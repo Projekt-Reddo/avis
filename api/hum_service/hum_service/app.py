@@ -16,7 +16,7 @@ from hum2song.models.myfaiss import *
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import songs
-from .dependencies import demo
+from .dependencies import singleton_s3_service
 import logging
 # from tqdm import tqdm
 
@@ -74,8 +74,7 @@ wav = io.BytesIO()
 
 # region FastAPI instance
 
-app = FastAPI(dependencies=[Depends(demo)])
-# app = FastAPI()
+app = FastAPI(dependencies=[Depends(singleton_s3_service)])
 
 # endregion
 
@@ -83,9 +82,9 @@ app = FastAPI(dependencies=[Depends(demo)])
 # region CORS middleware
 
 origins = [
-    "http://localhost:3000", # React dev
-    "https://localhost:7179", # Dotnet dev https
-    "http://localhost:5253" # Dotnet dev http
+    "http://localhost:3000",  # React dev
+    "https://localhost:7179",  # Dotnet dev https
+    "http://localhost:5253"  # Dotnet dev http
 ]
 
 app.add_middleware(

@@ -1,12 +1,11 @@
-class Demo:
-    def __init__(self):
-        print("Demo class initialized")
-    
-    def __call__(self):
-        print("Demo class called")
-        return self
+from .services.s3_service import S3Service
 
-demo = Demo()
+# region AWS S3
 
-async def singleton_demo():
-    return demo
+s3_service = S3Service("awss3demo")
+
+# endregion
+
+
+async def singleton_s3_service():
+    return s3_service
