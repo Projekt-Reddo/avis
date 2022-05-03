@@ -75,7 +75,7 @@ uvicorn hum_service.app:app --reload
 
 ---
 
--   Install Ionic CLI: [this link](https://ionicframework.com/docs/cli/install)
+-   Install Ionic CLI: [this link](https://ionicframework.com/docs/cli)
 
 > **NOTE:** You must have NPM installed on your computer before install Ionic CLI.
 
