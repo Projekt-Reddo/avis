@@ -3,6 +3,9 @@ import os
 from tqdm import tqdm
 from hum2song.utils.utils import *
 import pickle
+from hum2song.config.local_config import Config
+
+config = Config()
 
 class MyFaiss():
     def __init__(self) -> None:
@@ -10,7 +13,7 @@ class MyFaiss():
         Initialize the class
         
         """
-        self.path = "./hum2song/preprocessed"
+        self.path = config.checkpoints_path
         self.index = faiss.IndexFlatL2(512)
         self.index2id = {"-1": ""}
 

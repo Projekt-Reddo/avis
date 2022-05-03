@@ -26,9 +26,5 @@ namespace MainService.Models
         public string Thumbnail { get; set; } = null!;
 
         public string Lyric { get; set; } = null!;
-
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        [BsonIgnoreIfNull]
-        public string UserId { get; set; } = null!;
     }
 }

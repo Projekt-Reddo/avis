@@ -17,6 +17,12 @@ class Config(object):
     val_list = 'full_data_val.txt'
 
     checkpoints_path = './hum2song/checkpoints/' # 'checkpoints'
+    hum2song_embeded = 'resnet18_latest.pth'
+    faiss_index = 'index.index'
+    index2id = 'index2id.pkl'
+
+    preprocess = "./hum2song/config/preprocess.yaml"
+
     save_interval = 1
 
     train_batch_size = 32  # batch size

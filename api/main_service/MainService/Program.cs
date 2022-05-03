@@ -1,4 +1,6 @@
+using Amazon.S3;
 using MainService.Data;
+using MainService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,14 @@ var mongoDbSetting = new MongoDbSetting
 
 builder.Services.AddSingleton(mongoDbSetting);
 builder.Services.AddSingleton<IMongoContext, MongoContext>();
+
+#endregion
+
+#region AWS S3 config
+
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddSingleton<IS3Service, S3Service>();
 
 #endregion
 
