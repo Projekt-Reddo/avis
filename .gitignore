@@ -483,3 +483,6 @@ cython_debug/
 # NOTE : This is file can be download through the drive link
 pretrained_resnet18_latest.pth
 resnet18_latest.pth
+index.index
+index2id.pkl
+submission.csv
