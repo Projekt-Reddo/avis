@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 import magic
 from hum_service.services.s3_service import S3Service
-from ..dependencies import singleton_s3_service
-
+from ..dependencies import singleton_faiss_index, singleton_hum2song_model, singleton_preprocessHelper, singleton_s3_service
+import time
 # Create an instance of the router
 router = APIRouter(
     prefix="/songs",
@@ -12,7 +12,11 @@ router = APIRouter(
 
 
 @router.post("/hum", response_class=JSONResponse)
-async def hum_detect(hum_file: UploadFile = File(..., description="Hum file to detect song")):
+async def hum_detect(hum_file: UploadFile = File(..., description="Hum file to detect song"),
+model = Depends(singleton_hum2song_model),
+faiss_index = Depends(singleton_faiss_index),
+preprocessHelper = Depends(singleton_preprocessHelper)
+):
     """
     Detect song from hum file.
 
@@ -30,7 +34,17 @@ async def hum_detect(hum_file: UploadFile = File(..., description="Hum file to d
     if (mine_result not in ["audio/mpeg", "audio/mp3", "application/octet-stream"]):
         raise HTTPException(400, detail="MP3 MIME type required")
 
-    return {"fileName": hum_file.filename}
+
+    # Detect song
+    # start_time_detect = time.time()
+#     # preprocess file
+#     # r.seek = lambda *args: None  # allow pydub to call seek(0)
+#     pydub.AudioSegment.from_file(hum_file.file).export(wav, "wav")
+#     audio, _ = librosa.load(wav, sr=sampling_rate)
+#     spec = process(audio, max_wav_value, STFT)
+    spec = preprocessHelper.preprocess(hum_file)
+    result_ = faiss_index.predict(model, spec)
+    return {"result": result_}
 
 
 @router.post("/down", response_class=JSONResponse)
