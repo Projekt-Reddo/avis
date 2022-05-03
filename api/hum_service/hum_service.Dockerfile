@@ -12,8 +12,8 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 # STAGE Build container
 FROM python:3.8-slim
 
-# Install libs for handle MIME types & Soundfile
-RUN apt-get update && apt-get install -y libmagic1 libsndfile1
+# Install libs for handle MIME types & 2 Sound libs
+RUN apt-get update && apt-get install -y libmagic1 libsndfile1 ffmpeg
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
