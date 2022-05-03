@@ -42,7 +42,7 @@ namespace MainService.Controllers
         {
             var rs = await _s3Service.DownloadFileAsync(S3Config.BUCKET_NAME, null, "88703952_p0.png");
 
-            return File(rs, "image/png");
+            return File(rs!, "image/png");
         }
     }
 }
