@@ -13,20 +13,26 @@ class S3Service:
 
         self.profile = profile
 
-        AWS_ACEESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-        AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-        AWS_REGION = os.environ.get("AWS_REGION")
+        # AWS_ACEESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+        # AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+        # AWS_REGION = os.environ.get("AWS_REGION")
 
-        if (AWS_ACEESS_KEY_ID is None or AWS_SECRET_ACCESS_KEY is None or AWS_REGION is None):
-            self.s3 = boto3.Session(profile_name=profile).resource('s3')
-            print("AWS connection created using profile: " + profile)
-        else:
-            self.s3 = boto3.resource("s3",
-                                     aws_access_key_id=AWS_ACEESS_KEY_ID,
-                                     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                                     region_name=AWS_REGION
-                                     )
-            print("AWS connection created using credentials")
+        # if (AWS_ACEESS_KEY_ID is None or AWS_SECRET_ACCESS_KEY is None or AWS_REGION is None):
+        #     self.s3 = boto3.Session(profile_name=profile).resource('s3')
+        #     print("AWS connection created using profile: " + profile)
+        # else:
+
+        # Try hard code config
+        AWS_ACEESS_KEY_ID = "AKIA5ZUVKA73DF7V52UD"
+        AWS_SECRET_ACCESS_KEY = "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"
+        AWS_REGION = "us-east-1"
+
+        self.s3 = boto3.resource("s3",
+                                 aws_access_key_id=AWS_ACEESS_KEY_ID,
+                                 aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                                 region_name=AWS_REGION
+                                 )
+        print("AWS connection created using credentials")
 
     def upload_file(self, bucket_name: str, prefix: str, file_name: str, file):
         """Upload a file to an S3 bucket
