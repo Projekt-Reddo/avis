@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Bson.Serialization.Attributes;
 
-namespace MainService.Models
+namespace MainService.Dtos
 {
-    /// <summary>
-    /// Post model storing all information about a post
-    /// </summary>
-    public class Post : BaseModel
+    public class PostDto
     {
         public string Content { get; set; } = null!;
 
@@ -22,19 +18,13 @@ namespace MainService.Models
         [Url]
         public string Videos { get; set; } = null!;
 
-        [Range(0, int.MaxValue)]
         public int UpVote { get; set; }
 
-        [Range(0, int.MaxValue)]
         public int DownVote { get; set; }
 
         public List<string> Tags { get; set; } = null!;
 
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        [BsonIgnoreIfNull]
         public string UserId { get; set; } = null!;
-
-        public IEnumerable<Comment> Comments { get; set; } = null!;
 
     }
 }
