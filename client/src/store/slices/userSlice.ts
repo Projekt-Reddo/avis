@@ -5,8 +5,10 @@ const userSlice = createSlice({
     initialState: "sekai",
     reducers: {
         testUser: (state, action) => action.payload,
+
+        logout: (state) => "",
     },
 });
 
-export const { testUser } = userSlice.actions;
+export const { testUser, logout } = userSlice.actions;
 export default userSlice.reducer;
