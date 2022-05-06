@@ -1,7 +1,10 @@
+using AutoMapper;
 using MainService.Data;
+using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using static Constants;
 
@@ -15,11 +18,18 @@ namespace MainService.Controllers
         private readonly IMongoCollection<Song> _songs;
         private readonly IS3Service _s3Service;
 
-        public DemosController(IMongoContext context, IS3Service s3Service)
+        private readonly IMapper _mapper;
+        private readonly IPostRepo _postRepo;
+        private readonly ICommentRepo _commentRepo;
+
+        public DemosController(IMongoContext context, IS3Service s3Service, IPostRepo postRepo, ICommentRepo commentRepo, IMapper mapper)
         {
             _database = context.Database;
             _songs = _database.GetCollection<Song>("Songs");
             _s3Service = s3Service;
+            _mapper = mapper;
+            _postRepo = postRepo;
+            _commentRepo = commentRepo;
         }
 
         [HttpGet]
@@ -44,5 +54,45 @@ namespace MainService.Controllers
 
             return File(rs!, "image/png");
         }
+
+        [HttpGet("/getPosts")]
+        public async Task<IActionResult> GetPosts()
+        {
+
+            BsonDocument lookup = new BsonDocument
+            {
+                {
+                "$lookup", new BsonDocument{
+                        { "from", "comment" },
+                        { "localField", "_id" },
+                        { "foreignField", "PostId" },
+                        { "as", "Comments" }
+                    }
+                }
+            };
+
+            var posts = await _postRepo.GetAll(lookup: lookup);
+
+            return Ok(posts);
+        }
+
+        [HttpPost("/addPost")]
+        public async Task<IActionResult> AddPost([FromBody] PostDto postDto)
+        {
+            var post = _mapper.Map<Post>(postDto);
+            var rs = await _postRepo.Add(post);
+
+            return Ok("OK");
+        }
+
+        [HttpPost("/addComment")]
+        public async Task<IActionResult> AddComment([FromBody] CommentDto commentDto)
+        {
+            var comment = _mapper.Map<Comment>(commentDto);
+            var rs = await _commentRepo.Add(comment);
+
+            return Ok("OK");
+        }
+
     }
 }
