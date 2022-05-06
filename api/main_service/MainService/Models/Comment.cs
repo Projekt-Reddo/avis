@@ -10,7 +10,7 @@ namespace MainService.Models
     {
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         [BsonIgnoreIfNull]
-        public string CommentId { get; set; } = null!;
+        public string ParentId { get; set; } = null!;
 
         public string Content { get; set; } = null!;
 
