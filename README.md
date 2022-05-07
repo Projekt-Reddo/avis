@@ -41,7 +41,7 @@ _If there is an error about not found **Poetry** you can read Poetry install gui
 ### 2.1 Client app - Ionic React TS
 
 ```
-cd app
+cd client
 ionic serve
 ```
 
@@ -50,7 +50,7 @@ _If there is an error about not found **Ionic** you can read Ionic install guide
 ### 2.2 Main Api - ASP.NET Core
 
 ```
-cd api/main_service
+cd api/main_service/MainService
 dotnet watch run
 ```
 
