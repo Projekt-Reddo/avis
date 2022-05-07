@@ -8,7 +8,11 @@ namespace MainService.Profiles
     {
         public CommentProfile()
         {
-            CreateMap<CommentDto, Comment>();
+            CreateMap<CommentCreateDto, Comment>();
+
+            CreateMap<Comment, CommentReadDto>();
+
+            CreateMap<CommentUpdateDto, Comment>();
         }
     }
 }

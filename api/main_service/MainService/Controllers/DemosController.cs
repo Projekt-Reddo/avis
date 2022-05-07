@@ -10,6 +10,7 @@ using static Constants;
 
 namespace MainService.Controllers
 {
+    [Obsolete]
     [ApiController]
     [Route("api/[controller]")]
     public class DemosController : ControllerBase
@@ -42,9 +43,9 @@ namespace MainService.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(IFormFile song)
         {
-            var rs = await _s3Service.UploadFileAsync(S3Config.BUCKET_NAME, S3Config.SONGS_FOLDER, song.FileName, song.OpenReadStream(), song.ContentType);
+            // var rs = await _s3Service.UploadFileAsync(S3Config.BUCKET_NAME, S3Config.SONGS_FOLDER, song.FileName, song.OpenReadStream(), song.ContentType);
 
-            return Ok(rs);
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -59,40 +60,40 @@ namespace MainService.Controllers
         public async Task<IActionResult> GetPosts()
         {
 
-            BsonDocument lookup = new BsonDocument
-            {
-                {
-                "$lookup", new BsonDocument{
-                        { "from", "comment" },
-                        { "localField", "_id" },
-                        { "foreignField", "PostId" },
-                        { "as", "Comments" }
-                    }
-                }
+            BsonDocument lookup = new BsonDocument{
+                { "from", "comment" },
+                { "localField", "_id" },
+                { "foreignField", "PostId" },
+                { "as", "Comments" }
             };
 
-            var posts = await _postRepo.GetAll(lookup: lookup);
+            // Builders<Post>.Filter filter = Builders<Post>.Filter.Empty;
 
-            return Ok(posts);
+            BsonDocument sort = new BsonDocument{
+                { "CreatedAt", -1 }
+            };
+
+            var result = await _postRepo.FindManyAsync(lookup: lookup, sort: sort);
+
+            return Ok(result.entities);
         }
 
         [HttpPost("/addPost")]
-        public async Task<IActionResult> AddPost([FromBody] PostDto postDto)
+        public async Task<IActionResult> AddPost([FromBody] PostCreateDto postDto)
         {
             var post = _mapper.Map<Post>(postDto);
-            var rs = await _postRepo.Add(post);
+            // var rs = await _postRepo.Add(post);
 
             return Ok("OK");
         }
 
         [HttpPost("/addComment")]
-        public async Task<IActionResult> AddComment([FromBody] CommentDto commentDto)
+        public async Task<IActionResult> AddComment([FromBody] CommentCreateDto commentDto)
         {
             var comment = _mapper.Map<Comment>(commentDto);
-            var rs = await _commentRepo.Add(comment);
+            // var rs = await _commentRepo.Add(comment);
 
             return Ok("OK");
         }
-
     }
 }
