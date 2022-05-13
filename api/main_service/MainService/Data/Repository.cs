@@ -5,11 +5,58 @@ namespace MainService.Data
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!);
-        Task<TEntity> GetByCondition(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!);
-        Task<TEntity> Add(TEntity entity);
-        Task<bool> Update(string id, TEntity entity);
-        Task<bool> Delete(string id);
+        /// <summary>
+        /// Get all documents match filter
+        /// </summary>
+        /// <param name="filter">Filter builder for filter element</param>
+        /// <param name="sort">
+        ///     <para>Bson document for sort (1: increase, -1: decrease)</para>
+        ///     <para> Example: new BsonDocument { { "fieldName", 1 } }</para>
+        /// </param>
+        /// <param name="lookup">
+        ///  <para>Bson document for lookup</para>
+        ///  <para> Example: 
+        ///  new BsonDocument{
+        ///     { "from", "target_document_name" },
+        ///     { "localField", "field_for_comparision(Note: using _id not Id)" },
+        ///     { "foreignField", "foreign_key" },
+        ///     { "as", "joined_document_field" }
+        ///  }
+        /// </para>
+        /// </param>
+        /// <param name="limit">Number of documents to get</param>
+        /// <param name="skip">Number of documents to skip</param>
+        /// <returns>Total match filter count and List of documents</returns>
+        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!);
+
+        /// <summary>
+        /// Get a document by fitler
+        /// </summary>
+        /// <param name="filter">Bson filter</param>
+        /// <returns>Fit condition document</returns>
+        Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!);
+
+        /// <summary>
+        /// Add new document to selected collection
+        /// </summary>
+        /// <param name="entity">Entity to add</param>
+        /// <returns>New entity if created</returns>
+        Task<TEntity> AddOneAsync(TEntity entity);
+
+        /// <summary>
+        /// Update a document in selected collection with new value
+        /// </summary>
+        /// <param name="id">Document id</param>
+        /// <param name="entity">New document</param>
+        /// <returns>true(updated) / false(not update)</returns>
+        Task<bool> UpdateOneAsync(string id, TEntity entity);
+
+        /// <summary>
+        /// Delete a document in selected collection by id
+        /// </summary>
+        /// <param name="id">Id to delete</param>
+        /// <returns>true(deleted) / false(not delete)</returns>
+        Task<bool> DeleteOneAsync(string id);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
@@ -23,25 +70,13 @@ namespace MainService.Data
             _collection = _database.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
         }
 
-        /// <summary>
-        /// Add new document to selected collection
-        /// </summary>
-        /// <param name="entity">Entity to add</param>
-        /// <returns>New entity if created</returns>
-        public virtual async Task<TEntity> Add(TEntity entity)
+        public virtual async Task<TEntity> AddOneAsync(TEntity entity)
         {
             await _collection.InsertOneAsync(entity);
             return entity;
         }
 
-        /// <summary>
-        /// Get all document fit with filter condition
-        /// </summary>
-        /// <param name="filter">Filter builder for filter element</param>
-        /// <param name="sort">Bson document for sort</param>
-        /// <param name="lookup">Bson document for join collection</param>
-        /// <returns>List of documents</returns>
-        public virtual async Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!)
+        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!)
         {
 
             var query = _collection.Aggregate().Match(filter is null ? Builders<TEntity>.Filter.Empty : filter);
@@ -58,7 +93,12 @@ namespace MainService.Data
 
             if (lookup is not null)
             {
-                query = query.AppendStage<TEntity>(lookup);
+                query = query.AppendStage<TEntity>(new BsonDocument
+                {
+                    {
+                        "$lookup", lookup
+                    }
+                });
             }
 
             if (sort is not null)
@@ -66,39 +106,24 @@ namespace MainService.Data
                 query = query.Sort(sort);
             }
 
+            long total = await _collection.CountDocumentsAsync(filter is null ? Builders<TEntity>.Filter.Empty : filter);
             var entities = await query.ToListAsync();
-            return entities;
+            return (total, entities);
         }
 
-        /// <summary>
-        /// Update a document in selected collection with new value
-        /// </summary>
-        /// <param name="id">Document id</param>
-        /// <param name="entity">New value of document</param>
-        /// <returns>Yes(updated) / No(not update)</returns>
-        public virtual async Task<bool> Update(string id, TEntity entity)
+        public virtual async Task<bool> UpdateOneAsync(string id, TEntity entity)
         {
             var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
             return rs.ModifiedCount > 0 ? true : false;
         }
 
-        /// <summary>
-        /// Delete a document in selected collection by id
-        /// </summary>
-        /// <param name="id">Id to delete</param>
-        /// <returns>Yes(deleted) / No(not delete)</returns>
-        public virtual async Task<bool> Delete(string id)
+        public virtual async Task<bool> DeleteOneAsync(string id)
         {
             var rs = await _collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("Id", id));
             return rs.DeletedCount > 0 ? true : false;
         }
 
-        /// <summary>
-        /// Get a collection by fitler
-        /// </summary>
-        /// <param name="filter">Bson filter</param>
-        /// <returns>Fit condition document</returns>
-        public virtual async Task<TEntity> GetByCondition(FilterDefinition<TEntity> filter = null!)
+        public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!)
         {
             var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
             return entity;

@@ -8,7 +8,11 @@ namespace MainService.Profiles
     {
         public PostProfile()
         {
-            CreateMap<PostDto, Post>();
+            CreateMap<PostCreateDto, Post>();
+
+            CreateMap<Post, PostReadDto>();
+
+            CreateMap<PostUpdateDto, Post>();
         }
     }
 }
