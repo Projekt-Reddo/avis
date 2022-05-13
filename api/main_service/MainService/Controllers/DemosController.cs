@@ -23,7 +23,9 @@ namespace MainService.Controllers
         private readonly IPostRepo _postRepo;
         private readonly ICommentRepo _commentRepo;
 
-        public DemosController(IMongoContext context, IS3Service s3Service, IPostRepo postRepo, ICommentRepo commentRepo, IMapper mapper)
+        private readonly IMailService _mailService;
+
+        public DemosController(IMongoContext context, IS3Service s3Service, IPostRepo postRepo, ICommentRepo commentRepo, IMapper mapper, IMailService mailService)
         {
             _database = context.Database;
             _songs = _database.GetCollection<Song>("Songs");
@@ -31,6 +33,7 @@ namespace MainService.Controllers
             _mapper = mapper;
             _postRepo = postRepo;
             _commentRepo = commentRepo;
+            _mailService = mailService;
         }
 
         [HttpGet]
@@ -94,6 +97,20 @@ namespace MainService.Controllers
             // var rs = await _commentRepo.Add(comment);
 
             return Ok("OK");
+        }
+
+        [HttpGet("/sendMail")]
+        public async Task<IActionResult> SendMail()
+        {
+
+            await _mailService.SendEmailAsync(new MailRequest
+            {
+                ToEmail = "wsan.b214@gmail.com",
+                Subject = "Hello Sekai",
+                Body = "Hello Sekai"
+            });
+
+            return Ok();
         }
     }
 }
