@@ -1,5 +1,6 @@
 using Amazon.S3;
 using MainService.Data;
+using MainService.Models;
 using MainService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,13 @@ builder.Services.AddScoped<ICommentRepo, CommentRepo>();
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddSingleton<IS3Service, S3Service>();
+
+#endregion
+
+#region Mail settings
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddTransient<IMailService, MailService>();
 
 #endregion
 
