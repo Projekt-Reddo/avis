@@ -1,9 +1,9 @@
-import Icon from "./Icon";
+import Icon from "./shared/Icon";
 
 import "./HumCard.css";
 
 import Towa from "../static/Towa.png";
-import AyaFubiMi from "../static/AyaFubiMi.png";
+import AyaFubiMi from "static/AyaFubiMi.png";
 
 interface HumCardProps {}
 

@@ -6,7 +6,7 @@ import TrendingCard from "../components/TrendingCard";
 import SearchBox from "../components/SearchBox";
 const Discussion = () => {
     return (
-        <IonPage>
+        <IonPage className="padding-nav">
             <IonContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 md:gap-6 m-4 md:m-16">
                     <div className="col-span-2">

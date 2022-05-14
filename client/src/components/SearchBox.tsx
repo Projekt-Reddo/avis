@@ -1,6 +1,6 @@
 import { IonInput } from "@ionic/react";
 import "./HumCard.css";
-import Icon from "./Icon";
+import Icon from "./shared/Icon";
 
 interface SearchBoxProps {}
 
