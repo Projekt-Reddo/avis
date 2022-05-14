@@ -1,0 +1,41 @@
+p{
+    font-family: 'Arial';
+}
+.backgroundSignUp{
+    background-color: #FFFFFF;
+}
+
+.inputTextIon{
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+}
+
+.signUpButtonIon{
+    --background: #F858A8;
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    --padding-end: 2rem;
+    --padding-start: 2rem;
+}
+
+.loginButtonIon{
+    --background: #FFFFFF;
+}
+
+.textGray{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+hr { 
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    width:75%;
+    margin:0 auto;
+}
+
+.border{
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+}
+
+.boxShadow{
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
