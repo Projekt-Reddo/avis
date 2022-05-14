@@ -12,6 +12,8 @@ namespace MainService.Models
         [BsonIgnoreIfNull]
         public int PostId { get; set; }
 
+        public Post? Post { get; set; }
+
         [Required]
         public string Reason { get; set; } = null!;
 
@@ -20,5 +22,7 @@ namespace MainService.Models
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         [BsonIgnoreIfNull]
         public string UserId { get; set; } = null!;
+
+        public User? User { get; set; } = null!;
     }
 }

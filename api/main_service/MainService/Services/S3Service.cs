@@ -5,9 +5,34 @@ namespace MainService.Services
 {
     public interface IS3Service
     {
+        /// <summary>
+        /// Check if a Bucket exists
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <returns>True (Existed) / False (Not existed)</returns>
         Task<bool> DoesBucketExistsAsync(string bucketName);
+
+        /// <summary>
+        /// Download a file from S3 using the file name
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         Task<Stream?> DownloadFileAsync(string bucketName, string? folder, string fileName);
-        Task<bool> UploadFileAsync(string bucketName, string? folder, string fileName, Stream fileStream, string contentType);
+
+
+        /// <summary>
+        /// Upload a stream to S3
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        /// <param name="fileStream"></param>
+        /// <param name="contentType"></param>
+        /// <param name="acl">S3 access control list</param>
+        /// <returns>True (Upload done) and object access url / False (Fail to upload)</returns>
+        Task<(bool status, string url)> UploadFileAsync(string bucketName, string? folder, string fileName, Stream fileStream, string contentType, S3CannedACL acl = null!);
     }
 
     /// <summary>
@@ -22,23 +47,11 @@ namespace MainService.Services
             _s3Client = s3Client;
         }
 
-        /// <summary>
-        /// Check if a Bucket exists
-        /// </summary>
-        /// <param name="bucketName"></param>
-        /// <returns>True (Existed) / False (Not existed)</returns>
         public async Task<bool> DoesBucketExistsAsync(string bucketName)
         {
             return await _s3Client.DoesS3BucketExistAsync(bucketName);
         }
 
-        /// <summary>
-        /// Download a file from S3 using the file name
-        /// </summary>
-        /// <param name="bucketName"></param>
-        /// <param name="folder"></param>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
         public async Task<Stream?> DownloadFileAsync(string bucketName, string? folder, string fileName)
         {
             // Get the file from S3
@@ -61,32 +74,35 @@ namespace MainService.Services
             return response.ResponseStream;
         }
 
-        /// <summary>
-        /// Upload a stream to S3
-        /// </summary>
-        /// <param name="bucketName"></param>
-        /// <param name="folder"></param>
-        /// <param name="fileName"></param>
-        /// <param name="fileStream"></param>
-        /// <param name="contentType"></param>
-        /// <returns>True (Upload done) / False (Fail to upload)</returns>
-        public async Task<bool> UploadFileAsync(string bucketName, string? folder, string fileName, Stream fileStream, string contentType)
+        public async Task<(bool status, string url)> UploadFileAsync(string bucketName, string? folder, string fileName, Stream fileStream, string contentType, S3CannedACL acl = null!)
         {
             // Upload the file to S3
             var key = String.IsNullOrEmpty(folder) ? fileName : $"{folder}/{fileName}";
+
+            // Set public read access
+            if (acl == null)
+            {
+                acl = S3CannedACL.PublicRead;
+            }
 
             var request = new PutObjectRequest
             {
                 BucketName = bucketName,
                 Key = key,
                 InputStream = fileStream,
-                ContentType = contentType
+                ContentType = contentType,
+                CannedACL = acl
             };
 
             var result = await _s3Client.PutObjectAsync(request);
 
             // Return the result
-            return result.HttpStatusCode == System.Net.HttpStatusCode.OK;
+            if (result.HttpStatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return (true, $"https://{bucketName}.s3.amazonaws.com/{key}");
+            }
+
+            return (false, String.Empty);
         }
     }
 }
