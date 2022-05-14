@@ -9,7 +9,11 @@ const Home = () => {
     const dispatch = useDispatch();
 
     return (
-        <div>
+        <div
+            style={{
+                paddingTop: 100,
+            }}
+        >
             <div className="text-3xl font-bold underline">Hello, {user}</div>
             <button
                 className="btn"
