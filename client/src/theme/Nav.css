@@ -1,0 +1,11 @@
+:root {
+    --nav-height: 4rem;
+}
+
+.nav-height {
+    height: var(--nav-height);
+}
+
+.padding-nav {
+    padding-top: calc(var(--nav-height) / 2);
+}

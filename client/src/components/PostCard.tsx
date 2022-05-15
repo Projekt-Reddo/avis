@@ -6,8 +6,7 @@ import { useMutation } from "react-query";
 import axios from "axios";
 
 // Components
-import Icon from "./Icon";
-
+import Icon from "./shared/Icon";
 // Constants
 import { API } from "../utils/constants";
 
@@ -36,8 +35,6 @@ const PostCard: React.FC<PostCardProps> = () => {
             url: `${API}/api/Post`,
             data: newPost,
         });
-
-        console.log(data);
     });
 
     const handlePost = async (newPost: Post) => {

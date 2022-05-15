@@ -1,6 +1,6 @@
 import { IonInput } from "@ionic/react";
 import "../theme/Discover.css";
-import Icon from "./Icon";
+import Icon from "./shared/Icon";
 
 interface SearchBoxProps {}
 

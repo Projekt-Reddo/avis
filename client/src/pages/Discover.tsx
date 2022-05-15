@@ -32,7 +32,7 @@ const Discover = () => {
     return (
         <IonPage>
             <IonContent>
-                <div className="flex justify-center lg:grid md:grid-cols-3 lg:gap-6 lg:m-16">
+                <div className="flex justify-center lg:grid md:grid-cols-3 lg:gap-6 lg:m-16 pt-4">
                     <div className="w-full m-4 lg:m-0 lg:col-span-2">
                         <PostCard />
                         {isLoading || !data ? (

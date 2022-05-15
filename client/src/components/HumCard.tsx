@@ -1,9 +1,9 @@
-import Icon from "./Icon";
+import Icon from "./shared/Icon";
 
 import "../theme/Discover.css";
 
 import Towa from "../static/Towa.png";
-import AyaFubiMi from "../static/AyaFubiMi.png";
+import AyaFubiMi from "static/AyaFubiMi.png";
 
 interface HumCardProps {
     post: any;
@@ -37,9 +37,9 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                         <div className="color-6 ml-4">Apr 29</div>
                     </div>
                     <Icon className="card-icon" icon="ellipsis" />
-                    <div className="card absolute px-8 py-2">
+                    {/* <div className="card absolute px-8 py-2">
                         <Icon icon="flag" /> Report
-                    </div>
+                    </div> */}
                 </div>
                 <div className="my-4">{post.content}</div>
                 <div
