@@ -24,21 +24,25 @@ import "./theme/variables.css";
 
 import "./theme/global.css";
 
+import { QueryClientProvider, QueryClient } from "react-query";
+
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
 
 setupIonicReact();
 
 const App: React.FC = () => (
-    <IonApp>
-        <IonReactRouter>
-            <Nav />
+    <QueryClientProvider client={new QueryClient()}>
+        <IonApp>
+            <IonReactRouter>
+                <Nav />
 
-            <IonRouterOutlet>
-                <MainRoute />
-            </IonRouterOutlet>
-        </IonReactRouter>
-    </IonApp>
+                <IonRouterOutlet>
+                    <MainRoute />
+                </IonRouterOutlet>
+            </IonReactRouter>
+        </IonApp>
+    </QueryClientProvider>
 );
 
 export default App;
