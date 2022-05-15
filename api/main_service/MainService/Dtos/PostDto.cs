@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MainService.Dtos
 {
@@ -6,15 +7,17 @@ namespace MainService.Dtos
     {
         public string Content { get; set; } = null!;
 
-        public List<string> Images { get; set; } = null!;
+        public List<string>? Images { get; set; } = null!;
 
         [Url]
-        public string Audios { get; set; } = null!;
+        [AllowNull]
+        public string? Audios { get; set; } = null!;
 
         [Url]
-        public string Videos { get; set; } = null!;
+        [AllowNull]
+        public string? Videos { get; set; } = null!;
 
-        public List<string> Tags { get; set; } = null!;
+        public List<string>? Tags { get; set; } = null!;
 
         public string? UserId { get; set; } = null!;
     }
