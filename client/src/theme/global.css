@@ -4,6 +4,11 @@
     font-family: 'Mulish', sans-serif;
 }
 
+body {
+    background-color: var(--body-bg-color);
+    color: var(--text-primary-color);
+}
+
 a {
-    color: var(--ion-text-color);
+    color: var(--text-primary-color);
 }
