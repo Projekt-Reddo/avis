@@ -35,7 +35,7 @@ builder.Services.AddSingleton<IS3Service, S3Service>();
 #region Mail settings
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddSingleton<IMailService, MailService>();
 
 #endregion
 
