@@ -1,12 +1,4 @@
-import {
-    IonApp,
-    IonLabel,
-    IonRouterOutlet,
-    IonTabBar,
-    IonTabButton,
-    IonTabs,
-    setupIonicReact,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 import "./theme/index.css";
@@ -30,32 +22,27 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 
+import "./theme/global.css";
+
+import { QueryClientProvider, QueryClient } from "react-query";
+
 import MainRoute from "./routes";
+import Nav from "components/shared/Nav";
 
 setupIonicReact();
 
 const App: React.FC = () => (
-    <IonApp>
-        <IonReactRouter>
-            <IonTabs>
+    <QueryClientProvider client={new QueryClient()}>
+        <IonApp>
+            <IonReactRouter>
+                <Nav />
+
                 <IonRouterOutlet>
                     <MainRoute />
                 </IonRouterOutlet>
-
-                <IonTabBar slot="top">
-                    <IonTabButton tab="tab1" href="/tab1">
-                        <IonLabel>Tab 1</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="tab2" href="/tab2">
-                        <IonLabel>Tab 2</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="tab3" href="/tab3">
-                        <IonLabel>Tab 3</IonLabel>
-                    </IonTabButton>
-                </IonTabBar>
-            </IonTabs>
-        </IonReactRouter>
-    </IonApp>
+            </IonReactRouter>
+        </IonApp>
+    </QueryClientProvider>
 );
 
 export default App;

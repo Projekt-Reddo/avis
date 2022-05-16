@@ -1,5 +1,4 @@
 import { Route, Redirect } from "react-router-dom";
-import Discussion from "../pages/Discussion";
 
 import Home from "../pages/Home";
 import Login from "../pages/Login";
@@ -7,6 +6,8 @@ import Post from "../pages/Post";
 import Search from "../pages/Search";
 import Signup from "../pages/Signup";
 import Song from "../pages/Song";
+import Discover from "../pages/Discover";
+
 import { routes } from "../utils/constants";
 
 const MainRoute = () => {
@@ -31,12 +32,12 @@ const MainRoute = () => {
                     <Song />
                 </Route>
 
-                <Route path="/discussion/:postId">
+                <Route path="/discover/:postId">
                     <Post />
                 </Route>
 
-                <Route exact path="/discussion">
-                    <Discussion />
+                <Route exact path="/discover">
+                    <Discover />
                 </Route>
 
                 <Route exact path="/">

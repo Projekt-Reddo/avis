@@ -19,10 +19,10 @@ namespace MainService.Models
         public string Videos { get; set; } = null!;
 
         [Range(0, int.MaxValue)]
-        public int UpVote { get; set; }
+        public int UpVote { get; set; } = 0;
 
         [Range(0, int.MaxValue)]
-        public int DownVote { get; set; }
+        public int DownVote { get; set; } = 0;
 
         public List<string> Tags { get; set; } = null!;
 
