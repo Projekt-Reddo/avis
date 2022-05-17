@@ -10,4 +10,13 @@ public static class Constants
         public const string IMAGES_FOLDER = "images";
         public const string VIDEOS_FOLDER = "videos";
     }
+
+    /// <summary>
+    /// Mail templates 
+    /// </summary>
+    public static class MailTemplate
+    {
+        public const string MAIL_FORGOT_PASSWORD = "mail/forgotPassword";
+        public const string MAIL_VERIFY = "mail/verify";
+    }
 }

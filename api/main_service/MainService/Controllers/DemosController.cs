@@ -107,7 +107,7 @@ namespace MainService.Controllers
             {
                 ToEmail = "wsan.b214@gmail.com",
                 Subject = "Hello Sekai",
-                Body = "Hello Sekai"
+                Body = _mailService.GetMailTemplate(MailTemplate.MAIL_VERIFY, "www.lapis.wiki")
             });
 
             return Ok();
