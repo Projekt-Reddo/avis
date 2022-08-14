@@ -5,7 +5,7 @@ WORKDIR /tmp
 
 RUN pip install poetry
 
-COPY ./api/hum_service/pyproject.toml /tmp/
+COPY ./pyproject.toml /tmp/
 
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
@@ -21,14 +21,14 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /code
+WORKDIR /app
 
 # Install pip requirements
-COPY --from=requirements-state /tmp/requirements.txt /code/requirements.txt
-RUN python -m pip install --no-cache-dir --upgrade -r /code/requirements.txt
+COPY --from=requirements-state /tmp/requirements.txt /app/requirements.txt
+RUN python -m pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-COPY ./api/hum_service/hum_service /code/hum_service
-COPY ./api/hum_service/hum2song /code/hum2song
+COPY ./hum_service /app/hum_service
+COPY ./hum2song /app/hum2song
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers

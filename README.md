@@ -45,8 +45,6 @@ cd client
 npm start
 ```
 
-_If there is an error about not found **Ionic** you can read Ionic install guide at the Q&A part_
-
 ### 2.2 Main Api - ASP.NET Core
 
 ```
@@ -56,43 +54,23 @@ dotnet watch run
 
 ### 2.3 Hum Api - FastAPI
 
-> When you re-open project in any IDE you need to run following command to re-create the virtual environment if it NOT DETECTED:
+Select created Python environment and run app:
 
 ```
 cd api/hum_service
-poetry shell
-```
-
--   Run development server:
-
-```
-uvicorn hum_service.app:app --reload
+uvicorn app.main:app --reload
 ```
 
 ## Q & A
 
 -   Install NodeJS (ver 16.\*) - NPM included: [this link](https://nodejs.org/en/download/).
 
----
-
 -   Install Ionic CLI: [this link](https://ionicframework.com/docs/cli)
-
-> **NOTE:** You must have NPM installed on your computer before install Ionic CLI.
-
----
 
 -   Install Python (ver 3.8): [this link](https://www.python.org/downloads/)
 
----
-
 -   Install Poetry: [this link](https://python-poetry.org/docs/)
 
-> **NOTE:** You must have Python installed on your computer before install Poetry.
-
----
-
 -   Install Dotnet (ver 6.0): [this link](https://dotnet.microsoft.com/en-us/download)
-
----
 
 -   Install Docker: [this link](https://docs.docker.com/get-docker/)

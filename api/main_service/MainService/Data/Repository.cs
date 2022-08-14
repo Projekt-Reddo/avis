@@ -15,7 +15,7 @@ namespace MainService.Data
         /// </param>
         /// <param name="lookup">
         ///  <para>Bson document for lookup</para>
-        ///  <para> Example: 
+        ///  <para> Example:
         ///  new BsonDocument{
         ///     { "from", "target_document_name" },
         ///     { "localField", "field_for_comparision(Note: using _id not Id)" },

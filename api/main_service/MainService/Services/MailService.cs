@@ -26,7 +26,7 @@ namespace MainService.Services
     {
         private readonly MailSettings _mailSettings;
 
-        private IDictionary<string, string> _mailTemplate;
+        private IDictionary<string, string> _mailTemplate = null!;
 
         public MailService(IOptions<MailSettings> mailSettings)
         {
