@@ -17,11 +17,11 @@ class DevSettings(Settings):
 
 
 class StagingSettings(Settings):
-    pass
+    aws_profile: str = None
 
 
 class ProductionSettings(Settings):
-    pass
+    aws_profile: str = None
 
 
 def get_settings():
