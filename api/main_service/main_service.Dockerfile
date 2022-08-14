@@ -14,16 +14,16 @@ USER appuser
 # Restore
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ./api/main_service/*.sln .
-COPY ./api/main_service/MainService/*.csproj MainService/
-COPY ./api/main_service/MainServiceTest/*.csproj MainServiceTest/
+COPY ./*.sln .
+COPY ./MainService/*.csproj MainService/
+COPY ./MainServiceTest/*.csproj MainServiceTest/
 RUN dotnet restore
-COPY ./api/main_service .
+COPY . .
 
 # Testing
 FROM build as test
 WORKDIR /src/MainService
-RUN dotnet build 
+RUN dotnet build
 WORKDIR /src/MainServiceTest
 RUN dotnet test
 

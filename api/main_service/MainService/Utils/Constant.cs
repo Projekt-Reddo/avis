@@ -1,7 +1,7 @@
 public static class Constants
 {
     /// <summary>
-    /// Path config in AWS S3 
+    /// Path config in AWS S3
     /// </summary>
     public static class S3Config
     {
@@ -12,7 +12,7 @@ public static class Constants
     }
 
     /// <summary>
-    /// Mail templates 
+    /// Mail templates
     /// </summary>
     public static class MailTemplate
     {
