@@ -36,7 +36,7 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 # For local debugging, use the following entry point:
-# CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "80"]
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
 
 # For production with Heroku container:
 CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
