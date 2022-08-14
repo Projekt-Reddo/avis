@@ -42,7 +42,7 @@ _If there is an error about not found **Poetry** you can read Poetry install gui
 
 ```
 cd client
-ionic serve
+npm start
 ```
 
 _If there is an error about not found **Ionic** you can read Ionic install guide at the Q&A part_
