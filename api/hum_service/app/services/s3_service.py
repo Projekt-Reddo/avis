@@ -1,45 +1,29 @@
-import os
 import boto3
 from botocore.exceptions import ClientError
+from app.core.config import config
+from app.core.log_config import logger
 
 
 class S3Service:
 
-    def __init__(self, profile="awss3demo"):
-        """Create an S3 service with the given profile
+    def __init__(self):
+        if config.aws_profile is not None:
+            session = boto3.Session(profile_name=config.aws_profile)
+            self.s3 = session.resource("s3")
+            logger.debug("AWS S3 service initialized with profile")
+        else:
+            self.s3 = boto3.resource("s3")
+            logger.debug("AWS S3 service initialized")
 
-        :param profile: AWS profile name
-        """
-
-        self.profile = profile
-
-        # AWS_ACEESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-        # AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-        # AWS_REGION = os.environ.get("AWS_REGION")
-
-        # if (AWS_ACEESS_KEY_ID is None or AWS_SECRET_ACCESS_KEY is None or AWS_REGION is None):
-        #     self.s3 = boto3.Session(profile_name=profile).resource('s3')
-        #     print("AWS connection created using profile: " + profile)
-        # else:
-
-        # Try hard code config
-        AWS_ACEESS_KEY_ID = "AKIA5ZUVKA73DF7V52UD"
-        AWS_SECRET_ACCESS_KEY = "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"
-        AWS_REGION = "us-east-1"
-
-        self.s3 = boto3.resource("s3",
-                                 aws_access_key_id=AWS_ACEESS_KEY_ID,
-                                 aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                                 region_name=AWS_REGION
-                                 )
-        print("AWS connection created using credentials")
-
-    def upload_file(self, bucket_name: str, prefix: str, file_name: str, file):
+    def upload_file(
+        self, bucket_name: str,
+        prefix: str, file_name: str, file
+    ) -> bool:
         """Upload a file to an S3 bucket
 
         :param bucket_name: Bucket to upload to
         :param prefix: Folder in the bucket to upload to
-        :param file_name: File name to save if not provided name in the file will be used
+        :param file_name: File name to save
         :param file: File to upload
         :return: True if file was uploaded, else False
         """
@@ -59,7 +43,11 @@ class S3Service:
 
         return True
 
-    def download_file(self, bucket_name: str, prefix: str, file_name: str, target_dir: str):
+    def download_file(
+        self, bucket_name: str,
+        prefix: str, file_name: str,
+        target_dir: str
+    ) -> bool:
         """Download a file from an S3 bucket
 
         :param bucket_name: Bucket to download from

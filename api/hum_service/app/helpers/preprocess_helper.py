@@ -7,14 +7,19 @@ import pydub
 import librosa
 
 config = Config()
+
+
 class PreprocessHelper():
     def __init__(self) -> None:
-        """ 
+        """
         Initialize the class
         """
-        self.config_preprocess = yaml.load(open(config.preprocess, "r"), Loader=yaml.FullLoader)
-        self.sampling_rate = self.config_preprocess["preprocessing"]["audio"]["sampling_rate"]
-        self.max_wav_value = self.config_preprocess["preprocessing"]["audio"]["max_wav_value"]
+        self.config_preprocess = yaml.load(
+            open(config.preprocess, "r"), Loader=yaml.FullLoader)
+        self.sampling_rate = \
+            self.config_preprocess["preprocessing"]["audio"]["sampling_rate"]
+        self.max_wav_value = \
+            self.config_preprocess["preprocessing"]["audio"]["max_wav_value"]
 
         self.STFT = Audio.stft.TacotronSTFT(
             self.config_preprocess["preprocessing"]["stft"]["filter_length"],
@@ -27,10 +32,10 @@ class PreprocessHelper():
         )
 
         self.wav = io.BytesIO()
-    
+
     def process(self, audio):
         """
-            Process audio file
+        Process audio file
         """
         audio = audio.astype(np.float32)
         audio = audio / max(abs(audio)) * self.max_wav_value
@@ -41,16 +46,9 @@ class PreprocessHelper():
         """ Preprocess audio file
         Args:
             hum_file: hum_file sent from client
-        
         Returns:
             rs: mel_spectrogram
-        
         """
         pydub.AudioSegment.from_file(hum_file.file).export(self.wav, "wav")
         audio, _ = librosa.load(self.wav, sr=self.sampling_rate)
         return self.process(audio)
-
-    
-
-
-
