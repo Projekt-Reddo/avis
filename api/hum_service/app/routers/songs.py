@@ -9,10 +9,7 @@ from app.dependencies import (
     singleton_s3_service
 )
 
-router = APIRouter(
-    prefix="/songs",
-    tags=["songs"],
-)
+router = APIRouter()
 
 
 @router.post("/hum", response_class=JSONResponse)
