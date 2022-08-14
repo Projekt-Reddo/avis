@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
-import magic
-from hum_service.services.s3_service import S3Service
+from app.services.s3_service import S3Service
 from app.dependencies import (
     singleton_faiss_index,
     singleton_hum2song_model,
@@ -28,12 +27,12 @@ async def hum_detect(
     if (hum_file.content_type not in ["audio/mpeg", "audio/mp3"]):
         raise HTTPException(400, detail="MP3 extension required")
 
-    mime = magic.Magic(mime=True)
-    mine_result = mime.from_buffer(hum_file.file.read(1024))
-    if (mine_result not in [
-        "audio/mpeg", "audio/mp3", "application/octet-stream",
-    ]):
-        raise HTTPException(400, detail="MP3 MIME type required")
+    # mime = magic.Magic(mime=True)
+    # mine_result = mime.from_buffer(hum_file.file.read(1024))
+    # if (mine_result not in [
+    #     "audio/mpeg", "audio/mp3", "application/octet-stream",
+    # ]):
+    #     raise HTTPException(400, detail="MP3 MIME type required")
 
     spec = preprocessHelper.preprocess(hum_file)
     result_ = faiss_index.predict(model, spec)
