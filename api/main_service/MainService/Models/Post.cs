@@ -1,44 +1,33 @@
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MainService.Models
+namespace MainService.Models;
+
+/// <summary>
+/// Post model storing all information about a post
+/// </summary>
+public class Post : BaseModel
 {
-    /// <summary>
-    /// Post model storing all information about a post
-    /// </summary>
-    public class Post : BaseModel
-    {
-        public string Content { get; set; } = null!;
+    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+    public string UserId { get; set; } = null!;
 
-        public List<string> Images { get; set; } = null!;
+    public User? User { get; set; } = null!; // Post user
 
-        [Url]
-        public string Audios { get; set; } = null!;
+    public string Content { get; set; } = null!;
 
-        [Url]
-        public string Videos { get; set; } = null!;
+    public ICollection<Media> Medias { get; set; } = null!;
 
-        [Range(0, int.MaxValue)]
-        public int UpVote { get; set; } = 0;
+    public DateTime PublishedAt { get; set; }
 
-        [Range(0, int.MaxValue)]
-        public int DownVote { get; set; } = 0;
+    public string DisplayStatus { get; set; } = null!;
 
-        public List<string> Tags { get; set; } = null!;
+    public ICollection<ObjectId> UpvotedBy { get; set; } = null!;
 
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        [BsonIgnoreIfNull]
-        public string UserId { get; set; } = null!;
+    public ICollection<ObjectId> DownvotedBy { get; set; } = null!;
 
-        /// <summary>
-        /// One-to-One relationship between this post and its user
-        /// </summary>
-        public User? User { get; set; } = null!;
+    public ICollection<string> Hashtags { get; set; } = null!;
 
-        /// <summary>
-        /// One-to-Many relationship between this post and its comments
-        /// </summary>
-        public IEnumerable<Comment>? Comments { get; set; } = null!;
+    public ICollection<string> HashtagsNormalized { get; set; } = null!;
 
-    }
+    public ICollection<ObjectId>? Comments { get; set; } = null!; // This post's comments id
 }

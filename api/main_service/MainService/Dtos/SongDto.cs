@@ -1,62 +1,64 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MainService.Dtos
+namespace MainService.Dtos;
+
+public class SongReadDto
 {
-    public class SongReadDto
-    {
-        public string Id { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
-        public string Name { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
 
-        public string Artist { get; set; } = null!;
+    public DateTime ModifiedAt { get; set; }
 
-        public string Album { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
-        public string Genre { get; set; } = null!;
+    public string Alias { get; set; } = null!;
 
-        public List<string> Links { get; set; } = null!;
+    public string Thumbnail { get; set; } = null!;
 
-        public string Thumbnail { get; set; } = null!;
+    public string Lyric { get; set; } = null!;
 
-        public string Lyric { get; set; } = null!;
-    }
+    public string Description { get; set; } = null!;
 
-    public class SongCreateDto
-    {
-        [StringLength(300)]
-        public string Name { get; set; } = null!;
+    public ICollection<string> Genres { get; set; } = null!;
 
-        public string Artist { get; set; } = null!;
+    public ICollection<ArtistReadDto> Artist { get; set; } = null!;
 
-        public string Album { get; set; } = null!;
+    public UrlReadDto Url { get; set; } = null!;
+}
 
-        public string Genre { get; set; } = null!;
+public class SongCreateDto
+{
+    [StringLength(300)]
+    public string Title { get; set; } = null!;
 
-        public List<string> Links { get; set; } = null!;
+    public string Alias { get; set; } = null!;
 
-        [Url]
-        public string Thumbnail { get; set; } = null!;
+    public IFormFile Thumbnail { get; set; } = null!;
 
-        public string Lyric { get; set; } = null!;
-    }
+    public string Lyric { get; set; } = null!;
 
-    public class SongUpdateDto
-    {
-        [StringLength(300)]
-        public string Name { get; set; } = null!;
+    public string Description { get; set; } = null!;
 
-        public string Artist { get; set; } = null!;
+    public HashSet<string> Genres { get; set; } = null!;
 
-        public string Album { get; set; } = null!;
+    public IFormFile File { get; set; } = null!;
+}
 
-        public string Genre { get; set; } = null!;
+public class SongUpdateDto
+{
+    [StringLength(300)]
+    public string Title { get; set; } = null!;
 
-        public List<string> Links { get; set; } = null!;
+    public string Alias { get; set; } = null!;
 
-        [Url]
-        public string Thumbnail { get; set; } = null!;
+    public IFormFile Thumbnail { get; set; } = null!;
 
-        public string Lyric { get; set; } = null!;
-    }
+    public string Lyric { get; set; } = null!;
 
+    public string Description { get; set; } = null!;
+
+    public HashSet<string> Genres { get; set; } = null!;
+
+    public IFormFile File { get; set; } = null!;
 }

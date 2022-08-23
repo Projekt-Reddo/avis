@@ -8,7 +8,8 @@ namespace MainService.Profiles
     {
         public SongProfile()
         {
-            CreateMap<SongCreateDto, Song>();
+            CreateMap<SongCreateDto, Song>()
+                .ForMember(dest => dest.Thumbnail, src => src.Ignore());
 
             CreateMap<Song, SongReadDto>();
 

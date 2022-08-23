@@ -8,7 +8,8 @@ namespace MainService.Profiles
     {
         public CommentProfile()
         {
-            CreateMap<CommentCreateDto, Comment>();
+            CreateMap<CommentCreateDto, Comment>()
+                .ForMember(dest => dest.Media, src => src.Ignore());
 
             CreateMap<Comment, CommentReadDto>();
 

@@ -1,43 +1,42 @@
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+namespace MainService.Dtos;
 
-namespace MainService.Dtos
+public class PostCreateDto
 {
-    public class PostCreateDto
-    {
-        public string Content { get; set; } = null!;
+    public string Content { get; set; } = null!;
 
-        public List<string>? Images { get; set; } = null!;
+    public ICollection<IFormFile> Medias { get; set; } = null!;
 
-        [Url]
-        [AllowNull]
-        public string? Audios { get; set; } = null!;
+    public List<string>? HashTags { get; set; } = null!;
 
-        [Url]
-        [AllowNull]
-        public string? Videos { get; set; } = null!;
+    public DateTime PublishedAt { get; set; }
 
-        public List<string>? Tags { get; set; } = null!;
+    public string UserId { get; set; } = null!;
+}
 
-        public string? UserId { get; set; } = null!;
-    }
+public class PostReadDto
+{
+    public string Id { get; set; } = null!;
 
-    public class PostReadDto
-    {
-        public string Id { get; set; } = null!;
-        public string Content { get; set; } = null!;
-        public List<string> Images { get; set; } = null!;
-        public string Audios { get; set; } = null!;
-        public string Videos { get; set; } = null!;
-        public int UpVote { get; set; }
-        public int DownVote { get; set; }
-        public List<string> Tags { get; set; } = null!;
-        public UserReadDto? User { get; set; } = null!;
-        public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
-    }
+    public DateTime CreatedAt { get; set; }
 
-    public class PostUpdateDto
-    {
-        public string? Content { get; set; } = null!;
-    }
+    public DateTime ModifiedAt { get; set; }
+
+    public string Content { get; set; } = null!;
+
+    public ICollection<MediaReadDto> Medias { get; set; } = null!;
+
+    public int Upvote { get; set; } = 0;
+
+    public int Downvote { get; set; } = 0;
+
+    public List<string> Tags { get; set; } = null!;
+
+    public UserReadDto? User { get; set; } = null!;
+
+    public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
+}
+
+public class PostUpdateDto
+{
+    public string? Content { get; set; } = null!;
 }

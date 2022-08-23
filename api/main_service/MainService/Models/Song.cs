@@ -1,30 +1,29 @@
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
-namespace MainService.Models
+namespace MainService.Models;
+
+/// <summary>
+/// Song model storing all information about a song
+/// </summary>
+public class Song : BaseModel
 {
-    /// <summary>
-    /// Song model storing all information about a song
-    /// </summary>
-    public class Song : BaseModel
-    {
-        [Required]
-        [StringLength(300)]
-        public string Name { get; set; } = null!;
+    [StringLength(300)]
+    public string Title { get; set; } = null!;
 
-        [Required]
-        public string Artist { get; set; } = null!;
+    [StringLength(300)]
+    public string Alias { get; set; } = null!;
 
-        public string Album { get; set; } = null!;
+    [Url]
+    public string Thumbnail { get; set; } = null!;
 
-        public string Genre { get; set; } = null!;
+    public string Lyric { get; set; } = null!;
 
-        [Required]
-        public List<string> Links { get; set; } = null!;
+    public string Description { get; set; } = null!;
 
-        [Url]
-        public string Thumbnail { get; set; } = null!;
+    public HashSet<string> Genres { get; set; } = null!;
 
-        public string Lyric { get; set; } = null!;
-    }
+    public ICollection<ObjectId> ArtistIds { get; set; } = null!;
+
+    public Url Url { get; set; } = null!;
 }

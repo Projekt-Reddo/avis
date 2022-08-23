@@ -1,36 +1,30 @@
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
 
-namespace MainService.Models
+namespace MainService.Models;
+
+/// <summary>
+/// User model storing all information about a user
+/// </summary>
+public class User : BaseModel
 {
-    /// <summary>
-    /// User model storing all information about a user
-    /// </summary>
-    public class User : BaseModel
-    {
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
-        public string Fullname { get; set; } = null!;
+    [StringLength(100, MinimumLength = 6)]
+    public string DisplayName { get; set; } = null!;
 
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
-        public string Password { get; set; } = null!;
+    [EmailAddress]
+    public string Email { get; set; } = null!;
 
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = null!;
+    [StringLength(100, MinimumLength = 6)]
+    public string Password { get; set; } = null!;
 
-        [Url]
-        public string Avatar { get; set; } = null!;
+    public string Role { get; set; } = null!;
 
-        public string Issuer { get; set; } = null!;
+    public string Status { get; set; } = null!;
 
-        [Required]
-        public string Role { get; set; } = null!;
+    [Url]
+    public string Avatar { get; set; } = null!;
 
-        public List<string> SearchHistories { get; set; } = null!;
+    public string Issuer { get; set; } = null!;
 
-        public List<string> FavoriteSongs { get; set; } = null!;
-
-        public List<string> FavoritePosts { get; set; } = null!;
-    }
+    public List<ObjectId>? FavoritePosts { get; set; }
 }
