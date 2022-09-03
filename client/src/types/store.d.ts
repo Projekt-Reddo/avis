@@ -4,3 +4,8 @@ type ActionType = {
 };
 
 type DispatchType = (args: ActionType) => ActionType;
+
+interface InitialStateForApi {
+    status: "idle" | "loading" | "error";
+    data: any;
+}

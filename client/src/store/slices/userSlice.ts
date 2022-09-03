@@ -1,14 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+const initialState: UserInitialState = {
+    status: "idle",
+    data: null,
+};
 
 const userSlice = createSlice({
     name: "user",
-    initialState: "sekai",
+    initialState,
     reducers: {
-        testUser: (state, action) => action.payload,
+        signup: () => initialState,
 
-        logout: (state) => "",
+        logout: (state) => ({
+            ...state,
+            data: null,
+        }),
     },
 });
 
-export const { testUser, logout } = userSlice.actions;
+export const signupAsync = createAsyncThunk("user/signup", async () => {
+    // Signup here
+});
+
+export const { signup, logout } = userSlice.actions;
 export default userSlice.reducer;

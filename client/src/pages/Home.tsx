@@ -14,7 +14,7 @@ const Home = () => {
                 paddingTop: 100,
             }}
         >
-            <div className="text-3xl font-bold underline">Hello, {user}</div>
+            <div className="text-3xl font-bold underline">Hello, Hosimati</div>
             <button
                 className="btn"
                 onClick={() => {
