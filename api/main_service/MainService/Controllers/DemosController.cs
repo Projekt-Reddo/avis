@@ -51,13 +51,13 @@ namespace MainService.Controllers
             return Ok();
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> Get(string id)
-        {
-            var rs = await _s3Service.DownloadFileAsync(S3Config.BUCKET_NAME, null, "88703952_p0.png");
+        // [HttpGet("{id}")]
+        // public async Task<ActionResult> Get(string id)
+        // {
+        //     var rs = await _s3Service.DownloadFileAsync(S3Config.BUCKET_NAME, null, "88703952_p0.png");
 
-            return File(rs!, "image/png");
-        }
+        //     return File(rs!, "image/png");
+        // }
 
         [HttpGet("/getPosts")]
         public async Task<IActionResult> GetPosts()

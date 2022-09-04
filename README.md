@@ -22,6 +22,11 @@ cd api/main_service
 dotnet restore
 ```
 
+- Set connection string
+```
+dotnet user-secrets set "MongoDbSetting:ConnectionString" "<Ask back-end leader>"
+```
+
 _If there is an error about not found **Dotnet** you can read Dotnet install guide at the Q&A part_
 
 ### 1.3 Hum Api - FastAPI

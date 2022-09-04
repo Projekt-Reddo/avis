@@ -11,7 +11,7 @@ public class Report : BaseModel
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; } = null!;
 
-    public User? User { get; set; } = null!;
+    public Account? User { get; set; } = null!;
 
     public string Content { get; set; } = null!;
 
