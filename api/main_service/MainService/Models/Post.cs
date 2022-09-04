@@ -11,7 +11,7 @@ public class Post : BaseModel
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; } = null!;
 
-    public User? User { get; set; } = null!; // Post user
+    public Account? User { get; set; } = null!; // Post user
 
     public string Content { get; set; } = null!;
 
@@ -30,4 +30,6 @@ public class Post : BaseModel
     public ICollection<string> HashtagsNormalized { get; set; } = null!;
 
     public ICollection<ObjectId>? Comments { get; set; } = null!; // This post's comments id
+
+    public bool IsDeleted { get; set; } = false;
 }

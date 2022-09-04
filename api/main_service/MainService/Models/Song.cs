@@ -23,7 +23,9 @@ public class Song : BaseModel
 
     public HashSet<string> Genres { get; set; } = null!;
 
+    public Url Url { get; set; } = null!;
+
     public ICollection<ObjectId> ArtistIds { get; set; } = null!;
 
-    public Url Url { get; set; } = null!;
+    public bool IsDeleted { get; set; } = false;
 }

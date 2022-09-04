@@ -25,7 +25,9 @@ public class CommentReadDto
 
     public MediaReadDto Media { get; set; } = null!;
 
-    public UserReadDto? User { get; set; } = null!;
+    public AccountReadDto? User { get; set; } = null!;
+
+    public bool IsDeleted { get; set; } = false;
 }
 
 public class CommentUpdateDto
