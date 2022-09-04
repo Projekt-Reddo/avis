@@ -19,4 +19,9 @@ public static class Constants
         public const string MAIL_FORGOT_PASSWORD = "mail/forgotPassword";
         public const string MAIL_VERIFY = "mail/verify";
     }
+
+    public static class PollyHttpClient
+    {
+        public const string CLIENT_NAME = "client";
+    }
 }
