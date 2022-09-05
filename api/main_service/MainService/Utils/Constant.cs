@@ -5,9 +5,7 @@ public static class Constants
     /// </summary>
     public static class S3Config
     {
-        public const string RESOURCES_BUCKET_NAME = "resources-bucket";
-        public const string SONGS_BUCKET_NAME = "songs-bucket";
-        public const string SONGS_FOLDER = "songs";
+        public const string SONGS_FOLDER = "raw";
         public const string IMAGES_FOLDER = "images";
         public const string VIDEOS_FOLDER = "videos";
     }

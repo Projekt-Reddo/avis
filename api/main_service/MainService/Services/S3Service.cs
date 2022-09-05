@@ -99,7 +99,7 @@ namespace MainService.Services
             // Return the result
             if (result.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
-                return (true, $"https://{bucketName}.s3.amazonaws.com/{key}");
+                return (true, $"https://s3.amazonaws.com/{bucketName}/{key}");
             }
 
             return (false, String.Empty);
