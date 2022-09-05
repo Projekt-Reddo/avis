@@ -22,10 +22,7 @@ cd api/main_service
 dotnet restore
 ```
 
-- Set connection string
-```
-dotnet user-secrets set "MongoDbSetting:ConnectionString" "<Ask back-end leader>"
-```
+- After restored, ask your team lead to get dev setting file and add it to `api\main_service\MainService\`
 
 _If there is an error about not found **Dotnet** you can read Dotnet install guide at the Q&A part_
 
