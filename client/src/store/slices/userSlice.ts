@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const initialState: UserInitialState = {
+const initialState: AsyncReducerInitialState = {
     status: "idle",
     data: null,
 };

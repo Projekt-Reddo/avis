@@ -5,7 +5,11 @@ type ActionType = {
 
 type DispatchType = (args: ActionType) => ActionType;
 
-interface InitialStateForApi {
+interface AsyncReducerInitialState {
     status: "idle" | "loading" | "error";
     data: any;
+}
+
+interface RootState {
+    [key: string]: AsyncReducerInitialState;
 }

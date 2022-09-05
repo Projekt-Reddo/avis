@@ -7,12 +7,13 @@ const instance = axios.create({
 instance.defaults.withCredentials = true;
 
 instance.interceptors.request.use(
-    function(config: any) {
+    function (config: any) {
         // var token = localStorage.getItem("accessToken");
         // config.headers.Authorization = token ? `Bearer ${token}` : "";
-        // return config;
+
+        return config;
     },
-    function(error) {
+    function (error) {
         return Promise.reject(error);
     }
 );
