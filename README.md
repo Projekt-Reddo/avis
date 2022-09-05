@@ -22,6 +22,8 @@ cd api/main_service
 dotnet restore
 ```
 
+- After restored, ask your team lead to get dev setting file and add it to `api\main_service\MainService\`
+
 _If there is an error about not found **Dotnet** you can read Dotnet install guide at the Q&A part_
 
 ### 1.3 Hum Api - FastAPI

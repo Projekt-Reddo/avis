@@ -11,7 +11,7 @@ public class Comment : BaseModel
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; } = null!;
 
-    public User? User { get; set; } = null!; // Comment user
+    public Account? User { get; set; } = null!; // Comment user
 
     public string Content { get; set; } = null!;
 
@@ -22,4 +22,6 @@ public class Comment : BaseModel
     public ICollection<ObjectId> Comments { get; set; } = null!;
 
     public Media Media { get; set; } = null!;
+
+    public bool IsDeleted { get; set; } = false;
 }

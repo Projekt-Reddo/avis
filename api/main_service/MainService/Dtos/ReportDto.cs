@@ -19,7 +19,7 @@ public class ReportReadDto
 
     public DateTime ModifiedAt { get; set; }
 
-    public UserCreateDto User { get; set; } = null!;
+    public AccountCreateDto User { get; set; } = null!;
 
     public string Content { get; set; } = null!;
 

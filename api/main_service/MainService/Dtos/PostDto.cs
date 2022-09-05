@@ -31,9 +31,11 @@ public class PostReadDto
 
     public List<string> Tags { get; set; } = null!;
 
-    public UserReadDto? User { get; set; } = null!;
+    public AccountReadDto? User { get; set; } = null!;
 
     public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
+
+    public bool IsDeleted { get; set; } = false;
 }
 
 public class PostUpdateDto

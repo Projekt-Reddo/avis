@@ -25,6 +25,8 @@ public class SongReadDto
     public ICollection<ArtistReadDto> Artist { get; set; } = null!;
 
     public UrlReadDto Url { get; set; } = null!;
+
+    public bool IsDeleted { get; set; } = false;
 }
 
 public class SongCreateDto
