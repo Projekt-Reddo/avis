@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IonInput } from "@ionic/react";
 import "./SignUpForm.css";
-import { ChangeHandler } from "react-hook-form";
+import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 
 interface InputProps {
     type?: TextFieldTypes;
@@ -10,6 +10,7 @@ interface InputProps {
     className?: string;
     style?: {};
     register: InputRegister;
+    error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
 }
 
 const Input: React.FunctionComponent<InputProps> = ({
@@ -19,6 +20,7 @@ const Input: React.FunctionComponent<InputProps> = ({
     style = {},
     type = "text",
     register,
+    error,
 }) => {
     return (
         <div className={`${className}`} style={style}>
@@ -30,6 +32,9 @@ const Input: React.FunctionComponent<InputProps> = ({
                 id={register.name}
                 {...register}
             ></IonInput>
+            {error?.message && (
+                <span className="text-red-600">{`${error.message}`}</span>
+            )}
         </div>
     );
 };

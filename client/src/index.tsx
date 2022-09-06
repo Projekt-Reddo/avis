@@ -4,6 +4,9 @@ import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
+// Initialize firebase
+import "utils/firebase-config";
+
 import { Provider } from "react-redux";
 import store from "./store";
 
