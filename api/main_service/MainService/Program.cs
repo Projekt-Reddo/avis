@@ -19,6 +19,7 @@ var mongoDbSetting = new MongoDbSetting
 builder.Services.AddSingleton(mongoDbSetting);
 builder.Services.AddSingleton<IMongoContext, MongoContext>();
 // Project Services
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<ICommentRepo, CommentRepo>();
 builder.Services.AddScoped<ISongRepo, SongRepo>();

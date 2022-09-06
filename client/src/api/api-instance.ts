@@ -1,15 +1,19 @@
 import axios from "axios";
+import { getCurrentUserAccessToken } from "./firebase-api";
 
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_BASE_URL || "",
+    baseURL: process.env.VITE_MAIN_SERVICE_API || "",
 });
 
 instance.defaults.withCredentials = true;
 
 instance.interceptors.request.use(
-    function (config: any) {
-        // var token = localStorage.getItem("accessToken");
-        // config.headers.Authorization = token ? `Bearer ${token}` : "";
+    async function (config: any) {
+        // Get token from firebase
+        var token = await getCurrentUserAccessToken();
+
+        // Set token to authorize header
+        config.headers.Authorization = token ? `Bearer ${token}` : "";
 
         return config;
     },

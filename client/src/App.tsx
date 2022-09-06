@@ -28,21 +28,26 @@ import { QueryClientProvider, QueryClient } from "react-query";
 
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
+import { useUserChangeTracking } from "utils/firebase-hooks";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-    <QueryClientProvider client={new QueryClient()}>
-        <IonApp>
-            <IonReactRouter>
-                <Nav />
+const App: React.FC = () => {
+    useUserChangeTracking();
 
-                <IonRouterOutlet>
-                    <MainRoute />
-                </IonRouterOutlet>
-            </IonReactRouter>
-        </IonApp>
-    </QueryClientProvider>
-);
+    return (
+        <QueryClientProvider client={new QueryClient()}>
+            <IonApp>
+                <IonReactRouter>
+                    <Nav />
+
+                    <IonRouterOutlet>
+                        <MainRoute />
+                    </IonRouterOutlet>
+                </IonReactRouter>
+            </IonApp>
+        </QueryClientProvider>
+    );
+};
 
 export default App;

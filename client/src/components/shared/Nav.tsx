@@ -33,11 +33,13 @@ const Nav = () => {
             </div>
 
             <div className="font-bold">
-                <Link to="/login">
-                    <span className="font-bold">
-                        <Icon icon="right-to-bracket" /> Login / Register
-                    </span>
-                </Link>
+                <span className="font-bold">
+                    <Icon icon="right-to-bracket" />
+                    &nbsp;&nbsp;
+                    <Link to="/login">Login</Link>
+                    &nbsp;&nbsp;/&nbsp;&nbsp;
+                    <Link to="/signup">Register</Link>
+                </span>
             </div>
         </nav>
     );
