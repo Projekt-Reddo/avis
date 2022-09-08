@@ -11,6 +11,7 @@ public class Post : BaseModel
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; } = null!;
 
+    [BsonIgnoreIfNull]
     public Account? User { get; set; } = null!; // Post user
 
     public string Content { get; set; } = null!;

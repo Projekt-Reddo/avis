@@ -1,5 +1,8 @@
 using Amazon.S3;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MainService.Data;
+using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
 using Polly;
@@ -22,6 +25,8 @@ builder.Services.AddSingleton<IMongoContext, MongoContext>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<ICommentRepo, CommentRepo>();
 builder.Services.AddScoped<ISongRepo, SongRepo>();
+// Logics
+builder.Services.AddScoped<ISongLogic, SongLogic>();
 // Other Services
 builder.Services.AddScoped<IHumSvcClient, HumSvcClient>();
 // AWS S3 config
@@ -39,6 +44,9 @@ builder.Services.AddHttpClient(PollyHttpClient.CLIENT_NAME, client => { })
     );
 // CORS config
 builder.Services.AddCors();
+// Hangfire
+builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
+builder.Services.AddHangfireServer();
 // Auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
@@ -56,6 +64,8 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:Allowe
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowAnyOrigin());
+
+app.UseHangfireDashboard();
 
 app.UseHttpsRedirection();
 
