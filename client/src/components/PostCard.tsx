@@ -8,7 +8,7 @@ import axios from "axios";
 // Components
 import Icon from "./shared/Icon";
 // Constants
-import { API } from "../utils/constants";
+import { MAIN_SERVICE_API } from "../utils/constants";
 
 import Ayame from "../static/Ayame.png";
 
@@ -32,7 +32,7 @@ const PostCard: React.FC<PostCardProps> = () => {
     const createPostMutation = useMutation(async (newPost: Post) => {
         const { data } = await axios({
             method: "post",
-            url: `${API}/api/Post`,
+            url: `${MAIN_SERVICE_API}/api/Post`,
             data: newPost,
         });
     });

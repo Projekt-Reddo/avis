@@ -66,9 +66,9 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                     type="password"
                     error={errors.password}
                 ></Input>
-                <IonButton className="signUpButtonIon mt-5" type="submit">
+                <button className="signUpButtonIon mt-5" type="submit">
                     Sign Up
-                </IonButton>
+                </button>
             </form>
         </div>
     );

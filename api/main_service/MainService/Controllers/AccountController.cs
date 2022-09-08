@@ -28,7 +28,7 @@ namespace MainService.Controllers
         {
             var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Email", newAccount.Email));
 
-            if (accountFromRepo is null)
+            if (accountFromRepo is not null)
             {
                 return BadRequest(new ResponseDto(400, "Email duplicated!"));
             }

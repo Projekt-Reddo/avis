@@ -13,3 +13,9 @@ interface UserSignup {
     email: string;
     password: string;
 }
+
+interface UserCreateDto {
+    name: string;
+    email: string;
+    uid: string;
+}

@@ -1,8 +1,9 @@
 import axios from "axios";
+import { MAIN_SERVICE_API } from "utils/constants";
 import { getCurrentUserAccessToken } from "./firebase-api";
 
 const instance = axios.create({
-    baseURL: process.env.VITE_MAIN_SERVICE_API || "",
+    baseURL: MAIN_SERVICE_API || "",
 });
 
 instance.defaults.withCredentials = true;
