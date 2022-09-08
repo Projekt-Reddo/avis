@@ -9,5 +9,7 @@ public class UrlProfile : Profile
     public UrlProfile()
     {
         CreateMap<Url, UrlReadDto>();
+
+        CreateMap<UrlCreateDto, Url>();
     }
 }

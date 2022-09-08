@@ -82,9 +82,9 @@ namespace MainService.Controllers
         }
 
         [HttpPost("/addPost")]
-        public async Task<IActionResult> AddPost([FromBody] PostCreateDto postDto)
+        public async Task<ActionResult<PaginationResDto<PostReadDto>>> AddPost([FromBody] PaginationReqDto<PostCreateDto> paginationReqDto)
         {
-            var post = _mapper.Map<Post>(postDto);
+            // var post = _mapper.Map<Post>(postDto);
             // var rs = await _postRepo.Add(post);
 
             return Ok("OK");

@@ -5,7 +5,7 @@ public static class Constants
     /// </summary>
     public static class S3Config
     {
-        public const string SONGS_FOLDER = "raw";
+        public const string SONGS_FOLDER = "raw-demo";
         public const string IMAGES_FOLDER = "images";
         public const string VIDEOS_FOLDER = "videos";
     }

@@ -1,7 +1,11 @@
 using Amazon.S3;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MainService.Data;
+using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
+using MainService.Utils;
 using Polly;
 using Polly.Extensions.Http;
 using static Constants;
@@ -23,6 +27,8 @@ builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<ICommentRepo, CommentRepo>();
 builder.Services.AddScoped<ISongRepo, SongRepo>();
+// Logics
+builder.Services.AddScoped<ISongLogic, SongLogic>();
 // Other Services
 builder.Services.AddScoped<IHumSvcClient, HumSvcClient>();
 // AWS S3 config
@@ -40,9 +46,15 @@ builder.Services.AddHttpClient(PollyHttpClient.CLIENT_NAME, client => { })
     );
 // CORS config
 builder.Services.AddCors();
+// Hangfire
+// builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
+// builder.Services.AddHangfireServer();
 // Auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(opt =>
+{
+    opt.InvalidModelStateResponseFactory = ModelStateValidator.ValidateModelState;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -57,6 +69,8 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:Allowe
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowAnyOrigin());
+
+// app.UseHangfireDashboard();
 
 app.UseHttpsRedirection();
 
