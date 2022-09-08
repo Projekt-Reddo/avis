@@ -68,11 +68,15 @@ app.UseSwaggerUI();
 app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>())
                       .AllowAnyHeader()
                       .AllowAnyMethod()
-                      .AllowAnyOrigin());
+                      .AllowCredentials());
 
+<<<<<<< Updated upstream
 // app.UseHangfireDashboard();
 
 app.UseHttpsRedirection();
+=======
+/*app.UseHttpsRedirection();*/
+>>>>>>> Stashed changes
 
 app.UseAuthorization();
 

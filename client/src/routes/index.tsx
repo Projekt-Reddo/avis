@@ -1,12 +1,13 @@
 import { Route, Redirect } from "react-router-dom";
 
 import Home from "../pages/Home";
-import Login from "../pages/Login";
+import Login from "pages/auth/Login";
 import Post from "../pages/Post";
 import Search from "../pages/Search";
-import Signup from "../pages/Signup";
+import Signup from "pages/auth/Signup";
 import Song from "../pages/Song";
 import Discover from "../pages/Discover";
+import VerifyEmail from "pages/auth/VerifyEmail";
 
 import { routes } from "../utils/constants";
 
@@ -20,6 +21,10 @@ const MainRoute = () => {
 
                 <Route path="/signup">
                     <Signup />
+                </Route>
+
+                <Route path="/verify">
+                    <VerifyEmail />
                 </Route>
             </>
 
