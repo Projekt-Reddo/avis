@@ -70,13 +70,7 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:Allowe
                       .AllowAnyMethod()
                       .AllowCredentials());
 
-<<<<<<< Updated upstream
-// app.UseHangfireDashboard();
-
-app.UseHttpsRedirection();
-=======
 /*app.UseHttpsRedirection();*/
->>>>>>> Stashed changes
 
 app.UseAuthorization();
 
