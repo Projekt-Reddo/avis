@@ -17,4 +17,14 @@ public static class ResponseMessage
     public const string NO_FILE_UPLOAD = "No upload file";
     public const string WRONG_FILE_EXTENSION = "Not support file extension(s)";
     public const string FAKE_FILE_EXTENSION = "Not support FAKE extension";
+
+
+    // Genre msg
+    public const string GENRE_EXISTED = "Genre is already existed";
+    public const string GENRE_CREATE_SUCCESS = "Create new genres successfully";
+    public const string GENRE_CREATE_FAIL = "Fail to create new genres";
+    public const string GENRE_CREATE_SUCESS_AND_FAIL = "New genres were created successfully but there are some genres failed to insert";
+    public const string GENRE_DELETE_FAIL = "Fail to delete genres";
+    public const string GENRE_DELETE_SUCCESS = "Delete genre successfully";
+    public const string GENRE_DELETE_SUCCESS_AND_FAIL = "Delete genre successfully but there are some genres that failed to deleted";
 }
