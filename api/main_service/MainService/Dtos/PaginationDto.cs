@@ -14,4 +14,14 @@ public class PaginationResDto<T>
     public int Total { get; set; } = 0;
 
     public IEnumerable<T> Payload { get; set; } = default(IEnumerable<T>)!;
+
+    public PaginationResDto()
+    {
+    }
+
+    public PaginationResDto(int total, IEnumerable<T> payload)
+    {
+        this.Total = total;
+        this.Payload = payload;
+    }
 }
