@@ -11,6 +11,7 @@ from hum2song.models.myfaiss import (
 )
 from app.helpers.preprocess_helper import PreprocessHelper
 from app.core.log_config import logger
+from app.core.config import config as app_config
 
 # region AWS S3
 
@@ -39,8 +40,8 @@ def __download_checkpoint(checkpoint_name: str) -> bool:
     Download resnet checkpoint
     """
     rs = s3_service.download_file(
-        bucket_name="awss3demo-bucket",
-        prefix="hum2song_config",
+        bucket_name=app_config.ml_bucket,
+        prefix=app_config.ckpt_folder,
         file_name=checkpoint_name,
         target_dir="hum2song/checkpoints")
     return rs
