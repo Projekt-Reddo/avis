@@ -11,23 +11,20 @@ class MyFaiss():
     def __init__(self) -> None:
         """
         Initialize the class
-        
         """
         self.path = config.checkpoints_path
         self.index = faiss.IndexFlatL2(512)
         self.index2id = {"-1": ""}
 
     def dump_index(self):
-        """ 
+        """
         Save faiss index to file
-        
         """
         faiss.write_index(self.index, f"{self.path}/index.index")
-    
+
     def load_index(self):
         """
-        Load faiss index from file 
-
+        Load faiss index from file
         """
         self.index = faiss.read_index(f"{self.path}/index.index")
         self.get_index2id_dict()
@@ -42,16 +39,15 @@ class MyFaiss():
     def get_index2id_dict(self):
         """
         Load index2id from file
-        
         """
         with open(f"{self.path}/index2id.pkl", 'rb') as f:
             self.index2id = pickle.load(f)
         return self.index2id
-        
+
 
     def get_vector2index(self, model, root_song, input_shape):
         """
-        Get faiss index and vecto2id from raw file 
+        Get faiss index and vecto2id from raw file
 
         Args:
             model: model for creating embedding
@@ -66,7 +62,7 @@ class MyFaiss():
             image = load_image(path_song, input_shape=input_shape)
             self.index.add(get_feature(model, image))
             self.index2id[str(id)] = name_song.split('.')[0]
-        
+
         # self.save_index()
         self.dump_index2id_dict()
         self.dump_index()
