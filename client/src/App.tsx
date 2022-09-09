@@ -1,5 +1,4 @@
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
+import { IonRouterOutlet, setupIonicReact } from "@ionic/react";
 
 import "./theme/index.css";
 
@@ -24,25 +23,26 @@ import "./theme/variables.css";
 
 import "./theme/global.css";
 
-import { QueryClientProvider, QueryClient } from "react-query";
-
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
+import { useFirebaseUserChangeTracking } from "utils/firebase-hooks";
+import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-    <QueryClientProvider client={new QueryClient()}>
-        <IonApp>
-            <IonReactRouter>
-                <Nav />
+const App: React.FC = () => {
+    useFirebaseUserChangeTracking();
+    useUserChangeTracking();
 
-                <IonRouterOutlet>
-                    <MainRoute />
-                </IonRouterOutlet>
-            </IonReactRouter>
-        </IonApp>
-    </QueryClientProvider>
-);
+    return (
+        <>
+            <Nav />
+
+            <IonRouterOutlet>
+                <MainRoute />
+            </IonRouterOutlet>
+        </>
+    );
+};
 
 export default App;

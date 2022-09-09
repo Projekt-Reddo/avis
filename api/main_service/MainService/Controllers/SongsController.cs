@@ -1,5 +1,4 @@
 using AutoMapper;
-// using Hangfire;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Logic;
@@ -9,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using static Constants;
+using MainService.Utils;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MainService.Controllers;
 
@@ -40,44 +41,30 @@ public class SongsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> CreateSong([FromForm] SongCreateDto songCreateDto)
     {
+        (var isMp3File, var songCheckMessage) = FileExtension.CheckMp3Extension(songCreateDto.File);
+        if (isMp3File is false)
+        {
+            return BadRequest(new ResponseDto(400, $"Song file: {songCheckMessage}"));
+        }
+
+        (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(songCreateDto.Thumbnail);
+        if (isImageFile is false)
+        {
+            return BadRequest(new ResponseDto(400, $"Thumbnail: {imageCheckMessage}"));
+        }
+
         var song = _mapper.Map<Song>(songCreateDto);
         await _songRepo.AddOneAsync(song);
 
-        (var songUploadStatus, var songUrl) = await _s3Service.UploadFileAsync(
-                _configuration.GetValue<string>("S3:SongsBucket"),
-                S3Config.SONGS_FOLDER,
-                song.Id,
-                songCreateDto.File.OpenReadStream(),
-                songCreateDto.File.ContentType,
-                null!
-            );
-
-        song.Url = new Url();
-        song.Url.Internal = songUrl;
-
-        if (songCreateDto.Thumbnail.Length > 0)
+        var songUploadStatus = await _songLogic.UploadNewSong(song, songCreateDto.File.OpenReadStream(), songCreateDto.File.ContentType);
+        await _songLogic.UploadNewThumbnail(song, songCreateDto.Thumbnail.OpenReadStream(), songCreateDto.Thumbnail.ContentType);
+        if (songUploadStatus is false)
         {
-            (var thumbnailUploadStatus, var thumbnailUrl) = await _s3Service.UploadFileAsync(
-                _configuration.GetValue<string>("S3:ResourcesBucket"),
-                S3Config.IMAGES_FOLDER,
-                song.Id,
-                songCreateDto.Thumbnail.OpenReadStream(),
-                songCreateDto.Thumbnail.ContentType,
-                null!
-            );
-
-            song.Thumbnail = thumbnailUrl;
-        }
-        else
-        {
-            song.Thumbnail = "default";
+            return BadRequest(new ResponseDto(400, ResponseMessage.UPLOAD_SONG_FILE_FAIL));
         }
 
-        await _songRepo.UpdateOneAsync(song.Id, song);
-
-        return Ok(new ResponseDto(200, "Song created"));
+        return Ok(new ResponseDto(200, ResponseMessage.UPLOAD_SONG_SUCCESS));
     }
-
 
     /// <summary>
     /// Get all songs in database with filter and pagination

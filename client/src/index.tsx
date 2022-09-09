@@ -1,11 +1,17 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
+import { IonApp } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+import { QueryClientProvider, QueryClient } from "react-query";
+
+// Initialize firebase
+import "utils/firebase-config";
+
 import { Provider } from "react-redux";
-import store from "./store/store";
+import store from "./store";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -13,7 +19,13 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <Provider store={store}>
-        <App />
+        <QueryClientProvider client={new QueryClient()}>
+            <IonApp>
+                <IonReactRouter>
+                    <App />
+                </IonReactRouter>
+            </IonApp>
+        </QueryClientProvider>
     </Provider>
 );
 

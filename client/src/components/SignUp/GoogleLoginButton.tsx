@@ -1,41 +1,27 @@
-import { GoogleLogin } from "react-google-login";
-import IconBrand from "./IconBrand";
+import Icon from "components/shared/Icon";
+import { loginWithGoogleAsync } from "store/slices/userSlice";
+import { useAppDispatch } from "utils/react-redux-hooks";
 
-interface GoogleLoginButtonProps {
-  googleResponse?: () => void;
-}
-const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
-  googleResponse,
-}) => {
-  const styles = { backgroundColor: "#fff" };
-  var GOOGLE_CLIENT_ID = ":";
+interface GoogleLoginButtonProps {}
 
-  return (
-    <>
-      <GoogleLogin
-        clientId={GOOGLE_CLIENT_ID}
-        buttonText="Google Login"
-        render={(renderProps: any) => (
-          <button
-            className="rounded-full w-max border boxShadow"
-            onClick={renderProps.onClick}
-            style={styles}
-          >
-            {/* <div className="google-icon-wrapper rounded-full"> */}
-            <IconBrand
-              className="text-3xl p-1"
-              icon={["fab", "google"]}
-              style={{ color: "pink" }}
-            ></IconBrand>
-            {/* </div> */}
-          </button>
-        )}
-        onSuccess={googleResponse}
-        onFailure={googleResponse}
-        style={styles}
-      />
-    </>
-  );
+const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = () => {
+    const dispatch = useAppDispatch();
+
+    return (
+        <button
+            className="mt-3 btn-shadow rounded-full p-2"
+            onClick={() => {
+                dispatch(loginWithGoogleAsync());
+            }}
+        >
+            <Icon
+                icon={["fab", "google"]}
+                style={{
+                    color: "#14b8a6",
+                }}
+            />
+        </button>
+    );
 };
 
 export default GoogleLoginButton;

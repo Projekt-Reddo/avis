@@ -4,11 +4,9 @@ namespace MainService.Dtos
     {
         public string Email { get; set; } = null!;
 
-        public string Password { get; set; } = null!;
+        public string Uid { get; set; } = null!;
 
         public string Name { get; set; } = null!;
-
-        public string Avatar { get; set; } = null!;
     }
 
     public class AccountReadDto
@@ -27,7 +25,5 @@ namespace MainService.Dtos
     public class AccountUpdateDto
     {
         public string? Name { get; set; } = null!;
-
-        public string? Password { get; set; } = null!;
     }
 }

@@ -9,3 +9,7 @@
 .padding-nav {
     padding-top: calc(var(--nav-height) / 2);
 }
+
+.min-height-nav {
+    min-height: calc(100vh - var(--nav-height));
+}

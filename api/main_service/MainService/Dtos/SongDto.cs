@@ -43,6 +43,10 @@ public class SongCreateDto
 
     public HashSet<string> Genres { get; set; } = null!;
 
+    public UrlCreateDto Url { get; set; } = null!;
+
+    public ICollection<string> ArtistIds { get; set; } = null!;
+
     public IFormFile File { get; set; } = null!;
 }
 

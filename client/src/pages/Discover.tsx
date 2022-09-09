@@ -11,13 +11,13 @@ import TrendingCard from "../components/TrendingCard";
 import SearchBox from "../components/SearchBox";
 
 // Constants
-import { API } from "../utils/constants";
+import { MAIN_SERVICE_API } from "../utils/constants";
 
 const Discover = () => {
     const { isLoading, isError, data, refetch } = useQuery(
         "boards",
         async () => {
-            const { data } = await axios.get(`${API}/api/post`);
+            const { data } = await axios.get(`${MAIN_SERVICE_API}/api/post`);
             return data;
         },
         {

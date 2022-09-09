@@ -14,8 +14,7 @@ public class Account : BaseModel
     [EmailAddress]
     public string Email { get; set; } = null!;
 
-    [StringLength(100, MinimumLength = 6)]
-    public string Password { get; set; } = null!;
+    public string Uid { get; set; } = null!;
 
     public string Role { get; set; } = null!;
 

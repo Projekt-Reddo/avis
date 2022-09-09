@@ -18,6 +18,5 @@
         "baseUrl": "src",
         "types": ["vite/client"]
     },
-    "include": ["src"],
-    "extends": "./tsconfig.paths.json"
+    "include": ["src"]
 }
