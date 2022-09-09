@@ -9,7 +9,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using static Constants;
 using MainService.Utils;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MainService.Controllers;
 
