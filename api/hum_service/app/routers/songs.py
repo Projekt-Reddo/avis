@@ -36,7 +36,7 @@ async def hum_detect(
 
     spec = preprocessHelper.preprocess(hum_file)
     result_ = faiss_index.predict(model, spec)
-    return {"result": result_}
+    return {"result": preprocessHelper.postprocess_results(result_)}
 
 
 @router.post("/down", response_class=JSONResponse)

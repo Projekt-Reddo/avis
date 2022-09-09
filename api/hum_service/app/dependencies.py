@@ -41,7 +41,7 @@ def __download_checkpoint(checkpoint_name: str) -> bool:
     """
     rs = s3_service.download_file(
         bucket_name=app_config.ml_bucket,
-        prefix=app_config.ckpt_folder,
+        prefix=app_config.faiss_folder if "index" in checkpoint_name else app_config.ckpt_folder,
         file_name=checkpoint_name,
         target_dir="hum2song/checkpoints")
     return rs
@@ -59,6 +59,7 @@ def auto_init_checkpoint():
         if (__is_file_exist(
             os.path.join(config.checkpoints_path, file)
         ) is False):
+            print(f"Downloading {file}")
             __download_checkpoint(file)
 
 
