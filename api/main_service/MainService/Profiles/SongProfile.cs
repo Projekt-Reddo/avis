@@ -14,6 +14,8 @@ namespace MainService.Profiles
             CreateMap<Song, SongReadDto>();
 
             CreateMap<SongUpdateDto, Song>();
+
+            CreateMap<Song, SongManageListDto>();
         }
     }
 }

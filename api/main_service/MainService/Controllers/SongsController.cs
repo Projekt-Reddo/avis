@@ -6,6 +6,8 @@ using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using static Constants;
 
 namespace MainService.Controllers;
@@ -74,5 +76,49 @@ public class SongsController : ControllerBase
         await _songRepo.UpdateOneAsync(song.Id, song);
 
         return Ok(new ResponseDto(200, "Song created"));
+    }
+
+
+    /// <summary>
+    /// Get all songs in database with filter and pagination
+    /// </summary>
+    /// <param name="pagination">Pagination metrics and Search filters</param>
+    /// <returns>200 / 400 / 404</returns>
+    [HttpPost("filter")]
+    public async Task<ActionResult<PaginationResDto<IEnumerable<SongManageListDto>>>> ViewSong(PaginationReqDto<SongFilterDto> pagination)
+    {
+        // Create Song Filter
+        var songFilter = _songLogic.SongFilter(pagination);
+
+        // Pagination formula
+        var skipPage = (pagination.Page - 1) * pagination.Size;
+
+        // Config to get Song's Artists
+        BsonDocument lookup = new BsonDocument{
+                { "from", "artist" },
+                { "localField", "ArtistIds" },
+                { "foreignField", "_id" },
+                { "as", "Artists" }
+            };
+
+        // Config to specify needed fields
+        BsonDocument project = new BsonDocument{
+                { "_id", 1 },
+                { "CreatedAt", 1 },
+                { "ModifiedAt", 1 },
+                { "Title", 1 },
+                { "Thumbnail", 1 },
+                { "Artists",  new BsonDocument{
+                    {"_id" , 1},
+                    {"Name" , 1}
+                } },
+            };
+
+        // Get songs in database with filter and pagination
+        (var totalSong, var songsFromRepo) = await _songRepo.FindManyAsync(filter: songFilter, lookup: lookup, project: project, limit: pagination.Size, skip: skipPage);
+
+        var songs = _mapper.Map<IEnumerable<SongManageListDto>>(songsFromRepo);
+
+        return Ok(new PaginationResDto<SongManageListDto>((Int32)totalSong, songs));
     }
 }
