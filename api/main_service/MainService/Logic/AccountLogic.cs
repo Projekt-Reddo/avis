@@ -74,13 +74,14 @@ namespace MainService.Logic
 
             return accountFilter;
         }
-        public BsonDocument SortFilter(string Sort)
+
+        public BsonDocument SortFilter(string sortFilter)
         {
             string sortType = "";
 
             int adesc = 1;
 
-            switch (Sort)
+            switch (sortFilter)
             {
                 case Constants.UserSortFilterOption.NAME_DESC:
                     sortType = "Name";
