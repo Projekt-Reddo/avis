@@ -42,3 +42,10 @@ public class PostUpdateDto
 {
     public string? Content { get; set; } = null!;
 }
+
+public class PostReportDto
+{
+    public long ReportPost { get; set; }
+    
+    public long ReportedPost { get; set; }
+}
