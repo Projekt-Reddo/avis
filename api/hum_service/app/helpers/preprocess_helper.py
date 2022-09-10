@@ -52,3 +52,14 @@ class PreprocessHelper():
         pydub.AudioSegment.from_file(hum_file.file).export(self.wav, "wav")
         audio, _ = librosa.load(self.wav, sr=self.sampling_rate)
         return self.process(audio)
+
+    def postprocess_results(self, result):
+        """Postprocess result, only return id, suffix is removed,
+
+        Args:
+            result: list of result format id_xx_s
+        Returns:
+            result_processed: list of unique ids
+        """
+        result_ = [x.split("_")[0] for x in result]
+        return list(set(result_))
