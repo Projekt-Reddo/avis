@@ -1,5 +1,5 @@
 import React from "react";
-import signup_image from "static/dog_and_dog.jpg";
+import signup_image from "static/Flat_art_signup.jpg";
 import SignUpForm from "components/SignUp/SignUpForm";
 import "components/SignUp/SignUpForm.css";
 import GoogleLoginButton from "components/SignUp/GoogleLoginButton";

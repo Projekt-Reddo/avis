@@ -3,54 +3,55 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+    /* #region Project Custom color*/
 
-  /* #region Project Custom color*/
+    --body-bg-color: #fff;
 
-  --body-bg-color: #fff;
+    --nav-bg-color: #fff;
+    --nav-border-color: rgb(0 0 0 / 8%);
 
-  --nav-bg-color: #fff;
-  --nav-border-color: rgb(0 0 0 / 8%);
+    --text-primary-color: #373f41;
+    --text-secondary-color: #737b7d;
 
-  --text-primary-color: #373F41;
-  --text-secondary-color: #737B7D;
+    --element-shadow-color: rgba(0, 0, 0, 0.15);
 
-  --element-shadow-color: rgba(0, 0, 0, 0.15);
+    --post-bg-color: #fff;
+    --post-border-color: rgb(0 0 0 / 8%);
+    --post-bg-hover-color: #f8f9fa;
 
-  --post-bg-color: #fff;
-  --post-border-color: rgb(0 0 0 / 8%);
-  --post-bg-hover-color: #F8F9FA;
+    /* Theme color */
 
-  /* Theme color */
+    --teal-darker-color: #0f766e;
+    --teal-general-color: #14b8a6;
+    --teal-lighter-color: #5eead4;
 
-  --teal-darker-color: #0f766e;
-  --teal-general-color: #14b8a6;
-  --teal-lighter-color: #5eead4;
+    /* Support color */
 
-  /* Support color */
+    --amber-darker-color: #b45309;
+    --amber-general-color: #f59e0b;
+    --amber-lighter-color: #fbbf24;
 
-  --amber-darker-color: #b45309;
-  --amber-general-color: #f59e0b;
-  --amber-lighter-color: #fbbf24;
+    --red-darker-color: #b91c1c;
+    --red-general-color: #ef4444;
+    --red-lighter-color: #f87171;
 
-  --red-darker-color: #b91c1c;
-  --red-general-color: #ef4444;
-  --red-lighter-color: #f87171;
+    --blue-darker-color: #0369a1;
+    --blue-general-color: #0ea5e9;
+    --blue-lighter-color: #38bdf8;
 
-  --blue-darker-color: #0369a1;
-  --blue-general-color: #0ea5e9;
-  --blue-lighter-color: #38bdf8;
+    --white-color: #fff;
+    --black-color: #000;
 
-  /* #endregion */
-
+    /* #endregion */
 }
 
 /* @media (prefers-color-scheme: dark) { */
-  /*
+/*
    * Dark Colors
    * -------------------------------------------
    */
 
-  /* body {
+/* body {
     
   }
 

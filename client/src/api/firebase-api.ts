@@ -2,6 +2,7 @@ import {
     createUserWithEmailAndPassword,
     getAuth,
     GoogleAuthProvider,
+    sendEmailVerification,
     signInWithPopup,
 } from "firebase/auth";
 import { auth } from "utils/firebase-config";
@@ -10,6 +11,10 @@ export const userSignupFirebase = async ({ email, password }: UserSignup) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
 
     return res;
+};
+
+export const userEmailVerify = async () => {
+    if (auth.currentUser) await sendEmailVerification(auth.currentUser);
 };
 
 export const getCurrentUserAccessToken = async () => {
