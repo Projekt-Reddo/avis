@@ -11,6 +11,9 @@ namespace MainService.Logic
     public interface IAccountLogic
     {
         FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination);
+
+        BsonDocument SortFilter(string Sort);
+
     }
     public class AccountLogic : IAccountLogic
     {
@@ -33,12 +36,11 @@ namespace MainService.Logic
         {
             var accountFilter = Builders<Account>.Filter.Empty;
 
-            /// Name Filter
             if (pagination.Filter.Name != null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Regex("Name", new BsonRegularExpression(pagination.Filter.Name, "i"));
             }
-            // Joined Day Filter
+
             if (pagination.Filter.JoinedStart == null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Gte(x => x.CreatedAt, DateTime.MinValue);
@@ -46,7 +48,7 @@ namespace MainService.Logic
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Gte(x => x.CreatedAt, pagination.Filter.JoinedStart);
             }
-            // Joined End Filter
+
             if (pagination.Filter.JoinedEnd == null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Lte(x => x.CreatedAt, DateTime.MaxValue);
@@ -55,30 +57,55 @@ namespace MainService.Logic
                 accountFilter = accountFilter & Builders<Account>.Filter.Lte(x => x.CreatedAt, pagination.Filter.JoinedEnd);
             }
 
-            // Banned Filter
-
             if (pagination.Filter.isBanned)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Status.IsBanned == true);
             }
-
-            // Moderator Filter
 
             if (pagination.Filter.isModerator)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == "Moderator");
             }
 
-            // Muted Filter
-
             if (pagination.Filter.isMuted)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Status.CommentMutedUntil >= DateTime.Now || x.Status.PostMutedUntil >= DateTime.Now);
             }
 
-            // Return Filter
-
             return accountFilter;
+        }
+        public BsonDocument SortFilter(string Sort)
+        {
+            string sortType = "";
+
+            int adesc = 1;
+
+            switch (Sort)
+            {
+                case Constants.UserSortFilterOption.NAME_DESC:
+                    sortType = "Name";
+                    adesc = -1;
+                    break;
+                case Constants.UserSortFilterOption.JOIN_ASC:
+                    sortType = "CreatedAt";
+                    adesc = 1;
+                    break;
+                case Constants.UserSortFilterOption.JOIN_DESC:
+                    sortType = "CreatedAt";
+                    adesc = -1;
+                    break;
+                default:
+                    sortType = "Name";
+                    adesc = 1;
+                    break;
+            }
+
+            BsonDocument sort = new BsonDocument
+            {
+                { sortType, adesc }
+            };
+
+            return sort;
         }
     }
 }

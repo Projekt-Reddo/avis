@@ -46,5 +46,6 @@ public class PostUpdateDto
 public class PostReportDto
 {
     public long ReportPost { get; set; }
+    
     public long ReportedPost { get; set; }
 }

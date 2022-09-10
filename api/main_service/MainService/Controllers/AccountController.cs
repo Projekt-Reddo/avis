@@ -49,35 +49,7 @@ namespace MainService.Controllers
             // Pagination formula
             var skipPage = (pagination.Page - 1) * pagination.Size;
 
-            // Sort Filter
-            string sortType = "";
-
-            int adesc = 1;
-
-            switch (pagination.Filter.Sort)
-            {
-                case Constants.UserSortFilterOption.NAME_DESC:
-                    sortType = "Name";
-                    adesc = -1;
-                    break;
-                case Constants.UserSortFilterOption.JOIN_ASC:
-                    sortType = "CreatedAt";
-                    adesc = 1;
-                    break;
-                case Constants.UserSortFilterOption.JOIN_DESC:
-                    sortType = "CreatedAt";
-                    adesc = -1;
-                    break;
-                default:
-                    sortType = "Name";
-                    adesc = 1;
-                    break;
-            }
-
-            BsonDocument sort = new BsonDocument
-            {
-                { sortType, adesc }
-            };
+            var sort = _accountLogic.SortFilter(pagination.Filter.Sort);
 
             (var totalAccount, var accountsFromRepo) = await _accountRepo.FindManyAsync(filter: accountFilter, sort: sort, limit: pagination.Size, skip: skipPage);
 

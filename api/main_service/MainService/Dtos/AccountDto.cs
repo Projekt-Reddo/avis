@@ -28,6 +28,7 @@ namespace MainService.Dtos
     {
         public string? Name { get; set; } = null!;
     }
+    
     public class AccountResponseDto
     {
         public string Id { get; set; } = null!;
@@ -37,7 +38,9 @@ namespace MainService.Dtos
         public string Avatar { get; set; } = null!;
 
         public DateTime? JoinedDate { get; set; }
+
         public string Role { get; set; } = null!;
+
         public bool IsBanned { get; set; } = false;
 
         public DateTime PostMutedUntil { get; set; }
@@ -48,11 +51,23 @@ namespace MainService.Dtos
     public class AccountFilterDto
     {
         public string Name { get; set; } = null!;
+
         public string Sort { get; set; } = null!;
+
         public DateTime? JoinedStart { get; set; } = null!;
+
         public DateTime? JoinedEnd { get; set; } = null!;
+
         public bool isModerator{ get; set; }
+
         public bool isBanned { get; set; }
+
         public bool isMuted { get; set; }
+    }
+    public class AccountSortDto
+    {
+        public string SortBy { get; set; } = null!;
+
+        public int ADESC { get; set; }
     }
 }
