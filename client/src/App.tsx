@@ -27,6 +27,7 @@ import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
 import { useFirebaseUserChangeTracking } from "utils/firebase-hooks";
 import { useUserChangeTracking } from "utils/user-tracking-hooks";
+import Tabs from "routes/Tabs";
 
 setupIonicReact();
 
@@ -40,6 +41,7 @@ const App: React.FC = () => {
 
             <IonRouterOutlet>
                 <MainRoute />
+                <Tabs />
             </IonRouterOutlet>
         </>
     );

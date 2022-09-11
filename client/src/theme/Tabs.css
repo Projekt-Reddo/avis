@@ -1,0 +1,17 @@
+.ionic-tab-button{
+    --color: rgba(55, 63, 65, 0.75);
+    --color-selected: #373f41;
+    font-size: 1rem;
+}
+
+.ionic-tab-label-select{
+    font-weight: bold;
+    --color: #373f41;
+}
+
+.ionic-tab-label-select{
+    --color: rgba(55, 63, 65, 0.75);
+}
+
+
+
