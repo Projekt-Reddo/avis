@@ -1,0 +1,19 @@
+:root {
+    --nav-height: 4rem;
+}
+
+.nav-height {
+    height: var(--nav-height);
+}
+
+.tab-button{
+    color: rgba(55, 63, 65, 0.75);
+    text-align: center;
+}
+
+.tab-button-select{
+    color: #373f41;
+    font-weight: bold;
+    text-align: center;
+}
+

@@ -3,13 +3,13 @@ import React from "react";
 
 const Home = () => {
     return (
-        <IonPage
+        <div
             style={{
                 paddingTop: 100,
             }}
         >
             <div className="text-3xl font-bold underline">Hello, Hosimati</div>
-        </IonPage>
+        </div>
     );
 };
 
