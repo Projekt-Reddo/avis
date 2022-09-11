@@ -1,7 +1,6 @@
 import * as React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-<<<<<<< HEAD
 
 import yup from "utils/yup-config";
 
@@ -10,15 +9,6 @@ import { useAppDispatch } from "utils/react-redux-hooks";
 import { signupAsync } from "store/slices/userSlice";
 import { hash } from "utils/helpers";
 import Button from "components/shared/Button";
-=======
-
-import yup from "utils/yup-config";
-
-import Input from "../SignUp/Input";
-import { useAppDispatch } from "utils/react-redux-hooks";
-import { signupAsync } from "store/slices/userSlice";
-import { hash } from "utils/helpers";
->>>>>>> 40b2ea20e138669d2e891a87052d522b94ff9bc0
 
 interface SignUpFormProps {}
 
@@ -55,48 +45,30 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                 onSubmit={handleSubmit(handleSignup)}
             >
                 <Input
-<<<<<<< HEAD
                     className="py-2 w-4/5"
-=======
-                    className="py-2"
->>>>>>> 40b2ea20e138669d2e891a87052d522b94ff9bc0
                     label="Name"
                     placeholder="Please enter your name"
                     register={register("name")}
                     error={errors.name}
                 ></Input>
                 <Input
-<<<<<<< HEAD
                     className="py-2 w-4/5"
-=======
-                    className="py-2"
->>>>>>> 40b2ea20e138669d2e891a87052d522b94ff9bc0
                     label="Email"
                     placeholder="Please enter your Email"
                     register={register("email")}
                     error={errors.email}
                 ></Input>
                 <Input
-<<<<<<< HEAD
                     className="py-2 w-4/5"
-=======
-                    className="py-2"
->>>>>>> 40b2ea20e138669d2e891a87052d522b94ff9bc0
                     label="Password"
                     placeholder="Please enter your Password"
                     register={register("password")}
                     type="password"
                     error={errors.password}
                 ></Input>
-<<<<<<< HEAD
                 <Button className="mt-5" type="submit">
                     Sign Up
                 </Button>
-=======
-                <button className="signUpButtonIon mt-5" type="submit">
-                    Sign Up
-                </button>
->>>>>>> 40b2ea20e138669d2e891a87052d522b94ff9bc0
             </form>
         </div>
     );
