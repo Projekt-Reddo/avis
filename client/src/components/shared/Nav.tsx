@@ -10,9 +10,6 @@ import { useAppSelector } from "utils/react-redux-hooks";
 
 const Nav = () => {
     const location = useLocation();
-    if (routesIgnoreNav.some((route) => location.pathname.startsWith(route))) {
-        return null;
-    }
 
     const user = useAppSelector((state) => state.data);
 
@@ -36,6 +33,10 @@ const Nav = () => {
             lable: "Logout",
         },
     ];
+
+    if (routesIgnoreNav.some((route) => location.pathname.startsWith(route))) {
+        return null;
+    }
 
     return (
         <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-50 bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
