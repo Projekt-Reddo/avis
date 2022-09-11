@@ -47,12 +47,7 @@ const TabsNav = () => {
                 onClick={() => setTabselect("notification")}
             >
                 <div className="flex justify-center items-center p-4">
-                    <div
-                        className="absolute flex justify-center items-center h-3 w-3 font-bold rounded-full text-white text-[10px] ml-4 mb-6"
-                        style={{
-                            backgroundColor: "#E11D48",
-                        }}
-                    >
+                    <div className="absolute flex justify-center items-center h-3 w-3 bg-[color:var(--red-darker-color)] font-bold rounded-full text-white text-[10px] ml-4 mb-6">
                         2
                     </div>
                     <Icon

@@ -7,12 +7,12 @@
 }
 
 .tab-button{
-    color: rgba(55, 63, 65, 0.75);
+    color: var(--text-secondary-color);
     text-align: center;
 }
 
 .tab-button-select{
-    color: #373f41;
+    color: var(--text-primary-color);
     font-weight: bold;
     text-align: center;
 }
