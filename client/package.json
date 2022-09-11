@@ -13,6 +13,7 @@
         "@fortawesome/free-regular-svg-icons": "^6.2.0",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/react-fontawesome": "^0.1.18",
+        "@headlessui/react": "^1.7.0",
         "@hookform/resolvers": "^2.9.7",
         "@ionic/react": "^6.0.0",
         "@ionic/react-router": "^6.0.0",

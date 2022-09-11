@@ -12,7 +12,8 @@ http://ionicframework.com/docs/theming/ */
   --nav-border-color: rgb(0 0 0 / 8%);
 
   --text-primary-color: #373F41;
-  --text-secondary-color: #737B7D;
+  --text-secondary-color: rgba(55, 63, 65, 0.75);
+  --text-tertiary-color: rgba(55, 63, 65, 0.5);
 
   --element-shadow-color: rgba(0, 0, 0, 0.15);
 
@@ -22,23 +23,23 @@ http://ionicframework.com/docs/theming/ */
 
   /* Theme color */
 
-  --teal-darker-color: #0f766e;
-  --teal-general-color: #14b8a6;
-  --teal-lighter-color: #5eead4;
+  --teal-darker-color: #0D9488;
+  --teal-general-color: #14B8A6;
+  --teal-lighter-color: #2DD4BF;
 
   /* Support color */
 
-  --amber-darker-color: #b45309;
-  --amber-general-color: #f59e0b;
-  --amber-lighter-color: #fbbf24;
+  --amber-darker-color: #D97706;
+  --amber-general-color: #F59E0B;
+  --amber-lighter-color: #FBBF24;
 
-  --red-darker-color: #b91c1c;
-  --red-general-color: #ef4444;
-  --red-lighter-color: #f87171;
+  --red-darker-color: #E11D48;
+  --red-general-color: #F43F5E;
+  --red-lighter-color: #FB7185;
 
-  --blue-darker-color: #0369a1;
-  --blue-general-color: #0ea5e9;
-  --blue-lighter-color: #38bdf8;
+  --blue-darker-color: #0891B2;
+  --blue-general-color: #06B6D4;
+  --blue-lighter-color: #22D3EE;
 
   /* #endregion */
 
