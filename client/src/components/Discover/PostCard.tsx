@@ -6,14 +6,14 @@ import { useMutation } from "react-query";
 import axios from "axios";
 
 // Components
-import Icon from "./shared/Icon";
+import Icon from "components/shared/Icon";
 // Constants
-import { MAIN_SERVICE_API } from "../utils/constants";
+import { MAIN_SERVICE_API } from "utils/constants";
 
-import Ayame from "../static/Ayame.png";
+import Ayame from "static/Ayame.png";
 
 // Style
-import "../theme/Discover.css";
+import "theme/Discover.css";
 
 interface PostCardProps {}
 

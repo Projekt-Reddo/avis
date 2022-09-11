@@ -1,4 +1,4 @@
-import "../theme/Discover.css";
+import "theme/Discover.css";
 
 interface TrendingCardProps {}
 

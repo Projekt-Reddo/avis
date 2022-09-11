@@ -20,11 +20,11 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-
 import "./theme/global.css";
 
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
+import TabsNav from "components/shared/TabsNav";
 import { useFirebaseUserChangeTracking } from "utils/firebase-hooks";
 import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
@@ -41,6 +41,8 @@ const App: React.FC = () => {
             <IonRouterOutlet>
                 <MainRoute />
             </IonRouterOutlet>
+
+            <TabsNav />
         </>
     );
 };
