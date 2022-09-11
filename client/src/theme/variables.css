@@ -4,6 +4,10 @@ http://ionicframework.com/docs/theming/ */
 /** Ionic CSS Variables **/
 :root {
 
+  /* #region Border */
+  --border-width: .25rem;
+  --border-color: rgba(0, 0, 0, 0.15);
+
   /* #region Project Custom color*/
 
   --body-bg-color: #fff;
