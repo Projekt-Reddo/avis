@@ -24,10 +24,26 @@ namespace MainService.Data
         ///  }
         /// </para>
         /// </param>
+        /// <param name="project">
+        ///  <para>Bson document for lookup</para>
+        ///  <para> Example:
+        ///   new BsonDocument{
+        ///       { "_id", 1 },
+        ///       { "CreatedAt", 1 },
+        ///       { "ModifiedAt", 1 },
+        ///       { "Title", 1 },
+        ///       { "Thumbnail", 1 },
+        ///       { "Artists",  new BsonDocument{
+        ///           {"_id" , 1},
+        ///           {"Name" , 1}
+        ///       } },
+        ///   };
+        /// </para>
+        /// </param>
         /// <param name="limit">Number of documents to get</param>
         /// <param name="skip">Number of documents to skip</param>
         /// <returns>Total match filter count and List of documents</returns>
-        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!);
+        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
 
         /// <summary>
         /// Get a document by fitler
@@ -76,7 +92,7 @@ namespace MainService.Data
             return entity;
         }
 
-        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!)
+        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!)
         {
 
             var query = _collection.Aggregate().Match(filter is null ? Builders<TEntity>.Filter.Empty : filter);
@@ -97,6 +113,16 @@ namespace MainService.Data
                 {
                     {
                         "$lookup", lookup
+                    }
+                });
+            }
+
+            if (project is not null)
+            {
+                query = query.AppendStage<TEntity>(new BsonDocument
+                {
+                    {
+                        "$project", project
                     }
                 });
             }

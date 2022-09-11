@@ -27,5 +27,7 @@ public class Song : BaseModel
 
     public ICollection<ObjectId> ArtistIds { get; set; } = null!;
 
+    public ICollection<Artist> Artists { get; set; } = null!;
+
     public bool IsDeleted { get; set; } = false;
 }

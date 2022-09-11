@@ -9,5 +9,8 @@ public class ArtistProfile : Profile
     public ArtistProfile()
     {
         CreateMap<Artist, ArtistReadDto>();
+
+        CreateMap<Artist, ArtistViewSongDto>();
+
     }
 }

@@ -27,8 +27,12 @@ builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<ICommentRepo, CommentRepo>();
 builder.Services.AddScoped<ISongRepo, SongRepo>();
+builder.Services.AddScoped<IReportRepo, ReportRepo>();
+builder.Services.AddScoped<IGenreRepo, GenreRepo>();
 // Logics
 builder.Services.AddScoped<ISongLogic, SongLogic>();
+builder.Services.AddScoped<IAccountLogic, AccountLogic>();
+builder.Services.AddScoped<IGenreLogic, GenreLogic>();
 // Other Services
 builder.Services.AddScoped<IHumSvcClient, HumSvcClient>();
 // AWS S3 config

@@ -5,10 +5,10 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 // Components
-import PostCard from "../components/PostCard";
-import HumCard from "../components/HumCard";
-import TrendingCard from "../components/TrendingCard";
-import SearchBox from "../components/SearchBox";
+import PostCard from "../components/Discover/PostCard";
+import HumCard from "../components/Discover/HumCard";
+import TrendingCard from "../components/Discover/TrendingCard";
+import SearchBox from "../components/Discover/SearchBox";
 
 // Constants
 import { MAIN_SERVICE_API } from "../utils/constants";

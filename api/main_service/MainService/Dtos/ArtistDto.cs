@@ -12,3 +12,10 @@ public class ArtistReadDto
 
     public bool IsDeleted { get; set; } = false;
 }
+
+public class ArtistViewSongDto
+{
+    public string Id { get; set; } = null!;
+
+    public string Name { get; set; } = null!;
+}
