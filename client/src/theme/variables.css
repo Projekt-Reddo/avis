@@ -19,6 +19,7 @@ http://ionicframework.com/docs/theming/ */
     --text-tertiary-color: rgba(55, 63, 65, 0.5);
 
     --element-shadow-color: rgba(0, 0, 0, 0.15);
+    --element-bg-color: #fff;
 
     --post-bg-color: #fff;
     --post-border-color: rgb(0 0 0 / 8%);
