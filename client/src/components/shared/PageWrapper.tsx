@@ -1,3 +1,6 @@
+import { MOBILE_BREAKPOINT } from "utils/constants";
+import { useWindowDimensions } from "utils/useWindowDimensions";
+
 interface PageWrapperProps {
     children?: React.ReactNode;
     className?: string;
@@ -9,9 +12,13 @@ const PageWrapper: React.FC<PageWrapperProps> = ({
     className = "",
     style = {},
 }) => {
+    const { width } = useWindowDimensions();
+
     return (
         <div
-            className={`padding-nav min-height-nav w-full ${className}`}
+            className={`${
+                width! >= MOBILE_BREAKPOINT ? "padding-nav" : " "
+            } min-height-nav w-full ${className}`}
             style={{ ...style }}
         >
             {children}
