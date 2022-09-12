@@ -18,7 +18,9 @@ const PageWrapper: React.FC<PageWrapperProps> = ({
     return (
         <div
             className={`page-wrapper px-0 lg:px-32 2xl:px-52 ${
-                width! >= MOBILE_BREAKPOINT ? "padding-nav" : " "
+                width! > MOBILE_BREAKPOINT
+                    ? "padding-nav"
+                    : "padding-mobile-nav"
             } min-height-nav w-full ${className}`}
             style={{ ...style }}
         >

@@ -11,7 +11,7 @@ import { useWindowDimensions } from "utils/useWindowDimensions";
 const Nav = () => {
     const location = useLocation();
 
-    const user = useAppSelector((state) => state.data);
+    const user = useAppSelector((state) => state.user.data);
 
     function getLinkStyle(path: string) {
         if (path === "/")
@@ -63,7 +63,7 @@ const Nav = () => {
 
             <div className="flex flex-row justify-between items-center w-96 font-bold">
                 <Link className={getLinkStyle("/")} to="/">
-                    Search
+                    Home
                 </Link>
                 <Link className={getLinkStyle("/discover")} to="/discover">
                     Discover

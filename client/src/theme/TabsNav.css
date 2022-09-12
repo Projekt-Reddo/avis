@@ -17,3 +17,6 @@
     text-align: center;
 }
 
+.padding-mobile-nav {
+    padding-bottom: calc(var(--nav-height));
+}
