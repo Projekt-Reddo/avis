@@ -1,3 +1,4 @@
+import ViewSong from "pages/admin/Song/View";
 import { Route, useRouteMatch } from "react-router";
 
 const AdminRoutes = () => {
@@ -11,6 +12,10 @@ const AdminRoutes = () => {
 
             <Route path={`${path}/users`}>
                 <div>Here is user management</div>
+            </Route>
+
+            <Route path={`${path}/songs`}>
+                <ViewSong />
             </Route>
         </>
     );
