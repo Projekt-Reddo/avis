@@ -39,11 +39,13 @@ const Nav = () => {
         },
     ];
 
+    // For hiding nav bar in mobile view
+    const { width } = useWindowDimensions();
+
     if (routesIgnoreNav.some((route) => location.pathname.startsWith(route))) {
         return null;
     }
 
-    const { width } = useWindowDimensions();
     if (width && width <= MOBILE_BREAKPOINT) {
         return null;
     }
