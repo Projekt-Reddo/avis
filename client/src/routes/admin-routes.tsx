@@ -1,4 +1,6 @@
 import ViewSong from "pages/admin/Song/View";
+import CreateSong from "pages/admin/Song/Create";
+
 import { Route, useRouteMatch } from "react-router";
 
 const AdminRoutes = () => {
@@ -10,12 +12,16 @@ const AdminRoutes = () => {
                 <div>Here is dashboard</div>
             </Route>
 
-            <Route path={`${path}/users`}>
+            <Route path={`${path}/user`}>
                 <div>Here is user management</div>
             </Route>
 
-            <Route path={`${path}/songs`}>
+            <Route path={`${path}/song`}>
                 <ViewSong />
+            </Route>
+
+            <Route path={`${path}/song/create`}>
+                <CreateSong />
             </Route>
         </>
     );
