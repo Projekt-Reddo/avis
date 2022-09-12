@@ -25,7 +25,7 @@ import "./theme/global.css";
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
 import TabsNav from "components/shared/TabsNav";
-import { useFirebaseUserChangeTracking } from "utils/firebase-hooks";
+import { useFirebaseUserChangeTracking } from "utils/firebase/firebase-hooks";
 import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
 setupIonicReact();

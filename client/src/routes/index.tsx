@@ -1,13 +1,15 @@
 import { Route, Redirect } from "react-router-dom";
 
-import Home from "../pages/Home";
+import Home from "pages/Home";
 import Login from "pages/auth/Login";
-import Post from "../pages/Post";
-import Search from "../pages/Search";
+import Post from "pages/Post";
+import Search from "pages/Search";
 import Signup from "pages/auth/Signup";
-import Song from "../pages/Song";
-import Discover from "../pages/Discover";
+import Song from "pages/Song";
+import Discover from "pages/Discover";
 import VerifyEmail from "pages/auth/VerifyEmail";
+
+import AdminRoutes from "./admin-routes";
 
 import { routes } from "../utils/constants";
 
@@ -47,6 +49,10 @@ const MainRoute = () => {
 
                 <Route exact path="/">
                     <Home />
+                </Route>
+
+                <Route path="/admin">
+                    <AdminRoutes />
                 </Route>
 
                 <Route
