@@ -4,6 +4,7 @@ import { useLocation } from "react-router";
 import PageWrapperAuth from "components/shared/PageWrapperAuth";
 import backgroundImage from "static/Flat_art_verify_email.jpg";
 import { IonButton } from "@ionic/react";
+import Button from "components/shared/Button";
 
 const VerifyEmail = () => {
     const location: any = useLocation();
@@ -28,15 +29,14 @@ const VerifyEmail = () => {
                             We sent a verify link to your email address, please
                             check it!
                         </div>
-                        <IonButton
-                            className="mt-3"
-                            type="button"
+                        <Button
+                            className="mt-4"
                             onClick={() => {
                                 window.location.replace("/");
                             }}
                         >
                             Back to Home
-                        </IonButton>
+                        </Button>
                     </div>
                 </div>
             }
