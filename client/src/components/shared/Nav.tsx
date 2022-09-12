@@ -5,16 +5,20 @@ import Icon from "./Icon";
 import Dropdown from "components/shared/Dropdown";
 import { Fragment } from "react";
 import { useAppSelector } from "utils/react-redux-hooks";
+import { MOBILE_BREAKPOINT } from "utils/constants";
+import { useWindowDimensions } from "utils/useWindowDimensions";
 
 const Nav = () => {
     const location = useLocation();
-    if (routesIgnoreNav.some((route) => location.pathname.startsWith(route))) {
-        return null;
-    }
 
     const user = useAppSelector((state) => state.data);
 
     function getLinkStyle(path: string) {
+        if (path === "/")
+            return location.pathname === "/"
+                ? "text-[color:var(--teal-general-color)]"
+                : "hover:text-[color:var(--text-secondary-color)]";
+
         return location.pathname.startsWith(path)
             ? "text-[color:var(--teal-general-color)]"
             : "hover:text-[color:var(--text-secondary-color)]";
@@ -35,6 +39,15 @@ const Nav = () => {
         },
     ];
 
+    if (routesIgnoreNav.some((route) => location.pathname.startsWith(route))) {
+        return null;
+    }
+
+    const { width } = useWindowDimensions();
+    if (width && width <= MOBILE_BREAKPOINT) {
+        return null;
+    }
+
     return (
         <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-50 bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
             {/* <div className="ml-24"> */}
@@ -47,7 +60,7 @@ const Nav = () => {
             </div>
 
             <div className="flex flex-row justify-between items-center w-96 font-bold">
-                <Link className={getLinkStyle("/search")} to="/search">
+                <Link className={getLinkStyle("/")} to="/">
                     Search
                 </Link>
                 <Link className={getLinkStyle("/discover")} to="/discover">

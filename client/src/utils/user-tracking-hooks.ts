@@ -1,3 +1,4 @@
+import { userEmailVerify } from "api/firebase-api";
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { logout } from "store/slices/userSlice";
@@ -9,16 +10,18 @@ export const useUserChangeTracking = () => {
     const history = useHistory();
 
     useEffect(() => {
-        const tempUser = {
-            ...user,
-        };
+        (async () => {
+            const tempUser = {
+                ...user,
+            };
 
-        if (user && !tempUser.emailVerified) {
-            dispatch(logout());
+            if (user && !tempUser.emailVerified) {
+                dispatch(logout());
 
-            history.replace("/verify", {
-                ...tempUser,
-            });
-        }
+                history.replace("/verify", {
+                    ...tempUser,
+                });
+            }
+        })();
     }, [user]);
 };
