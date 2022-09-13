@@ -8,7 +8,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import { QueryClientProvider, QueryClient } from "react-query";
 
 // Initialize firebase
-import "utils/firebase-config";
+import "utils/firebase/firebase-config";
 
 import { Provider } from "react-redux";
 import store from "./store";

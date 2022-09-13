@@ -23,4 +23,11 @@ public static class Constants
     {
         public const string CLIENT_NAME = "client";
     }
+
+    public static class UserSortFilterOption
+    {
+        public const string NAME_DESC = "Name Desc";
+        public const string JOIN_ASC = "Join Asc";
+        public const string JOIN_DESC = "Join Desc";
+    }
 }
