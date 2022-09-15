@@ -13,4 +13,5 @@ interface AsyncReducerInitialState {
 
 interface RootState {
     [key: string]: AsyncReducerInitialState;
+    toast: ToastType[];
 }
