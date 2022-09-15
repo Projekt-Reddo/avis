@@ -16,7 +16,7 @@ const AdminRoutes = () => {
                 <div>Here is user management</div>
             </Route>
 
-            <Route path={`${path}/song`}>
+            <Route exact path={`${path}/song`}>
                 <ViewSong />
             </Route>
 
