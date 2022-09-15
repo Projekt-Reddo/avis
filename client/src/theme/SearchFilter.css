@@ -1,0 +1,27 @@
+.input-date{
+    background-color: var(--body-bg-color);
+    color: var(--text-primary-color);
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+}
+
+.none-shadow-button{
+    box-shadow: none;
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+}
+
+.radius-border{
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+}
+
+.radius-border-left-side{
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.radius-border-right-side{
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}

@@ -86,9 +86,9 @@ public class SongLogic : ISongLogic
         var songFilter = Builders<Song>.Filter.Empty;
 
         // Name Filter
-        if (pagination.Filter.Name != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.Title))
         {
-            songFilter = songFilter & Builders<Song>.Filter.Regex("Title", new BsonRegularExpression(pagination.Filter.Name, "i"));
+            songFilter = songFilter & Builders<Song>.Filter.Regex("Title", new BsonRegularExpression(pagination.Filter.Title, "i"));
         }
 
         // Genres Filter
@@ -98,18 +98,18 @@ public class SongLogic : ISongLogic
         }
 
         // Created At Filter
-        if (pagination.Filter.CreatedStart != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedStart.ToString()))
         {
             songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.CreatedAt, pagination.Filter.CreatedStart);
         }
 
-        if (pagination.Filter.CreatedEnd != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedEnd.ToString()))
         {
             songFilter = songFilter & Builders<Song>.Filter.Lte(x => x.CreatedAt, pagination.Filter.CreatedEnd);
         }
 
         // Modified At Filter
-        if (pagination.Filter.ModifiedStart != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.ModifiedStart.ToString()))
         {
             songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.ModifiedAt, pagination.Filter.ModifiedStart);
         }

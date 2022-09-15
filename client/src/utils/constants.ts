@@ -16,5 +16,6 @@ export const MAIN_SERVICE_API =
 export const SUGAR = import.meta.env.VITE_SUGAR;
 
 export const DefaultDay = "0001-01-01T00:00:00Z";
+export const DayFormat = "YYYY MMMM DD";
 
 export const MOBILE_BREAKPOINT = 1024;
