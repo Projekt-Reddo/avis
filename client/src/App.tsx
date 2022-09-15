@@ -25,6 +25,7 @@ import "./theme/global.css";
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
 import TabsNav from "components/shared/TabsNav";
+import ToastManager from "components/Toast/ToastManager";
 import { useFirebaseUserChangeTracking } from "utils/firebase/firebase-hooks";
 import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
@@ -43,6 +44,8 @@ const App: React.FC = () => {
             </IonRouterOutlet>
 
             <TabsNav />
+
+            <ToastManager />
         </>
     );
 };
