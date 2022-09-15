@@ -5,7 +5,6 @@ import ThumbnailInput from "components/Admin/Create/ThumbnailInput";
 import UrlInput from "components/Admin/Create/UrlInput";
 import LyricInput from "components/Admin/Create/LyricInput";
 import ArtistsInput from "components/Admin/Create/ArtistsInput";
-import yup from "utils/yup-config";
 
 interface StepFormProps {
     clasName?: string;
@@ -71,7 +70,13 @@ const StepForm: FunctionComponent<StepFormProps> = ({ clasName, style }) => {
             nextFormStep={nextFormStep}
             previousFormStep={previousFormStep}
         />,
-        <LyricInput />,
+        <LyricInput
+            song={songCreate}
+            setSong={setSongCreate}
+            currentStep={currentStep}
+            nextFormStep={nextFormStep}
+            previousFormStep={previousFormStep}
+        />,
         <ArtistsInput />,
     ];
 
@@ -104,7 +109,10 @@ const StepForm: FunctionComponent<StepFormProps> = ({ clasName, style }) => {
             <div>
                 {stepContents.map((content, index) =>
                     currentStep === index ? (
-                        <div key={"st" + index} className="px-2 lg:px-9">
+                        <div
+                            key={"st" + index}
+                            className="px-2 lg:px-9 max-h-fit"
+                        >
                             {content}
                         </div>
                     ) : (
@@ -155,17 +163,3 @@ const StepForm: FunctionComponent<StepFormProps> = ({ clasName, style }) => {
 };
 
 export default StepForm;
-
-const schema = yup.object().shape({
-    title: yup.string().required("Name is required!"),
-    alias: yup.string(),
-    description: yup.string(),
-    genres: yup.array(),
-    // thumbnail: yup.,
-    lyric: yup.string(),
-    soundcloud: yup.string(),
-    spotify: yup.string(),
-    youtube: yup.string(),
-    artistIds: yup.array(),
-    // file: null,
-});

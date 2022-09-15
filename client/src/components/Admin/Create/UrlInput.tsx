@@ -39,53 +39,58 @@ const UrlInput: FunctionComponent<UrlInputProps> = ({
     };
 
     return (
-        <form
-            className="grid grid-cols-6 gap-4 gap-y-14"
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <div className="col-span-1">
-                <div className="flex flex-col items-center">
-                    <Icon icon={["fab", "youtube"]} size="2xl" />
-                    <label className="font-medium">Youtube</label>
-                </div>
-            </div>
-            <div className="col-span-5">
-                <Input
-                    className="w-100 lg:w-4/5"
-                    type="text"
-                    register={register("url.youtube")}
-                    error={errors.url?.youtube}
-                />
-            </div>
+        <form className="" onSubmit={handleSubmit(onSubmit)}>
+            <div
+                style={{
+                    minHeight: "22rem",
+                }}
+            >
+                <div className="grid grid-cols-6 gap-4 gap-y-14">
+                    <div className="col-span-1">
+                        <div className="flex flex-col items-center">
+                            <Icon icon={["fab", "youtube"]} size="2xl" />
+                            <label className="font-medium">Youtube</label>
+                        </div>
+                    </div>
+                    <div className="col-span-5">
+                        <Input
+                            className="w-100 lg:w-4/5"
+                            type="text"
+                            register={register("url.youtube")}
+                            error={errors.url?.youtube}
+                        />
+                    </div>
 
-            <div className="col-span-1">
-                <div className="flex flex-col items-center">
-                    <Icon icon={["fab", "spotify"]} size="2xl" />
-                    <label className="font-medium">Spotify</label>
-                </div>
-            </div>
-            <div className="col-span-5">
-                <Input
-                    className="w-100 lg:w-4/5"
-                    type="text"
-                    register={register("url.spotify")}
-                    error={errors.url?.spotify}
-                />
-            </div>
+                    <div className="col-span-1">
+                        <div className="flex flex-col items-center">
+                            <Icon icon={["fab", "spotify"]} size="2xl" />
+                            <label className="font-medium">Spotify</label>
+                        </div>
+                    </div>
+                    <div className="col-span-5">
+                        <Input
+                            className="w-100 lg:w-4/5"
+                            type="text"
+                            register={register("url.spotify")}
+                            error={errors.url?.spotify}
+                        />
+                    </div>
 
-            <div className="col-span-1">
-                <div className="flex flex-col items-center">
-                    <Icon icon={["fab", "soundcloud"]} size="2xl" />
-                    <label className="font-medium">SoundCloud</label>
+                    <div className="col-span-1">
+                        <div className="flex flex-col items-center">
+                            <Icon icon={["fab", "soundcloud"]} size="2xl" />
+                            <label className="font-medium">SoundCloud</label>
+                        </div>
+                    </div>
+                    <div className="col-span-5">
+                        <Input
+                            className="w-100 lg:w-4/5"
+                            type="text"
+                            register={register("url.soundcloud")}
+                            error={errors.url?.soundcloud}
+                        />
+                    </div>
                 </div>
-            </div>
-            <div className="col-span-5">
-                <Input
-                    className="w-100 lg:w-4/5"
-                    type="text"
-                    register={register("url.soundcloud")}
-                    error={errors.url?.soundcloud}
-                />
             </div>
 
             {/* Form navigate btn */}
@@ -121,9 +126,9 @@ const UrlInput: FunctionComponent<UrlInputProps> = ({
 };
 
 const schema = yup.object().shape({
-    "url.soundcloud": yup.string().required(),
-    "url.spotify": yup.string(),
     "url.youtube": yup.string(),
+    "url.spotify": yup.string(),
+    "url.soundcloud": yup.string(),
 });
 
 export default UrlInput;

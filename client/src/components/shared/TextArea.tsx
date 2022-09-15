@@ -10,7 +10,7 @@ interface TextAreaProps
     style?: any;
     rows?: number;
     label?: string;
-    register: InputRegister;
+    register: TextAreaRegister;
     error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
 }
 

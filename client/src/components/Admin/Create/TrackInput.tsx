@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "components/shared/Button";
+import FileDropzone from "components/shared/FileDropzone";
 import Icon from "components/shared/Icon";
 import { Dispatch, FunctionComponent } from "react";
 import { FieldValues, useForm } from "react-hook-form";
@@ -21,10 +22,10 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
     previousFormStep,
 }) => {
     const {
-        register,
         handleSubmit,
         formState: { errors },
-        control,
+        setValue,
+        getValues,
     } = useForm({
         mode: "onChange",
         resolver: yupResolver(schema),
@@ -37,13 +38,23 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
     };
 
     return (
-        <form
-            className="grid grid-cols-6 gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <div>This is form submit</div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            {/* From content */}
+            <div
+                className="flex items-center"
+                style={{
+                    minHeight: "22rem",
+                }}
+            >
+                <FileDropzone
+                    error={errors.file}
+                    getValues={getValues}
+                    setValue={setValue}
+                />
+            </div>
+
             {/* Form navigate btn */}
-            <div className="col-span-6">
+            <div className="">
                 <div className="flex flex-row justify-end mt-4">
                     <Button
                         type="submit"
@@ -61,10 +72,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
 };
 
 const schema = yup.object().shape({
-    // title: yup.string().required("Name is required!"),
-    // alias: yup.string(),
-    // description: yup.string(),
-    // genres: yup.array(),
+    file: yup.mixed().required("Track is required!"),
 });
 
 export default TrackInput;

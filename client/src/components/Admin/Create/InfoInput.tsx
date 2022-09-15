@@ -42,61 +42,66 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
     };
 
     return (
-        <form
-            className="grid grid-cols-6 gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <div className="col-span-1">
-                <label className="font-medium">Title</label>
-            </div>
-            <div className="col-span-5">
-                <Input
-                    className="w-100 lg:w-4/5"
-                    type="text"
-                    register={register("title")}
-                    error={errors.title}
-                />
-            </div>
+        <form className="" onSubmit={handleSubmit(onSubmit)}>
+            <div
+                style={{
+                    minHeight: "22rem",
+                }}
+            >
+                <div className="grid grid-cols-6 gap-4">
+                    <div className="col-span-1">
+                        <label className="font-medium">Title</label>
+                    </div>
+                    <div className="col-span-5">
+                        <Input
+                            className="w-100 lg:w-4/5"
+                            type="text"
+                            register={register("title")}
+                            error={errors.title}
+                        />
+                    </div>
 
-            <div className="col-span-1">
-                <label className="font-medium">Alias</label>
-            </div>
-            <div className="col-span-5">
-                <Input
-                    className="w-100 lg:w-4/5"
-                    type="text"
-                    register={register("alias")}
-                    error={errors.alias}
-                />
-            </div>
+                    <div className="col-span-1">
+                        <label className="font-medium">Alias</label>
+                    </div>
+                    <div className="col-span-5">
+                        <Input
+                            className="w-100 lg:w-4/5"
+                            type="text"
+                            register={register("alias")}
+                            error={errors.alias}
+                        />
+                    </div>
 
-            <div className="col-span-1">
-                <label className="font-medium">Description</label>
-            </div>
-            <div className="col-span-5">
-                <TextArea
-                    className="w-100 lg:w-4/5"
-                    rows={7}
-                    register={register("description")}
-                    error={errors.description}
-                />
-            </div>
+                    <div className="col-span-1">
+                        <label className="font-medium">Description</label>
+                    </div>
+                    <div className="col-span-5">
+                        <TextArea
+                            className="w-100 lg:w-4/5"
+                            rows={7}
+                            register={register("description")}
+                            error={errors.description}
+                        />
+                    </div>
 
-            <div className="col-span-1">
-                <label className="font-medium">Genre</label>
-            </div>
-            <div className="col-span-5">
-                <SelectAsync
-                    className="w-100 lg:w-4/5"
-                    isMulti={true}
-                    loadOptionsCallback={recommendGenreApi}
-                    control={control}
-                    controlName={"genres"}
-                />
+                    <div className="col-span-1">
+                        <label className="font-medium">Genre</label>
+                    </div>
+                    <div className="col-span-5">
+                        <SelectAsync
+                            className="w-100 lg:w-4/5"
+                            isMulti={true}
+                            loadOptionsCallback={recommendGenreApi}
+                            control={control}
+                            controlName={"genres"}
+                        />
+                    </div>
+                </div>
             </div>
 
             {/* Form navigate btn */}
-            <div className="col-span-6">
+            <div className="">
                 <div className="flex flex-row justify-end mt-4">
                     <Button
                         className="mr-5 border-2 border-blue-500"
