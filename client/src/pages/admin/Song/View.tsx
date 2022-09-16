@@ -14,6 +14,8 @@ import SearchFilter from "components/shared/SearchFilter";
 import { FieldValues, useForm } from "react-hook-form";
 import { DayFormat } from "utils/constants";
 import { Link } from "react-router-dom";
+import { recommendGenreApi } from "api/genre-api";
+import { string } from "yup/lib/locale";
 
 const View = () => {
     const songState = useAppSelector((state) => state.song);
@@ -24,10 +26,20 @@ const View = () => {
 
     const {
         register,
+        control,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onChange",
+        defaultValues: {
+            title: "",
+            genres: [],
+            createdStart: "",
+            createdEnd: "",
+            modifiedStart: "",
+            modifiedEnd: "",
+        },
     });
 
     const dispatch = useAppDispatch();
@@ -39,7 +51,7 @@ const View = () => {
                 size: 5,
                 filter: {
                     title: data.title,
-                    genres: selectedGenre.length > 0 ? selectedGenre : null,
+                    genres: data.genres.length > 0 ? data.genres : null,
                     createdStart:
                         data.createdStart !== "" ? data.createdStart : null,
                     createdEnd: data.createdEnd !== "" ? data.createdEnd : null,
@@ -62,9 +74,18 @@ const View = () => {
         );
     }, []);
 
-    // if (songState.status === "loading") {
-    //     return <div>Loading</div>;
-    // }
+    if (songState.status === "loading") {
+        return (
+            <div className="flex justify-center items-center">
+                <div
+                    className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+                    role="status"
+                >
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+    }
     // if (songState.status === "error") {
     //     return <div>Error</div>;
     // }
@@ -77,8 +98,10 @@ const View = () => {
         selectMultiple: [
             {
                 label: "Genre",
-                selected: selectedGenre,
-                setSelected: setSelectedGenre,
+                isMulti: true,
+                loadOptionsCallback: recommendGenreApi,
+                control: control,
+                controlName: "genres",
             },
         ],
         dateInput: [
@@ -96,7 +119,6 @@ const View = () => {
         // radioBox: [
         //     {
         //         label: "Report Type",
-
         //     }
         // ],
     };
@@ -122,10 +144,12 @@ const View = () => {
             {/* Search Bar */}
             <SearchFilter
                 handleSubmit={handleSubmit(handleSearch)}
+                setValue={setValue}
                 filterContent={filterContent}
             />
 
             {/* Data Table */}
+
             <Table
                 className=""
                 columns={[

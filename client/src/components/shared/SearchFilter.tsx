@@ -1,41 +1,58 @@
 import React from "react";
-import { UseFormRegisterReturn } from "react-hook-form";
+import {
+    Control,
+    UseFormRegisterReturn,
+    UseFormSetValue,
+} from "react-hook-form";
 
 // Components
 import Button from "./Button";
 import Icon from "./Icon";
+import SelectAsync from "./SelectAsync";
 
+// Styles
 import "theme/SearchFilter.css";
 
 interface SearchFilterProps {
     handleSubmit: () => void;
+    setValue: UseFormSetValue<any>;
     filterContent: {
         search: {
             placeholder: string;
             register: UseFormRegisterReturn;
         };
-        selectMultiple?: any;
-        dateInput?: any;
+        selectMultiple?: {
+            label?: string;
+            isMulti: boolean;
+            loadOptionsCallback: (keyword: string) => Promise<any>;
+            control: Control<any>;
+            controlName: string;
+        }[];
+        dateInput?: {
+            label?: string;
+            registerStart: InputRegister;
+            registerEnd: InputRegister;
+        }[];
         radioBox?: any;
     };
 }
 
-// {
-//     label: string;
-//     registerStart: () => UseFormRegisterReturn;
-//     registerEnd: () => UseFormRegisterReturn;
-// }
-
 const SearchFilter: React.FC<SearchFilterProps> = ({
     handleSubmit,
+    setValue,
     filterContent,
 }) => {
     const [showSearchFilter, setShowSearchFilter] =
         React.useState<boolean>(false);
 
     const handleClearFilter = () => {
-        filterContent.selectMultiple.forEach(function (item: any) {
-            item.setSelected([]);
+        filterContent.selectMultiple?.forEach((element) => {
+            setValue(element.controlName, "");
+        });
+
+        filterContent.dateInput?.forEach((element) => {
+            setValue(element.registerStart.name, "");
+            setValue(element.registerEnd.name, "");
         });
     };
 
@@ -62,7 +79,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 />
 
                 {/* Show Filter Button */}
-                <div
+                <button
+                    type="button"
                     className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0"
                     onClick={() => setShowSearchFilter(!showSearchFilter)}
                 >
@@ -71,72 +89,37 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         icon="filter"
                         className="text-[color:var(--teal-lighter-color)]"
                     />
-                </div>
+                </button>
             </div>
 
             {/* Search Filter */}
 
             {showSearchFilter ? (
-                <div className="radius-border text-[color:--text-primary-color] bg-[color:var(--body-bg-color)] px-5 py-3">
+                <div className="radius-border text-[color:--text-primary-color] bg-[color:var(--body-bg-color)] px-4">
                     {/* Select Multiple Filter */}
-                    {filterContent.selectMultiple.map((item: any) => (
-                        <div className="w-full mt-4">
-                            <div className="flex">
-                                <div className="text-base font-bold self-center pr-5">
-                                    {item.label}
-                                </div>
 
-                                <select
-                                    className="input-app w-full"
-                                    placeholder="Add a genre"
-                                    onChange={(event) =>
-                                        item.setSelected([
-                                            ...item.selected,
-                                            event.currentTarget.value,
-                                        ])
-                                    }
-                                >
-                                    <option value="Pop">Pop</option>
-                                    <option value="Rock">Rock</option>
-                                </select>
+                    {filterContent.selectMultiple?.map((item) => (
+                        <div key={item.label} className="w-full py-4">
+                            <div className="text-base font-bold self-center mb-2">
+                                {item.label}
                             </div>
-
-                            {/* Show Selected Items */}
-                            <div className="flex max-w-full overflow-x-hidden pt-4">
-                                {item.selected.map((itemSelected: any) => (
-                                    <div
-                                        key={item}
-                                        className="flex px-4 py-2 text-sm font-bold text-[color:var(--body-bg-color)] bg-[color:var(--text-primary-color)] rounded-full mr-4"
-                                    >
-                                        <div className="pr-2">
-                                            {itemSelected}
-                                        </div>
-                                        <div
-                                            onClick={() =>
-                                                item.setSelected(
-                                                    item.selected.filter(
-                                                        (selected: string) =>
-                                                            selected !==
-                                                            itemSelected
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            <Icon icon="times" />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            <SelectAsync
+                                className="w-full"
+                                isMulti={item.isMulti}
+                                loadOptionsCallback={item.loadOptionsCallback}
+                                control={item.control}
+                                controlName={item.controlName}
+                            />
                         </div>
                     ))}
 
-                    <div className="h-[0.25px] w-full my-4 bg-[color:var(--text-primary-color)]" />
+                    <div className="h-[0.25px] w-full bg-[color:var(--text-primary-color)]" />
 
                     {/* Date Input Filter */}
-                    <div className="flex justify-between">
-                        {filterContent.dateInput.map((item: any) => (
-                            <div>
-                                <div className="text-base font-bold pb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 justify-start py-4">
+                        {filterContent.dateInput?.map((item) => (
+                            <div key={item.label}>
+                                <div className="text-base font-bold pb-2">
                                     {item.label}
                                 </div>
                                 <div className="flex">
@@ -145,7 +128,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                                         {...item.registerStart}
                                         type="date"
                                     />
-                                    <div className="self-center p-4">-</div>
+                                    <div className="self-center px-4">-</div>
                                     <input
                                         className="input-date px-2 py-1"
                                         {...item.registerEnd}
@@ -156,9 +139,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         ))}
                     </div>
 
-                    <div className="h-[0.25px] w-full my-4 bg-[color:var(--text-primary-color)]" />
+                    <div className="h-[0.25px] w-full bg-[color:var(--text-primary-color)]" />
 
                     {/* Radio Box Filter */}
+
+                    {/* Up comming in future */}
 
                     {/* <div>
                         <div className="text-base font-bold pb-4">
@@ -180,20 +165,21 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                     </div> */}
 
                     {/* Clear, Close, Apply Filter  */}
-                    <div className="flex justify-between pt-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 justify-end py-4">
                         {/* Clear Filter Button */}
                         <Button
-                            className="none-shadow-button"
+                            className="none-shadow-button mr-4 w-fit"
+                            type="button"
                             variant="danger"
-                            onClick={handleClearFilter}
+                            onClick={() => handleClearFilter()}
                         >
-                            Clear all filter
+                            Clear filter
                         </Button>
-
-                        <div>
+                        <div className="flex justify-start sm:justify-end pt-4 sm:pt-0">
                             {/* Close Filter Button */}
                             <Button
-                                className="none-shadow-button mr-5"
+                                className="none-shadow-button mr-4"
+                                type="button"
                                 variant="secondary"
                                 onClick={() => setShowSearchFilter(false)}
                             >
