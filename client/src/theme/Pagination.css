@@ -1,0 +1,27 @@
+.pagination_Container {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    text-align: center;
+    padding: 0.3rem 0;
+    width: fit-content;
+}
+
+.pagination_Button {
+    background: var(--body-bg-color);
+    width: 35px;
+    height: 35px;
+    border: none;
+    margin-left: 0.25rem;
+    color: var(--text-primary-color);
+    border-radius: 8px;
+}
+
+.pagination_Button:hover {
+    background-color: var(--teal-lighter-color);
+    transition: 0.3s;
+}
+
+.pagination_Button_Active {
+    background-color: var(--teal-lighter-color);
+}
