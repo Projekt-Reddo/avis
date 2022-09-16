@@ -27,4 +27,13 @@ public static class ResponseMessage
     public const string GENRE_DELETE_FAIL = "Fail to delete genres";
     public const string GENRE_DELETE_SUCCESS = "Delete genre successfully";
     public const string GENRE_DELETE_SUCCESS_AND_FAIL = "Delete genre successfully but there are some genres that failed to deleted";
+
+    // Artist msg
+    public const string ARTIST_EXISTED = "Artist is already existed";
+    public const string ARTIST_CREATE_SUCCESS = "Create new artists successfully";
+    public const string ARTIST_CREATE_FAIL = "Fail to create new artists";
+    public const string ARTIST_CREATE_SUCESS_AND_FAIL = "New artists were created successfully but there are some artists failed to insert";
+    public const string ARTIST_DELETE_FAIL = "Fail to delete artists";
+    public const string ARTIST_DELETE_SUCCESS = "Delete artist successfully";
+    public const string ARTIST_DELETE_SUCCESS_AND_FAIL = "Delete artist successfully but there are some artists that failed to deleted";
 }

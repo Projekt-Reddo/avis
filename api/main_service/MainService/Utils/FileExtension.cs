@@ -118,4 +118,20 @@ public class FileExtension
 
         return Tuple.Create(true, "");
     }
+
+    /// <summary>
+    /// Get extension of IFormfile
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    public static string GetFileExtension(IFormFile file)
+    {
+        if (file == null || file.Length <= 0)
+        {
+            return String.Empty;
+        }
+
+        var extension = Path.GetExtension(file.FileName);
+        return extension;
+    }
 }

@@ -55,8 +55,16 @@ public class SongsController : ControllerBase
         var song = _mapper.Map<Song>(songCreateDto);
         await _songRepo.AddOneAsync(song);
 
-        var songUploadStatus = await _songLogic.UploadNewSong(song, songCreateDto.File.OpenReadStream(), songCreateDto.File.ContentType);
-        await _songLogic.UploadNewThumbnail(song, songCreateDto.Thumbnail.OpenReadStream(), songCreateDto.Thumbnail.ContentType);
+        var songUploadStatus = await _songLogic.UploadNewSong(
+            song,
+            songCreateDto.File.OpenReadStream(),
+            songCreateDto.File.ContentType,
+            FileExtension.GetFileExtension(songCreateDto.File));
+        await _songLogic.UploadNewThumbnail(
+            song,
+            songCreateDto.Thumbnail.OpenReadStream(),
+            songCreateDto.Thumbnail.ContentType,
+            FileExtension.GetFileExtension(songCreateDto.Thumbnail));
         if (songUploadStatus is false)
         {
             return BadRequest(new ResponseDto(400, ResponseMessage.UPLOAD_SONG_FILE_FAIL));
