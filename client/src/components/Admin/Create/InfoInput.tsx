@@ -6,6 +6,7 @@ import yup from "utils/yup-config";
 import TextArea from "components/shared/TextArea";
 import SelectAsync from "components/shared/SelectAsync";
 import { recommendGenreApi } from "api/genre-api";
+import { recommendArtistApi } from "api/artist-api";
 import Button from "components/shared/Button";
 import Icon from "components/shared/Icon";
 
@@ -86,7 +87,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                     </div>
 
                     <div className="col-span-1">
-                        <label className="font-medium">Genre</label>
+                        <label className="font-medium">Genres</label>
                     </div>
                     <div className="col-span-5">
                         <SelectAsync
@@ -95,6 +96,27 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                             loadOptionsCallback={recommendGenreApi}
                             control={control}
                             controlName={"genres"}
+                            optionConfig={{
+                                label: "name",
+                                value: "name",
+                            }}
+                        />
+                    </div>
+
+                    <div className="col-span-1">
+                        <label className="font-medium">Artists</label>
+                    </div>
+                    <div className="col-span-5">
+                        <SelectAsync
+                            className="w-100 lg:w-4/5"
+                            isMulti={true}
+                            loadOptionsCallback={recommendArtistApi}
+                            control={control}
+                            controlName={"artistIds"}
+                            optionConfig={{
+                                label: "name",
+                                value: "id",
+                            }}
                         />
                     </div>
                 </div>
@@ -137,6 +159,7 @@ const schema = yup.object().shape({
     alias: yup.string(),
     description: yup.string(),
     genres: yup.array(),
+    artistIds: yup.array(),
 });
 
 export default InfoInput;
