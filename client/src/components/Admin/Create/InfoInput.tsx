@@ -11,8 +11,8 @@ import Button from "components/shared/Button";
 import Icon from "components/shared/Icon";
 
 interface InfoInputProps {
-    song: SongCreateDto;
-    setSong: Dispatch<React.SetStateAction<SongCreateDto>>;
+    song: SongCreate;
+    setSong: Dispatch<React.SetStateAction<SongCreate>>;
     currentStep?: number;
     nextFormStep: () => void;
     previousFormStep: () => void;

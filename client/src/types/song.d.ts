@@ -1,4 +1,4 @@
-interface SongCreateDto {
+interface SongCreate {
     title: string;
     alias: string;
     thumbnail: File | null;

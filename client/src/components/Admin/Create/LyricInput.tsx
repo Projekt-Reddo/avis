@@ -11,8 +11,8 @@ import React from "react";
 import style from "theme/markdown-styles.module.css";
 
 interface LyricInputProps {
-    song: SongCreateDto;
-    setSong: Dispatch<React.SetStateAction<SongCreateDto>>;
+    song: SongCreate;
+    setSong: Dispatch<React.SetStateAction<SongCreate>>;
     currentStep?: number;
     nextFormStep: () => void;
     previousFormStep: () => void;
