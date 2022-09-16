@@ -9,6 +9,10 @@ interface SelectAsyncProps {
     loadOptionsCallback: (keyword: string) => Promise<any>;
     control: Control<SongCreateDto, any>;
     controlName: any;
+    optionConfig: {
+        label: string; // response property for displaying lable
+        value: string; // response property for storing value
+    };
 }
 
 const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
@@ -17,6 +21,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
     loadOptionsCallback,
     control,
     controlName,
+    optionConfig,
 }) => {
     const customStyles = {
         control: (provided: any, state: any) => ({
@@ -38,8 +43,8 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
 
     const mapOptionsToValues = (options: any) => {
         const generatedOptions = options.map((option: any) => ({
-            value: option.name,
-            label: option.name,
+            value: option[optionConfig.value],
+            label: option[optionConfig.label],
         }));
 
         setOptions(generatedOptions);
