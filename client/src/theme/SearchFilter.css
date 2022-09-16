@@ -25,3 +25,26 @@
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
+
+.input-search-app{
+    box-sizing: border-box;
+    background: var(--body-bg-color);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.25);
+    padding: 0.5rem;
+}
+
+.input-search-app:focus{
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+}
+
+.input-search-app-only{
+    box-sizing: border-box;
+    background: var(--body-bg-color);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-right: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 0.5rem;
+}

@@ -10,19 +10,28 @@ import Icon from "components/shared/Icon";
 import Table from "components/shared/Table";
 import PageWrapper from "components/shared/PageWrapper";
 import SearchFilter from "components/shared/SearchFilter";
+import SelectRow from "components/shared/SelectRow";
+import Pagination from "components/shared/Pagination";
 
 import { FieldValues, useForm } from "react-hook-form";
 import { DayFormat } from "utils/constants";
 import { Link } from "react-router-dom";
 import { recommendGenreApi } from "api/genre-api";
-import { string } from "yup/lib/locale";
+import Loading from "components/shared/Loading";
 
 const View = () => {
+    const dispatch = useAppDispatch();
+
     const songState = useAppSelector((state) => state.song);
 
-    const [isSelected, setIsSelected] = React.useState<boolean>(false);
+    const [currentPage, setCurrentPage] = React.useState(1);
 
-    const [selectedGenre, setSelectedGenre] = React.useState<string[]>([]);
+    const [rowShow, setRowShow] = React.useState({
+        value: 10,
+        label: "10 rows",
+    });
+
+    const [isSelected, setIsSelected] = React.useState<boolean>(false);
 
     const {
         register,
@@ -42,13 +51,11 @@ const View = () => {
         },
     });
 
-    const dispatch = useAppDispatch();
-
     const handleSearch = (data: FieldValues) => {
         dispatch(
             viewSongAsync({
-                page: 1,
-                size: 5,
+                page: currentPage,
+                size: rowShow.value,
                 filter: {
                     title: data.title,
                     genres: data.genres.length > 0 ? data.genres : null,
@@ -67,34 +74,14 @@ const View = () => {
     useEffect(() => {
         dispatch(
             viewSongAsync({
-                page: 1,
-                size: 10,
+                page: currentPage,
+                size: rowShow.value,
                 filter: {},
             })
         );
-    }, []);
-
-    if (songState.status === "loading") {
-        return (
-            <div className="flex justify-center items-center">
-                <div
-                    className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
-                    role="status"
-                >
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        );
-    }
-    // if (songState.status === "error") {
-    //     return <div>Error</div>;
-    // }
+    }, [currentPage, rowShow]);
 
     const filterContent = {
-        search: {
-            placeholder: "Enter title of song",
-            register: register("title"),
-        },
         selectMultiple: [
             {
                 label: "Genre",
@@ -116,11 +103,6 @@ const View = () => {
                 registerEnd: register("modifiedEnd"),
             },
         ],
-        // radioBox: [
-        //     {
-        //         label: "Report Type",
-        //     }
-        // ],
     };
 
     return (
@@ -143,6 +125,8 @@ const View = () => {
 
             {/* Search Bar */}
             <SearchFilter
+                placeholder="Enter title of song"
+                register={register("title")}
                 handleSubmit={handleSubmit(handleSearch)}
                 setValue={setValue}
                 filterContent={filterContent}
@@ -150,23 +134,51 @@ const View = () => {
 
             {/* Data Table */}
 
-            <Table
-                className=""
-                columns={[
-                    "Thumbnail",
-                    "Title",
-                    "Artist",
-                    "Created",
-                    "Modified",
-                ]}
-                data={songState.tableData.payload}
-                hasSelectOption={true}
-                setDataState={(data) => dispatch(setSong(data))}
-                onRowClick={() => {
-                    console.log("Clicked");
-                }}
-                setIsSelected={setIsSelected}
-            />
+            {songState.status === "loading" || !songState.tableData ? (
+                // Loading Components
+                <div className="flex justify-center items-center mt-8">
+                    <Loading />
+                </div>
+            ) : songState.status === "error" ? (
+                // Error show
+                <div className="flex justify-center items-center mt-8 text-lg">
+                    <div>{songState.status}</div>
+                </div>
+            ) : (
+                <>
+                    {/* Data Table */}
+                    <Table
+                        className=""
+                        columns={[
+                            "Thumbnail",
+                            "Title",
+                            "Artist",
+                            "Created",
+                            "Modified",
+                        ]}
+                        data={songState.tableData.payload}
+                        hasSelectOption={true}
+                        setDataState={(data) => dispatch(setSong(data))}
+                        onRowClick={() => {
+                            console.log("Clicked");
+                        }}
+                        setIsSelected={setIsSelected}
+                    />
+
+                    <div className="sm:flex sm:justify-between">
+                        {/* Show rows select */}
+                        <SelectRow state={rowShow} setState={setRowShow} />
+
+                        {/* Pagination */}
+                        <Pagination
+                            totalRecords={songState.data.total}
+                            currentPage={currentPage}
+                            pageSize={rowShow.value}
+                            onPageChange={setCurrentPage}
+                        />
+                    </div>
+                </>
+            )}
         </PageWrapper>
     );
 };
@@ -177,21 +189,25 @@ export const getSongData = (data: any) => {
     return data.payload.map((item: any) => ({
         id: item.id,
         thumbnail: (
-            <div
-                style={{
-                    backgroundImage: `url(${item.thumbnail})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    height: "35px",
-                    width: "35px",
-                    borderRadius: "50%",
-                    border: "2px solid white",
-                    minWidth: "35px",
-                }}
-            />
+            <div className="flex justify-center items-center">
+                <div
+                    style={{
+                        backgroundImage: `url(${item.thumbnail})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        height: "35px",
+                        width: "35px",
+                        borderRadius: "50%",
+                        border: "2px solid white",
+                        minWidth: "35px",
+                    }}
+                />
+            </div>
         ),
         title: item.title,
-        artist: item.artist,
+        artist: item.artists.map((item: any) => (
+            <div key={item.id}>{item.name}</div>
+        )),
         created: moment(item.createdAt).format(DayFormat),
         modified: moment(item.modifiedAt).format(DayFormat),
     }));

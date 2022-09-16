@@ -14,13 +14,11 @@ import SelectAsync from "./SelectAsync";
 import "theme/SearchFilter.css";
 
 interface SearchFilterProps {
+    placeholder?: string;
+    register: UseFormRegisterReturn;
     handleSubmit: () => void;
     setValue: UseFormSetValue<any>;
-    filterContent: {
-        search: {
-            placeholder: string;
-            register: UseFormRegisterReturn;
-        };
+    filterContent?: {
         selectMultiple?: {
             label?: string;
             isMulti: boolean;
@@ -38,6 +36,8 @@ interface SearchFilterProps {
 }
 
 const SearchFilter: React.FC<SearchFilterProps> = ({
+    placeholder,
+    register,
     handleSubmit,
     setValue,
     filterContent,
@@ -46,11 +46,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         React.useState<boolean>(false);
 
     const handleClearFilter = () => {
-        filterContent.selectMultiple?.forEach((element) => {
+        filterContent?.selectMultiple?.forEach((element) => {
             setValue(element.controlName, "");
         });
 
-        filterContent.dateInput?.forEach((element) => {
+        filterContent?.dateInput?.forEach((element) => {
             setValue(element.registerStart.name, "");
             setValue(element.registerEnd.name, "");
         });
@@ -73,23 +73,31 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
 
                 {/* Search Input */}
                 <input
-                    className="input-search-app w-full"
-                    placeholder={filterContent.search.placeholder}
-                    {...filterContent.search.register}
+                    className={`${
+                        filterContent
+                            ? "input-search-app w-full"
+                            : "input-search-app-only w-full"
+                    }`}
+                    placeholder={placeholder}
+                    {...register}
                 />
 
                 {/* Show Filter Button */}
-                <button
-                    type="button"
-                    className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0"
-                    onClick={() => setShowSearchFilter(!showSearchFilter)}
-                >
-                    <div className="text-base font-bold pr-4">Filter</div>
-                    <Icon
-                        icon="filter"
-                        className="text-[color:var(--teal-lighter-color)]"
-                    />
-                </button>
+                {filterContent ? (
+                    <button
+                        type="button"
+                        className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0"
+                        onClick={() => setShowSearchFilter(!showSearchFilter)}
+                    >
+                        <div className="text-base font-bold pr-4">Filter</div>
+                        <Icon
+                            icon="filter"
+                            className="text-[color:var(--teal-lighter-color)]"
+                        />
+                    </button>
+                ) : (
+                    " "
+                )}
             </div>
 
             {/* Search Filter */}
@@ -98,7 +106,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 <div className="radius-border text-[color:--text-primary-color] bg-[color:var(--body-bg-color)] px-4">
                     {/* Select Multiple Filter */}
 
-                    {filterContent.selectMultiple?.map((item) => (
+                    {filterContent?.selectMultiple?.map((item) => (
                         <div key={item.label} className="w-full py-4">
                             <div className="text-base font-bold self-center mb-2">
                                 {item.label}
@@ -109,6 +117,10 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                                 loadOptionsCallback={item.loadOptionsCallback}
                                 control={item.control}
                                 controlName={item.controlName}
+                                optionConfig={{
+                                    label: "name",
+                                    value: "name",
+                                }}
                             />
                         </div>
                     ))}
@@ -117,7 +129,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
 
                     {/* Date Input Filter */}
                     <div className="grid grid-cols-1 md:grid-cols-2 justify-start py-4">
-                        {filterContent.dateInput?.map((item) => (
+                        {filterContent?.dateInput?.map((item) => (
                             <div key={item.label}>
                                 <div className="text-base font-bold pb-2">
                                     {item.label}
@@ -142,27 +154,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                     <div className="h-[0.25px] w-full bg-[color:var(--text-primary-color)]" />
 
                     {/* Radio Box Filter */}
-
                     {/* Up comming in future */}
-
-                    {/* <div>
-                        <div className="text-base font-bold pb-4">
-                            Report Type
-                        </div>
-                        <div className="flex">
-                            <div className="flex mr-4">
-                                <label className="font-bold text-[color:var(--text-secondary-color)] mr-2">
-                                    Post
-                                </label>
-                                <input
-                                    type="radio"
-                                    className="none-shadow-button h-full"
-                                    value="1"
-                                    name="reportType"
-                                />
-                            </div>
-                        </div>
-                    </div> */}
 
                     {/* Clear, Close, Apply Filter  */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 justify-end py-4">
