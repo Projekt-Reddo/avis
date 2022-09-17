@@ -73,17 +73,25 @@ namespace MainService.Data
         /// <param name="id">Id to delete</param>
         /// <returns>true(deleted) / false(not delete)</returns>
         Task<bool> DeleteOneAsync(string id);
+
+        /// <summary>
+        /// Start a session for transaction
+        /// </summary>
+        /// <returns></returns>
+        Task<IClientSession> StartSessionAsync();
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly IMongoCollection<TEntity> _collection;
+        private readonly MongoClient _client;
         protected readonly IMongoDatabase _database;
 
         public Repository(IMongoContext context)
         {
             _database = context.Database;
             _collection = _database.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
+            _client = context.client;
         }
 
         public virtual async Task<TEntity> AddOneAsync(TEntity entity)
@@ -153,6 +161,12 @@ namespace MainService.Data
         {
             var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
             return entity;
+        }
+
+        public virtual async Task<IClientSession> StartSessionAsync()
+        {
+            var session = await _client.StartSessionAsync();
+            return session;
         }
 
         /// <summary>

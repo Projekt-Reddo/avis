@@ -53,28 +53,25 @@ const songSlice = createSlice({
 export const createAsync = createAsyncThunk(
     "song/create",
     async (songCreate: SongCreate, thunkApi) => {
-        const res = await createSongApi(songCreate);
-        const msg = res.data.message;
+        try {
+            const res = await createSongApi(songCreate);
+            const msg = res.message;
 
-        if (res.status !== 200) {
             thunkApi.dispatch(
                 addToast({
-                    variant: "danger",
+                    variant: "primary",
                     message: msg,
                 })
             );
-
             return msg;
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "danger",
+                    message: e.response.data.message,
+                })
+            );
         }
-
-        thunkApi.dispatch(
-            addToast({
-                variant: "primary",
-                message: msg,
-            })
-        );
-
-        return msg;
     }
 );
 

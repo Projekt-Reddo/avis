@@ -8,7 +8,6 @@ const store = configureStore({
         user: userSlice,
         song: songSlice,
         toast: toastSlice,
-        song: songSlice,
     },
 });
 

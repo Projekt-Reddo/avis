@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "components/shared/Button";
 import Icon from "components/shared/Icon";
-import { Dispatch, FunctionComponent, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import yup from "utils/yup-config";
 import Editor from "react-markdown-editor-lite";
@@ -37,7 +37,7 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
     });
 
     const onSubmit = (values: FieldValues) => {
-        setSong({ ...song, ...values });
+        // setSong({ ...song, ...values });
         nextFormStep();
     };
 
@@ -48,6 +48,7 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
         const newValue = md.text.replace(/\d/g, "");
         setMdContent(newValue);
         setValue("lyric", newValue);
+        setSong({ ...song, lyric: newValue });
     };
 
     useEffect(() => {
@@ -121,8 +122,8 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
                             boxShadow: "none !important",
                         }}
                     >
-                        <Icon icon="arrow-right" className="text-white" />
-                        <span className="ml-2 text-white">Next</span>
+                        <Icon icon="plus" className="text-white" />
+                        <span className="ml-2 text-white">Submit</span>
                     </Button>
                 </div>
             </div>

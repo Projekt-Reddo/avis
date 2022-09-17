@@ -1,5 +1,11 @@
 import { FunctionComponent, useState } from "react";
-import { Control, Controller } from "react-hook-form";
+import {
+    Control,
+    Controller,
+    FieldError,
+    FieldErrorsImpl,
+    Merge,
+} from "react-hook-form";
 import AsyncSelect from "react-select/async";
 
 interface SelectAsyncProps {
@@ -7,12 +13,13 @@ interface SelectAsyncProps {
     style?: any;
     isMulti: boolean;
     loadOptionsCallback: (keyword: string) => Promise<any>;
-    control: Control<SongCreateDto, any>;
+    control: any;
     controlName: any;
     optionConfig: {
         label: string; // response property for displaying lable
         value: string; // response property for storing value
     };
+    error?: FieldError | Merge<FieldError, (FieldError | undefined)[]>;
 }
 
 const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
@@ -22,6 +29,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
     control,
     controlName,
     optionConfig,
+    error,
 }) => {
     const customStyles = {
         control: (provided: any, state: any) => ({
@@ -89,6 +97,10 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
                     />
                 )}
             />
+
+            {error?.message && (
+                <span className="text-red-600">{`${error.message}`}</span>
+            )}
         </div>
     );
 };

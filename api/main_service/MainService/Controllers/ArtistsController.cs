@@ -17,35 +17,41 @@ public class ArtistsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ResponseDto>> CreateManyGenre([FromForm] ArtistManyCreateDto manyCreateDto)
+    public async Task<ActionResult<ResponseDto>> CreateMany(ArtistManyCreateDto manyCreateDto)
     {
-        var rs = await _artistLogic.CreateMany(manyCreateDto.Artists);
-        if (rs == 0)
+        var msg = await _artistLogic.CreateMany(manyCreateDto.Artists);
+        if (!String.IsNullOrEmpty(msg))
         {
-            return BadRequest(new ResponseDto(400, ResponseMessage.ARTIST_CREATE_FAIL));
+            return Ok(new ResponseDto
+            {
+                Status = 200,
+                Message = msg
+            });
         }
-        if (rs < manyCreateDto.Artists.Count)
+
+        return Ok(new ResponseDto
         {
-            return BadRequest(new ResponseDto(200, ResponseMessage.ARTIST_CREATE_SUCESS_AND_FAIL));
-        }
-        return Ok(new ResponseDto(200, ResponseMessage.ARTIST_CREATE_SUCCESS));
+            Status = 200,
+            Message = ResponseMessage.ARTIST_CREATE_SUCCESS
+        });
     }
 
     [HttpGet]
-    public async Task<ActionResult<ICollection<GenreReadDto>>> GetAllGenre()
+    public async Task<ActionResult<ICollection<ArtistReadDto>>> GetAll()
     {
-        return Ok(await _artistLogic.GetAllGenre());
+        var rs = await _artistLogic.GetAll();
+        return Ok(rs);
     }
 
     [HttpPost("recommend")]
-    public async Task<ActionResult<ICollection<GenreReadDto>>> RecommendGenres(GenreRecommendDto genreRecommendDto)
+    public async Task<ActionResult<ICollection<ArtistReadDto>>> Recommend(ArtistRecommendDto recommendDto)
     {
-        var rs = await _artistLogic.GetByName(genreRecommendDto.Keyword);
+        var rs = await _artistLogic.GetByName(recommendDto.Keyword);
         return Ok(rs);
     }
 
     [HttpDelete]
-    public async Task<ActionResult<ResponseDto>> DeleteManyGenre(ArtistManyDeleteDto manyDeleteDto)
+    public async Task<ActionResult<ResponseDto>> DeleteMany(ArtistManyDeleteDto manyDeleteDto)
     {
         var rs = await _artistLogic.DeleteMany(manyDeleteDto);
         if (rs == 0)

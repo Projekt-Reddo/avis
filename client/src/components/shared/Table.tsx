@@ -33,6 +33,7 @@ const Table: React.FC<TableProps> = ({
     setDataState,
     setIsSelected,
 }) => {
+    console.log("🚀 ~ file: Table.tsx ~ line 36 ~ data", data);
     const handleAllChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDataState(
             data.map((obj) => {

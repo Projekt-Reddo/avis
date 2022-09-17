@@ -10,11 +10,11 @@ namespace MainService.Logic;
 public interface IArtistLogic
 {
     Task<bool> Create(ArtistCreateDto createDto);
-    Task<int> CreateMany(ICollection<ArtistCreateDto> createManyDto);
-    Task<ICollection<ArtistReadDto>> GetAllGenre();
+    Task<string> CreateMany(ICollection<ArtistCreateDto> createManyDto);
+    Task<ICollection<ArtistReadDto>> GetAll();
     Task<bool> Delete(string id);
     Task<int> DeleteMany(ArtistManyDeleteDto deleteManyDto);
-    Task<Artist> GetById(string id);
+    Task<ArtistReadDto> GetById(string id);
     Task<IEnumerable<Artist>> GetByName(string name);
 }
 
@@ -37,23 +37,33 @@ public class ArtistLogic : IArtistLogic
 
     public async Task<bool> Create(ArtistCreateDto createDto)
     {
-        var entity = _mapper.Map<Artist>(createDto);
-        await _artistRepo.AddOneAsync(entity);
-        return true;
+        try
+        {
+            var entity = _mapper.Map<Artist>(createDto);
+            await _artistRepo.AddOneAsync(entity);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    public async Task<int> CreateMany(ICollection<ArtistCreateDto> createManyDto)
+    public async Task<string> CreateMany(ICollection<ArtistCreateDto> createManyDto)
     {
-        var successCount = 0;
+        ICollection<string> failedEntities = new List<string>();
         foreach (var item in createManyDto)
         {
             var isSuccess = await Create(item);
-            if (isSuccess == true)
+            if (isSuccess != true)
             {
-                successCount += 1;
+                failedEntities.Append(item.Name);
             }
         }
-        return successCount;
+
+        if (failedEntities.Any())
+            return $"There is an error with: {String.Join(" ", failedEntities)}";
+        return String.Empty;
     }
 
     public async Task<bool> Delete(string id)
@@ -76,17 +86,17 @@ public class ArtistLogic : IArtistLogic
         return successCount;
     }
 
-    public async Task<ICollection<ArtistReadDto>> GetAllGenre()
+    public async Task<ICollection<ArtistReadDto>> GetAll()
     {
         (_, var entities) = await _artistRepo.FindManyAsync();
         return _mapper.Map<ICollection<ArtistReadDto>>(entities);
     }
 
-    public async Task<Artist> GetById(string id)
+    public async Task<ArtistReadDto> GetById(string id)
     {
         var filter = Builders<Artist>.Filter.Eq(x => x.Id, id);
-        var rs = await _artistRepo.FindOneAsync(filter);
-        return rs;
+        var entity = await _artistRepo.FindOneAsync(filter);
+        return _mapper.Map<ArtistReadDto>(entity);
     }
 
     public async Task<IEnumerable<Artist>> GetByName(string name)

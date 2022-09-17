@@ -43,22 +43,6 @@ namespace MainService.Controllers
             return Ok(await songs.ToListAsync());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(IFormFile song)
-        {
-            // var rs = await _s3Service.UploadFileAsync(S3Config.BUCKET_NAME, S3Config.SONGS_FOLDER, song.FileName, song.OpenReadStream(), song.ContentType);
-
-            return Ok();
-        }
-
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult> Get(string id)
-        // {
-        //     var rs = await _s3Service.DownloadFileAsync(S3Config.BUCKET_NAME, null, "88703952_p0.png");
-
-        //     return File(rs!, "image/png");
-        // }
-
         [HttpGet("/getPosts")]
         public async Task<IActionResult> GetPosts()
         {
@@ -79,24 +63,6 @@ namespace MainService.Controllers
             var result = await _postRepo.FindManyAsync(lookup: lookup, sort: sort);
 
             return Ok(result.entities);
-        }
-
-        [HttpPost("/addPost")]
-        public async Task<ActionResult<PaginationResDto<PostReadDto>>> AddPost([FromBody] PaginationReqDto<PostCreateDto> paginationReqDto)
-        {
-            // var post = _mapper.Map<Post>(postDto);
-            // var rs = await _postRepo.Add(post);
-
-            return Ok("OK");
-        }
-
-        [HttpPost("/addComment")]
-        public async Task<IActionResult> AddComment([FromBody] CommentCreateDto commentDto)
-        {
-            var comment = _mapper.Map<Comment>(commentDto);
-            // var rs = await _commentRepo.Add(comment);
-
-            return Ok("OK");
         }
 
         [HttpGet("/sendMail")]

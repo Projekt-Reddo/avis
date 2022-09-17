@@ -100,6 +100,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                                 label: "name",
                                 value: "name",
                             }}
+                            error={errors.genres}
                         />
                     </div>
 
@@ -117,6 +118,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                                 label: "name",
                                 value: "id",
                             }}
+                            error={errors.artistIds}
                         />
                     </div>
                 </div>
@@ -158,8 +160,8 @@ const schema = yup.object().shape({
     title: yup.string().required("Name is required!"),
     alias: yup.string(),
     description: yup.string(),
-    genres: yup.array(),
-    artistIds: yup.array(),
+    genres: yup.array().min(1, "At least a genre must be selected"),
+    artistIds: yup.array().min(1, "At least an artist must be selected"),
 });
 
 export default InfoInput;
