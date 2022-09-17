@@ -1,11 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createSongApi } from "api/song-api";
+import { createSongApi, viewSongApi } from "api/song-api";
 import { addToast } from "./toastSlice";
+import { getSongData } from "pages/admin/Song/View";
 
 const initialState: AsyncReducerInitialState = {
     status: "idle",
-    data: null,
+    data: {
+        total: 0,
+        payload: [],
+    },
     error: null,
+    tableData: {
+        total: 0,
+        payload: [],
+    },
 };
 
 const songSlice = createSlice({
@@ -13,6 +21,11 @@ const songSlice = createSlice({
     initialState,
     reducers: {
         create: () => initialState,
+        viewSong: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
+        setSong: (_, action) => action.payload,
     },
     extraReducers: (builder) => {
         builder
@@ -22,6 +35,17 @@ const songSlice = createSlice({
             .addCase(createAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(viewSongAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(viewSongAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+                state.tableData = {
+                    ...action.payload,
+                    payload: getSongData(action.payload),
+                };
             });
     },
 });
@@ -54,5 +78,12 @@ export const createAsync = createAsyncThunk(
     }
 );
 
-export const { create } = songSlice.actions;
+export const viewSongAsync = createAsyncThunk(
+    "song/viewSong",
+    async (songFilter: SongFilter) => {
+        return await viewSongApi(songFilter);
+    }
+);
+
+export const { viewSong, setSong, create } = songSlice.actions;
 export default songSlice.reducer;

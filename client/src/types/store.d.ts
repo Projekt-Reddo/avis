@@ -9,6 +9,7 @@ interface AsyncReducerInitialState {
     status: "idle" | "loading" | "error";
     data: any;
     error: any;
+    tableData?: any;
 }
 
 interface RootState {

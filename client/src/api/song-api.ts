@@ -12,3 +12,8 @@ export const createSongApi = async (data: SongCreate) => {
 
     return res.data;
 };
+
+export const viewSongApi = async (data: SongFilter) => {
+    const res = await axios.post(apiRoute + "/filter", data);
+    return res.data;
+};

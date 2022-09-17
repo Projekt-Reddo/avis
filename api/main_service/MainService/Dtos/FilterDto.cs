@@ -3,7 +3,7 @@ namespace MainService.Dtos
 {
     public class SongFilterDto
     {
-        public string? Name { get; set; } = null!;
+        public string? Title { get; set; } = null!;
 
         public ICollection<string>? Genres { get; set; } = null!;
 
