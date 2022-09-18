@@ -6,8 +6,6 @@ using MainService.Models;
 using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using MongoDB.Driver;
-using static Constants;
 using MainService.Utils;
 
 namespace MainService.Controllers;
@@ -21,13 +19,15 @@ public class SongsController : ControllerBase
     private readonly IS3Service _s3Service;
     private readonly IConfiguration _configuration;
     private readonly ISongLogic _songLogic;
+    private readonly ILogger<SongsController> _logger;
 
     public SongsController(
         ISongRepo songRepo,
         IMapper mapper,
         IS3Service s3Service,
         IConfiguration configuration,
-        ISongLogic songLogic
+        ISongLogic songLogic,
+        ILogger<SongsController> logger
     )
     {
         _songRepo = songRepo;
@@ -35,6 +35,7 @@ public class SongsController : ControllerBase
         _s3Service = s3Service;
         _configuration = configuration;
         _songLogic = songLogic;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -53,10 +54,33 @@ public class SongsController : ControllerBase
         }
 
         var song = _mapper.Map<Song>(songCreateDto);
-        await _songRepo.AddOneAsync(song);
+        bool songUploadStatus = false;
 
-        var songUploadStatus = await _songLogic.UploadNewSong(song, songCreateDto.File.OpenReadStream(), songCreateDto.File.ContentType);
-        await _songLogic.UploadNewThumbnail(song, songCreateDto.Thumbnail.OpenReadStream(), songCreateDto.Thumbnail.ContentType);
+        using var session = await _songRepo.StartSessionAsync();
+        try
+        {
+            session.StartTransaction();
+            await _songRepo.AddOneAsync(song);
+
+            songUploadStatus = await _songLogic.UploadNewSong(
+                song,
+                songCreateDto.File.OpenReadStream(),
+                songCreateDto.File.ContentType,
+                FileExtension.GetFileExtension(songCreateDto.File));
+            await _songLogic.UploadNewThumbnail(
+                song,
+                songCreateDto.Thumbnail.OpenReadStream(),
+                songCreateDto.Thumbnail.ContentType,
+                FileExtension.GetFileExtension(songCreateDto.Thumbnail));
+            await session.CommitTransactionAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            await session.AbortTransactionAsync();
+            return BadRequest(new ResponseDto(400, ResponseMessage.SONG_CREATE_FAIL));
+        }
+
         if (songUploadStatus is false)
         {
             return BadRequest(new ResponseDto(400, ResponseMessage.UPLOAD_SONG_FILE_FAIL));

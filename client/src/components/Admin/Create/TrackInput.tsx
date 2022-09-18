@@ -7,8 +7,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import yup from "utils/yup-config";
 
 interface TrackInputProps {
-    song: SongCreateDto;
-    setSong: Dispatch<React.SetStateAction<SongCreateDto>>;
+    song: SongCreate;
+    setSong: Dispatch<React.SetStateAction<SongCreate>>;
     currentStep?: number;
     nextFormStep: () => void;
     previousFormStep: () => void;

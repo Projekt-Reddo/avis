@@ -1,6 +1,7 @@
 import React from "react";
 import {
     Control,
+    FieldValues,
     UseFormRegisterReturn,
     UseFormSetValue,
 } from "react-hook-form";
@@ -23,7 +24,7 @@ interface SearchFilterProps {
             label?: string;
             isMulti: boolean;
             loadOptionsCallback: (keyword: string) => Promise<any>;
-            control: Control<any>;
+            control: any;
             controlName: string;
         }[];
         dateInput?: {

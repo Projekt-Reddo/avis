@@ -12,5 +12,7 @@ public class ArtistProfile : Profile
 
         CreateMap<Artist, ArtistViewSongDto>();
 
+        CreateMap<ArtistCreateDto, Artist>()
+            .ForMember(dest => dest.Thumbnail, src => src.Ignore());
     }
 }
