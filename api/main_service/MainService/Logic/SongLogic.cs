@@ -80,7 +80,7 @@ public class SongLogic : ISongLogic
 
     public async Task<bool> UpdateSong(string songId, Song song)
     {
-        var rs = await _songRepo.UpdateOneAsync(songId, song);
+        var rs = await _songRepo.ReplaceOneAsync(songId, song);
         return rs;
     }
 

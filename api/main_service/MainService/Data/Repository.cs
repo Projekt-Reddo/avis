@@ -65,7 +65,7 @@ namespace MainService.Data
         /// <param name="id">Document id</param>
         /// <param name="entity">New document</param>
         /// <returns>true(updated) / false(not update)</returns>
-        Task<bool> UpdateOneAsync(string id, TEntity entity);
+        Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
         /// <summary>
         /// Delete a document in selected collection by id
@@ -78,7 +78,7 @@ namespace MainService.Data
         /// Start a session for transaction
         /// </summary>
         /// <returns></returns>
-        Task<IClientSession> StartSessionAsync();
+        Task<IClientSessionHandle> StartSessionAsync();
 
         /// <summary>
         /// Soft delete documents in selected collection by list id
@@ -152,7 +152,7 @@ namespace MainService.Data
             return (total, entities);
         }
 
-        public virtual async Task<bool> UpdateOneAsync(string id, TEntity entity)
+        public virtual async Task<bool> ReplaceOneAsync(string id, TEntity entity)
         {
             var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
             return rs.ModifiedCount > 0 ? true : false;
@@ -195,7 +195,7 @@ namespace MainService.Data
             return entity;
         }
 
-        public virtual async Task<IClientSession> StartSessionAsync()
+        public virtual async Task<IClientSessionHandle> StartSessionAsync()
         {
             var session = await _client.StartSessionAsync();
             return session;
