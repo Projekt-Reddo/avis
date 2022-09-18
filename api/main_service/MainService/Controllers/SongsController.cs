@@ -7,6 +7,7 @@ using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MainService.Utils;
+using MongoDB.Driver;
 
 namespace MainService.Controllers;
 
@@ -130,5 +131,25 @@ public class SongsController : ControllerBase
         var songs = _mapper.Map<IEnumerable<SongManageListDto>>(songsFromRepo);
 
         return Ok(new PaginationResDto<SongManageListDto>((Int32)totalSong, songs));
+    }
+
+    /// <summary>
+    /// Delete songs with list id
+    /// </summary>
+    /// <param name="songDeleteDto"></param>
+    /// <returns>200 / 404</returns>
+    [HttpDelete]
+    public async Task<ActionResult<ResponseDto>> DeleteSong(SongDeleteDto songDeleteDto)
+    {
+        var songUpdate = Builders<Song>.Update.Set(s => s.IsDeleted, true);
+
+        var rs = await _songRepo.SoftDelete(songDeleteDto.listId, songUpdate);
+
+        if (rs == false)
+        {
+            return BadRequest(new ResponseDto(404, ResponseMessage.SONG_DELETE_FAIL));
+        }
+
+        return Ok(new ResponseDto(200, ResponseMessage.SONG_DELETE_SUCCESS));
     }
 }
