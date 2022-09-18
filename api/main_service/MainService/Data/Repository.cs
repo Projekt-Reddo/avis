@@ -79,6 +79,7 @@ namespace MainService.Data
         /// </summary>
         /// <returns></returns>
         Task<IClientSession> StartSessionAsync();
+        Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
@@ -155,6 +156,31 @@ namespace MainService.Data
         {
             var rs = await _collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("Id", id));
             return rs.DeletedCount > 0 ? true : false;
+        }
+
+        public virtual async Task<bool> SoftDelete(string[] listId, UpdateDefinition<TEntity> update = null!)
+        {
+
+            using var session = await _client.StartSessionAsync();
+            try
+            {
+                session.StartTransaction();
+
+                foreach (string id in listId)
+                {
+                    var rs = await _collection.FindOneAndUpdateAsync(session: session, Builders<TEntity>.Filter.Eq("Id", id), update);
+                }
+
+                await session.CommitTransactionAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await session.AbortTransactionAsync();
+                return false;
+            }
+
+            return true;
         }
 
         public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!)

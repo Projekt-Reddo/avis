@@ -82,3 +82,8 @@ public class SongManageListDto
 
     public IEnumerable<ArtistViewSongDto> Artists { get; set; } = null!;
 }
+
+public class SongDeleteDto
+{
+    public string[] listId { get; set; } = null!;
+}
