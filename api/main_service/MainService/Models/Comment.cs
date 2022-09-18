@@ -6,6 +6,7 @@ namespace MainService.Models;
 /// <summary>
 /// Comment model for storing all information about a comment
 /// </summary>
+[BsonIgnoreExtraElements]
 public class Comment : BaseModel
 {
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]

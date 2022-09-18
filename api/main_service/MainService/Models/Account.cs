@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MainService.Models;
 
 /// <summary>
 /// Account model storing all information about a account
 /// </summary>
+[BsonIgnoreExtraElements]
 public class Account : BaseModel
 {
     [StringLength(100, MinimumLength = 6)]

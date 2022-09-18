@@ -5,6 +5,7 @@ namespace MainService.Models;
 /// <summary>
 /// PortReport model storing all information about a report for a post
 /// </summary>
+[BsonIgnoreExtraElements]
 public class Report : BaseModel
 {
 
