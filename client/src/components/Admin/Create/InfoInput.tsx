@@ -118,6 +118,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                                 label: "name",
                                 value: "id",
                             }}
+                            error={errors.artistIds}
                         />
                     </div>
                 </div>
