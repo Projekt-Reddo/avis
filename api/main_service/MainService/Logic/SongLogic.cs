@@ -10,8 +10,8 @@ namespace MainService.Logic;
 
 public interface ISongLogic
 {
-    Task<bool> UploadNewSong(Song song, Stream stream, string contentType);
-    Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType);
+    Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension);
+    Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType, string fileExtension);
     FilterDefinition<Song> SongFilter(PaginationReqDto<SongFilterDto> pagination);
 
 }
@@ -29,12 +29,12 @@ public class SongLogic : ISongLogic
         _songRepo = songRepo;
     }
 
-    public async Task<bool> UploadNewSong(Song song, Stream stream, string contentType)
+    public async Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension)
     {
         (var songUploadStatus, var songUrl) = await _s3Service.UploadFileAsync(
             _configuration.GetValue<string>("S3:SongsBucket"),
             S3Config.SONGS_FOLDER,
-            song.Id,
+            $"{song.Id}{fileExtension}",
             stream,
             contentType,
             null!
@@ -45,17 +45,21 @@ public class SongLogic : ISongLogic
             return false;
         }
 
+        if (song.Url is null)
+        {
+            song.Url = new Url();
+        }
         song.Url.Internal = songUrl;
         var rs = await UpdateSong(song.Id, song);
         return rs;
     }
 
-    public async Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType)
+    public async Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType, string fileExtension)
     {
         (var thumbnailUploadStatus, var thumbnailUrl) = await _s3Service.UploadFileAsync(
             _configuration.GetValue<string>("S3:ResourcesBucket"),
             S3Config.IMAGES_FOLDER,
-            song.Id,
+            $"{song.Id}{fileExtension}",
             stream,
             contentType,
             null!
@@ -76,7 +80,7 @@ public class SongLogic : ISongLogic
 
     public async Task<bool> UpdateSong(string songId, Song song)
     {
-        var rs = await _songRepo.UpdateOneAsync(songId, song);
+        var rs = await _songRepo.ReplaceOneAsync(songId, song);
         return rs;
     }
 
@@ -86,9 +90,9 @@ public class SongLogic : ISongLogic
         var songFilter = Builders<Song>.Filter.Empty;
 
         // Name Filter
-        if (pagination.Filter.Name != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.Title))
         {
-            songFilter = songFilter & Builders<Song>.Filter.Regex("Title", new BsonRegularExpression(pagination.Filter.Name, "i"));
+            songFilter = songFilter & Builders<Song>.Filter.Regex("Title", new BsonRegularExpression(pagination.Filter.Title, "i"));
         }
 
         // Genres Filter
@@ -98,18 +102,18 @@ public class SongLogic : ISongLogic
         }
 
         // Created At Filter
-        if (pagination.Filter.CreatedStart != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedStart.ToString()))
         {
             songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.CreatedAt, pagination.Filter.CreatedStart);
         }
 
-        if (pagination.Filter.CreatedEnd != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedEnd.ToString()))
         {
             songFilter = songFilter & Builders<Song>.Filter.Lte(x => x.CreatedAt, pagination.Filter.CreatedEnd);
         }
 
         // Modified At Filter
-        if (pagination.Filter.ModifiedStart != null)
+        if (!String.IsNullOrWhiteSpace(pagination.Filter.ModifiedStart.ToString()))
         {
             songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.ModifiedAt, pagination.Filter.ModifiedStart);
         }

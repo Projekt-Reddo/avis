@@ -9,8 +9,10 @@ interface AsyncReducerInitialState {
     status: "idle" | "loading" | "error";
     data: any;
     error: any;
+    tableData?: any;
 }
 
 interface RootState {
     [key: string]: AsyncReducerInitialState;
+    toast: ToastType[];
 }

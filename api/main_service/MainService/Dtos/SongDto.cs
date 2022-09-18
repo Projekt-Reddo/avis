@@ -33,17 +33,17 @@ public class SongCreateDto
     [StringLength(300)]
     public string Title { get; set; } = null!;
 
-    public string Alias { get; set; } = null!;
+    public string? Alias { get; set; } = null!;
 
     public IFormFile Thumbnail { get; set; } = null!;
 
     public string Lyric { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string? Description { get; set; } = null!;
 
     public HashSet<string> Genres { get; set; } = null!;
 
-    public UrlCreateDto Url { get; set; } = null!;
+    public UrlCreateDto? Url { get; set; } = null!;
 
     public ICollection<string> ArtistIds { get; set; } = null!;
 
@@ -81,4 +81,9 @@ public class SongManageListDto
     public string Thumbnail { get; set; } = null!;
 
     public IEnumerable<ArtistViewSongDto> Artists { get; set; } = null!;
+}
+
+public class SongDeleteDto
+{
+    public string[] listId { get; set; } = null!;
 }

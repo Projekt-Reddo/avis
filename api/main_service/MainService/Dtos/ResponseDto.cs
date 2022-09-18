@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace MainService.Dtos
@@ -8,6 +7,7 @@ namespace MainService.Dtos
         public int Status { get; set; } = 500;
         public string Message { get; set; } = "Internal Server Error";
         public object Errors { get; set; } = new object();
+
         private IDictionary<int, string> statusMessage = new Dictionary<int, string>(){
             {200, "Request has succceeded"},
             {201, "Resource has been created"},

@@ -65,7 +65,7 @@ namespace MainService.Data
         /// <param name="id">Document id</param>
         /// <param name="entity">New document</param>
         /// <returns>true(updated) / false(not update)</returns>
-        Task<bool> UpdateOneAsync(string id, TEntity entity);
+        Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
         /// <summary>
         /// Delete a document in selected collection by id
@@ -73,17 +73,32 @@ namespace MainService.Data
         /// <param name="id">Id to delete</param>
         /// <returns>true(deleted) / false(not delete)</returns>
         Task<bool> DeleteOneAsync(string id);
+
+        /// <summary>
+        /// Start a session for transaction
+        /// </summary>
+        /// <returns></returns>
+        Task<IClientSessionHandle> StartSessionAsync();
+
+        /// <summary>
+        /// Soft delete documents in selected collection by list id
+        /// </summary>
+        /// <param name="listId">List Id to soft delete</param>
+        /// <returns>true(deleted) / false(not delete)</returns>
+        Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly IMongoCollection<TEntity> _collection;
+        private readonly MongoClient _client;
         protected readonly IMongoDatabase _database;
 
         public Repository(IMongoContext context)
         {
             _database = context.Database;
             _collection = _database.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
+            _client = context.client;
         }
 
         public virtual async Task<TEntity> AddOneAsync(TEntity entity)
@@ -137,7 +152,7 @@ namespace MainService.Data
             return (total, entities);
         }
 
-        public virtual async Task<bool> UpdateOneAsync(string id, TEntity entity)
+        public virtual async Task<bool> ReplaceOneAsync(string id, TEntity entity)
         {
             var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
             return rs.ModifiedCount > 0 ? true : false;
@@ -149,10 +164,41 @@ namespace MainService.Data
             return rs.DeletedCount > 0 ? true : false;
         }
 
+        public virtual async Task<bool> SoftDelete(string[] listId, UpdateDefinition<TEntity> update = null!)
+        {
+
+            using var session = await _client.StartSessionAsync();
+            try
+            {
+                session.StartTransaction();
+
+                foreach (string id in listId)
+                {
+                    var rs = await _collection.FindOneAndUpdateAsync(session: session, Builders<TEntity>.Filter.Eq("Id", id), update);
+                }
+
+                await session.CommitTransactionAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await session.AbortTransactionAsync();
+                return false;
+            }
+
+            return true;
+        }
+
         public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!)
         {
             var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
             return entity;
+        }
+
+        public virtual async Task<IClientSessionHandle> StartSessionAsync()
+        {
+            var session = await _client.StartSessionAsync();
+            return session;
         }
 
         /// <summary>

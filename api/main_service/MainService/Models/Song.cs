@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MainService.Models;
 
 /// <summary>
 /// Song model storing all information about a song
 /// </summary>
+[BsonIgnoreExtraElements]
 public class Song : BaseModel
 {
     [StringLength(300)]

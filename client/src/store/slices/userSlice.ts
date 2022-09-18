@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createAccountApi } from "api/account-api";
 import { loginWithGoogle, userSignupFirebase } from "api/firebase-api";
+import { FirebaseError } from "firebase/app";
+import { mapAuthCodeToMessage } from "utils/firebase/firebase-helpers";
+import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
     status: "idle",
@@ -38,28 +41,39 @@ const userSlice = createSlice({
 
 export const signupAsync = createAsyncThunk(
     "user/signup",
-    async (userSignup: UserSignup) => {
-        // Signup here
-        const userFirebaseData = await userSignupFirebase(
-            userSignup as UserSignup
-        );
+    async (userSignup: UserSignup, thunkApi) => {
+        try {
+            // Signup here
+            const userFirebaseData = await userSignupFirebase(
+                userSignup as UserSignup
+            );
 
-        const res = await createAccountApi({
-            email: userSignup.email,
-            name: userSignup.name,
-            uid: userFirebaseData.user.uid,
-        });
+            const res = await createAccountApi({
+                email: userSignup.email,
+                name: userSignup.name,
+                uid: userFirebaseData.user.uid,
+            });
 
-        if (res.status !== 200) {
-            return res.data.message;
+            if (res.status !== 200) {
+                return res.data.message;
+            }
+
+            return {
+                emailVerified: userFirebaseData.user.emailVerified,
+                email: userSignup.email,
+                name: userSignup.name,
+                uid: userFirebaseData.user.uid,
+            };
+        } catch (e: unknown) {
+            if (e instanceof FirebaseError) {
+                thunkApi.dispatch(
+                    addToast({
+                        variant: "danger",
+                        message: mapAuthCodeToMessage(e.code),
+                    })
+                );
+            }
         }
-
-        return {
-            emailVerified: userFirebaseData.user.emailVerified,
-            email: userSignup.email,
-            name: userSignup.name,
-            uid: userFirebaseData.user.uid,
-        };
     }
 );
 

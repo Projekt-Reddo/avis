@@ -6,6 +6,7 @@ namespace MainService.Models;
 /// <summary>
 /// Post model storing all information about a post
 /// </summary>
+[BsonIgnoreExtraElements]
 public class Post : BaseModel
 {
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]

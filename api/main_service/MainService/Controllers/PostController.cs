@@ -49,22 +49,22 @@ namespace MainService.Controllers
             return Ok(rs.entities);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseDto>> DeletePost()
-        {
-            return Ok();
-        }
+        // [HttpDelete("{id}")]
+        // public async Task<ActionResult<ResponseDto>> DeletePost()
+        // {
+        //     return Ok();
+        // }
 
-        [HttpPut("")]
-        public async Task<ActionResult<ResponseDto>> UpdatePost()
-        {
-            return Ok();
-        }
+        // [HttpPut("")]
+        // public async Task<ActionResult<ResponseDto>> UpdatePost()
+        // {
+        //     return Ok();
+        // }
 
-        [HttpPut("vote/{id}")]
-        public async Task<ActionResult<ResponseDto>> UpDownVotePost()
-        {
-            return Ok();
-        }
+        // [HttpPut("vote/{id}")]
+        // public async Task<ActionResult<ResponseDto>> UpDownVotePost()
+        // {
+        //     return Ok();
+        // }
     }
 }
