@@ -134,9 +134,9 @@ public class SongsController : ControllerBase
     }
 
     /// <summary>
-    /// Delete an board by id
+    /// Delete songs with list id
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="songDeleteDto"></param>
     /// <returns>200 / 404</returns>
     [HttpDelete]
     public async Task<ActionResult<ResponseDto>> DeleteSong(SongDeleteDto songDeleteDto)

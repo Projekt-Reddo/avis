@@ -6,7 +6,7 @@ import yup from "utils/yup-config";
 import TextArea from "components/shared/TextArea";
 import SelectAsync from "components/shared/SelectAsync";
 import { recommendGenreApi } from "api/genre-api";
-// import { recommendArtistApi } from "api/artist-api";
+import { recommendArtistApi } from "api/artist-api";
 import Button from "components/shared/Button";
 import Icon from "components/shared/Icon";
 
@@ -108,7 +108,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                         <label className="font-medium">Artists</label>
                     </div>
                     <div className="col-span-5">
-                        {/* <SelectAsync
+                        <SelectAsync
                             className="w-100 lg:w-4/5"
                             isMulti={true}
                             loadOptionsCallback={recommendArtistApi}
@@ -118,7 +118,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                                 label: "name",
                                 value: "id",
                             }}
-                        /> */}
+                        />
                     </div>
                 </div>
             </div>

@@ -79,6 +79,12 @@ namespace MainService.Data
         /// </summary>
         /// <returns></returns>
         Task<IClientSession> StartSessionAsync();
+
+        /// <summary>
+        /// Soft delete documents in selected collection by list id
+        /// </summary>
+        /// <param name="listId">List Id to soft delete</param>
+        /// <returns>true(deleted) / false(not delete)</returns>
         Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
     }
 
