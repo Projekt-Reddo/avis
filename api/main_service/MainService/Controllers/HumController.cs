@@ -1,3 +1,4 @@
+using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
@@ -14,15 +15,17 @@ public class HumController : ControllerBase
 {
     private readonly IHumSvcClient _humSvcClient;
     private readonly ISongRepo _songRepo;
+    private readonly IMapper _mapper;
 
-    public HumController(IHumSvcClient humSvcClient, ISongRepo songRepo)
+    public HumController(IHumSvcClient humSvcClient, ISongRepo songRepo, IMapper mapper)
     {
         _humSvcClient = humSvcClient;
         _songRepo = songRepo;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<ActionResult<ResponseDto>> GetSongsByHum([FromForm] IFormFile inputFile)
+    public async Task<ActionResult<ICollection<SongReadDto>>> GetSongsByHum([FromForm] IFormFile inputFile)
     {
         var songIds = await _humSvcClient.GetSongIdsByHum(file: inputFile);
 
@@ -33,8 +36,8 @@ public class HumController : ControllerBase
 
         var filter = Builders<Song>.Filter.In(x => x.Id, songIds);
 
-        var songs = await _songRepo.FindManyAsync(filter: filter);
+        (_, var songs) = await _songRepo.FindManyAsync(filter: filter);
 
-        return Ok(songs);
+        return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
     }
 }
