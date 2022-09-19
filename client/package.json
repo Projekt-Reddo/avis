@@ -46,14 +46,7 @@
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "5.0.1",
-<<<<<<< Updated upstream
         "react-select": "^5.4.0",
-=======
-<<<<<<< Updated upstream
-=======
-        "react-select": "^5.4.0",
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         "redux": "^4.2.0",
         "typescript": "^4.1.3",
         "web-vitals": "^0.2.4",
