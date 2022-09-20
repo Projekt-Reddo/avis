@@ -1,10 +1,17 @@
 interface Song {
-    sid: string;
+    id: string;
     title: string;
     alias: string;
     thumbnail: string;
     lyric: string;
     description: string;
+    genres: string[];
+    url?: {
+        soundcloud?: string;
+        spotify?: string;
+        youtube?: string;
+    };
+    artists: Artist[];
 }
 
 interface SongFilter {

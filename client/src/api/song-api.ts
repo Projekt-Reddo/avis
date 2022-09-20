@@ -30,13 +30,11 @@ export const viewSongApi = async (data: SongFilter) => {
     return res.data;
 };
 
-export const searchSongApi = async(data: SearchSong) =>
-{
+export const humToSongApi = async (data: Blob) => {
     const formData = new FormData();
+    formData.append("inputFile", data);
 
-    formData.append("inputFile",data.hum);
-
-    const res = await axios.post(humRoute, formData);
+    const res = await axios.post("/api/hum", formData);
 
     return res.data;
-}
+};
