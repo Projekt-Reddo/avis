@@ -45,7 +45,13 @@ http://ionicframework.com/docs/theming/ */
     --blue-general-color: #06b6d4;
     --blue-lighter-color: #22d3ee;
 
+    --white-color: #fff;
+    --black-color: #000;
+
     /* #endregion */
+
+    /* Var */
+    --z-index-nav: 69;
 }
 
 /* @media (prefers-color-scheme: dark) { */

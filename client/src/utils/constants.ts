@@ -7,6 +7,7 @@ export const routes = [
     "/song",
     "/verify",
     "/admin",
+    "/feedback",
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
