@@ -12,6 +12,36 @@ export const routes = [
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
 
+export const leftNavAdmin: LeftNavItemData[] = [
+    {
+        icon: "home",
+        path: "/admin/dashboard",
+        title: "Dashboard",
+    },
+    {
+        icon: "user",
+        path: "/admin/user",
+        title: "User",
+    },
+    {
+        icon: "music",
+        path: "/admin/song",
+        title: "Song",
+    },
+    {
+        icon: "microphone",
+        path: "/admin/artist",
+        title: "Artist",
+    },
+    {
+        icon: "flag",
+        path: "/admin/report",
+        title: "Report",
+    },
+];
+
+export const leftNavUser: LeftNavItemData[] = [];
+
 export const MAIN_SERVICE_API =
     import.meta.env.VITE_MAIN_SERVICE_API || "localhost:7000";
 export const SUGAR = import.meta.env.VITE_SUGAR;
