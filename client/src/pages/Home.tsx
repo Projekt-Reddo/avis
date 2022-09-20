@@ -10,10 +10,9 @@ const Home = () => {
 
     return (
         <PageWrapper
-            className="px-0 lg:px-0 2xl:px-0"
             style={{
-                paddingRight: "0px !important",
-                paddingLeft: "0px !important",
+                paddingLeft: 0,
+                paddingRight: 0,
             }}
         >
             <SongSearch />
