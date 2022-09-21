@@ -61,6 +61,7 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(opt =>
 {
     opt.InvalidModelStateResponseFactory = ModelStateValidator.ValidateModelState;
 });
+builder.Services.AddRouting(opt => opt.LowercaseUrls = true); // Display lowercase url in swagger
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
