@@ -1,20 +1,10 @@
-import { useLeftNav } from "components/Nav.Left/left-nav-hooks";
-import LeftNav from "components/Nav.Left/LeftNav";
-import PageWrapper from "components/shared/PageWrapper";
+import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
 
 const Feedback = () => {
-    const leftNavProps = useLeftNav();
-
     return (
-        <PageWrapper
-            style={{
-                paddingLeft: 0,
-                paddingRight: 0,
-            }}
-            {...leftNavProps}
-        >
-            <LeftNav />
-        </PageWrapper>
+        <PageWrapperWithLeftNav>
+            <div>Hello Sekai</div>
+        </PageWrapperWithLeftNav>
     );
 };
 

@@ -8,7 +8,6 @@ import moment from "moment";
 // Components
 import Icon from "components/shared/Icon";
 import Table from "components/shared/Table";
-import PageWrapper from "components/shared/PageWrapper";
 import SearchFilter from "components/shared/SearchFilter";
 import SelectRow from "components/shared/SelectRow";
 import Pagination from "components/shared/Pagination";
@@ -18,6 +17,7 @@ import { DayFormat } from "utils/constants";
 import { Link } from "react-router-dom";
 import { recommendGenreApi } from "api/genre-api";
 import Loading from "components/shared/Loading";
+import PageWrapper from "components/PageWrapper/PageWrapper";
 
 const View = () => {
     const dispatch = useAppDispatch();

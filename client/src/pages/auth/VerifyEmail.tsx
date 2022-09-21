@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 
-import PageWrapperAuth from "components/shared/PageWrapperAuth";
 import backgroundImage from "static/Flat_art_verify_email.jpg";
-import { IonButton } from "@ionic/react";
 import Button from "components/shared/Button";
+import PageWrapperAuth from "components/PageWrapper/PageWrapperAuth";
 
 const VerifyEmail = () => {
     const location: any = useLocation();
