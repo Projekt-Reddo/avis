@@ -5,19 +5,19 @@ import { useQuery } from "react-query";
 import axios from "axios";
 
 // Components
-import PostCard from "../components/PostCard";
-import HumCard from "../components/HumCard";
-import TrendingCard from "../components/TrendingCard";
-import SearchBox from "../components/SearchBox";
+import PostCard from "../components/Discover/PostCard";
+import HumCard from "../components/Discover/HumCard";
+import TrendingCard from "../components/Discover/TrendingCard";
+import SearchBox from "../components/Discover/SearchBox";
 
 // Constants
-import { API } from "../utils/constants";
+import { MAIN_SERVICE_API } from "../utils/constants";
 
 const Discover = () => {
     const { isLoading, isError, data, refetch } = useQuery(
         "boards",
         async () => {
-            const { data } = await axios.get(`${API}/api/post`);
+            const { data } = await axios.get(`${MAIN_SERVICE_API}/api/post`);
             return data;
         },
         {

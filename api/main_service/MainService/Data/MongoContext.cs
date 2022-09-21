@@ -5,15 +5,17 @@ namespace MainService.Data
     public interface IMongoContext
     {
         IMongoDatabase Database { get; }
+        public MongoClient client { get; }
     }
 
     public class MongoContext : IMongoContext
     {
         public IMongoDatabase Database { get; }
+        public MongoClient client { get; }
 
         public MongoContext(MongoDbSetting mongoDbSetting)
         {
-            var client = new MongoClient(mongoDbSetting.ConnectionString);
+            client = new MongoClient(mongoDbSetting.ConnectionString);
             Database = client.GetDatabase(mongoDbSetting.Database);
         }
     }

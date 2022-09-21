@@ -1,0 +1,24 @@
+.input-app {
+    box-sizing: border-box;
+    background: var(--body-bg-color);
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.input-app:focus {
+    border: 0.5px solid rgba(0, 0, 0, 0.25);
+}
+
+.input-app:focus-visible {
+    outline: 0.1px solid rgba(0, 0, 0, 0.35);
+}
+
+/* Change the white to any color */
+.input-app:-webkit-autofill,
+.input-app:-webkit-autofill:hover,
+.input-app:-webkit-autofill:focus,
+.input-app:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: var(--teal-general-color) !important;
+}

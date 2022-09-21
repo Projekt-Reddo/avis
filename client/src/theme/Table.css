@@ -1,0 +1,31 @@
+.table-component td, .table-component th {
+    text-align: center;
+}
+
+.select-all-mobile {
+    display: none;
+}
+
+.thead-mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .table-component thead {
+        display: none;
+    }
+
+    .select-all-mobile {
+        display: block;
+    }
+
+    /* custom table mobile ver render */
+    .thead-mobile {
+        display: inline;
+    }
+
+    .table-component tr,
+    .table-component td {
+        display: block;
+    }
+}

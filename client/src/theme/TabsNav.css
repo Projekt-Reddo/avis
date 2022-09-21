@@ -1,0 +1,22 @@
+:root {
+    --nav-height: 4rem;
+}
+
+.nav-height {
+    height: var(--nav-height);
+}
+
+.tab-button{
+    color: var(--text-secondary-color);
+    text-align: center;
+}
+
+.tab-button-select{
+    color: var(--text-primary-color);
+    font-weight: bold;
+    text-align: center;
+}
+
+.padding-mobile-nav {
+    padding-bottom: calc(var(--nav-height));
+}

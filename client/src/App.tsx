@@ -1,7 +1,4 @@
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
-
-import "./theme/index.css";
+import { IonRouterOutlet, setupIonicReact } from "@ionic/react";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -21,28 +18,38 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-
 import "./theme/global.css";
-
-import { QueryClientProvider, QueryClient } from "react-query";
 
 import MainRoute from "./routes";
 import Nav from "components/shared/Nav";
+import TabsNav from "components/shared/TabsNav";
+import ToastManager from "components/Toast/ToastManager";
+import { useFirebaseUserChangeTracking } from "utils/firebase/firebase-hooks";
+import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
-setupIonicReact();
+import "./theme/index.css";
 
-const App: React.FC = () => (
-    <QueryClientProvider client={new QueryClient()}>
-        <IonApp>
-            <IonReactRouter>
-                <Nav />
+setupIonicReact({
+    swipeBackEnabled: false,
+});
 
-                <IonRouterOutlet>
-                    <MainRoute />
-                </IonRouterOutlet>
-            </IonReactRouter>
-        </IonApp>
-    </QueryClientProvider>
-);
+const App: React.FC = () => {
+    useFirebaseUserChangeTracking();
+    useUserChangeTracking();
+
+    return (
+        <>
+            <Nav />
+
+            <IonRouterOutlet>
+                <MainRoute />
+            </IonRouterOutlet>
+
+            <TabsNav />
+
+            <ToastManager />
+        </>
+    );
+};
 
 export default App;

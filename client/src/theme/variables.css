@@ -3,55 +3,67 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+    /* #region Border */
+    --border-width: 0.25rem;
+    --border-color: rgba(0, 0, 0, 0.15);
 
-  /* #region Project Custom color*/
+    /* #region Project Custom color*/
 
-  --body-bg-color: #fff;
+    --body-bg-color: #fff;
 
-  --nav-bg-color: #fff;
-  --nav-border-color: rgb(0 0 0 / 8%);
+    --white-color: #fff;
 
-  --text-primary-color: #373F41;
-  --text-secondary-color: #737B7D;
+    --nav-bg-color: #fff;
+    --nav-border-color: rgb(0 0 0 / 8%);
 
-  --element-shadow-color: rgba(0, 0, 0, 0.15);
+    --text-primary-color: #373f41;
+    --text-secondary-color: rgba(55, 63, 65, 0.75);
+    --text-tertiary-color: rgba(55, 63, 65, 0.5);
 
-  --post-bg-color: #fff;
-  --post-border-color: rgb(0 0 0 / 8%);
-  --post-bg-hover-color: #F8F9FA;
+    --element-shadow-color: rgba(0, 0, 0, 0.15);
+    --element-bg-color: #fff;
 
-  /* Theme color */
+    --post-bg-color: #fff;
+    --post-border-color: rgb(0 0 0 / 8%);
+    --post-bg-hover-color: #f8f9fa;
 
-  --teal-darker-color: #0f766e;
-  --teal-general-color: #14b8a6;
-  --teal-lighter-color: #5eead4;
+    /* Theme color */
 
-  /* Support color */
+    --teal-darker-color: #0d9488;
+    --teal-general-color: #14b8a6;
+    --teal-lighter-color: #2dd4bf;
 
-  --amber-darker-color: #b45309;
-  --amber-general-color: #f59e0b;
-  --amber-lighter-color: #fbbf24;
+    /* Support color */
 
-  --red-darker-color: #b91c1c;
-  --red-general-color: #ef4444;
-  --red-lighter-color: #f87171;
+    --amber-darker-color: #d97706;
+    --amber-general-color: #f59e0b;
+    --amber-lighter-color: #fbbf24;
 
-  --blue-darker-color: #0369a1;
-  --blue-general-color: #0ea5e9;
-  --blue-lighter-color: #38bdf8;
+    --red-darker-color: #e11d48;
+    --red-general-color: #f43f5e;
+    --red-lighter-color: #fb7185;
 
-  /* #endregion */
+    --blue-darker-color: #0891b2;
+    --blue-general-color: #06b6d4;
+    --blue-lighter-color: #22d3ee;
 
+    --white-color: #fff;
+    --black-color: #000;
+
+    /* #endregion */
+
+    /* Var */
+    --z-index-nav: 69;
+    --mobile-break-point: 1024px;
 }
 
 /* @media (prefers-color-scheme: dark) { */
-  /*
+/*
    * Dark Colors
    * -------------------------------------------
    */
 
-  /* body {
+/* body {
     
   }
-
 } */

@@ -8,6 +8,20 @@ namespace MainService.Data
         /// <summary>
         /// Get all documents match filter
         /// </summary>
+        /// <param name="indexFilter">
+        ///  <para>Bson document for fulltext search</para>
+        ///  <para>Example:
+        ///  new BsonDocument {
+        ///    { "index", "SongIndex" },
+        ///    { "text", new BsonDocument {
+        ///        { "query", keyword },
+        ///        { "path", new BsonDocument {
+        ///            { "wildcard", "*" }
+        ///        }},
+        ///    }}
+        ///  }
+        ///  </para>
+        /// </param>
         /// <param name="filter">Filter builder for filter element</param>
         /// <param name="sort">
         ///     <para>Bson document for sort (1: increase, -1: decrease)</para>
@@ -24,10 +38,26 @@ namespace MainService.Data
         ///  }
         /// </para>
         /// </param>
+        /// <param name="project">
+        ///  <para>Bson document for lookup</para>
+        ///  <para> Example:
+        ///   new BsonDocument{
+        ///       { "_id", 1 },
+        ///       { "CreatedAt", 1 },
+        ///       { "ModifiedAt", 1 },
+        ///       { "Title", 1 },
+        ///       { "Thumbnail", 1 },
+        ///       { "Artists",  new BsonDocument{
+        ///           {"_id" , 1},
+        ///           {"Name" , 1}
+        ///       } },
+        ///   };
+        /// </para>
+        /// </param>
         /// <param name="limit">Number of documents to get</param>
         /// <param name="skip">Number of documents to skip</param>
         /// <returns>Total match filter count and List of documents</returns>
-        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!);
+        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
 
         /// <summary>
         /// Get a document by fitler
@@ -49,7 +79,7 @@ namespace MainService.Data
         /// <param name="id">Document id</param>
         /// <param name="entity">New document</param>
         /// <returns>true(updated) / false(not update)</returns>
-        Task<bool> UpdateOneAsync(string id, TEntity entity);
+        Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
         /// <summary>
         /// Delete a document in selected collection by id
@@ -57,17 +87,32 @@ namespace MainService.Data
         /// <param name="id">Id to delete</param>
         /// <returns>true(deleted) / false(not delete)</returns>
         Task<bool> DeleteOneAsync(string id);
+
+        /// <summary>
+        /// Start a session for transaction
+        /// </summary>
+        /// <returns></returns>
+        Task<IClientSessionHandle> StartSessionAsync();
+
+        /// <summary>
+        /// Soft delete documents in selected collection by list id
+        /// </summary>
+        /// <param name="listId">List Id to soft delete</param>
+        /// <returns>true(deleted) / false(not delete)</returns>
+        Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly IMongoCollection<TEntity> _collection;
+        private readonly MongoClient _client;
         protected readonly IMongoDatabase _database;
 
         public Repository(IMongoContext context)
         {
             _database = context.Database;
             _collection = _database.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
+            _client = context.client;
         }
 
         public virtual async Task<TEntity> AddOneAsync(TEntity entity)
@@ -76,10 +121,30 @@ namespace MainService.Data
             return entity;
         }
 
-        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!)
+        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!)
         {
 
-            var query = _collection.Aggregate().Match(filter is null ? Builders<TEntity>.Filter.Empty : filter);
+            var query = _collection.Aggregate();
+
+            // $search need to be the first stage in pipeline
+            if (indexFilter is not null)
+            {
+                query = query.AppendStage<TEntity>(new BsonDocument {
+                    {
+                        "$search", indexFilter
+                    }
+                });
+            }
+
+            if (sort is not null)
+            {
+                query = query.Sort(sort);
+            }
+
+            if (filter is not null)
+            {
+                query = query.Match(filter);
+            }
 
             if (skip is not null)
             {
@@ -101,9 +166,14 @@ namespace MainService.Data
                 });
             }
 
-            if (sort is not null)
+            if (project is not null)
             {
-                query = query.Sort(sort);
+                query = query.AppendStage<TEntity>(new BsonDocument
+                {
+                    {
+                        "$project", project
+                    }
+                });
             }
 
             long total = await _collection.CountDocumentsAsync(filter is null ? Builders<TEntity>.Filter.Empty : filter);
@@ -111,7 +181,7 @@ namespace MainService.Data
             return (total, entities);
         }
 
-        public virtual async Task<bool> UpdateOneAsync(string id, TEntity entity)
+        public virtual async Task<bool> ReplaceOneAsync(string id, TEntity entity)
         {
             var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
             return rs.ModifiedCount > 0 ? true : false;
@@ -123,10 +193,41 @@ namespace MainService.Data
             return rs.DeletedCount > 0 ? true : false;
         }
 
+        public virtual async Task<bool> SoftDelete(string[] listId, UpdateDefinition<TEntity> update = null!)
+        {
+
+            using var session = await _client.StartSessionAsync();
+            try
+            {
+                session.StartTransaction();
+
+                foreach (string id in listId)
+                {
+                    var rs = await _collection.FindOneAndUpdateAsync(session: session, Builders<TEntity>.Filter.Eq("Id", id), update);
+                }
+
+                await session.CommitTransactionAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                await session.AbortTransactionAsync();
+                return false;
+            }
+
+            return true;
+        }
+
         public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!)
         {
             var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
             return entity;
+        }
+
+        public virtual async Task<IClientSessionHandle> StartSessionAsync()
+        {
+            var session = await _client.StartSessionAsync();
+            return session;
         }
 
         /// <summary>

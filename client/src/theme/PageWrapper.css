@@ -1,0 +1,15 @@
+.page-wrapper {
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.page-wrapper::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.page-wrapper {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+}
