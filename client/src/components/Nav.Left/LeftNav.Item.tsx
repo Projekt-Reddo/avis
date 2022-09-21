@@ -4,17 +4,33 @@ import { Link } from "react-router-dom";
 interface LeftNavItemProps {
     itemData: LeftNavItemData;
     isActive: boolean;
+    isShowing: boolean;
 }
 
-const LeftNavItem: React.FC<LeftNavItemProps> = ({ itemData, isActive }) => {
+const LeftNavItem: React.FC<LeftNavItemProps> = ({
+    itemData,
+    isActive,
+    isShowing,
+}) => {
     return (
         <Link
-            className="w-full flex flex-row items-center rounded-lg p-3 pl-6 my-1 font-bold"
+            className={`left-nav-item flex flex-row items-center rounded-lg my-1 font-bold ${
+                isShowing ? "show" : ""
+            }`}
             style={isActive ? { background: "rgba(55, 63, 65, 0.1)" } : {}}
-            to=""
+            to={itemData.path}
         >
-            <Icon icon={itemData.icon} className="pr-3" />
-            <div>{itemData.title}</div>
+            <Icon
+                icon={itemData.icon}
+                className={
+                    isShowing
+                        ? "left-nav-item-icon pr-3"
+                        : "left-nav-item-icon p-0"
+                }
+            />
+            <div className={`left-nav-item-title ${isShowing ? "show" : ""}`}>
+                {itemData.title}
+            </div>
         </Link>
     );
 };

@@ -1,7 +1,5 @@
 import { IonRouterOutlet, setupIonicReact } from "@ionic/react";
 
-import "./theme/index.css";
-
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -28,6 +26,8 @@ import TabsNav from "components/shared/TabsNav";
 import ToastManager from "components/Toast/ToastManager";
 import { useFirebaseUserChangeTracking } from "utils/firebase/firebase-hooks";
 import { useUserChangeTracking } from "utils/user-tracking-hooks";
+
+import "./theme/index.css";
 
 setupIonicReact();
 

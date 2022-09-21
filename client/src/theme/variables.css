@@ -52,6 +52,7 @@ http://ionicframework.com/docs/theming/ */
 
     /* Var */
     --z-index-nav: 69;
+    --mobile-break-point: 1024px;
 }
 
 /* @media (prefers-color-scheme: dark) { */

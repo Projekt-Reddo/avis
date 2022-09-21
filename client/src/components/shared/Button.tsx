@@ -45,4 +45,8 @@ const buttonVariants: ButtonVariantsType = {
         backgroundColor: "var(--red-general-color)",
         color: "var(--white-color)",
     },
+    white: {
+        backgroundColor: "var(--white-color)",
+        color: "var(--black-color)",
+    },
 };

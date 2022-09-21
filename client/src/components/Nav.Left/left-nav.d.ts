@@ -4,3 +4,5 @@ interface LeftNavItemData {
     title: string;
     isActive?: boolean;
 }
+
+type ShowingStateType = "show" | "hide";
