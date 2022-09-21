@@ -136,6 +136,11 @@ namespace MainService.Data
                 });
             }
 
+            if (sort is not null)
+            {
+                query = query.Sort(sort);
+            }
+
             if (filter is not null)
             {
                 query = query.Match(filter);
@@ -169,11 +174,6 @@ namespace MainService.Data
                         "$project", project
                     }
                 });
-            }
-
-            if (sort is not null)
-            {
-                query = query.Sort(sort);
             }
 
             long total = await _collection.CountDocumentsAsync(filter is null ? Builders<TEntity>.Filter.Empty : filter);

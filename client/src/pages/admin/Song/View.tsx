@@ -17,19 +17,38 @@ import { DayFormat } from "utils/constants";
 import { Link } from "react-router-dom";
 import { recommendGenreApi } from "api/genre-api";
 import Loading from "components/shared/Loading";
-import PageWrapper from "components/PageWrapper/PageWrapper";
+import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
+
+interface pageRowFilterProps {
+    currentPage: number;
+    rowShow: {
+        value: number;
+        label: string;
+    };
+    filter?: {
+        title?: string;
+        genres?: string[];
+        createdStart?: string;
+        createdEnd?: string;
+        modifiedStart?: string;
+        modifiedEnd?: string;
+    };
+}
 
 const View = () => {
     const dispatch = useAppDispatch();
 
     const songState = useAppSelector((state) => state.song);
 
-    const [currentPage, setCurrentPage] = React.useState(1);
-
-    const [rowShow, setRowShow] = React.useState({
-        value: 10,
-        label: "10 rows",
-    });
+    const [pageRowFilter, setPageRowFilter] =
+        React.useState<pageRowFilterProps>({
+            currentPage: 1,
+            rowShow: {
+                value: 10,
+                label: "10 rows",
+            },
+            filter: {},
+        });
 
     const [isSelected, setIsSelected] = React.useState<boolean>(false);
 
@@ -52,34 +71,34 @@ const View = () => {
     });
 
     const handleSearch = (data: FieldValues) => {
-        dispatch(
-            viewSongAsync({
-                page: currentPage,
-                size: rowShow.value,
-                filter: {
-                    title: data.title,
-                    genres: data.genres.length > 0 ? data.genres : null,
-                    createdStart:
-                        data.createdStart !== "" ? data.createdStart : null,
-                    createdEnd: data.createdEnd !== "" ? data.createdEnd : null,
-                    modifiedStart:
-                        data.modifiedStart !== "" ? data.modifiedStart : null,
-                    modifiedEnd:
-                        data.modifiedEnd !== "" ? data.modifiedEnd : null,
-                },
-            } as SongFilter)
-        );
+        setPageRowFilter({
+            currentPage: 1,
+            rowShow: {
+                value: pageRowFilter.rowShow.value,
+                label: pageRowFilter.rowShow.label,
+            },
+            filter: {
+                title: data.title,
+                genres: data.genres.length > 0 ? data.genres : null,
+                createdStart:
+                    data.createdStart !== "" ? data.createdStart : null,
+                createdEnd: data.createdEnd !== "" ? data.createdEnd : null,
+                modifiedStart:
+                    data.modifiedStart !== "" ? data.modifiedStart : null,
+                modifiedEnd: data.modifiedEnd !== "" ? data.modifiedEnd : null,
+            },
+        });
     };
 
     useEffect(() => {
         dispatch(
             viewSongAsync({
-                page: currentPage,
-                size: rowShow.value,
-                filter: {},
+                page: pageRowFilter.currentPage,
+                size: pageRowFilter.rowShow.value,
+                filter: pageRowFilter.filter,
             })
         );
-    }, [currentPage, rowShow]);
+    }, [pageRowFilter]);
 
     const filterContent = {
         selectMultiple: [
@@ -106,9 +125,9 @@ const View = () => {
     };
 
     return (
-        <PageWrapper className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
             {/* Header */}
-            <div className="flex justify-between pt-2">
+            <div className="flex justify-between pt-6">
                 <div className="text-lg font-bold">Song</div>
                 <Link to="/admin/song/create">
                     <div
@@ -166,20 +185,24 @@ const View = () => {
                     />
 
                     <div className="sm:flex sm:justify-between">
-                        {/* Show rows select */}
-                        <SelectRow state={rowShow} setState={setRowShow} />
-
+                        <div>
+                            {/* Show rows select */}
+                            <SelectRow
+                                state={pageRowFilter.rowShow}
+                                setState={setPageRowFilter}
+                            />
+                        </div>
                         {/* Pagination */}
                         <Pagination
                             totalRecords={songState.data.total}
-                            currentPage={currentPage}
-                            pageSize={rowShow.value}
-                            onPageChange={setCurrentPage}
+                            currentPage={pageRowFilter.currentPage}
+                            pageSize={pageRowFilter.rowShow.value}
+                            onPageChange={setPageRowFilter}
                         />
                     </div>
                 </>
             )}
-        </PageWrapper>
+        </PageWrapperWithLeftNav>
     );
 };
 

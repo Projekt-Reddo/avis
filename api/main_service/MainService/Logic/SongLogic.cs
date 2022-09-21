@@ -87,7 +87,7 @@ public class SongLogic : ISongLogic
     public FilterDefinition<Song> SongFilter(PaginationReqDto<SongFilterDto> pagination)
     {
 
-        var songFilter = Builders<Song>.Filter.Empty;
+        var songFilter = Builders<Song>.Filter.Not(Builders<Song>.Filter.Eq(x => x.IsDeleted, true));
 
         // Name Filter
         if (!String.IsNullOrWhiteSpace(pagination.Filter.Title))
