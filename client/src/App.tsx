@@ -29,7 +29,9 @@ import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
 import "./theme/index.css";
 
-setupIonicReact();
+setupIonicReact({
+    swipeBackEnabled: false,
+});
 
 const App: React.FC = () => {
     useFirebaseUserChangeTracking();

@@ -20,14 +20,7 @@ const LeftNavItem: React.FC<LeftNavItemProps> = ({
             style={isActive ? { background: "rgba(55, 63, 65, 0.1)" } : {}}
             to={itemData.path}
         >
-            <Icon
-                icon={itemData.icon}
-                className={
-                    isShowing
-                        ? "left-nav-item-icon pr-3"
-                        : "left-nav-item-icon p-0"
-                }
-            />
+            <Icon icon={itemData.icon} className="left-nav-item-icon" />
             <div className={`left-nav-item-title ${isShowing ? "show" : ""}`}>
                 {itemData.title}
             </div>

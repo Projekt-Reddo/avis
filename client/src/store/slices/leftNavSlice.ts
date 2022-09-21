@@ -10,8 +10,12 @@ const leftNavSlice = createSlice({
     initialState,
     reducers: {
         toggleLeftNav: (state) => !state,
+
+        showLeftNav: () => true,
+
+        hideLeftNav: () => false,
     },
 });
 
-export const { toggleLeftNav } = leftNavSlice.actions;
+export const { toggleLeftNav, showLeftNav, hideLeftNav } = leftNavSlice.actions;
 export default leftNavSlice.reducer;
