@@ -39,13 +39,27 @@ const Pagination = ({
                     {currentPage !== 1 && (
                         <>
                             <button
-                                onClick={() => onPageChange(1)}
+                                onClick={() => {
+                                    onPageChange((state: any) => {
+                                        return {
+                                            ...state,
+                                            currentPage: 1,
+                                        };
+                                    });
+                                }}
                                 className="pagination_Button"
                             >
                                 <Icon icon="angle-double-left" />
                             </button>
                             <button
-                                onClick={() => onPageChange(currentPage - 1)}
+                                onClick={() => {
+                                    onPageChange((state: any) => {
+                                        return {
+                                            ...state,
+                                            currentPage: currentPage - 1,
+                                        };
+                                    });
+                                }}
                                 className="pagination_Button"
                             >
                                 <Icon icon="angle-left" />
@@ -66,9 +80,14 @@ const Pagination = ({
                                                   : "pagination_Button"
                                           }
                                           style={{ marginLeft: "0.5rem" }}
-                                          onClick={() =>
-                                              onPageChange(pageNumber)
-                                          }
+                                          onClick={() => {
+                                              onPageChange((state: any) => {
+                                                  return {
+                                                      ...state,
+                                                      currentPage: pageNumber,
+                                                  };
+                                              });
+                                          }}
                                           key={pageNumber}
                                       >
                                           {pageNumber}
@@ -89,9 +108,14 @@ const Pagination = ({
                                                   : "pagination_Button"
                                           }
                                           style={{ marginRight: "0.5rem" }}
-                                          onClick={() =>
-                                              onPageChange(pageNumber)
-                                          }
+                                          onClick={() => {
+                                              onPageChange((state: any) => {
+                                                  return {
+                                                      ...state,
+                                                      currentPage: pageNumber,
+                                                  };
+                                              });
+                                          }}
                                           key={pageNumber}
                                       >
                                           {pageNumber}
@@ -107,7 +131,14 @@ const Pagination = ({
                                                 "pagination_Button_Active"
                                               : "pagination_Button"
                                       }
-                                      onClick={() => onPageChange(pageNumber)}
+                                      onClick={() => {
+                                          onPageChange((state: any) => {
+                                              return {
+                                                  ...state,
+                                                  currentPage: pageNumber,
+                                              };
+                                          });
+                                      }}
                                       key={pageNumber}
                                   >
                                       {pageNumber}
@@ -119,13 +150,27 @@ const Pagination = ({
                     {currentPage !== totalPage && (
                         <>
                             <button
-                                onClick={() => onPageChange(currentPage + 1)}
+                                onClick={() => {
+                                    onPageChange((state: any) => {
+                                        return {
+                                            ...state,
+                                            currentPage: currentPage + 1,
+                                        };
+                                    });
+                                }}
                                 className="pagination_Button"
                             >
                                 <Icon icon="angle-right" />
                             </button>
                             <button
-                                onClick={() => onPageChange(totalPage)}
+                                onClick={() => {
+                                    onPageChange((state: any) => {
+                                        return {
+                                            ...state,
+                                            currentPage: totalPage,
+                                        };
+                                    });
+                                }}
                                 className="pagination_Button"
                             >
                                 <Icon icon="angle-double-right" />

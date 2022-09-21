@@ -8,12 +8,7 @@ interface SelectRowProps {
         label: string;
         value: number;
     };
-    setState: Dispatch<
-        React.SetStateAction<{
-            label: string;
-            value: number;
-        }>
-    >;
+    setState: any;
 }
 
 const showRowOptions = [
@@ -35,7 +30,12 @@ const SelectRow: FunctionComponent<SelectRowProps> = ({
             options={showRowOptions}
             defaultValue={state}
             onChange={(val: any) => {
-                setState(val);
+                setState((state: any) => {
+                    return {
+                        ...state,
+                        rowShow: val,
+                    };
+                });
             }}
         />
     );
