@@ -1,5 +1,5 @@
+import PageWrapper from "components/PageWrapper/PageWrapper";
 import Table from "components/shared/Table";
-import PageWrapper from "components/shared/PageWrapper";
 import React from "react";
 
 const Home = () => {

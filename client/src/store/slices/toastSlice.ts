@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 
 const initialState: ToastType[] = [];
 
-const userSlice = createSlice({
-    name: "user",
+const toastSlice = createSlice({
+    name: "toast",
     initialState,
     reducers: {
         addToast: (state, action) => {
@@ -29,5 +29,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { addToast, removeToast } = userSlice.actions;
-export default userSlice.reducer;
+export const { addToast, removeToast } = toastSlice.actions;
+export default toastSlice.reducer;

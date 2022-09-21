@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PageWrapper from "components/shared/PageWrapper";
 import StepFrom from "components/Admin/Create/StepForm";
 import TrackInput from "components/Admin/Create/TrackInput";
 import InfoInput from "components/Admin/Create/InfoInput";
@@ -8,7 +7,7 @@ import UrlInput from "components/Admin/Create/UrlInput";
 import LyricInput from "components/Admin/Create/LyricInput";
 import { useAppDispatch } from "utils/react-redux-hooks";
 import { createAsync } from "store/slices/songSlice";
-import { FieldValues } from "react-hook-form";
+import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
 
 const Create = () => {
     // document.title = "Create song";
@@ -80,14 +79,14 @@ const Create = () => {
     ];
 
     return (
-        <PageWrapper className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
             <StepFrom
                 clasName="mx-5 lg:mx-0"
                 currentStep={currentStep}
                 stepTitles={stepTitles}
                 stepContents={stepContents}
             />
-        </PageWrapper>
+        </PageWrapperWithLeftNav>
     );
 };
 
