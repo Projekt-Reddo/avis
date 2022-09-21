@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import leftNavSlice from "./slices/leftNavSlice";
 import songSlice from "./slices/songSlice";
 import toastSlice from "./slices/toastSlice";
 import userSlice from "./slices/userSlice";
@@ -8,6 +9,7 @@ const store = configureStore({
         user: userSlice,
         song: songSlice,
         toast: toastSlice,
+        leftNavShowing: leftNavSlice,
     },
 });
 

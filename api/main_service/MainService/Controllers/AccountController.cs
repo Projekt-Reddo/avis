@@ -41,7 +41,7 @@ namespace MainService.Controllers
             return Ok(new ResponseDto(200, "Account created successfully"));
         }
 
-        [HttpPost("accounts/filter")]
+        [HttpPost("filter")]
         public async Task<ActionResult<PaginationResDto<IEnumerable<AccountResponseDto>>>> ViewUser([FromBody] PaginationReqDto<AccountFilterDto> pagination)
         {
             // Create Account Filter
