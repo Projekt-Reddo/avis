@@ -3,7 +3,6 @@ import Select from "react-select";
 
 interface SelectRowProps {
     className?: string;
-    style?: any;
     state: {
         label: string;
         value: number;
@@ -19,14 +18,12 @@ const showRowOptions = [
 
 const SelectRow: FunctionComponent<SelectRowProps> = ({
     className,
-    style,
     state,
     setState,
 }) => {
     return (
         <Select
-            className={`${className} hidden sm:block w-32`}
-            styles={style}
+            className={`${className} w-32`}
             options={showRowOptions}
             defaultValue={state}
             onChange={(val: any) => {

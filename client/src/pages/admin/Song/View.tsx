@@ -17,7 +17,7 @@ import { DayFormat } from "utils/constants";
 import { Link } from "react-router-dom";
 import { recommendGenreApi } from "api/genre-api";
 import Loading from "components/shared/Loading";
-import PageWrapper from "components/PageWrapper/PageWrapper";
+import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
 
 interface pageRowFilterProps {
     currentPage: number;
@@ -125,9 +125,9 @@ const View = () => {
     };
 
     return (
-        <PageWrapper className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
             {/* Header */}
-            <div className="flex justify-between pt-2">
+            <div className="flex justify-between pt-6">
                 <div className="text-lg font-bold">Song</div>
                 <Link to="/admin/song/create">
                     <div
@@ -185,12 +185,13 @@ const View = () => {
                     />
 
                     <div className="sm:flex sm:justify-between">
-                        {/* Show rows select */}
-                        <SelectRow
-                            state={pageRowFilter.rowShow}
-                            setState={setPageRowFilter}
-                        />
-
+                        <div>
+                            {/* Show rows select */}
+                            <SelectRow
+                                state={pageRowFilter.rowShow}
+                                setState={setPageRowFilter}
+                            />
+                        </div>
                         {/* Pagination */}
                         <Pagination
                             totalRecords={songState.data.total}
@@ -201,7 +202,7 @@ const View = () => {
                     </div>
                 </>
             )}
-        </PageWrapper>
+        </PageWrapperWithLeftNav>
     );
 };
 
