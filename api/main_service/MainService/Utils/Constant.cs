@@ -30,4 +30,9 @@ public static class Constants
         public const string JOIN_ASC = "Join Asc";
         public const string JOIN_DESC = "Join Desc";
     }
+
+    public static class MongoDbIndex
+    {
+        public const string SONG_INDEX = "SongIndex";
+    }
 }
