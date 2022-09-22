@@ -8,7 +8,8 @@ import Editor from "react-markdown-editor-lite";
 import ReactMarkdown from "react-markdown";
 import "react-markdown-editor-lite/lib/index.css";
 import React from "react";
-import style from "theme/markdown-styles.module.css";
+import style from "components/Admin/Create/markdown-styles.module.css";
+import { useAppSelector } from "utils/react-redux-hooks";
 
 interface LyricInputProps {
     song: SongCreate;
@@ -36,8 +37,9 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
         defaultValues: song,
     });
 
+    const songState = useAppSelector((state) => state.song); // Check isSubmitting or not
+
     const onSubmit = (values: FieldValues) => {
-        // setSong({ ...song, ...values });
         nextFormStep();
     };
 
@@ -121,6 +123,7 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
                         style={{
                             boxShadow: "none !important",
                         }}
+                        disabled={songState.status === "loading"}
                     >
                         <Icon icon="plus" className="text-white" />
                         <span className="ml-2 text-white">Submit</span>
