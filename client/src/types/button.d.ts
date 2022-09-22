@@ -5,4 +5,9 @@ type ButtonVariantsType = {
     };
 };
 
-type ButtonVariantNameType = "primary" | "secondary" | "danger";
+type ButtonVariantNameType =
+    | "primary"
+    | "secondary"
+    | "danger"
+    | "white"
+    | "black";

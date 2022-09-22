@@ -11,6 +11,7 @@ import VerifyEmail from "pages/auth/VerifyEmail";
 import AdminRoutes from "./admin-routes";
 
 import { routes } from "../utils/constants";
+import Feedback from "pages/Feedback";
 
 const MainRoute = () => {
     return (
@@ -44,6 +45,10 @@ const MainRoute = () => {
 
                 <Route exact path="/">
                     <Home />
+                </Route>
+
+                <Route path="/feedback">
+                    <Feedback />
                 </Route>
 
                 <Route path="/admin">

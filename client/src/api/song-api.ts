@@ -1,6 +1,6 @@
 import axios from "./api-instance";
 
-const apiRoute = "/api/songs";
+const apiRoute = "/songs";
 
 export const createSongApi = async (data: SongCreate) => {
     const formData = new FormData();

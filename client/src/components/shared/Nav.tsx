@@ -51,7 +51,7 @@ const Nav = () => {
     }
 
     return (
-        <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-50 bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
+        <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
             {/* <div className="ml-24"> */}
             <div className="">
                 <Link to="/">

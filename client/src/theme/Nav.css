@@ -13,3 +13,7 @@
 .min-height-nav {
     min-height: calc(100vh);
 }
+
+.z-nav {
+    z-index: var(--z-index-nav);
+}

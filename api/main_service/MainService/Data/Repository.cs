@@ -8,6 +8,20 @@ namespace MainService.Data
         /// <summary>
         /// Get all documents match filter
         /// </summary>
+        /// <param name="indexFilter">
+        ///  <para>Bson document for fulltext search</para>
+        ///  <para>Example:
+        ///  new BsonDocument {
+        ///    { "index", "SongIndex" },
+        ///    { "text", new BsonDocument {
+        ///        { "query", keyword },
+        ///        { "path", new BsonDocument {
+        ///            { "wildcard", "*" }
+        ///        }},
+        ///    }}
+        ///  }
+        ///  </para>
+        /// </param>
         /// <param name="filter">Filter builder for filter element</param>
         /// <param name="sort">
         ///     <para>Bson document for sort (1: increase, -1: decrease)</para>
@@ -43,7 +57,7 @@ namespace MainService.Data
         /// <param name="limit">Number of documents to get</param>
         /// <param name="skip">Number of documents to skip</param>
         /// <returns>Total match filter count and List of documents</returns>
-        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
+        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
 
         /// <summary>
         /// Get a document by fitler
@@ -107,10 +121,30 @@ namespace MainService.Data
             return entity;
         }
 
-        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!)
+        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!)
         {
 
-            var query = _collection.Aggregate().Match(filter is null ? Builders<TEntity>.Filter.Empty : filter);
+            var query = _collection.Aggregate();
+
+            // $search need to be the first stage in pipeline
+            if (indexFilter is not null)
+            {
+                query = query.AppendStage<TEntity>(new BsonDocument {
+                    {
+                        "$search", indexFilter
+                    }
+                });
+            }
+
+            if (sort is not null)
+            {
+                query = query.Sort(sort);
+            }
+
+            if (filter is not null)
+            {
+                query = query.Match(filter);
+            }
 
             if (skip is not null)
             {
@@ -140,11 +174,6 @@ namespace MainService.Data
                         "$project", project
                     }
                 });
-            }
-
-            if (sort is not null)
-            {
-                query = query.Sort(sort);
             }
 
             long total = await _collection.CountDocumentsAsync(filter is null ? Builders<TEntity>.Filter.Empty : filter);
