@@ -4,6 +4,7 @@ import MicRecorder from "mic-recorder-to-mp3";
 import { humToSongAsync } from "store/slices/songSlice";
 import Icon from "components/shared/Icon";
 import { addToast } from "store/slices/toastSlice";
+import "../../theme/Home.css"
 
 interface SongSearchProp {}
 
@@ -53,9 +54,12 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                 setRecord({ ...record, isRecording: true });
             })
             .catch((e: any) => console.log(e));
+        setAppear(true);
     };
 
-    const endRecord = () => {
+    const endRecord = async () => {
+        setAppear(false);
+        await delay(750);
         if (record.isBlocked) {
             return;
         }
@@ -78,6 +82,8 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
 
     const [searchValue, setSearchValue] = React.useState("");
 
+    const [appear, setAppear] = React.useState(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
     };
@@ -86,10 +92,17 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
         e.preventDefault();
     };
 
+    const delay = (ms : any ) => new Promise(res => setTimeout(res, ms));
+
     return (
         <div>
             {record.isRecording && (
-                <div className="absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10">
+                <div className={
+                    appear ?
+                    "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
+                    :
+                    "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
+                    }>
                     <div
                         className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer"
                         onClick={endRecord}
@@ -123,7 +136,7 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
 
                             <input
                                 type="search"
-                                className="w-[9rem] md:w-[29rem] ml-3 text-base font-normal text-gray-700 bg-white transition ease-in-out focus:text-gray-700 focus:outline-none"
+                                className="w-[9rem] md:w-[29rem] ml-3 text-base font-normal text-gray-700 bg-white transition ease-in-out focus:text-gray-700 focus:outline-none md: w-[14.5rem]"
                                 placeholder="Search for song"
                                 onChange={handleChange}
                                 value={searchValue}
