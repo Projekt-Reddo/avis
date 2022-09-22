@@ -4,12 +4,15 @@ using Google.Apis.Auth.OAuth2;
 using Hangfire;
 using Hangfire.PostgreSql;
 using MainService.Data;
+using MainService.Dtos;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
 using MainService.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Polly;
 using Polly.Extensions.Http;
 using static Constants;
@@ -114,6 +117,37 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:Allowe
                       .AllowCredentials());
 
 /*app.UseHttpsRedirection();*/
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == (int)System.Net.HttpStatusCode.Unauthorized)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(
+            JsonConvert.SerializeObject(
+                new ResponseDto(401),
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }
+            ));
+    }
+
+    if (context.Response.StatusCode == (int)System.Net.HttpStatusCode.Forbidden)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(
+            JsonConvert.SerializeObject(
+                new ResponseDto(403),
+                new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }
+            ));
+    }
+});
 
 app.UseAuthentication();
 
