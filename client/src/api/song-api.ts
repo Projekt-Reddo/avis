@@ -34,7 +34,7 @@ export const humToSongApi = async (data: Blob) => {
     const formData = new FormData();
     formData.append("inputFile", data);
 
-    const res = await axios.post("/api/hum", formData);
+    const res = await axios.post("/search/song/hum", formData);
 
     return res.data;
 };
