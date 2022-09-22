@@ -34,6 +34,7 @@
         "crypto-js": "^4.1.1",
         "firebase": "^9.9.4",
         "ionicons": "^5.4.0",
+        "mic-recorder-to-mp3": "github:NikolaBalaban/mic-recorder-to-mp3",
         "moment": "^2.29.4",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",

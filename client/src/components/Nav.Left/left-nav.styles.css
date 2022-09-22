@@ -1,0 +1,110 @@
+:root {
+    --left-nav-padding: 1.5rem;
+    --left-nav-item-height: 3rem;
+    --left-nav-item-padding: 0.875rem; /* p-3.5 */
+    --left-nav-transition-duration: 1s;
+    --page-wrapper-left-nav-padding: 3rem;
+}
+
+.left-nav {
+    z-index: calc(var(--z-index-nav) - 1);
+    position: fixed;
+    left: -71vw;
+    top: 0;
+
+    height: 100vh;
+    width: 70vw;
+
+    padding: 0 var(--left-nav-padding);
+
+    transition: var(--left-nav-transition-duration);
+    background-color: lavender;
+}
+
+.left-nav.show {
+    left: 0;
+}
+
+.left-nav-border {
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+}
+
+.left-nav-item {
+    height: var(--left-nav-item-height);
+    padding: var(--left-nav-item-padding);
+    width: 100%;
+    transition: var(--left-nav-transition-duration);
+}
+
+.left-nav-item-icon {
+    height: var(--left-nav-item-height);
+    width: var(--left-nav-item-height);
+
+    padding-right: 1rem;
+    transition: var(--left-nav-transition-duration);
+}
+
+.left-nav-item-title {
+    transition: visibility 0s,
+        opacity var(--left-nav-transition-duration) linear;
+}
+
+.page-wrapper-left-nav {
+    transition: var(--left-nav-transition-duration);
+}
+
+@media screen and (min-width: 1024px) {
+    .left-nav {
+        width: calc(
+            var(--left-nav-item-height) + var(--left-nav-item-padding) * 2 +
+                var(--left-nav-padding)
+        );
+
+        left: 0;
+    }
+
+    .left-nav.show {
+        width: 20vw;
+    }
+
+    .left-nav-item {
+        width: var(--left-nav-item-height);
+    }
+
+    .left-nav-item.show {
+        width: 100%;
+    }
+
+    .left-nav-item-icon {
+        padding-right: 0;
+    }
+
+    .left-nav-item-icon {
+        padding-right: 1rem;
+    }
+
+    .left-nav-item-title {
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    .left-nav-item-title.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .page-wrapper-left-nav {
+        padding-left: calc(
+            var(--left-nav-item-height) + var(--left-nav-item-padding) * 2 +
+                var(--left-nav-padding) + var(--page-wrapper-left-nav-padding) +
+                0.25rem
+        ) !important;
+        padding-right: var(--page-wrapper-left-nav-padding) !important;
+    }
+
+    .page-wrapper-left-nav.show {
+        padding-left: calc(
+            20vw + var(--page-wrapper-left-nav-padding)
+        ) !important;
+    }
+}

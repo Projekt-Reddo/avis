@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createSongApi, viewSongApi } from "api/song-api";
+import { createSongApi, viewSongApi, humToSongApi } from "api/song-api";
 import { addToast } from "./toastSlice";
 import { getSongData } from "pages/admin/Song/View";
 
@@ -26,6 +26,10 @@ const songSlice = createSlice({
             data: action.payload,
         }),
         setSong: (_, action) => action.payload,
+        humToSong: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -46,6 +50,13 @@ const songSlice = createSlice({
                     ...action.payload,
                     payload: getSongData(action.payload),
                 };
+            })
+            .addCase(humToSongAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(humToSongAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data.payload = action.payload;
             });
     },
 });
@@ -79,6 +90,13 @@ export const viewSongAsync = createAsyncThunk(
     "song/viewSong",
     async (songFilter: SongFilter) => {
         return await viewSongApi(songFilter);
+    }
+);
+
+export const humToSongAsync = createAsyncThunk(
+    "song/hum",
+    async (blob: Blob) => {
+        return await humToSongApi(blob);
     }
 );
 
