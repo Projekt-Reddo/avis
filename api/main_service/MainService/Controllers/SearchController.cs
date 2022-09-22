@@ -18,12 +18,18 @@ public class SearchController : ControllerBase
     private readonly IHumSvcClient _humSvcClient;
     private readonly ISongRepo _songRepo;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
 
-    public SearchController(IHumSvcClient humSvcClient, ISongRepo songRepo, IMapper mapper)
+    public SearchController(
+        IHumSvcClient humSvcClient,
+        ISongRepo songRepo,
+        IMapper mapper,
+        IConfiguration configuration)
     {
         _humSvcClient = humSvcClient;
         _songRepo = songRepo;
         _mapper = mapper;
+        _configuration = configuration;
     }
 
     [HttpPost("song/hum")]
@@ -47,7 +53,7 @@ public class SearchController : ControllerBase
     public async Task<ActionResult<ICollection<SongReadDto>>> SearchSongByText([FromQuery] string keyword)
     {
         var filter = new BsonDocument {
-            { "index", MongoDbIndex.SONG_INDEX },
+            { "index", _configuration["DbIndexs:Song"] },
             { "text", new BsonDocument {
                 { "query", keyword },
                 { "path", new BsonDocument {
