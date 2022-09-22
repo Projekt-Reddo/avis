@@ -3,7 +3,6 @@ import { Route, Redirect } from "react-router-dom";
 import Home from "pages/Home";
 import Login from "pages/auth/Login";
 import Post from "pages/Post";
-import Search from "pages/Search";
 import Signup from "pages/auth/Signup";
 import Song from "pages/Song";
 import Discover from "pages/Discover";
@@ -32,10 +31,6 @@ const MainRoute = () => {
             </>
 
             <>
-                <Route path="/search">
-                    <Search />
-                </Route>
-
                 <Route path="/song/:songId">
                     <Song />
                 </Route>

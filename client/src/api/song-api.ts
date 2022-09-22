@@ -29,3 +29,12 @@ export const viewSongApi = async (data: SongFilter) => {
     const res = await axios.post(apiRoute + "/filter", data);
     return res.data;
 };
+
+export const humToSongApi = async (data: Blob) => {
+    const formData = new FormData();
+    formData.append("inputFile", data);
+
+    const res = await axios.post("/search/song/hum", formData);
+
+    return res.data;
+};

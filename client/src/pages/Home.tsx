@@ -1,144 +1,38 @@
+import SongSearch from "components/Home/SongSearch";
+import Result from "components/Home/Result";
+import Feature from "components/Home/Feature";
+import Footer from "components/Home/Footer"
+import { useAppSelector } from "utils/react-redux-hooks";
+import "theme/Home.css";
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import Table from "components/shared/Table";
-import React from "react";
+
 
 const Home = () => {
-    var data = [
-        {
-            id: "123",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 1",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "456",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 2",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "789",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 3",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "abc",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 4",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "def",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 5",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "ghi",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 6",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "jkl",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 7",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "mno",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 8",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "pqr",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 9",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "stu",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 10",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-        {
-            id: "vwx",
-            thumbnail: "https://i.ibb.co/WftX2Rk/89297527-p0.jpg",
-            title: "Demo title 11",
-            artist: "Mili",
-            created: "2022-10-09",
-            modified: "2022-10-12",
-        },
-    ];
-
-    const [stateData, setStateData] = React.useState<any[]>(
-        data.map((item) => ({
-            id: item.id,
-            thumbnail: (
-                <div
-                    style={{
-                        backgroundImage: `url(${item.thumbnail})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        height: "35px",
-                        width: "35px",
-                        borderRadius: "50%",
-                        border: "2px solid white",
-                        minWidth: "35px",
-                    }}
-                />
-            ),
-            title: item.title,
-            artist: item.artist,
-            created: item.created,
-            modified: item.modified,
-        }))
-    );
-
-    const [isSelected, setIsSelected] = React.useState<boolean>(false);
+    const result = useAppSelector((state) => state.song);
 
     return (
-        <PageWrapper className="bg-[#F0F0F5]">
-            <Table
-                className=""
-                columns={[
-                    "Thumbnail",
-                    "Title",
-                    "Artist",
-                    "Created",
-                    "Modified",
-                ]}
-                data={stateData}
-                hasSelectOption={true}
-                setDataState={setStateData}
-                onRowClick={() => {
-                    console.log("Clicked");
-                }}
-                setIsSelected={setIsSelected}
-            />
+        <PageWrapper
+            style={{
+                paddingLeft: 0,
+                paddingRight: 0,
+            }}
+        >
+            <SongSearch />
+            <div className="bg-white text-black">
+                {result.status === "idle" &&
+                result.data.payload.length === 0 ? (
+                    <></>
+                ) : (
+                    <div>
+                        <Result result={result} />
+                    </div>
+                )}
+                <div>
+                    <Feature />
+                </div>
+                <div className="bg-white h-12"></div>
+            </div>
+            <Footer/>
         </PageWrapper>
     );
 };
