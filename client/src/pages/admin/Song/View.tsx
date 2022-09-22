@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { setSong, viewSongAsync } from "store/slices/songSlice";
+import { setTableData, viewSongAsync } from "store/slices/songSlice";
 
 import moment from "moment";
 
@@ -39,6 +39,8 @@ const View = () => {
     const dispatch = useAppDispatch();
 
     const songState = useAppSelector((state) => state.song);
+
+    console.log(songState);
 
     const [pageRowFilter, setPageRowFilter] =
         React.useState<pageRowFilterProps>({
@@ -175,9 +177,10 @@ const View = () => {
                             "Created",
                             "Modified",
                         ]}
-                        data={songState.tableData.payload}
+                        data={getSongData(songState.tableData)}
                         hasSelectOption={true}
-                        setDataState={(data) => dispatch(setSong(data))}
+                        setDataState={(data) => dispatch(setTableData(data))}
+                        originalDataState={songState.tableData}
                         onRowClick={() => {
                             console.log("Clicked");
                         }}
@@ -209,7 +212,9 @@ const View = () => {
 export default View;
 
 export const getSongData = (data: any) => {
-    return data.payload.map((item: any) => ({
+    if (!data) return [];
+
+    return data.map((item: any) => ({
         id: item.id,
         thumbnail: (
             <div className="flex justify-center items-center">
@@ -228,9 +233,13 @@ export const getSongData = (data: any) => {
             </div>
         ),
         title: item.title,
-        artist: item.artists.map((item: any) => (
-            <div key={item.id}>{item.name}</div>
-        )),
+        artist: item.artists ? (
+            item.artists.map((item: any) => (
+                <div key={item.id}>{item.name}</div>
+            ))
+        ) : (
+            <></>
+        ),
         created: moment(item.createdAt).format(DayFormat),
         modified: moment(item.modifiedAt).format(DayFormat),
     }));

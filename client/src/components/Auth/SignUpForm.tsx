@@ -8,7 +8,7 @@ import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { signupAsync } from "store/slices/userSlice";
 import { hash } from "utils/helpers";
-import Button from "components/shared/Button";
+import Button from "components/Button/Button";
 
 interface SignUpFormProps {}
 
@@ -37,42 +37,40 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
     };
 
     return (
-        <div className="w-full flex flex-col justify-center text-black">
-            <form
-                className="w-full h-max md:mt-8"
-                onSubmit={handleSubmit(handleSignup)}
+        <form
+            className="w-full h-max md:mt-8"
+            onSubmit={handleSubmit(handleSignup)}
+        >
+            <Input
+                className="py-3 w-full"
+                label="Name"
+                placeholder="Please enter your name"
+                register={register("name")}
+                error={errors.name}
+            ></Input>
+            <Input
+                className="py-3 w-full"
+                label="Email"
+                placeholder="Please enter your Email"
+                register={register("email")}
+                error={errors.email}
+            ></Input>
+            <Input
+                className="py-3 w-full"
+                label="Password"
+                placeholder="Please enter your Password"
+                register={register("password")}
+                type="password"
+                error={errors.password}
+            ></Input>
+            <Button
+                className="mt-2.5"
+                type="submit"
+                disabled={userState.status === "loading"}
             >
-                <Input
-                    className="py-2 w-full"
-                    label="Name"
-                    placeholder="Please enter your name"
-                    register={register("name")}
-                    error={errors.name}
-                ></Input>
-                <Input
-                    className="py-2 w-full"
-                    label="Email"
-                    placeholder="Please enter your Email"
-                    register={register("email")}
-                    error={errors.email}
-                ></Input>
-                <Input
-                    className="py-2 w-full"
-                    label="Password"
-                    placeholder="Please enter your Password"
-                    register={register("password")}
-                    type="password"
-                    error={errors.password}
-                ></Input>
-                <Button
-                    className="md:mt-5"
-                    type="submit"
-                    disabled={userState.status === "loading"}
-                >
-                    Sign Up
-                </Button>
-            </form>
-        </div>
+                Sign Up
+            </Button>
+        </form>
     );
 };
 
