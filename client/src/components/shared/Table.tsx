@@ -6,6 +6,7 @@ interface TableProps {
     style?: any;
     columns: string[];
     data: TableRowData[];
+    originalDataState: any[];
     hasSelectOption: boolean;
     onRowClick?: () => void;
     setDataState: React.Dispatch<React.SetStateAction<TableRowData[]>>;
@@ -29,16 +30,17 @@ const Table: React.FC<TableProps> = ({
     columns,
     data,
     hasSelectOption = true,
+    originalDataState,
     onRowClick = () => {},
     setDataState,
     setIsSelected,
 }) => {
     const handleAllChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDataState(
-            data.map((obj) => {
-                obj.isSelected = event.target.checked;
-                return obj;
-            })
+            originalDataState.map((obj) => ({
+                ...obj,
+                isSelected: event.target.checked,
+            }))
         );
         setIsCheckedAll(event.target.checked);
     };
@@ -48,9 +50,12 @@ const Table: React.FC<TableProps> = ({
         obj: TableRowData
     ) => {
         setDataState(
-            data.map((oldValue) => {
+            originalDataState.map((oldValue) => {
                 if (oldValue.id === obj.id) {
-                    oldValue.isSelected = event.target.checked;
+                    return {
+                        ...oldValue,
+                        isSelected: event.target.checked,
+                    };
                 }
                 return oldValue;
             })
@@ -73,6 +78,8 @@ const Table: React.FC<TableProps> = ({
             setIsSelected(false);
         }
     }, [data]);
+
+    if (!data || !columns) return <></>;
 
     return (
         <div className={`${className}`} style={{ ...style }}>
