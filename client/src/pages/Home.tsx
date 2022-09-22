@@ -1,11 +1,11 @@
 import SongSearch from "components/Home/SongSearch";
 import Result from "components/Home/Result";
 import Feature from "components/Home/Feature";
+import Footer from "components/Home/Footer"
 import { useAppSelector } from "utils/react-redux-hooks";
 import "theme/Home.css";
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import Table from "components/shared/Table";
-import React from "react";
+
 
 const Home = () => {
     const result = useAppSelector((state) => state.song);
@@ -32,6 +32,7 @@ const Home = () => {
                 </div>
                 <div className="bg-white h-12"></div>
             </div>
+            <Footer/>
         </PageWrapper>
     );
 };
