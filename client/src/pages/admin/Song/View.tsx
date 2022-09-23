@@ -40,8 +40,6 @@ const View = () => {
 
     const songState = useAppSelector((state) => state.song);
 
-    console.log(songState);
-
     const [pageRowFilter, setPageRowFilter] =
         React.useState<pageRowFilterProps>({
             currentPage: 1,
@@ -177,10 +175,10 @@ const View = () => {
                             "Created",
                             "Modified",
                         ]}
-                        data={getSongData(songState.tableData)}
+                        displayData={getSongData(songState.tableData)}
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setTableData(data))}
-                        originalDataState={songState.tableData}
+                        rawData={songState.tableData}
                         onRowClick={() => {
                             console.log("Clicked");
                         }}
@@ -240,6 +238,7 @@ export const getSongData = (data: any) => {
         ) : (
             <></>
         ),
+        isSelected: item.isSelected,
         created: moment(item.createdAt).format(DayFormat),
         modified: moment(item.modifiedAt).format(DayFormat),
     }));
