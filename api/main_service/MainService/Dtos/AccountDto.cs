@@ -28,7 +28,7 @@ namespace MainService.Dtos
     {
         public string? Name { get; set; } = null!;
     }
-    
+
     public class AccountResponseDto
     {
         public string Id { get; set; } = null!;
@@ -58,7 +58,7 @@ namespace MainService.Dtos
 
         public DateTime? JoinedEnd { get; set; } = null!;
 
-        public bool isModerator{ get; set; }
+        public bool isModerator { get; set; }
 
         public bool isBanned { get; set; }
 

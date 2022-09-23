@@ -133,7 +133,12 @@ public class SongsController : ControllerBase
             };
 
         // Get songs in database with filter and pagination
-        (var totalSong, var songsFromRepo) = await _songRepo.FindManyAsync(filter: songFilter, lookup: lookup, project: project, sort: sort, limit: pagination.Size, skip: skipPage);
+        (var totalSong, var songsFromRepo) = await _songRepo.FindManyAsync(
+            filter: songFilter,
+            lookup: lookup, project:
+            project, sort: sort,
+            limit: pagination.Size,
+            skip: skipPage);
 
         var songs = _mapper.Map<IEnumerable<SongManageListDto>>(songsFromRepo);
 
