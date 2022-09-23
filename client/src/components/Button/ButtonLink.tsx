@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, LinkProps } from "react-router-dom";
 import "theme/Button.css";
 import { buttonVariants } from "./Button";
 
-interface ButtonProps extends Link {
+interface ButtonLinkProps extends LinkProps {
     children?: React.ReactNode;
     className?: string;
     style?: any;
@@ -11,7 +11,7 @@ interface ButtonProps extends Link {
     to: any;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const ButtonLink: React.FC<ButtonLinkProps> = ({
     children,
     className = "",
     style = {},
@@ -34,4 +34,4 @@ const Button: React.FC<ButtonProps> = ({
     );
 };
 
-export default Button;
+export default ButtonLink;

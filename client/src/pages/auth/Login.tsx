@@ -7,7 +7,7 @@ const Login = () => {
     return (
         <PageWrapperAuth
             leftImage={login_flat_art}
-            rightContent={createAuthContent()}
+            rightContent={createAuthContent("login")}
         />
     );
 };

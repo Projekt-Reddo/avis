@@ -18,7 +18,7 @@ const PageWrapperAuth: React.FC<PageWrapperAuthProps> = ({
             style={{ ...style, overflowY: "scroll" }}
         >
             <div
-                className="w-full md:w-1/2 h-2/6 md:h-full"
+                className="w-full lg:w-1/2 h-2/6 lg:h-full"
                 style={{
                     backgroundImage: `url(${leftImage})`,
                     backgroundSize: "contain",
@@ -27,7 +27,7 @@ const PageWrapperAuth: React.FC<PageWrapperAuthProps> = ({
                     aspectRatio: "1/1",
                 }}
             ></div>
-            <div className="w-full md:w-1/2 h-4/6 lg:h-full">
+            <div className="w-full lg:w-1/2 h-4/6 lg:h-full">
                 {rightContent}
             </div>
         </div>
