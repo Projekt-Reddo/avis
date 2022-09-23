@@ -64,7 +64,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 {/* Search Button */}
                 <button
                     type="submit"
-                    className="radius-border-left-side flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0"
+                    className="radius-border-left-side flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0 focus:outline-none"
                 >
                     <Icon
                         icon="search"
@@ -76,8 +76,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 <input
                     className={`${
                         filterContent
-                            ? "input-search-app w-full"
-                            : "input-search-app-only w-full"
+                            ? "input-search-app w-full focus:outline-none"
+                            : "input-search-app-only w-full focus:outline-none"
                     }`}
                     placeholder={placeholder}
                     {...register}
@@ -87,7 +87,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 {filterContent ? (
                     <button
                         type="button"
-                        className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0"
+                        className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-l-0 focus:outline-none"
                         onClick={() => setShowSearchFilter(!showSearchFilter)}
                     >
                         <div className="text-base font-bold pr-4">Filter</div>
