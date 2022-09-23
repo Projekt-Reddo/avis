@@ -40,8 +40,6 @@ const View = () => {
 
     const songState = useAppSelector((state) => state.song);
 
-    console.log(songState);
-
     const [pageRowFilter, setPageRowFilter] =
         React.useState<pageRowFilterProps>({
             currentPage: 1,
