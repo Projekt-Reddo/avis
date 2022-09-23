@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "components/shared/Button";
+import Button from "components/Button/Button";
 import Icon from "components/shared/Icon";
 import { Dispatch, FunctionComponent, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";

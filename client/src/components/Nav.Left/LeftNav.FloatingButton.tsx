@@ -1,4 +1,4 @@
-import Button from "components/shared/Button";
+import Button from "components/Button/Button";
 import Icon from "components/shared/Icon";
 import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";

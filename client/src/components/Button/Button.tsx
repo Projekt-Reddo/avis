@@ -10,6 +10,7 @@ interface ButtonProps
     className?: string;
     style?: any;
     variant?: ButtonVariantNameType;
+    border?: boolean | "true" | "false";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,11 +18,14 @@ const Button: React.FC<ButtonProps> = ({
     className = "",
     style = {},
     variant = "primary",
+    border = false,
     ...props
 }) => {
     return (
         <button
-            className={`btn-app ${className}`}
+            className={`btn-app ${className} ${
+                `${border}` === "true" && "border"
+            }`}
             style={{ ...buttonVariants[variant], ...style }}
             {...props}
         >
@@ -32,7 +36,7 @@ const Button: React.FC<ButtonProps> = ({
 
 export default Button;
 
-const buttonVariants: ButtonVariantsType = {
+export const buttonVariants: ButtonVariantsType = {
     primary: {
         backgroundColor: "var(--teal-general-color)",
         color: "var(--white-color)",

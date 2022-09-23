@@ -96,7 +96,7 @@ public class SongsController : ControllerBase
     /// </summary>
     /// <param name="pagination">Pagination metrics and Search filters</param>
     /// <returns>200 / 400 / 404</returns>
-    [Authorize]
+    // [Authorize]
     [HttpPost("filter")]
     public async Task<ActionResult<PaginationResDto<IEnumerable<SongManageListDto>>>> ViewSong(PaginationReqDto<SongFilterDto> pagination)
     {
