@@ -7,7 +7,7 @@ import TextArea from "components/shared/TextArea";
 import SelectAsync from "components/shared/SelectAsync";
 import { recommendGenreApi } from "api/genre-api";
 import { recommendArtistApi } from "api/artist-api";
-import Button from "components/shared/Button";
+import Button from "components/Button/Button";
 import Icon from "components/shared/Icon";
 
 interface InfoInputProps {

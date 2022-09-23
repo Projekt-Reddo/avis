@@ -7,18 +7,19 @@ using MainService.Logic;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using FirebaseAdmin.Auth;
 
 namespace MainService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IAccountRepo _accountRepo;
         private readonly IAccountLogic _accountLogic;
 
-        public AccountController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic)
+        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic)
         {
             _mapper = mapper;
             _accountRepo = accountRepo;
@@ -34,6 +35,16 @@ namespace MainService.Controllers
             {
                 return BadRequest(new ResponseDto(400, "Email duplicated!"));
             }
+
+            // Set admin privileges on the user corresponding to uid.
+            var claims = new Dictionary<string, object>()
+            {
+                { "role", "user" },
+            };
+
+            await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(newAccount.Uid, claims);
+            // The new custom claims will propagate to the user's ID token the
+            // next time a new one is issued.
 
             var account = _mapper.Map<Account>(newAccount);
             var _ = await _accountRepo.AddOneAsync(account);

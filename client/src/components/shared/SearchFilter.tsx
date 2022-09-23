@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 
 // Components
-import Button from "./Button";
+import Button from "../Button/Button";
 import Icon from "./Icon";
 import SelectAsync from "./SelectAsync";
 

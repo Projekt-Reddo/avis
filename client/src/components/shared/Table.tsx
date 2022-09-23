@@ -5,7 +5,8 @@ interface TableProps {
     className?: string;
     style?: any;
     columns: string[];
-    data: TableRowData[];
+    displayData: TableRowData[];
+    rawData: any[];
     hasSelectOption: boolean;
     onRowClick?: () => void;
     setDataState: React.Dispatch<React.SetStateAction<TableRowData[]>>;
@@ -17,28 +18,29 @@ interface TableProps {
  * @param {string} className the className pass to the outer most div
  * @param {object} style the styles pass to the outer most div
  * @param {array of strings} columns the columns want to render
- * @param {array of TableRowData} data the data pass to the table corresponding with columns
+ * @param {array of TableRowData} displayData the displayData pass to the table corresponding with columns
  * @param {boolean} hasSelectOption show check & check all button
  * @param {function} onRowClick the onClick callback on table row
- * @param {SetStateAction} setDataState set state for data param
+ * @param {SetStateAction} setDataState set state for displayData param
  * @param {SetStateAction} setIsSelected pass the set state for is any row selected
  */
 const Table: React.FC<TableProps> = ({
     className,
     style,
     columns,
-    data,
+    displayData,
     hasSelectOption = true,
+    rawData,
     onRowClick = () => {},
     setDataState,
     setIsSelected,
 }) => {
     const handleAllChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDataState(
-            data.map((obj) => {
-                obj.isSelected = event.target.checked;
-                return obj;
-            })
+            rawData.map((obj) => ({
+                ...obj,
+                isSelected: event.target.checked,
+            }))
         );
         setIsCheckedAll(event.target.checked);
     };
@@ -48,9 +50,12 @@ const Table: React.FC<TableProps> = ({
         obj: TableRowData
     ) => {
         setDataState(
-            data.map((oldValue) => {
+            rawData.map((oldValue) => {
                 if (oldValue.id === obj.id) {
-                    oldValue.isSelected = event.target.checked;
+                    return {
+                        ...oldValue,
+                        isSelected: event.target.checked,
+                    };
                 }
                 return oldValue;
             })
@@ -60,8 +65,8 @@ const Table: React.FC<TableProps> = ({
     // Handle check to checkAll button after all of rows is checked
     const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
     useEffect(() => {
-        var checkedData = data.filter((obj) => obj.isSelected === true);
-        if (checkedData.length === data.length) {
+        var checkedData = rawData.filter((obj) => obj.isSelected === true);
+        if (checkedData.length === displayData.length) {
             setIsCheckedAll(true);
         } else {
             setIsCheckedAll(false);
@@ -72,7 +77,9 @@ const Table: React.FC<TableProps> = ({
         } else if (checkedData.length == 0 && setIsSelected) {
             setIsSelected(false);
         }
-    }, [data]);
+    }, [displayData]);
+
+    if (!displayData || !columns) return <></>;
 
     return (
         <div className={`${className}`} style={{ ...style }}>
@@ -127,7 +134,7 @@ const Table: React.FC<TableProps> = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((obj, index) => (
+                    {displayData.map((obj, index) => (
                         <tr
                             key={obj.id + index + "tr"}
                             className="hover:shadow-lg border-[length:var(--border-width)] border-[color:var(--border-color)]"
@@ -145,7 +152,7 @@ const Table: React.FC<TableProps> = ({
                                             onClick={(event) => {
                                                 event.stopPropagation(); // Check the checkbox rather than onClick to parent element
                                             }}
-                                            checked={obj.isSelected === true}
+                                            checked={obj.isSelected}
                                             value={obj.id}
                                         />
                                     </label>
