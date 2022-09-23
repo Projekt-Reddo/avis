@@ -9,7 +9,11 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = () => {
 
     return (
         <button
-            className="mt-3 btn-shadow rounded-full p-2"
+            className="btn-shadow rounded-full p-2"
+            style={{
+                height: "2.5rem",
+                width: "2.5rem",
+            }}
             onClick={() => {
                 dispatch(loginWithGoogleAsync());
             }}

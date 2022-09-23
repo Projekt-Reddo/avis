@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 
 import backgroundImage from "static/Flat_art_verify_email.jpg";
-import Button from "components/shared/Button";
+import Button from "components/Button/Button";
 import PageWrapperAuth from "components/PageWrapper/PageWrapperAuth";
 
 const VerifyEmail = () => {
