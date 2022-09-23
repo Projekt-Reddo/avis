@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MainService.Utils;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MainService.Controllers;
 
@@ -95,6 +96,7 @@ public class SongsController : ControllerBase
     /// </summary>
     /// <param name="pagination">Pagination metrics and Search filters</param>
     /// <returns>200 / 400 / 404</returns>
+    [Authorize]
     [HttpPost("filter")]
     public async Task<ActionResult<PaginationResDto<IEnumerable<SongManageListDto>>>> ViewSong(PaginationReqDto<SongFilterDto> pagination)
     {
