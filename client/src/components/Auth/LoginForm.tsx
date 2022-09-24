@@ -6,7 +6,7 @@ import yup from "utils/yup-config";
 
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { signupAsync } from "store/slices/userSlice";
+import { signupAsync } from "store/slices/authSlice";
 import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 import { Link } from "react-router-dom";

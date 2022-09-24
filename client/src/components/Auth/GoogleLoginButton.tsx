@@ -1,5 +1,5 @@
 import Icon from "components/shared/Icon";
-import { loginWithGoogleAsync } from "store/slices/userSlice";
+import { loginWithGoogleAsync } from "store/slices/authSlice";
 import { useAppDispatch } from "utils/react-redux-hooks";
 
 interface GoogleLoginButtonProps {}
