@@ -41,7 +41,6 @@ public class SearchController : ControllerBase
         {
             return NotFound(new ResponseDto(400, ResponseMessage.SONG_NOT_FOUND));
         }
-
         var filter = Builders<Song>.Filter.In(x => x.Id, songIds);
 
         (_, var songs) = await _songRepo.FindManyAsync(filter: filter);

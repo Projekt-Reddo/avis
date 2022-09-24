@@ -15,4 +15,11 @@ namespace MainService.Dtos
 
         public DateTime? ModifiedEnd { get; set; }
     }
+
+    public class PostFilterDto
+    {
+        public string? Content { get; set; } = null!;
+
+        public ICollection<string>? Hashtags { get; set; } = null!;
+    }
 }
