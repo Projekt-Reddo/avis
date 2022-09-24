@@ -1,4 +1,5 @@
 import ViewSong from "pages/admin/Song/View";
+import ViewUser from "pages/admin/User/View"
 import CreateSong from "pages/admin/Song/Create";
 
 import { Route, useRouteMatch } from "react-router";
@@ -12,8 +13,8 @@ const AdminRoutes = () => {
                 <div>Here is dashboard</div>
             </Route>
 
-            <Route path={`${path}/user`}>
-                <div>Here is user management</div>
+            <Route exact path={`${path}/user`}>
+                <ViewUser />
             </Route>
 
             <Route exact path={`${path}/song`}>
