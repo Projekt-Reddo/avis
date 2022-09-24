@@ -19,3 +19,17 @@ interface UserCreateDto {
     email: string;
     uid: string;
 }
+
+interface UserFilter {
+    page: number;
+    size: number;
+    filter?: {
+        name?: string;
+        sort?: string;
+        joinedStart?: string;
+        joinedEnd?: string;
+        isModerator?: bool;
+        isBanned?: bool;
+        isMuted?: bool;
+    };
+}

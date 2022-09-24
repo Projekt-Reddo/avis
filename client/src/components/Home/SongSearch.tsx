@@ -24,10 +24,13 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
         blob: null,
     });
 
+    const [hum,setHum] = React.useState(false);
+
     const dispatch = useAppDispatch();
 
     const startRecord = async () => {
         // Check for mic permission
+        setHum(true);
         const allowStatus = await navigator.permissions.query({
             // @ts-ignore
             name: "microphone",
@@ -55,6 +58,21 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
             .catch((e: any) => console.log(e));
         setAppear(true);
     };
+
+    React.useEffect(() =>
+    {
+        if (hum) {
+            StopHum();
+        }
+    }, [hum]);
+
+    const StopHum = async () => {
+        await delay(10000);
+        endRecord();
+        setHum(false);
+    }
+
+
 
     const endRecord = async () => {
         setAppear(false);
@@ -102,11 +120,10 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                     }
                 >
                     <div
-                        className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer"
-                        onClick={endRecord}
-                    >
+                        className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer" >
                         <div className="font-medium">Listening</div>
-                        <div className="text-sm">Click to stop listening</div>
+                        <br></br>
+                        <div className="text-sm">Try to Hum something</div>
                     </div>
                 </div>
             )}

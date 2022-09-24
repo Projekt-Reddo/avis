@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createAccountApi } from "api/account-api";
+import { createAccountApi, viewUserApi } from "api/account-api";
 import { loginWithGoogle, userSignupFirebase } from "api/firebase-api";
 import { FirebaseError } from "firebase/app";
+import { getUserData } from "pages/admin/User/View";
 import { mapAuthCodeToMessage } from "utils/firebase/firebase-helpers";
 import { addToast } from "./toastSlice";
 
@@ -26,6 +27,13 @@ const userSlice = createSlice({
             ...state,
             data: null,
         }),
+        create: () => initialState,
+        viewUser: (state, action) => ({
+            ...state,
+            data: action.payload
+        }),
+        setUser: (_, action) => action.payload,
+
     },
     extraReducers: (builder) => {
         builder
@@ -35,7 +43,19 @@ const userSlice = createSlice({
             .addCase(signupAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
-            });
+            })
+            .addCase(viewUserAsync.pending, (state) =>
+            {
+                state.status = "loading";
+            })
+            .addCase(viewUserAsync.fulfilled, (state,action) =>{
+                state.status = "idle";
+                state.data = action.payload;
+                state.tableData = {
+                    ...action.payload,
+                    payload: getUserData(action.payload),
+                };
+            })
     },
 });
 
@@ -88,5 +108,17 @@ export const loginWithGoogleAsync = createAsyncThunk("user/login", async () => {
     };
 });
 
+export const viewUserAsync = createAsyncThunk(
+    "user/viewUser",
+    async (userFilter: UserFilter) =>
+    {
+        return await viewUserApi(userFilter);
+    }
+);
+
+
 export const { signup, logout } = userSlice.actions;
+
+export const {viewUser,setUser,create} = userSlice.actions;
+
 export default userSlice.reducer;

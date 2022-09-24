@@ -6,6 +6,7 @@ http://ionicframework.com/docs/theming/ */
     /* #region Border */
     --border-width: 0.25rem;
     --border-color: rgba(0, 0, 0, 0.15);
+    --inline-color: rgba(0, 0, 0, 0.6);
 
     /* #region Project Custom color*/
 
