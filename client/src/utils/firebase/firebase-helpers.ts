@@ -15,6 +15,9 @@ export const mapAuthCodeToMessage = (authCode: string) => {
         case "auth/user-not-found":
             return "User not found!";
 
+        case "auth/wrong-password":
+            return "Wrong credential!";
+
         // Many more authCode mapping here...
 
         default:

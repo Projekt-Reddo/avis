@@ -6,7 +6,7 @@ import yup from "utils/yup-config";
 
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { signupAsync } from "store/slices/authSlice";
+import { loginAsync } from "store/slices/authSlice";
 import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ interface LoginFormProps {}
 
 const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
     // Handle loading
-    const userState = useAppSelector((state) => state.user);
+    const userState = useAppSelector((state) => state.auth);
 
     // Form init
     const {
@@ -30,12 +30,12 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
     // HandleSubmit
     const dispatch = useAppDispatch();
     const handleSubmitForm = (data: FieldValues) => {
-        // dispatch(
-        //     signupAsync({
-        //         email: data.email,
-        //         password: hash(data.password),
-        //     } as UserSignup)
-        // );
+        dispatch(
+            loginAsync({
+                email: data.email,
+                password: hash(data.password),
+            } as UserLoginDto)
+        );
     };
 
     return (

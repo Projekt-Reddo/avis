@@ -7,6 +7,7 @@ export const useFirebaseUserChangeTracking = () => {
         const auth = getAuth();
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            console.log(user);
             if (user) {
                 // Handle user change
 

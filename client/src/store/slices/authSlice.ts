@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createAccountApi } from "api/account-api";
-import { loginWithGoogle, userSignupFirebase } from "api/firebase-api";
+import {
+    loginWithGoogle,
+    userLoginFirebase,
+    userSignupFirebase,
+} from "api/firebase-api";
 import { FirebaseError } from "firebase/app";
 import { mapAuthCodeToMessage } from "utils/firebase/firebase-helpers";
 import { addToast } from "./toastSlice";
@@ -11,8 +15,8 @@ const initialState: AsyncReducerInitialState = {
     error: null,
 };
 
-const userSlice = createSlice({
-    name: "user",
+const authSlice = createSlice({
+    name: "auth",
     initialState,
     reducers: {
         signup: () => initialState,
@@ -35,12 +39,50 @@ const userSlice = createSlice({
             .addCase(signupAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(loginAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(loginAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
             });
     },
 });
 
+export const loginAsync = createAsyncThunk(
+    "auth/login",
+    async (userLogin: UserLoginDto, thunkApi) => {
+        try {
+            const userFirebaseData = await userLoginFirebase(userLogin);
+
+            const tokenResult = await userFirebaseData.user.getIdTokenResult();
+
+            return {
+                emailVerified: userFirebaseData.user.emailVerified,
+                uid: userFirebaseData.user.uid,
+                role: tokenResult.claims["role"],
+                email: userFirebaseData.user.email,
+                name:
+                    tokenResult.claims["name"] ||
+                    userFirebaseData.user.displayName ||
+                    "Kuhaku",
+            };
+        } catch (e: unknown) {
+            if (e instanceof FirebaseError) {
+                thunkApi.dispatch(
+                    addToast({
+                        variant: "danger",
+                        message: mapAuthCodeToMessage(e.code),
+                    })
+                );
+            }
+        }
+    }
+);
+
 export const signupAsync = createAsyncThunk(
-    "user/signup",
+    "auth/signup",
     async (userSignup: UserSignup, thunkApi) => {
         try {
             // Signup here
@@ -77,7 +119,7 @@ export const signupAsync = createAsyncThunk(
     }
 );
 
-export const loginWithGoogleAsync = createAsyncThunk("user/login", async () => {
+export const loginWithGoogleAsync = createAsyncThunk("auth/login", async () => {
     // Login here
     const userFirebaseData = await loginWithGoogle();
 
@@ -88,6 +130,6 @@ export const loginWithGoogleAsync = createAsyncThunk("user/login", async () => {
     };
 });
 
-export const { signup, logout } = userSlice.actions;
+export const { signup, logout } = authSlice.actions;
 
-export default userSlice.reducer;
+export default authSlice.reducer;

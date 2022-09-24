@@ -13,7 +13,7 @@ import Button from "components/Button/Button";
 interface SignUpFormProps {}
 
 const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
-    const userState = useAppSelector((state) => state.user);
+    const userState = useAppSelector((state) => state.auth);
 
     const {
         register,
