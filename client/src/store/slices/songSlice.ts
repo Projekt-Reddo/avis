@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createSongApi, viewSongApi, humToSongApi } from "api/song-api";
 import { addToast } from "./toastSlice";
-import { getSongData } from "pages/admin/Song/View";
 
 const initialState: AsyncReducerInitialState = {
     status: "idle",
@@ -10,10 +9,7 @@ const initialState: AsyncReducerInitialState = {
         payload: [],
     },
     error: null,
-    tableData: {
-        total: 0,
-        payload: [],
-    },
+    tableData: [],
 };
 
 const songSlice = createSlice({
@@ -25,7 +21,12 @@ const songSlice = createSlice({
             ...state,
             data: action.payload,
         }),
-        setSong: (_, action) => action.payload,
+        setTableData: (state, action) => {
+            return {
+                ...state,
+                tableData: action.payload,
+            };
+        },
         humToSong: (state, action) => ({
             ...state,
             data: action.payload,
@@ -46,10 +47,7 @@ const songSlice = createSlice({
             .addCase(viewSongAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
-                state.tableData = {
-                    ...action.payload,
-                    payload: getSongData(action.payload),
-                };
+                state.tableData = action.payload.payload;
             })
             .addCase(humToSongAsync.pending, (state) => {
                 state.status = "loading";
@@ -100,5 +98,5 @@ export const humToSongAsync = createAsyncThunk(
     }
 );
 
-export const { viewSong, setSong, create } = songSlice.actions;
+export const { viewSong, setTableData, create } = songSlice.actions;
 export default songSlice.reducer;

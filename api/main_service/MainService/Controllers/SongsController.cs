@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MainService.Utils;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MainService.Controllers;
 
@@ -95,6 +96,7 @@ public class SongsController : ControllerBase
     /// </summary>
     /// <param name="pagination">Pagination metrics and Search filters</param>
     /// <returns>200 / 400 / 404</returns>
+    // [Authorize]
     [HttpPost("filter")]
     public async Task<ActionResult<PaginationResDto<IEnumerable<SongManageListDto>>>> ViewSong(PaginationReqDto<SongFilterDto> pagination)
     {
@@ -131,7 +133,12 @@ public class SongsController : ControllerBase
             };
 
         // Get songs in database with filter and pagination
-        (var totalSong, var songsFromRepo) = await _songRepo.FindManyAsync(filter: songFilter, lookup: lookup, project: project, sort: sort, limit: pagination.Size, skip: skipPage);
+        (var totalSong, var songsFromRepo) = await _songRepo.FindManyAsync(
+            filter: songFilter,
+            lookup: lookup, project:
+            project, sort: sort,
+            limit: pagination.Size,
+            skip: skipPage);
 
         var songs = _mapper.Map<IEnumerable<SongManageListDto>>(songsFromRepo);
 

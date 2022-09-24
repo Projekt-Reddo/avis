@@ -3,15 +3,15 @@ import { useAppDispatch } from "utils/react-redux-hooks";
 import MicRecorder from "mic-recorder-to-mp3";
 import { humToSongAsync } from "store/slices/songSlice";
 import Icon from "components/shared/Icon";
-import { addToast } from "store/slices/toastSlice";
-import "../../theme/Home.css"
+import "../../theme/Home.css";
+import { addNewToast } from "components/Toast";
 
 interface SongSearchProp {}
 
 interface RecordInfo {
     isRecording: boolean;
     blobURL: string;
-    isBlocked: boolean;
+    // isBlocked: boolean;
     blob: Blob | null;
 }
 
@@ -20,34 +20,35 @@ const mp3Recorder = new MicRecorder({ bitRate: 128 });
 const SongSearch: React.FC<SongSearchProp> = ({}) => {
     const [record, setRecord] = React.useState<RecordInfo>({
         isRecording: false,
-        isBlocked: false,
         blobURL: "",
         blob: null,
     });
 
+    const [hum,setHum] = React.useState(false);
+
     const dispatch = useAppDispatch();
 
-    // Checking user mic permission
-    React.useEffect(() => {
-        navigator.mediaDevices
-            .getUserMedia({ audio: true })
-            .then()
-            .catch((err: any) => {
-                console.log(err);
-                setRecord({ ...record, isBlocked: true });
-            });
-    }, []);
-
-    const startRecord = () => {
-        if (record.isBlocked) {
-            dispatch(
-                addToast({
+    const startRecord = async () => {
+        // Check for mic permission
+        const allowStatus = await navigator.permissions.query({
+            // @ts-ignore
+            name: "microphone",
+        });
+        if (allowStatus.state !== "granted") {
+            try {
+                await navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                });
+            } catch (err: any) {
+                addNewToast({
                     variant: "danger",
                     message: "Please enable microphone for recording",
-                })
-            );
-            return;
+                });
+                console.log(err);
+                return;
+            }
         }
+
         mp3Recorder
             .start()
             .then(() => {
@@ -60,9 +61,7 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
     const endRecord = async () => {
         setAppear(false);
         await delay(750);
-        if (record.isBlocked) {
-            return;
-        }
+
         mp3Recorder
             .stop()
             .getMp3()
@@ -75,19 +74,11 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                     blobURL: blobUrl,
                     isRecording: false,
                 });
+                console.log(blob);
                 dispatch(humToSongAsync(blob)); // fetch api
             })
             .catch((e: any) => console.log(e));
     };
-
-    const Scroll = () =>
-    {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-    }
-
 
     const [searchValue, setSearchValue] = React.useState("");
 
@@ -101,23 +92,23 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
         e.preventDefault();
     };
 
-    const delay = (ms : any ) => new Promise(res => setTimeout(res, ms));
+    const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
     return (
         <div>
             {record.isRecording && (
-                <div className={
-                    appear ?
-                    "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
-                    :
-                    "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
-                    }>
+                <div
+                    className={
+                        appear
+                            ? "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
+                            : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
+                    }
+                >
                     <div
-                        className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer"
-                        onClick={endRecord}
-                    >
+                        className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer" >
                         <div className="font-medium">Listening</div>
-                        <div className="text-sm">Click to stop listening</div>
+                        <br></br>
+                        <div className="text-sm">Try to Hum something</div>
                     </div>
                 </div>
             )}
@@ -145,7 +136,7 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
 
                             <input
                                 type="search"
-                                className="w-[9rem] md:w-[29rem] ml-3 text-base font-normal text-gray-700 bg-white transition ease-in-out focus:text-gray-700 focus:outline-none md: w-[14.5rem]"
+                                className="md:w-[29rem] ml-3 text-base font-normal text-gray-700 bg-white transition ease-in-out focus:text-gray-700 focus:outline-none md: w-[14.5rem]"
                                 placeholder="Search for song"
                                 onChange={handleChange}
                                 value={searchValue}

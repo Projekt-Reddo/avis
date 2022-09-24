@@ -1,5 +1,7 @@
 import Loading from "components/shared/Loading";
 import * as React from "react";
+import "../../theme/Result.css"
+import Icon from "components/shared/Icon";
 
 interface TopSearchProp {
     result: {
@@ -10,7 +12,43 @@ interface TopSearchProp {
     };
 }
 
+
 const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
+
+    const audioRef = React.useRef(new Audio);
+    const [songPlay, setSong] = React.useState("");
+    const [isPlay,setPlay] = React.useState(false);
+
+
+    const handleLoadedData = () => {
+        // audioRef.current.volume = 0.5;
+        // if (songPlay != "")
+        // {
+        //     audioRef.current.play();
+        // };
+    };
+
+    const handlePausePlayClick = (e: string) => {
+        audioRef.current.volume = 0.1;
+        audioRef.current.currentTime=0;
+        if(e != audioRef.current.src)
+        {
+            audioRef.current.src = e;
+            setSong(audioRef.current.src);
+            setPlay(true);
+            audioRef.current.play();
+        } else {
+            if (isPlay) {
+                audioRef.current.pause();
+                setPlay(false);
+            } else {
+                audioRef.current.play();
+                setPlay(true);
+            }
+        }
+    };
+
+
     return (
         <div className="px-3 lg:px-32 2xl:px-52 mt-10">
             <div className="text-2xl mb-3 text-black font-bold">Top Result</div>
@@ -26,14 +64,24 @@ const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
                             className="flex flex-row rounded-md mb-6 shadow-md col-span-1"
                         >
                             <div
-                                className="rounded-md min-h-[11rem] w-1/3"
+                                onClick={() => handlePausePlayClick(song.url?.internal ? song.url?.internal : "")}
+                                className="Container rounded-md min-h-[11rem] w-1/3 flex justify-center items-center"
                                 style={{
                                     backgroundImage: `url(${song.thumbnail})`,
                                     backgroundRepeat: "no-repeat",
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
-                                }}
-                            ></div>
+                                }}>
+                                <div className="Icon">
+                                    <div className="bg-[color:var(--inline-color)] h-[4rem] w-[4rem] rounded-full flex justify-center items-center">
+                                        { (songPlay == song.url?.internal) ? (isPlay) ? <Icon icon="pause" className="fa-2xl text-[color:var(--white-color)]"/> : <Icon icon="play" className="fa-2xl text-[color:var(--white-color)]"/> : <Icon icon="play" className="fa-2xl text-[color:var(--white-color)]"/>}
+                                    </div>
+                                    <audio
+                                        ref={audioRef}
+                                        onEnded={() => setSong("")}
+                                    />
+                                </div>
+                            </div>
                             <div className="ml-3 mt-3">
                                 <div className="text-xl font-bold">
                                     {song.title}
@@ -53,3 +101,5 @@ const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
     );
 };
 export default TopSearch;
+
+

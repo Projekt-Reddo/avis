@@ -4,6 +4,8 @@ namespace MainService.Dtos;
 
 public class UrlReadDto
 {
+    public string Internal { get; set; } = null!;
+
     public string Soundcloud { get; set; } = null!;
 
     public string Spotify { get; set; } = null!;
