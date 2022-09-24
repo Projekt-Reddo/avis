@@ -1,12 +1,15 @@
 import * as React from "react";
 import { useAppDispatch } from "utils/react-redux-hooks";
 import MicRecorder from "mic-recorder-to-mp3";
-import { humToSongAsync } from "store/slices/songSlice";
+// import { humToSongAsync } from "store/slices/songSlice";
+import { textSearchAsync, humToSongAsync } from "store/slices/searchSlice";
 import Icon from "components/shared/Icon";
 import "../../theme/Home.css";
 import { addNewToast } from "components/Toast";
 
-interface SongSearchProp {}
+interface SongSearchProp {
+    scrollRef: React.MutableRefObject<null>;
+}
 
 interface RecordInfo {
     isRecording: boolean;
@@ -17,7 +20,7 @@ interface RecordInfo {
 
 const mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-const SongSearch: React.FC<SongSearchProp> = ({}) => {
+const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
     const [record, setRecord] = React.useState<RecordInfo>({
         isRecording: false,
         blobURL: "",
@@ -77,9 +80,19 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
             .catch((e: any) => console.log(e));
     };
 
-    const [searchValue, setSearchValue] = React.useState("");
-
+    // Manage animation
     const [appear, setAppear] = React.useState(false);
+    const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+
+    const handleScroll = () => {
+        // @ts-ignore
+        scrollRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    };
+
+    const [searchValue, setSearchValue] = React.useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
@@ -87,9 +100,13 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
 
     const handleTextSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!searchValue) {
+            return;
+        }
+        dispatch(textSearchAsync(searchValue));
+        setSearchValue("");
+        handleScroll();
     };
-
-    const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
     return (
         <div>
@@ -97,12 +114,12 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                 <div
                     className={
                         appear
-                            ? "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
-                            : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
+                            ? "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
+                            : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
                     }
                 >
                     <div
-                        className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer"
+                        className="text-2xl h-56 w-56 rounded-full bg-white border-2 flex flex-col justify-center items-center cursor-pointer"
                         onClick={endRecord}
                     >
                         <div className="font-medium">Listening</div>

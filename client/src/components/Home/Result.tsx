@@ -1,5 +1,7 @@
 import Loading from "components/shared/Loading";
 import * as React from "react";
+import { MOBILE_BREAKPOINT } from "utils/constants";
+import { useWindowDimensions } from "utils/useWindowDimensions";
 
 interface TopSearchProp {
     result: {
@@ -8,11 +10,22 @@ interface TopSearchProp {
             payload: Song[];
         };
     };
+    scrollRef: React.MutableRefObject<null>;
 }
 
-const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
+const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
+    // For hiding nav bar in mobile view
+    const { width } = useWindowDimensions();
+
     return (
-        <div className="px-3 lg:px-32 2xl:px-52 mt-10">
+        <div
+            ref={scrollRef}
+            className={`px-3 lg:px-32 2xl:px-52 mt-10 ${
+                width! <= MOBILE_BREAKPOINT // Margin the fixed navbar when scrollIntoView
+                    ? "scroll-mt-1"
+                    : "scroll-mt-[4.5rem]"
+            }`}
+        >
             <div className="text-2xl mb-3 text-black font-bold">Top Result</div>
             {result.status === "loading" ? (
                 <div className="px-3 lg:px-32 2xl:px-52 mt-10 h-48 flex justify-center items-center">
