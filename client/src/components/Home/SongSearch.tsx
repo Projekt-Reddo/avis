@@ -80,6 +80,14 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
             .catch((e: any) => console.log(e));
     };
 
+    const Scroll = () =>
+    {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }
+
 
     const [searchValue, setSearchValue] = React.useState("");
 
