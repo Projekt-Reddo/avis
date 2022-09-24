@@ -1,7 +1,7 @@
 import { userEmailVerify } from "api/firebase-api";
 import { useEffect } from "react";
 import { useHistory } from "react-router";
-import { logout } from "store/slices/userSlice";
+import { logout } from "store/slices/authSlice";
 import { useAppSelector, useAppDispatch } from "./react-redux-hooks";
 
 export const useUserChangeTracking = () => {

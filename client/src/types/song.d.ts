@@ -7,6 +7,7 @@ interface Song {
     description: string;
     genres: string[];
     url?: {
+        internal?: string;
         soundcloud?: string;
         spotify?: string;
         youtube?: string;

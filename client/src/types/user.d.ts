@@ -14,8 +14,27 @@ interface UserSignup {
     password: string;
 }
 
+interface UserLoginDto {
+    email: string;
+    password: string;
+}
+
 interface UserCreateDto {
     name: string;
     email: string;
     uid: string;
+}
+
+interface UserFilter {
+    page: number;
+    size: number;
+    filter?: {
+        name?: string;
+        sort?: string;
+        joinedStart?: string;
+        joinedEnd?: string;
+        isModerator?: bool;
+        isBanned?: bool;
+        isMuted?: bool;
+    };
 }
