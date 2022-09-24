@@ -1,6 +1,8 @@
 import Loading from "components/shared/Loading";
 import * as React from "react";
-import "../../theme/Result.css"
+import { MOBILE_BREAKPOINT } from "utils/constants";
+import { useWindowDimensions } from "utils/useWindowDimensions";
+import "../../theme/Result.css";
 import Icon from "components/shared/Icon";
 
 interface TopSearchProp {
@@ -10,29 +12,21 @@ interface TopSearchProp {
             payload: Song[];
         };
     };
+    scrollRef: React.RefObject<HTMLDivElement>;
 }
 
+const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
+    // For hiding nav bar in mobile view
+    const { width } = useWindowDimensions();
 
-const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
-
-    const audioRef = React.useRef(new Audio);
+    const audioRef = React.useRef(new Audio());
     const [songPlay, setSong] = React.useState("");
-    const [isPlay,setPlay] = React.useState(false);
-
-
-    const handleLoadedData = () => {
-        // audioRef.current.volume = 0.5;
-        // if (songPlay != "")
-        // {
-        //     audioRef.current.play();
-        // };
-    };
+    const [isPlay, setPlay] = React.useState(false);
 
     const handlePausePlayClick = (e: string) => {
         audioRef.current.volume = 0.1;
-        audioRef.current.currentTime=0;
-        if(e != audioRef.current.src)
-        {
+        audioRef.current.currentTime = 0;
+        if (e != audioRef.current.src) {
             audioRef.current.src = e;
             setSong(audioRef.current.src);
             setPlay(true);
@@ -48,9 +42,15 @@ const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
         }
     };
 
-
     return (
-        <div className="px-3 lg:px-32 2xl:px-52 mt-10">
+        <div
+            ref={scrollRef}
+            className={`px-3 lg:px-32 2xl:px-52 mt-10 ${
+                width! <= MOBILE_BREAKPOINT // Margin the fixed navbar when scrollIntoView
+                    ? "scroll-mt-1"
+                    : "scroll-mt-[4.5rem]"
+            }`}
+        >
             <div className="text-2xl mb-3 text-black font-bold">Top Result</div>
             {result.status === "loading" ? (
                 <div className="px-3 lg:px-32 2xl:px-52 mt-10 h-48 flex justify-center items-center">
@@ -64,17 +64,41 @@ const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
                             className="flex flex-row rounded-md mb-6 shadow-md col-span-1"
                         >
                             <div
-                                onClick={() => handlePausePlayClick(song.url?.internal ? song.url?.internal : "")}
+                                onClick={() =>
+                                    handlePausePlayClick(
+                                        song.url?.internal
+                                            ? song.url?.internal
+                                            : ""
+                                    )
+                                }
                                 className="Container rounded-md min-h-[11rem] w-1/3 flex justify-center items-center"
                                 style={{
                                     backgroundImage: `url(${song.thumbnail})`,
                                     backgroundRepeat: "no-repeat",
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
-                                }}>
+                                }}
+                            >
                                 <div className="Icon">
                                     <div className="bg-[color:var(--inline-color)] h-[4rem] w-[4rem] rounded-full flex justify-center items-center">
-                                        { (songPlay == song.url?.internal) ? (isPlay) ? <Icon icon="pause" className="fa-2xl text-[color:var(--white-color)]"/> : <Icon icon="play" className="fa-2xl text-[color:var(--white-color)]"/> : <Icon icon="play" className="fa-2xl text-[color:var(--white-color)]"/>}
+                                        {songPlay == song.url?.internal ? (
+                                            isPlay ? (
+                                                <Icon
+                                                    icon="pause"
+                                                    className="fa-2xl text-[color:var(--white-color)]"
+                                                />
+                                            ) : (
+                                                <Icon
+                                                    icon="play"
+                                                    className="fa-2xl text-[color:var(--white-color)]"
+                                                />
+                                            )
+                                        ) : (
+                                            <Icon
+                                                icon="play"
+                                                className="fa-2xl text-[color:var(--white-color)]"
+                                            />
+                                        )}
                                     </div>
                                     <audio
                                         ref={audioRef}
@@ -101,5 +125,3 @@ const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
     );
 };
 export default TopSearch;
-
-
