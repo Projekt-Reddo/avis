@@ -64,21 +64,18 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         setAppear(true);
     };
 
-    // React.useEffect(() =>
-    // {
-    //     if (hum) {
-    //         StopHum();
-    //     }
-    // }, [hum]);
+    React.useEffect(() =>
+    {
+        if (hum) {
+            StopHum();
+        }
+    }, [hum]);
 
-
-    // const StopHum = async () => {
-    //     await delay(10000);
-    //     endRecord();
-    //     setHum(false);
-    // }
-
-
+    const StopHum = async () => {
+        await delay(10000);
+        endRecord();
+        setHum(false);
+    }
 
     const endRecord = async () => {
         setAppear(false);
