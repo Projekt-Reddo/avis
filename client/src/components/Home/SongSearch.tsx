@@ -30,6 +30,7 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
 
     const startRecord = async () => {
         // Check for mic permission
+        setHum(true);
         const allowStatus = await navigator.permissions.query({
             // @ts-ignore
             name: "microphone",
@@ -58,6 +59,21 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
         setAppear(true);
     };
 
+    React.useEffect(() =>
+    {
+        if (hum) {
+            StopHum();
+        }
+    }, [hum]);
+
+    const StopHum = async () => {
+        await delay(10000);
+        endRecord();
+        setHum(false);
+    }
+
+
+
     const endRecord = async () => {
         setAppear(false);
         await delay(750);
@@ -74,7 +90,6 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                     blobURL: blobUrl,
                     isRecording: false,
                 });
-                console.log(blob);
                 dispatch(humToSongAsync(blob)); // fetch api
             })
             .catch((e: any) => console.log(e));
