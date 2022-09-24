@@ -1,32 +1,37 @@
 import * as React from "react";
 import { useAppDispatch } from "utils/react-redux-hooks";
 import MicRecorder from "mic-recorder-to-mp3";
-import { humToSongAsync } from "store/slices/songSlice";
+import { textSearchAsync, humToSongAsync } from "store/slices/searchSlice";
 import Icon from "components/shared/Icon";
-import "../../theme/Home.css";
+import "theme/Home.css";
 import { addNewToast } from "components/Toast";
+import { saveSearchHistory } from "./search-history-hook";
+import History from "./History";
 
-interface SongSearchProp {}
+interface SongSearchProp {
+    scrollRef: React.RefObject<HTMLDivElement>;
+}
 
 interface RecordInfo {
     isRecording: boolean;
     blobURL: string;
-    // isBlocked: boolean;
     blob: Blob | null;
 }
 
 const mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-const SongSearch: React.FC<SongSearchProp> = ({}) => {
+const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
+    const dispatch = useAppDispatch();
+
+    //#region Hum search
+
     const [record, setRecord] = React.useState<RecordInfo>({
         isRecording: false,
         blobURL: "",
         blob: null,
     });
 
-    const [hum,setHum] = React.useState(false);
-
-    const dispatch = useAppDispatch();
+    const [hum, setHum] = React.useState(false);
 
     const startRecord = async () => {
         // Check for mic permission
@@ -59,8 +64,7 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
         setAppear(true);
     };
 
-    React.useEffect(() =>
-    {
+    React.useEffect(() => {
         if (hum) {
             StopHum();
         }
@@ -70,9 +74,7 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
         await delay(10000);
         endRecord();
         setHum(false);
-    }
-
-
+    };
 
     const endRecord = async () => {
         setAppear(false);
@@ -91,23 +93,59 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                     isRecording: false,
                 });
                 dispatch(humToSongAsync(blob)); // fetch api
+                handleScrollToResult();
             })
             .catch((e: any) => console.log(e));
     };
 
-    const [searchValue, setSearchValue] = React.useState("");
+    //#endregion
 
+    // Listening animation
     const [appear, setAppear] = React.useState(false);
+    const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+
+    const handleScrollToResult = () => {
+        scrollRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    };
+
+    //#region Text search
+
+    const [searchValue, setSearchValue] = React.useState("");
+    const inputRef = React.useRef<HTMLInputElement>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
     };
 
-    const handleTextSearch = (e: React.FormEvent) => {
+    const handleTextSearch = async (e: React.FormEvent) => {
+        const value = searchValue.trim().replace(/\s+/g, " ");
+
         e.preventDefault();
+        inputRef.current?.blur(); // remove focus on input
+
+        if (!value) {
+            return;
+        }
+
+        dispatch(textSearchAsync(value));
+        await saveSearchHistory(value);
+        setSearchValue("");
+        handleScrollToResult();
     };
 
-    const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+    const handleHistorySearch = (searchInput: string) => {
+        const value = searchInput.trim().replace(/\s+/g, " ");
+        dispatch(textSearchAsync(value));
+        handleScrollToResult();
+        setShowHistory(false);
+    };
+
+    const [showHistory, setShowHistory] = React.useState<boolean>(false);
+
+    //#endregion
 
     return (
         <div>
@@ -115,12 +153,11 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                 <div
                     className={
                         appear
-                            ? "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
-                            : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10 "
+                            ? "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
+                            : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
                     }
                 >
-                    <div
-                        className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer" >
+                    <div className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer">
                         <div className="font-medium">Listening</div>
                         <br></br>
                         <div className="text-sm">Try to Hum something</div>
@@ -132,7 +169,14 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                     <div className="text-4xl mb-10 text-black font-bold text-center ">
                         Discover and search song
                     </div>
-                    <div className="w-80 md:w-[35rem] flex h-15 bg-white items-center rounded-xl border-[0.25px] mb-6 shadow-md">
+                    <div className="relative w-80 md:w-[35rem] flex h-15 bg-white items-center rounded-xl border-[0.25px] mb-6 shadow-md">
+                        {showHistory && (
+                            <History
+                                onClickElement={handleHistorySearch}
+                                setShowHistory={setShowHistory}
+                                inputRef={inputRef}
+                            />
+                        )}
                         <form
                             className="flex flex-row py-1 pl-3"
                             onSubmit={handleTextSearch}
@@ -155,6 +199,10 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                                 placeholder="Search for song"
                                 onChange={handleChange}
                                 value={searchValue}
+                                onFocus={() => {
+                                    setShowHistory(true);
+                                }}
+                                ref={inputRef}
                             />
                         </form>
                         <div className="h-full flex items-center justify-center pr-3">
@@ -176,7 +224,6 @@ const SongSearch: React.FC<SongSearchProp> = ({}) => {
                     </div>
                 </div>
             </div>
-            {/* <audio src={record.blobURL} controls={true} /> */}
         </div>
     );
 };

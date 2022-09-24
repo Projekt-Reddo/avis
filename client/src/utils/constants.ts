@@ -50,3 +50,5 @@ export const DefaultDay = "0001-01-01T00:00:00Z";
 export const DayFormat = "YYYY MMM DD";
 
 export const MOBILE_BREAKPOINT = 1024;
+
+export const HISTORY = "history";
