@@ -14,6 +14,11 @@ interface UserSignup {
     password: string;
 }
 
+interface UserLoginDto {
+    email: string;
+    password: string;
+}
+
 interface UserCreateDto {
     name: string;
     email: string;
