@@ -1,20 +1,20 @@
 import * as React from "react";
 import { useAppDispatch } from "utils/react-redux-hooks";
 import MicRecorder from "mic-recorder-to-mp3";
-// import { humToSongAsync } from "store/slices/songSlice";
 import { textSearchAsync, humToSongAsync } from "store/slices/searchSlice";
 import Icon from "components/shared/Icon";
 import "../../theme/Home.css";
 import { addNewToast } from "components/Toast";
+import { saveSearchHistory } from "./search-history-hook";
+import History from "./History";
 
 interface SongSearchProp {
-    scrollRef: React.MutableRefObject<null>;
+    scrollRef: React.RefObject<HTMLDivElement>;
 }
 
 interface RecordInfo {
     isRecording: boolean;
     blobURL: string;
-    // isBlocked: boolean;
     blob: Blob | null;
 }
 
@@ -26,6 +26,8 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         blobURL: "",
         blob: null,
     });
+
+    const inputRef = React.useRef<HTMLInputElement>(null);
 
     const dispatch = useAppDispatch();
 
@@ -84,8 +86,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
     const [appear, setAppear] = React.useState(false);
     const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
-    const handleScroll = () => {
-        // @ts-ignore
+    const handleScrollToResult = () => {
         scrollRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "start",
@@ -98,15 +99,30 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         setSearchValue(e.target.value);
     };
 
-    const handleTextSearch = (e: React.FormEvent) => {
+    const handleTextSearch = async (e: React.FormEvent) => {
+        const value = searchValue.trim().replace(/\s+/g, " ");
+
         e.preventDefault();
-        if (!searchValue) {
+        inputRef.current?.blur(); // remove focus on input
+
+        if (!value) {
             return;
         }
-        dispatch(textSearchAsync(searchValue));
+
+        dispatch(textSearchAsync(value));
+        await saveSearchHistory(value);
         setSearchValue("");
-        handleScroll();
+        handleScrollToResult();
     };
+
+    const handleHistorySearch = (searchInput: string) => {
+        const value = searchInput.trim().replace(/\s+/g, " ");
+        dispatch(textSearchAsync(value));
+        handleScrollToResult();
+        setShowHistory(false);
+    };
+
+    const [showHistory, setShowHistory] = React.useState<boolean>(false);
 
     return (
         <div>
@@ -132,7 +148,14 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                     <div className="text-4xl mb-10 text-black font-bold text-center ">
                         Discover and search song
                     </div>
-                    <div className="w-80 md:w-[35rem] flex h-15 bg-white items-center rounded-xl border-[0.25px] mb-6 shadow-md">
+                    <div className="relative w-80 md:w-[35rem] flex h-15 bg-white items-center rounded-xl border-[0.25px] mb-6 shadow-md">
+                        {showHistory && (
+                            <History
+                                onClickElement={handleHistorySearch}
+                                setShowHistory={setShowHistory}
+                                inputRef={inputRef}
+                            />
+                        )}
                         <form
                             className="flex flex-row py-1 pl-3"
                             onSubmit={handleTextSearch}
@@ -155,7 +178,13 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                                 placeholder="Search for song"
                                 onChange={handleChange}
                                 value={searchValue}
+                                onFocus={() => {
+                                    setShowHistory(true);
+                                }}
+                                ref={inputRef}
                             />
+
+                            {/* {showHistory && <History />} */}
                         </form>
                         <div className="h-full flex items-center justify-center pr-3">
                             <button

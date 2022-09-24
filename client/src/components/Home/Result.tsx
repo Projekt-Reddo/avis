@@ -10,7 +10,7 @@ interface TopSearchProp {
             payload: Song[];
         };
     };
-    scrollRef: React.MutableRefObject<null>;
+    scrollRef: React.RefObject<HTMLDivElement>;
 }
 
 const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {

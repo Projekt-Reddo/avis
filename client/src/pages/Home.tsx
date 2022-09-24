@@ -10,7 +10,7 @@ import { useRef } from "react";
 const Home = () => {
     const result = useAppSelector((state) => state.search);
 
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     return (
         <PageWrapper
