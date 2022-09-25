@@ -64,7 +64,8 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         setAppear(true);
     };
 
-    React.useEffect(() => {
+    React.useEffect(() =>
+    {
         if (hum) {
             StopHum();
         }
@@ -74,12 +75,11 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         await delay(10000);
         endRecord();
         setHum(false);
-    };
+    }
 
     const endRecord = async () => {
         setAppear(false);
         await delay(750);
-
         mp3Recorder
             .stop()
             .getMp3()
@@ -157,11 +157,12 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
                     }
                 >
-                    <div className="text-2xl h-56 w-56 rounded-full border-2 flex flex-col justify-center items-center cursor-pointer">
-                        <div className="font-medium">Listening</div>
-                        <br></br>
-                        <div className="text-sm">Try to Hum something</div>
+                    <div className="text-4xl h-56 w-56 mb-20 rounded-full border-2 bg-white flex flex-col justify-center items-center color" >
+                        <div className="wave text-4xl h-48 w-48 rounded-full border bg-white flex flex-col justify-center items-center color" >
+                            <Icon icon="microphone" className="text-[color:var(--teal-general-color)]"></Icon>
+                        </div>
                     </div>
+                    <div className="listen text-3xl font-bold absolute">Listening</div>
                 </div>
             )}
             <div className="search-bg h-[91vh] flex justify-center items-center">
