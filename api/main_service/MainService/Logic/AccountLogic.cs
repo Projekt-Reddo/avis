@@ -1,9 +1,11 @@
+using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Security.Principal;
 using static Constants;
 
 namespace MainService.Logic
@@ -14,6 +16,12 @@ namespace MainService.Logic
 
         BsonDocument SortFilter(string Sort);
 
+        Task<Account> SetupNewAccount(AccountCreateDto newAccount);
+
+        Task SetClaimWhenSignUp(Account account);
+
+        Account SetAccountDefaultValues(AccountCreateDto newAccount);
+
     }
     public class AccountLogic : IAccountLogic
     {
@@ -22,14 +30,16 @@ namespace MainService.Logic
         private IAccountRepo _accountRepo;
         private IPostRepo _postRepo;
         private IReportRepo _reportRepo;
+        private readonly IMapper _mapper;
 
-        public AccountLogic(IS3Service s3Service, IConfiguration configuration, IAccountRepo accountRepo, IPostRepo postRepo, IReportRepo reportRepo)
+        public AccountLogic(IS3Service s3Service, IConfiguration configuration, IAccountRepo accountRepo, IPostRepo postRepo, IReportRepo reportRepo, IMapper mapper)
         {
             _s3Service = s3Service;
             _configuration = configuration;
             _accountRepo = accountRepo;
             _postRepo = postRepo;
             _reportRepo = reportRepo;
+            _mapper = mapper;
         }
 
         public FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination)
@@ -107,6 +117,38 @@ namespace MainService.Logic
             };
 
             return sort;
+        }
+
+        public async Task<Account> SetupNewAccount(AccountCreateDto newAccount)
+        {
+            // Set account default values if missing.
+            var account = SetAccountDefaultValues(newAccount);
+
+            // set Firebase claims for front-end handle.
+            await SetClaimWhenSignUp(account);
+
+            var res = await _accountRepo.AddOneAsync(account);
+
+            return res;
+        }
+
+        public Account SetAccountDefaultValues(AccountCreateDto newAccount)
+        {
+            newAccount.Avatar ??= DEFAULT_AVATAR;
+
+            var account = _mapper.Map<Account>(newAccount);
+
+            account.Role = AccountRoles.USER;
+
+            return account;
+        }
+
+        public async Task SetClaimWhenSignUp(Account account)
+        {
+            await FirebaseService.SetRoleClaim(account.Uid, AccountRoles.USER);
+            await FirebaseService.SetNameClaim(account.Uid, account.Name);
+            await FirebaseService.SetNameClaim(account.Uid, account.Avatar);
+            await FirebaseService.SetInitiatedClaim(account.Uid);
         }
     }
 }
