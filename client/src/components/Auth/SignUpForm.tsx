@@ -66,7 +66,10 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
             <Button
                 className="mt-2.5"
                 type="submit"
-                disabled={userState.status === "loading"}
+                disabled={
+                    userState.status === "loading" ||
+                    userState.status === "init"
+                }
             >
                 Sign Up
             </Button>

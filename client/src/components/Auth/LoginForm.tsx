@@ -10,6 +10,7 @@ import { loginAsync } from "store/slices/authSlice";
 import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 import { Link } from "react-router-dom";
+import { useRedirectAfterLoggedIn } from "./login-hooks";
 
 interface LoginFormProps {}
 
@@ -38,6 +39,8 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
         );
     };
 
+    useRedirectAfterLoggedIn();
+
     return (
         <form
             className="w-full h-max md:mt-8"
@@ -64,7 +67,10 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
             <Button
                 className="mt-2.5 block"
                 type="submit"
-                disabled={userState.status === "loading"}
+                disabled={
+                    userState.status === "loading" ||
+                    userState.status === "init"
+                }
             >
                 Login
             </Button>

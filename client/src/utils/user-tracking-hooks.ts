@@ -20,6 +20,8 @@ export const useUserChangeTracking = () => {
                 history.replace("/verify", {
                     ...tempUser,
                 });
+
+                return;
             }
         })();
     }, [user]);
