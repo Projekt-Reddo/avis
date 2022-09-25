@@ -10,10 +10,13 @@ export const mapAuthCodeToMessage = (authCode: string) => {
             return "Email already exists!";
 
         case "auth/email-already-in-use":
-            return "Email alredy in use!";
+            return "Email already in use!";
 
         case "auth/user-not-found":
-            return "User not found!";
+            return "Wrong credential!";
+
+        case "auth/wrong-password":
+            return "Wrong credential!";
 
         // Many more authCode mapping here...
 

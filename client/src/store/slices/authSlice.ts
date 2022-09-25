@@ -1,18 +1,24 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createAccountApi } from "api/account-api";
-import { loginWithGoogle, userSignupFirebase } from "api/firebase-api";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
+import { createAccountApi, loginWithGoogleApi } from "api/account-api";
+import {
+    currentFirebaseUser,
+    loginWithGoogle,
+    userLoginFirebase,
+    userSignupFirebase,
+} from "api/firebase-api";
 import { FirebaseError } from "firebase/app";
+import { User } from "firebase/auth";
 import { mapAuthCodeToMessage } from "utils/firebase/firebase-helpers";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
-    status: "idle",
+    status: "init",
     data: null,
     error: null,
 };
 
-const userSlice = createSlice({
-    name: "user",
+const authSlice = createSlice({
+    name: "auth",
     initialState,
     reducers: {
         signup: () => initialState,
@@ -29,65 +35,140 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(signupAsync.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(signupAsync.fulfilled, (state, action) => {
-                state.status = "idle";
-                state.data = action.payload;
-            });
+            .addMatcher(
+                isAnyOf(
+                    signupAsync.pending,
+                    loginAsync.pending,
+                    loginWithGoogleAsync.pending,
+                    firstCheckin.pending
+                ),
+                (state) => {
+                    state.status = "loading";
+                }
+            )
+            .addMatcher(
+                isAnyOf(
+                    signupAsync.fulfilled,
+                    loginAsync.fulfilled,
+                    loginWithGoogleAsync.fulfilled,
+                    firstCheckin.fulfilled
+                ),
+                (state, action) => {
+                    state.status = "idle";
+                    state.data = action.payload;
+                }
+            );
     },
 });
 
-export const signupAsync = createAsyncThunk(
-    "user/signup",
-    async (userSignup: UserSignup, thunkApi) => {
+export const firstCheckin = createAsyncThunk("auth/checkin", async () => {
+    const firebaseUser = currentFirebaseUser();
+
+    if (!firebaseUser) return null;
+
+    return await getUserDataState(firebaseUser);
+});
+
+export const loginAsync = createAsyncThunk(
+    "auth/login",
+    async (userLogin: UserLoginDto, thunkApi) => {
         try {
-            // Signup here
-            const userFirebaseData = await userSignupFirebase(
-                userSignup as UserSignup
-            );
+            const userFirebaseData = await userLoginFirebase(userLogin);
 
-            const res = await createAccountApi({
-                email: userSignup.email,
-                name: userSignup.name,
-                uid: userFirebaseData.user.uid,
-            });
-
-            if (res.status !== 200) {
-                return res.data.message;
-            }
-
-            return {
-                emailVerified: userFirebaseData.user.emailVerified,
-                email: userSignup.email,
-                name: userSignup.name,
-                uid: userFirebaseData.user.uid,
-            };
+            return await getUserDataState(userFirebaseData.user);
         } catch (e: unknown) {
-            if (e instanceof FirebaseError) {
-                thunkApi.dispatch(
-                    addToast({
-                        variant: "danger",
-                        message: mapAuthCodeToMessage(e.code),
-                    })
-                );
-            }
+            handleError(e, thunkApi);
         }
     }
 );
 
-export const loginWithGoogleAsync = createAsyncThunk("user/login", async () => {
-    // Login here
-    const userFirebaseData = await loginWithGoogle();
+export const signupAsync = createAsyncThunk(
+    "auth/signup",
+    async (userSignup: UserSignup, thunkApi) => {
+        try {
+            // Signup with Firebase
+            const userFirebaseData = await userSignupFirebase(
+                userSignup as UserSignup
+            );
+
+            // Add firebase data to back-end
+            const res = await createAccountApi({
+                email: userSignup.email,
+                name: userSignup.name,
+                uid: userFirebaseData.user.uid,
+                avatar: userFirebaseData.user.photoURL,
+            });
+
+            if (res.status === 200) {
+                return await getUserDataState(userFirebaseData.user);
+            }
+        } catch (e: unknown) {
+            handleError(e, thunkApi);
+        }
+    }
+);
+
+export const loginWithGoogleAsync = createAsyncThunk(
+    "auth/login",
+    async (_, thunkApi) => {
+        try {
+            // Login here.
+            const userFirebaseData = await loginWithGoogle();
+
+            var tokenResult = await userFirebaseData.user.getIdTokenResult();
+
+            // Check if the user account had been added to back-end database or not.
+            if (!tokenResult.claims["initiated"]) {
+                const res = await loginWithGoogleApi({
+                    uid: userFirebaseData.user.uid,
+                    avatar: userFirebaseData.user.photoURL,
+                    email: userFirebaseData.user.email!,
+                    name: userFirebaseData.user.displayName!,
+                });
+
+                if (res.status === 200) {
+                    return await getUserDataState(userFirebaseData.user);
+                }
+            } else {
+                return await getUserDataState(userFirebaseData.user);
+            }
+        } catch (e: any) {
+            handleError(e, thunkApi);
+        }
+    }
+);
+
+export const { signup, logout } = authSlice.actions;
+
+export default authSlice.reducer;
+
+// Get data from Firebase return to add to Redux
+async function getUserDataState(userFirebaseData: User) {
+    const tokenResult = await userFirebaseData.getIdTokenResult();
 
     return {
-        // emailVerified: userFirebaseData?.user.emailVerified,
-        // email: userFirebaseData?.user.email,
-        // uid: userFirebaseData?.user.uid,
+        emailVerified: userFirebaseData.emailVerified,
+        uid: userFirebaseData.uid,
+        role: tokenResult.claims["role"],
+        email: userFirebaseData.email,
+        name:
+            tokenResult.claims["name"] ||
+            userFirebaseData.displayName ||
+            "Kuhaku",
     };
-});
+}
 
-export const { signup, logout } = userSlice.actions;
+// Display toast based on error
+function handleError(e: unknown, thunkApi: any) {
+    if (e instanceof FirebaseError) {
+        // User close popup
+        if (e.code === "auth/popup-closed-by-user") return;
 
-export default userSlice.reducer;
+        thunkApi.dispatch(
+            addToast({
+                variant: "danger",
+                message: mapAuthCodeToMessage(e.code),
+            })
+        );
+    }
+}
