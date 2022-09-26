@@ -30,4 +30,16 @@ public static class Constants
         public const string JOIN_ASC = "Join Asc";
         public const string JOIN_DESC = "Join Desc";
     }
+
+    /// <summary>
+    /// Account roles
+    /// </summary>
+    public static class AccountRoles
+    {
+        public const string ADMIN = "admin";
+        public const string MODERATOR = "moderator";
+        public const string USER = "user";
+    }
+
+    public const string DEFAULT_AVATAR = "https://static.wikia.nocookie.net/virtualyoutuber/images/8/8b/Hoshimachi_Suisei_2019_Portrait.png";
 }

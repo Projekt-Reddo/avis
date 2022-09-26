@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
-from app.services.s3_service import S3Service
 from app.dependencies import (
     singleton_faiss_index,
     singleton_hum2song_model,
-    singleton_preprocessHelper,
-    singleton_s3_service
+    singleton_preprocessHelper
 )
 
 router = APIRouter()
@@ -37,16 +35,3 @@ async def hum_detect(
     spec = preprocessHelper.preprocess(hum_file)
     result_ = faiss_index.predict(model, spec)
     return {"result": preprocessHelper.postprocess_results(result_)}
-
-
-@router.post("/down", response_class=JSONResponse)
-async def download_file(s3_service: S3Service = Depends(singleton_s3_service)):
-
-    rs = s3_service.download_file(
-        "awss3demo-bucket", "songs/", "88703952_p0.png", "hum2song/checkpoints"
-    )
-
-    if rs:
-        return {"message": "File downloaded successfully"}
-
-    return {"message": "Fail to download file"}

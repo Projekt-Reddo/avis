@@ -6,14 +6,14 @@ import yup from "utils/yup-config";
 
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { signupAsync } from "store/slices/userSlice";
+import { signupAsync } from "store/slices/authSlice";
 import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 
 interface SignUpFormProps {}
 
 const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
-    const userState = useAppSelector((state) => state.user);
+    const userState = useAppSelector((state) => state.auth);
 
     const {
         register,
@@ -66,7 +66,10 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
             <Button
                 className="mt-2.5"
                 type="submit"
-                disabled={userState.status === "loading"}
+                disabled={
+                    userState.status === "loading" ||
+                    userState.status === "init"
+                }
             >
                 Sign Up
             </Button>

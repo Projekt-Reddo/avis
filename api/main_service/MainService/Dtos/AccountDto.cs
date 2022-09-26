@@ -9,6 +9,8 @@ namespace MainService.Dtos
         public string Uid { get; set; } = null!;
 
         public string Name { get; set; } = null!;
+
+        public string? Avatar { get; set; }
     }
 
     public class AccountReadDto
@@ -64,6 +66,7 @@ namespace MainService.Dtos
 
         public bool isMuted { get; set; }
     }
+
     public class AccountSortDto
     {
         public string SortBy { get; set; } = null!;

@@ -27,9 +27,7 @@ const PageWrapperAuth: React.FC<PageWrapperAuthProps> = ({
                     aspectRatio: "1/1",
                 }}
             ></div>
-            <div className="w-full lg:w-1/2 h-4/6 lg:h-full">
-                {rightContent}
-            </div>
+            <div className="w-full lg:w-1/2 lg:h-full">{rightContent}</div>
         </div>
     );
 };
