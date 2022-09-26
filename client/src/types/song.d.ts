@@ -43,3 +43,10 @@ interface SongCreate {
     artistIds: string[];
     file: File | null;
 }
+
+interface SongDelete{
+    deleteObject: {
+        listId: string[]
+    };
+    searchFilter: any;
+}

@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
 
+// Libs
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { setTableData, viewSongAsync } from "store/slices/songSlice";
-
+import {
+    deleteSongAsync,
+    setTableData,
+    viewSongAsync,
+} from "store/slices/songSlice";
+import { Link } from "react-router-dom";
+import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
 
 // Components
@@ -11,13 +17,17 @@ import Table from "components/shared/Table";
 import SearchFilter from "components/shared/SearchFilter";
 import SelectRow from "components/shared/SelectRow";
 import Pagination from "components/shared/Pagination";
-
-import { FieldValues, useForm } from "react-hook-form";
-import { DayFormat } from "utils/constants";
-import { Link } from "react-router-dom";
-import { recommendGenreApi } from "api/genre-api";
 import Loading from "components/shared/Loading";
 import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
+import Button from "components/Button/Button";
+
+// Constants
+import { DayFormat } from "utils/constants";
+
+// Api
+import { recommendGenreApi } from "api/genre-api";
+import { useModal } from "components/Modal";
+import Modal from "components/Modal/Modal";
 
 interface pageRowFilterProps {
     currentPage: number;
@@ -40,6 +50,10 @@ const View = () => {
 
     const songState = useAppSelector((state) => state.song);
 
+    const { open: openDelete, setOpen: setOpenDelete } = useModal();
+
+    const [isSelected, setIsSelected] = React.useState<boolean>(false);
+
     const [pageRowFilter, setPageRowFilter] =
         React.useState<pageRowFilterProps>({
             currentPage: 1,
@@ -49,8 +63,6 @@ const View = () => {
             },
             filter: {},
         });
-
-    const [isSelected, setIsSelected] = React.useState<boolean>(false);
 
     const {
         register,
@@ -88,6 +100,20 @@ const View = () => {
                 modifiedEnd: data.modifiedEnd !== "" ? data.modifiedEnd : null,
             },
         });
+    };
+
+    const handleDelete = () => {
+        setIsSelected(false);
+        dispatch(
+            deleteSongAsync({
+                deleteObject: {
+                    listId: songState.tableData
+                        .filter((s: any) => s.isSelected == true)
+                        .map((song: any) => song.id),
+                },
+                searchFilter: pageRowFilter,
+            })
+        );
     };
 
     useEffect(() => {
@@ -151,8 +177,42 @@ const View = () => {
                 filterContent={filterContent}
             />
 
-            {/* Data Table */}
+            {isSelected ? (
+                <div className="mt-2">
+                    <Button
+                        className="none-shadow-button focus:outline-none"
+                        type="button"
+                        variant="danger"
+                        onClick={() => setOpenDelete(true)}
+                    >
+                        <Icon icon="trash" className="mr-2" />
+                        Delete
+                    </Button>
+                </div>
+            ) : (
+                ""
+            )}
 
+            <Modal
+                type="error"
+                open={openDelete}
+                setOpen={setOpenDelete}
+                title="Are you sure you want to delete those songs!!!"
+                message=""
+                modalBody={
+                    <div className="w-[25rem] rounded p-2 border-solid border-2 border-sky-500s">
+                        {songState.tableData
+                            ?.filter((s: any) => s.isSelected === true)
+                            .map((song: any) => (
+                                <div key={song.id}>{song.title}</div>
+                            ))}
+                    </div>
+                }
+                confirmTitle="Delete"
+                onConfirm={handleDelete}
+            />
+
+            {/* Data Table */}
             {songState.status === "loading" || !songState.tableData ? (
                 // Loading Components
                 <div className="flex justify-center items-center mt-8">

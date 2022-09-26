@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createSongApi, viewSongApi, humToSongApi } from "api/song-api";
+import { createSongApi, viewSongApi, humToSongApi, deleteSongApi } from "api/song-api";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
@@ -21,16 +21,19 @@ const songSlice = createSlice({
             ...state,
             data: action.payload,
         }),
-        setTableData: (state, action) => {
-            return {
-                ...state,
-                tableData: action.payload,
-            };
-        },
+        setTableData: (state, action) => ({
+            ...state,
+            tableData: action.payload,
+        }),
         humToSong: (state, action) => ({
             ...state,
             data: action.payload,
         }),
+        deleteSongApi: (state, action) => ({
+            ...state,
+            data: action.payload,
+        })
+        ,
     },
     extraReducers: (builder) => {
         builder
@@ -55,7 +58,16 @@ const songSlice = createSlice({
             .addCase(humToSongAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data.payload = action.payload;
-            });
+            })
+            .addCase(deleteSongAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(deleteSongAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+                state.tableData = action.payload.payload;
+            })
+            ;
     },
 });
 
@@ -95,6 +107,38 @@ export const humToSongAsync = createAsyncThunk(
     "song/hum",
     async (blob: Blob) => {
         return await humToSongApi(blob);
+    }
+);
+
+export const deleteSongAsync = createAsyncThunk(
+    "song/deleteSong",
+    async (songDelete: SongDelete, thunkApi) => {
+        try {
+            const res = await deleteSongApi(songDelete.deleteObject);
+
+            const msg = res.message;
+
+            thunkApi.dispatch(
+                addToast({
+                    variant: "primary",
+                    message: msg,
+                })
+            );
+            
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "danger",
+                    message: e.response.data.message,
+                })
+            );
+        }
+
+        return await viewSongApi({
+            page: songDelete.searchFilter.currentPage,
+            size: songDelete.searchFilter.rowShow.value,
+            filter: songDelete.searchFilter.filter
+        }); 
     }
 );
 
