@@ -26,8 +26,8 @@ import { DayFormat } from "utils/constants";
 
 // Api
 import { recommendGenreApi } from "api/genre-api";
-import Modal from "components/shared/Modal";
-import { useModal } from "utils/useModal";
+import { useModal } from "components/Modal";
+import Modal from "components/Modal/Modal";
 
 interface pageRowFilterProps {
     currentPage: number;

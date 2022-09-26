@@ -1,7 +1,7 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { Dialog, Transition } from "@headlessui/react";
-import Icon from "./Icon";
+import Icon from "../shared/Icon";
 
 interface ModalProps {
     type: "info" | "error" | "warning";
