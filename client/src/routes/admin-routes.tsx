@@ -9,8 +9,8 @@ import { useAppSelector } from "utils/react-redux-hooks";
 const AdminRoutes = () => {
     let { path } = useRouteMatch();
 
-    const userState = useAppSelector((state) => state.auth);
-    if (userState.status === "init") return <></>;
+    const authState = useAppSelector((state) => state.auth);
+    if (authState.status === "init") return <></>;
 
     return (
         <>

@@ -2,9 +2,9 @@ import { Route, Redirect } from "react-router-dom";
 import { useAppSelector } from "utils/react-redux-hooks";
 
 const UserRoute: React.FC<any> = ({ component: Component, ...rest }) => {
-    const user = useAppSelector((state) => state.auth);
+    const authState = useAppSelector((state) => state.auth);
 
-    if (!user) {
+    if (!authState.data) {
         return <Redirect to="/" />;
     }
 
