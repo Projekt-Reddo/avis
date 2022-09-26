@@ -39,8 +39,7 @@ const authSlice = createSlice({
                 isAnyOf(
                     signupAsync.pending,
                     loginAsync.pending,
-                    loginWithGoogleAsync.pending,
-                    firstCheckin.pending
+                    loginWithGoogleAsync.pending
                 ),
                 (state) => {
                     state.status = "loading";

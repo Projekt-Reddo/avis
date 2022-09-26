@@ -12,22 +12,23 @@ import AdminRoutes from "./admin-routes";
 
 import { routes } from "../utils/constants";
 import Feedback from "pages/Feedback";
+import AuthRoute from "./AuthRoute";
 
 const MainRoute = () => {
     return (
         <>
             <>
-                <Route path="/login">
+                <AuthRoute path="/login">
                     <Login />
-                </Route>
+                </AuthRoute>
 
-                <Route path="/signup">
+                <AuthRoute path="/signup">
                     <Signup />
-                </Route>
+                </AuthRoute>
 
-                <Route path="/verify">
+                <AuthRoute path="/verify">
                     <VerifyEmail />
-                </Route>
+                </AuthRoute>
             </>
 
             <>
