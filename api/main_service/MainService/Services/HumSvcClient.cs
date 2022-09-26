@@ -13,6 +13,8 @@ public interface IHumSvcClient
     /// <param name="file">Hum file</param>
     /// <returns></returns>
     Task<IList<string>?> GetSongIdsByHum(IFormFile file);
+
+    Task<bool> HealthCheck();
 }
 
 public class HumSvcClient : IHumSvcClient
@@ -53,5 +55,20 @@ public class HumSvcClient : IHumSvcClient
         }
 
         return null;
+    }
+
+    public async Task<bool> HealthCheck()
+    {
+        using var client = _httpClientFactory.CreateClient(PollyHttpClient.CLIENT_NAME);
+        var url = $"{_humSvcUrl}/health";
+
+        var response = await client.GetAsync(url);
+        var content = await response.Content.ReadAsStringAsync();
+        if (response.IsSuccessStatusCode)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
