@@ -74,3 +74,8 @@ public class ListPostDto
 
     public int CommentCount { get; set; }
 }
+
+public class PostListCommentDto
+{
+    public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
+}
