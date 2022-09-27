@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using FirebaseAdmin.Auth;
+using Hangfire;
+using System.Reflection.Metadata;
+using System.Security.Claims;
 
 namespace MainService.Controllers
 {
@@ -29,25 +32,33 @@ namespace MainService.Controllers
         [HttpPost("signup")]
         public async Task<ActionResult<ResponseDto>> Signup([FromBody] AccountCreateDto newAccount)
         {
+            // To check whether email exist or not.
             var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Email", newAccount.Email));
 
+            // Email cannot be duplicated due to the database design.
             if (accountFromRepo is not null)
             {
                 return BadRequest(new ResponseDto(400, "Email duplicated!"));
             }
 
-            // Set admin privileges on the user corresponding to uid.
-            var claims = new Dictionary<string, object>()
+            var _ = _accountLogic.SetupNewAccount(newAccount);
+
+            return Ok(new ResponseDto(200, "Account created successfully"));
+        }
+
+        [HttpPost("google-login")]
+        public async Task<ActionResult<ResponseDto>> GoogleLogin([FromBody] AccountCreateDto newAccount)
+        {
+            // To check whether email exist or not.
+            var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Email", newAccount.Email));
+
+            // Email cannot be duplicated due to the database design.
+            if (accountFromRepo is not null)
             {
-                { "role", "user" },
-            };
-
-            await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(newAccount.Uid, claims);
-            // The new custom claims will propagate to the user's ID token the
-            // next time a new one is issued.
-
-            var account = _mapper.Map<Account>(newAccount);
-            var _ = await _accountRepo.AddOneAsync(account);
+                return Ok(new ResponseDto(200, "This account is exist and no need to set up!"));
+            }
+            
+            var _ = _accountLogic.SetupNewAccount(newAccount);
 
             return Ok(new ResponseDto(200, "Account created successfully"));
         }

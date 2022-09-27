@@ -8,6 +8,12 @@ import {
 } from "firebase/auth";
 import { auth } from "utils/firebase/firebase-config";
 
+export const currentFirebaseUser = () => {
+    const res = auth.currentUser;
+
+    return res;
+};
+
 export const userLoginFirebase = async ({ email, password }: UserLoginDto) => {
     const res = await signInWithEmailAndPassword(auth, email, password);
 

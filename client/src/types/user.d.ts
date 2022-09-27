@@ -23,6 +23,7 @@ interface UserCreateDto {
     name: string;
     email: string;
     uid: string;
+    avatar: string | null;
 }
 
 interface UserFilter {

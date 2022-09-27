@@ -6,7 +6,7 @@ type ActionType = {
 type DispatchType = (args: ActionType) => ActionType;
 
 interface AsyncReducerInitialState {
-    status: "idle" | "loading" | "error";
+    status: "init" | "idle" | "loading" | "error";
     data: any;
     error: any;
     tableData?: any;

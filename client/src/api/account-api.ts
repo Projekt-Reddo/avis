@@ -8,8 +8,13 @@ export const createAccountApi = async (data: UserCreateDto) => {
     return res.data;
 };
 
-export const viewUserApi = async (data: UserFilter) =>
-{
+export const loginWithGoogleApi = async (data: UserCreateDto) => {
+    const res = await axios.post(apiRoute + "/google-login", data);
+
+    return res.data;
+};
+
+export const viewUserApi = async (data: UserFilter) => {
     const res = await axios.post(apiRoute + "/filter", data);
     return res.data;
-}
+};
