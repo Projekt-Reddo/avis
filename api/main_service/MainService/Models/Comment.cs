@@ -10,6 +10,7 @@ namespace MainService.Models;
 public class Comment : BaseModel
 {
     [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+
     public string UserId { get; set; } = null!;
 
     public Account? User { get; set; } = null!; // Comment user

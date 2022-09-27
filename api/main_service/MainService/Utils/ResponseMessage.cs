@@ -40,4 +40,9 @@ public static class ResponseMessage
     public const string ARTIST_DELETE_FAIL = "Fail to delete artists";
     public const string ARTIST_DELETE_SUCCESS = "Delete artist successfully";
     public const string ARTIST_DELETE_SUCCESS_AND_FAIL = "Delete artist successfully but there are some artists that failed to deleted";
+
+    // Comment msg
+    public const string COMMENT_CREATE_SUCCESS = "Add new comment successfully";
+    public const string COMMENT_CREATE_FAIL = "Add new comment failed";
+    public const string COMMENT_CREATE_MEDIA_FAIL = "Media type is not supported";
 }

@@ -22,4 +22,10 @@ namespace MainService.Dtos
 
         public ICollection<string>? Hashtags { get; set; } = null!;
     }
+
+    public class CommentFilterDto
+    {
+        public string? ObjectId { get; set; } = null!;
+        public bool IsPostChild { get; set; } = false;
+    }
 }
