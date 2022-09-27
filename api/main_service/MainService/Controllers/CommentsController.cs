@@ -64,6 +64,10 @@ namespace MainService.Controllers
                 (var isMp3File, var songCheckMessage) = FileExtension.CheckMp3Extension(newComment.Media);
                 (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(newComment.Media);
                 (var isVideoFile, var videoCheckMessage) = FileExtension.CheckVideoExtension(newComment.Media);
+
+                if (!isMp3File && !isImageFile && !isVideoFile){
+                    return BadRequest(new ResponseDto(400, ResponseMessage.COMMENT_CREATE_MEDIA_FAIL));
+                }
                 var mediaType = "";
                 var folderUpload = "";
                 if (isMp3File){
@@ -88,7 +92,7 @@ namespace MainService.Controllers
                 mediaType
                 );
             }
-            return Ok(new ResponseDto(200, "Add new comment successfully"));
+            return Ok(new ResponseDto(200, ResponseMessage.COMMENT_CREATE_SUCCESS));
         }
 
         [HttpPost("filter")]
