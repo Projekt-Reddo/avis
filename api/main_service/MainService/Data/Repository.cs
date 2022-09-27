@@ -64,7 +64,7 @@ namespace MainService.Data
         /// </summary>
         /// <param name="filter">Bson filter</param>
         /// <returns>Fit condition document</returns>
-        Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!);
+        Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? project = null!, BsonDocument? lookup = null!);
 
         /// <summary>
         /// Add new document to selected collection
@@ -218,9 +218,36 @@ namespace MainService.Data
             return true;
         }
 
-        public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!)
+        public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? project = null!, BsonDocument? lookup = null!)
         {
-            var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
+            var query = _collection.Aggregate();
+
+            if (filter is not null)
+            {
+                query = query.Match(filter);
+            }
+
+            if (lookup is not null)
+            {
+                query = query.AppendStage<TEntity>(new BsonDocument
+                {
+                    {
+                        "$lookup", lookup
+                    }
+                });
+            }
+
+            if (project is not null)
+            {
+                query = query.AppendStage<TEntity>(new BsonDocument
+                {
+                    {
+                        "$project", project
+                    }
+                });
+            }
+            // var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
+            var entity = await query.FirstOrDefaultAsync();
             return entity;
         }
 

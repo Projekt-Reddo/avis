@@ -78,6 +78,13 @@ public class ListPostDto
 public class VotePostDto
 {
     public string PostId { get; set; } = null!;
+
     public string UserId { get; set; } = null!;
+
     public bool UpVote { get; set; }
+}
+
+public class PostListCommentDto
+{
+    public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
 }

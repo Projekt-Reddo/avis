@@ -73,4 +73,8 @@ namespace MainService.Dtos
 
         public int ADESC { get; set; }
     }
+
+    public class AccountIdFilter {
+        public string Id { get; set; } = null!;
+    }
 }
