@@ -74,3 +74,10 @@ public class ListPostDto
 
     public int CommentCount { get; set; }
 }
+
+public class VotePostDto
+{
+    public string PostId { get; set; } = null!;
+    public string UserId { get; set; } = null!;
+    public bool UpVote { get; set; }
+}

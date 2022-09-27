@@ -12,7 +12,8 @@ public static class ResponseMessage
 
 
     // Post msg
-
+    public const string POST_NOT_FOUND = "No post found";
+    public const string POST_VOTE_SUCCESS = "Vote post success";
 
     // User msg
 

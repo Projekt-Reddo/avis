@@ -44,6 +44,7 @@ builder.Services.AddScoped<ISongLogic, SongLogic>();
 builder.Services.AddScoped<IAccountLogic, AccountLogic>();
 builder.Services.AddScoped<IGenreLogic, GenreLogic>();
 builder.Services.AddScoped<IArtistLogic, ArtistLogic>();
+builder.Services.AddScoped<IPostLogic, PostLogic>();
 
 // Other Services
 builder.Services.AddScoped<IHumSvcClient, HumSvcClient>();

@@ -1,7 +1,9 @@
 using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
+using MainService.Logic;
 using MainService.Models;
+using MainService.Utils;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -15,13 +17,15 @@ namespace MainService.Controllers
         private readonly IMapper _mapper;
         private readonly IPostRepo _postRepo;
         private readonly IConfiguration _configuration;
+        private readonly IPostLogic _postLogic;
 
 
-        public PostsController(IMapper mapper, IPostRepo postRepo, IConfiguration configuration)
+        public PostsController(IMapper mapper, IPostRepo postRepo, IConfiguration configuration, IPostLogic postLogic)
         {
             _mapper = mapper;
             _postRepo = postRepo;
             _configuration = configuration;
+            _postLogic = postLogic;
         }
 
         [HttpPost]
@@ -146,5 +150,30 @@ namespace MainService.Controllers
         // {
         //     return Ok();
         // }
+        [HttpPost("vote")]
+        public async Task<ActionResult<string>> VotePost(VotePostDto votePost)
+        {
+            /// Create Post Filter
+            var postFilter = _postLogic.VotePostFilter(votePost);
+
+            var postFromRepo = await _postRepo.FindOneAsync(filter: postFilter);
+
+            if (postFromRepo == null)
+            {
+                return NotFound(new ResponseDto(404,ResponseMessage.POST_NOT_FOUND));
+            }
+
+            var check = await _postLogic.UpDownVoteCheck(votePost);
+
+            if (check)
+            {
+                await _postLogic.Vote(votePost);
+            } else
+            {
+                await _postLogic.UnVote(votePost);
+            }
+
+            return Ok(new ResponseDto(200,ResponseMessage.POST_VOTE_SUCCESS));
+        }
     }
 }
