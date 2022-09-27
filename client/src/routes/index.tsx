@@ -5,6 +5,7 @@ import Login from "pages/auth/Login";
 import Post from "pages/Post";
 import Signup from "pages/auth/Signup";
 import Song from "pages/Song";
+import Notification from "pages/Notification";
 import Discover from "pages/Discover";
 import VerifyEmail from "pages/auth/VerifyEmail";
 
@@ -42,6 +43,10 @@ const MainRoute = () => {
 
                 <Route exact path="/discover">
                     <Discover />
+                </Route>
+
+                <Route exact path="/notification">
+                    <Notification />
                 </Route>
 
                 <Route exact path="/">

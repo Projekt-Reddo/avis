@@ -12,48 +12,53 @@ import SearchBox from "../components/Discover/SearchBox";
 
 // Constants
 import { MAIN_SERVICE_API } from "../utils/constants";
+import PageWrapper from "components/PageWrapper/PageWrapper";
+import InDevelopment from "components/shared/InDevelopment";
 
 const Discover = () => {
-    const { isLoading, isError, data, refetch } = useQuery(
-        "boards",
-        async () => {
-            const { data } = await axios.get(`${MAIN_SERVICE_API}/api/post`);
-            return data;
-        },
-        {
-            enabled: false,
-        }
-    );
+    // const { isLoading, isError, data, refetch } = useQuery(
+    //     "boards",
+    //     async () => {
+    //         const { data } = await axios.get(`${MAIN_SERVICE_API}/api/post`);
+    //         return data;
+    //     },
+    //     {
+    //         enabled: false,
+    //     }
+    // );
 
-    React.useEffect(() => {
-        refetch();
-    }, []);
+    // React.useEffect(() => {
+    //     refetch();
+    // }, []);
 
     return (
-        <IonPage>
-            <IonContent>
-                <div className="flex justify-center lg:grid md:grid-cols-3 lg:gap-6 lg:m-16 pt-4">
-                    <div className="w-full m-4 lg:m-0 lg:col-span-2">
-                        <PostCard />
-                        {isLoading || !data ? (
-                            <div>Loading</div>
-                        ) : isError ? (
-                            <div>error</div>
-                        ) : (
-                            data.map((post: any, objIndex: any) => (
-                                <div key={objIndex}>
-                                    <HumCard post={post} />
-                                </div>
-                            ))
-                        )}
-                    </div>
-                    <div className=" hidden lg:col-span-1 lg:block">
-                        <SearchBox />
-                        <TrendingCard />
-                    </div>
-                </div>
-            </IonContent>
-        </IonPage>
+        // <IonPage>
+        //     <IonContent>
+        //         <div className="flex justify-center lg:grid md:grid-cols-3 lg:gap-6 lg:m-16 pt-4">
+        //             <div className="w-full m-4 lg:m-0 lg:col-span-2">
+        //                 <PostCard />
+        //                 {isLoading || !data ? (
+        //                     <div>Loading</div>
+        //                 ) : isError ? (
+        //                     <div>error</div>
+        //                 ) : (
+        //                     data.map((post: any, objIndex: any) => (
+        //                         <div key={objIndex}>
+        //                             <HumCard post={post} />
+        //                         </div>
+        //                     ))
+        //                 )}
+        //             </div>
+        //             <div className=" hidden lg:col-span-1 lg:block">
+        //                 <SearchBox />
+        //                 <TrendingCard />
+        //             </div>
+        //         </div>
+        //     </IonContent>
+        // </IonPage>
+        <PageWrapper>
+            <InDevelopment />
+        </PageWrapper>
     );
 };
 

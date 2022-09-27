@@ -1,8 +1,10 @@
+import React from "react";
+
 // Components
 import PageWrapper from "components/PageWrapper/PageWrapper";
 import InDevelopment from "components/shared/InDevelopment";
 
-const Feedback = () => {
+const Notification = () => {
     return (
         <PageWrapper>
             <InDevelopment />
@@ -10,4 +12,4 @@ const Feedback = () => {
     );
 };
 
-export default Feedback;
+export default Notification;
