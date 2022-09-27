@@ -10,7 +10,7 @@ interface AuthFooterProps {
 const AuthFooter: React.FC<AuthFooterProps> = ({ message, url, title }) => {
     return (
         <div className="w-full flex flex-col items-center">
-            <div className="w-3/4 border-t-2 mb-2.5"></div>
+            <div className="w-3/4 border-t-2 mt-3.5 mb-2.5"></div>
             <div className="w-full flex flex-row items-center justify-between">
                 <div className="flex flex-col items-start">
                     <div className="mb-2">Login with</div>

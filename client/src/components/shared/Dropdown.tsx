@@ -40,12 +40,13 @@ const Dropdown: React.FC<DropdownProps> = ({
                             <Menu.Item key={index}>
                                 {({ active }) => (
                                     <Link
-                                        to="#"
+                                        to={option.to || "#"}
                                         className={`block px-4 py-2 text-sm ${
                                             active
                                                 ? "bg-gray-100 text-gray-900"
                                                 : "text-gray-700"
                                         }`}
+                                        onClick={option.onClick}
                                     >
                                         <Icon
                                             className="mr-3"

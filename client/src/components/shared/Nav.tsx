@@ -7,11 +7,13 @@ import { Fragment } from "react";
 import { useAppSelector } from "utils/react-redux-hooks";
 import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";
+import { firebaseLogout } from "api/firebase-api";
 
 const Nav = () => {
     const location = useLocation();
 
-    const user = useAppSelector((state) => state.user.data);
+    const user = useAppSelector((state) => state.auth.data);
+    const authStatus = useAppSelector((state) => state.auth.status);
 
     function getLinkStyle(path: string) {
         if (path === "/")
@@ -36,9 +38,17 @@ const Nav = () => {
         {
             icon: "sign-out-alt",
             lable: "Logout",
+            onClick: handleLogout,
         },
     ];
 
+    function handleLogout() {
+        firebaseLogout().then(() => window.location.reload());
+    }
+
+    /**
+     * Render
+     */
     // For hiding nav bar in mobile view
     const { width } = useWindowDimensions();
 
@@ -56,7 +66,7 @@ const Nav = () => {
             <div className="">
                 <Link to="/">
                     <span className="font-extrabold text-[color:var(--teal-general-color)]">
-                        LOGO
+                        AVIS
                     </span>
                 </Link>
             </div>
@@ -74,7 +84,9 @@ const Nav = () => {
             </div>
 
             <div className="flex items-center font-bold">
-                {!user ? (
+                {authStatus === "init" || authStatus === "loading" ? (
+                    <></>
+                ) : !user ? (
                     <span>
                         <Icon icon="right-to-bracket" />
                         &nbsp;&nbsp;

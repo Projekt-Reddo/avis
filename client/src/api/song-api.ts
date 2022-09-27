@@ -30,6 +30,11 @@ export const viewSongApi = async (data: SongFilter) => {
     return res.data;
 };
 
+export const deleteSongApi = async (data: object) => {
+    const res = await axios.delete(apiRoute, {data: data});
+    return res.data;
+};
+
 export const humToSongApi = async (data: Blob) => {
     const formData = new FormData();
     formData.append("inputFile", data);

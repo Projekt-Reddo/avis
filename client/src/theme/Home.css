@@ -27,3 +27,32 @@
     0% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+.listen{
+    top: 30rem;
+}
+
+@media screen and (min-width: 1537px) {
+    .listen{
+        top: 30rem;
+    }
+}
+
+.wave{
+    animation: wave-fade 2s infinite;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes wave-fade {
+    0% {
+        width: 20%;
+        height: 20%
+    }
+    100% {
+        width: 90%;
+        height: 90%
+    }
+}
+
+
