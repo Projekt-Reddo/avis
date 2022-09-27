@@ -1,4 +1,4 @@
-import signup_image from "static/Flat_art_signup.jpg";
+import signup_image from "static/Flat_art_signup.webp";
 import PageWrapperAuth from "components/PageWrapper/PageWrapperAuth";
 import createAuthContent from "components/Auth/create-auth-content";
 

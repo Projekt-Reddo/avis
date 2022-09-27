@@ -31,7 +31,9 @@ public class Post : BaseModel
 
     public ICollection<string> HashtagsNormalized { get; set; } = null!;
 
-    public ICollection<ObjectId>? Comments { get; set; } = null!; // This post's comments id
+    public ICollection<ObjectId>? CommentIds { get; set; } = null!; // This post's comments id
+
+    public ICollection<Comment> Comments { get; set; } = null!;
 
     public bool IsDeleted { get; set; } = false;
 }

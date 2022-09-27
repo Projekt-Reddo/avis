@@ -66,7 +66,7 @@ const Nav = () => {
             <div className="">
                 <Link to="/">
                     <span className="font-extrabold text-[color:var(--teal-general-color)]">
-                        LOGO
+                        AVIS
                     </span>
                 </Link>
             </div>

@@ -44,6 +44,7 @@ builder.Services.AddScoped<ISongLogic, SongLogic>();
 builder.Services.AddScoped<IAccountLogic, AccountLogic>();
 builder.Services.AddScoped<IGenreLogic, GenreLogic>();
 builder.Services.AddScoped<IArtistLogic, ArtistLogic>();
+builder.Services.AddScoped<ICommentLogic, CommentLogic>();
 
 // Other Services
 builder.Services.AddScoped<IHumSvcClient, HumSvcClient>();
@@ -65,7 +66,8 @@ builder.Services.AddHttpClient(PollyHttpClient.CLIENT_NAME, client => { })
     );
 
 // Authentication
-string cred = Environment.GetEnvironmentVariable("FIREBASE_TOKEN") ?? builder.Configuration.GetValue<string>("FirebaseToken") ?? "";
+string credBase64 = Environment.GetEnvironmentVariable("FIREBASE_TOKEN") ?? builder.Configuration.GetValue<string>("FirebaseToken") ?? "";
+string cred = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(credBase64)); // Raw JSON cause error in ENV
 FirebaseApp.Create(new AppOptions
 {
     Credential = GoogleCredential.FromJson(cred),
