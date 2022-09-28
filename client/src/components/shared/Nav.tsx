@@ -65,9 +65,11 @@ const Nav = () => {
             {/* <div className="ml-24"> */}
             <div className="">
                 <Link to="/">
-                    <span className="font-extrabold text-[color:var(--teal-general-color)]">
-                        AVIS
-                    </span>
+                    <img
+                        className="inline-block h-9 w-9 rounded-full"
+                        src="/assets/icon/favicon.png"
+                        alt="logo"
+                    />
                 </Link>
             </div>
 
@@ -116,7 +118,7 @@ const Nav = () => {
                                         alt="avatar"
                                     />
                                     <span className="ml-3 mr-1 font-bold">
-                                        Mash
+                                        {user.name}
                                     </span>
                                     <Icon icon="angle-down" />
                                 </Fragment>
