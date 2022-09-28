@@ -40,6 +40,7 @@ public class SongsController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> CreateSong([FromForm] SongCreateDto songCreateDto)
     {
@@ -96,7 +97,6 @@ public class SongsController : ControllerBase
     /// </summary>
     /// <param name="pagination">Pagination metrics and Search filters</param>
     /// <returns>200 / 400 / 404</returns>
-    // [Authorize]
     [HttpPost("filter")]
     public async Task<ActionResult<PaginationResDto<IEnumerable<SongManageListDto>>>> ViewSong(PaginationReqDto<SongFilterDto> pagination)
     {
@@ -150,6 +150,7 @@ public class SongsController : ControllerBase
     /// </summary>
     /// <param name="songDeleteDto"></param>
     /// <returns>200 / 404</returns>
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<ResponseDto>> DeleteSong(SongDeleteDto songDeleteDto)
     {

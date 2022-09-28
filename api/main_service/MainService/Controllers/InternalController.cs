@@ -1,7 +1,6 @@
 using MainService.Dtos;
 using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using static Constants;
 
 namespace MainService.Controllers;
@@ -29,7 +28,7 @@ public class InternalController : ControllerBase // Health check controller
     [HttpPost("grant-admin-role")]
     public async Task<ActionResult> GrantAdMinRole(AdminRoleCreateDto adminRoleCreateDto)
     {
-        string secretKey = _configuration.GetValue<string>("SecretKey");
+        string secretKey = Environment.GetEnvironmentVariable("API_SECRET_KEY") ?? _configuration.GetValue<string>("ApiSecretKey");
 
         // The server does not have a secret key
         if (string.IsNullOrWhiteSpace(secretKey))
@@ -40,11 +39,11 @@ public class InternalController : ControllerBase // Health check controller
         // The user send an invalid secret key
         if (adminRoleCreateDto.Secret != secretKey)
         {
-            return BadRequest("Wrong credential!");
+            return BadRequest(new ResponseDto(400, "Wrong credential!"));
         }
 
         await FirebaseService.SetRoleClaim(adminRoleCreateDto.Uid, AccountRoles.ADMIN);
 
-        return Ok("Admin role granted!");
+        return Ok(new ResponseDto(200, "Admin role granted!"));
     }
 }

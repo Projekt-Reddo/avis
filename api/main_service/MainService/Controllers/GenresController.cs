@@ -1,6 +1,7 @@
 using MainService.Dtos;
 using MainService.Logic;
 using MainService.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MainService.Controllers;
@@ -16,6 +17,7 @@ public class GenresController : ControllerBase
         _genreLogic = genreLogic;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> CreateManyGenre(GenreManyCreateDto genreManyCreateDto)
     {
@@ -31,12 +33,14 @@ public class GenresController : ControllerBase
         return Ok(new ResponseDto(200, ResponseMessage.GENRE_CREATE_SUCCESS));
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<ICollection<GenreReadDto>>> GetAllGenre()
     {
         return Ok(await _genreLogic.GetAllGenre());
     }
 
+    [Authorize]
     [HttpPost("recommend")]
     public async Task<ActionResult<ICollection<GenreReadDto>>> RecommendGenres(GenreRecommendDto genreRecommendDto)
     {
@@ -44,6 +48,7 @@ public class GenresController : ControllerBase
         return Ok(rs);
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<ResponseDto>> DeleteManyGenre(GenreManyDeleteDto genreManyDeleteDto)
     {
