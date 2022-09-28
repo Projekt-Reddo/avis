@@ -7,6 +7,7 @@ import "theme/Home.css";
 import { addNewToast } from "components/Toast";
 import { saveSearchHistory } from "./search-history-hook";
 import History from "./History";
+import { TIME_TO_HUM } from "utils/constants";
 
 interface SongSearchProp {
     scrollRef: React.RefObject<HTMLDivElement>;
@@ -64,18 +65,17 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         setAppear(true);
     };
 
-    React.useEffect(() =>
-    {
+    React.useEffect(() => {
         if (hum) {
             StopHum();
         }
     }, [hum]);
 
     const StopHum = async () => {
-        await delay(12000);
+        await delay(12 * 1000); // second to milisecond
         endRecord();
         setHum(false);
-    }
+    };
 
     const endRecord = async () => {
         setAppear(false);
@@ -157,13 +157,20 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
                     }
                 >
-                    <div className="text-4xl h-56 w-56 mb-20 rounded-full border-2 bg-white flex flex-col justify-center items-center color" >
-                        <div className="wave text-4xl h-48 w-48 rounded-full border bg-white flex flex-col justify-center items-center color" >
-                            <Icon icon="microphone" className="text-[color:var(--teal-general-color)]"></Icon>
+                    <div className="text-4xl h-56 w-56 mb-20 rounded-full border-2 bg-white flex flex-col justify-center items-center color">
+                        <div className="wave text-4xl h-48 w-48 rounded-full border bg-white flex flex-col justify-center items-center color">
+                            <Icon
+                                icon="microphone"
+                                className="text-[color:var(--teal-general-color)]"
+                            ></Icon>
                         </div>
                     </div>
-                    <div className="listen text-xl font-bold absolute">Try to Hum something in 12 secs</div>
-                    <div className="listen text-3xl font-bold absolute mt-10">Listening</div>
+                    <div className="listen text-xl font-bold absolute">
+                        Try to Hum something in {TIME_TO_HUM} secs
+                    </div>
+                    <div className="listen text-3xl font-bold absolute mt-10">
+                        Listening
+                    </div>
                 </div>
             )}
             <div className="search-bg h-[91vh] flex justify-center items-center">
