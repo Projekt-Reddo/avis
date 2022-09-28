@@ -27,7 +27,9 @@ export const userSignupFirebase = async ({ email, password }: UserSignup) => {
 };
 
 export const userEmailVerify = async () => {
-    if (auth.currentUser) await sendEmailVerification(auth.currentUser);
+    try {
+        if (auth.currentUser) await sendEmailVerification(auth.currentUser);
+    } catch (e) {}
 };
 
 export const getCurrentUserAccessToken = async () => {
