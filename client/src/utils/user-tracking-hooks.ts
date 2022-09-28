@@ -18,7 +18,9 @@ export const useUserChangeTracking = () => {
                 dispatch(logout());
 
                 history.replace("/verify", {
-                    ...tempUser,
+                    user: {
+                        ...tempUser,
+                    },
                 });
 
                 return;

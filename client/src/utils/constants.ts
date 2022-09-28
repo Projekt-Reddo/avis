@@ -12,7 +12,7 @@ export const routes = [
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
-export const authRoutes = routesIgnoreNav;
+export const authRoutes = ["/login", "/signup"];
 
 export const leftNavAdmin: LeftNavItemData[] = [
     {
