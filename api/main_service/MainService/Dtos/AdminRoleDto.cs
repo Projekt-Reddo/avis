@@ -2,7 +2,7 @@
 {
     public class AdminRoleCreateDto
     {
-        public string Uid { get; set; } = string.Empty;
-        public string Secret { get; set; } = string.Empty;
+        public string Uid { get; set; } = null!;
+        public string Secret { get; set; } = null!;
     }
 }
