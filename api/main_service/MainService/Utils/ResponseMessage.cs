@@ -45,4 +45,9 @@ public static class ResponseMessage
     public const string COMMENT_CREATE_SUCCESS = "Add new comment successfully";
     public const string COMMENT_CREATE_FAIL = "Add new comment failed";
     public const string COMMENT_CREATE_MEDIA_FAIL = "Media type is not supported";
+
+    // Account msg
+    public const string ACCOUNT_EMAIL_DUPLICATED = "Email duplicated!";
+    public const string ACCOUNT_CREATE_SUCCESS = "Account created successfully";
+    public const string ACCOUNT_GOOGLE_LOGIN_SUCCESS = "This account is exist and no need to set up!";
 }

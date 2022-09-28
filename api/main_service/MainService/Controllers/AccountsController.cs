@@ -12,6 +12,7 @@ using Hangfire;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using MainService.Utils;
 
 namespace MainService.Controllers
 {
@@ -39,12 +40,12 @@ namespace MainService.Controllers
             // Email cannot be duplicated due to the database design.
             if (accountFromRepo is not null)
             {
-                return BadRequest(new ResponseDto(400, "Email duplicated!"));
+                return BadRequest(new ResponseDto(400, ResponseMessage.ACCOUNT_EMAIL_DUPLICATED));
             }
 
             var _ = _accountLogic.SetupNewAccount(newAccount);
 
-            return Ok(new ResponseDto(200, "Account created successfully"));
+            return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_CREATE_SUCCESS));
         }
 
         [HttpPost("google-login")]
@@ -56,12 +57,12 @@ namespace MainService.Controllers
             // Email cannot be duplicated due to the database design.
             if (accountFromRepo is not null)
             {
-                return Ok(new ResponseDto(200, "This account is exist and no need to set up!"));
+                return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_GOOGLE_LOGIN_SUCCESS));
             }
 
             var _ = _accountLogic.SetupNewAccount(newAccount);
 
-            return Ok(new ResponseDto(200, "Account created successfully"));
+            return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_CREATE_SUCCESS));
         }
 
         [Authorize]
