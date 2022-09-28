@@ -16,27 +16,26 @@ const InDevelopment = () => {
                         Donate and we will accomplish it immediately &#129297;
                     </div>
                 </div>
-                <div className="flex justify-center items-center gap-8 mt-8">
+                <div className="grid justify-items-center gap-4 sm:flex sm:justify-center sm:items-center sm:gap-8 mt-8">
                     <Link to="/">
                         <button
-                            className="font-bold text-[color:var(--white-color)] bg-[color:var(--teal-lighter-color)]"
+                            className="font-bold text-[color:var(--white-color)] bg-[color:var(--teal-lighter-color)] py-3 px-8"
                             style={{
                                 boxSizing: "border-box",
                                 borderRadius: 8,
-                                padding: "0.75rem 2rem",
                                 border: "1px solid var( --nav-border-color)",
                             }}
                         >
                             <Icon icon="arrow-left" /> Back to home
                         </button>
                     </Link>
+
                     <Link to="/">
                         <button
-                            className="font-bold text-[color:var(--white-color)] bg-[color:var(--teal-lighter-color)]"
+                            className="font-bold text-[color:var(--white-color)] bg-[color:var(--teal-lighter-color)] py-3 px-8"
                             style={{
                                 boxSizing: "border-box",
                                 borderRadius: 8,
-                                padding: "0.75rem 2rem",
                                 border: "1px solid var( --nav-border-color)",
                             }}
                         >

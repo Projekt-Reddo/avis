@@ -1,7 +1,10 @@
+using MainService.Data;
 using MainService.Dtos;
+using MainService.Models;
 using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
+using System.Security.Principal;
 using static Constants;
 
 namespace MainService.Controllers;
@@ -12,11 +15,13 @@ public class InternalController : ControllerBase // Health check controller
 {
     private readonly IHumSvcClient _humSvcClient;
     private readonly IConfiguration _configuration;
+    private readonly IAccountRepo _accountRepo;
 
-    public InternalController(IHumSvcClient humSvcClient, IConfiguration configuration)
+    public InternalController(IHumSvcClient humSvcClient, IConfiguration configuration, IAccountRepo accountRepo)
     {
         _humSvcClient = humSvcClient;
         _configuration = configuration;
+        _accountRepo = accountRepo;
     }
 
     [HttpGet("health-check")]
@@ -29,7 +34,7 @@ public class InternalController : ControllerBase // Health check controller
     [HttpPost("grant-admin-role")]
     public async Task<ActionResult> GrantAdMinRole(AdminRoleCreateDto adminRoleCreateDto)
     {
-        string secretKey = _configuration.GetValue<string>("SecretKey");
+        string secretKey = Environment.GetEnvironmentVariable("API_SECRET_KEY") ?? _configuration.GetValue<string>("ApiSecretKey");
 
         // The server does not have a secret key
         if (string.IsNullOrWhiteSpace(secretKey))
@@ -40,11 +45,23 @@ public class InternalController : ControllerBase // Health check controller
         // The user send an invalid secret key
         if (adminRoleCreateDto.Secret != secretKey)
         {
-            return BadRequest("Wrong credential!");
+            return BadRequest(new ResponseDto(400, "Wrong credential!"));
+        }
+
+        // To check whether uid exist or not.
+        var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", adminRoleCreateDto.Uid));
+
+        if (accountFromRepo == null)
+        {
+            return BadRequest(new ResponseDto(400, "No Uid found!"));
         }
 
         await FirebaseService.SetRoleClaim(adminRoleCreateDto.Uid, AccountRoles.ADMIN);
 
-        return Ok("Admin role granted!");
+        // Assign role to database
+        accountFromRepo.Role = AccountRoles.ADMIN;
+        await _accountRepo.ReplaceOneAsync(accountFromRepo.Id, accountFromRepo);
+
+        return Ok(new ResponseDto(200, "Admin role granted!"));
     }
 }

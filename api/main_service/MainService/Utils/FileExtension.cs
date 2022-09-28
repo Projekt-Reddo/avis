@@ -66,6 +66,17 @@ public class FileExtension
     );
 
     /// <summary>
+    /// Check a file is a video or not
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    public static Tuple<bool, string> CheckVideoExtension(IFormFile file) => CheckFileExtension(
+        file: file,
+        fileTypes: new[] { ".mp4", ".avi", ".mpeg", ".webm" },
+        mimeTypes: new[] { "video/mp4",  "video/x-msvideo",  "video/mpeg", "video/webm"}
+    );
+
+    /// <summary>
     /// Validate the file extension
     /// </summary>
     /// <param name="file">the file</param>

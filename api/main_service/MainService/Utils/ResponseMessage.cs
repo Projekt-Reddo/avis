@@ -40,4 +40,14 @@ public static class ResponseMessage
     public const string ARTIST_DELETE_FAIL = "Fail to delete artists";
     public const string ARTIST_DELETE_SUCCESS = "Delete artist successfully";
     public const string ARTIST_DELETE_SUCCESS_AND_FAIL = "Delete artist successfully but there are some artists that failed to deleted";
+
+    // Comment msg
+    public const string COMMENT_CREATE_SUCCESS = "Add new comment successfully";
+    public const string COMMENT_CREATE_FAIL = "Add new comment failed";
+    public const string COMMENT_CREATE_MEDIA_FAIL = "Media type is not supported";
+
+    // Account msg
+    public const string ACCOUNT_EMAIL_DUPLICATED = "Email duplicated!";
+    public const string ACCOUNT_CREATE_SUCCESS = "Account created successfully";
+    public const string ACCOUNT_GOOGLE_LOGIN_SUCCESS = "This account is exist and no need to set up!";
 }

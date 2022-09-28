@@ -2,11 +2,15 @@ namespace MainService.Dtos;
 
 public class CommentCreateDto
 {
+    public string? CommentId { get; set; } = null!;
+
+    public string? PostId { get; set; } = null!;
+
     public string UserId { get; set; } = null!;
 
     public string Content { get; set; } = null!;
 
-    public IFormFile Media { get; set; } = null!;
+    public IFormFile? Media { get; set; } = null!;
 }
 
 public class CommentReadDto
@@ -24,6 +28,8 @@ public class CommentReadDto
     public int Downvote { get; set; } = 0;
 
     public MediaReadDto Media { get; set; } = null!;
+
+    public string UserId { get; set; } = null!;
 
     public AccountReadDto? User { get; set; } = null!;
 

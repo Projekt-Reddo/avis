@@ -5,7 +5,7 @@ import { firstCheckin } from "store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 export const useFirebaseUserChangeTracking = () => {
-    const userState = useAppSelector((state) => state.auth);
+    const authState = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -13,7 +13,7 @@ export const useFirebaseUserChangeTracking = () => {
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             // Handle user change
-            if (userState.status === "init") {
+            if (authState.status === "init") {
                 dispatch(firstCheckin());
             }
 

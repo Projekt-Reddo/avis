@@ -2,6 +2,7 @@ using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -24,6 +25,7 @@ namespace MainService.Controllers
             _configuration = configuration;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ResponseDto>> AddPost([FromBody] PostCreateDto newPost)
         {

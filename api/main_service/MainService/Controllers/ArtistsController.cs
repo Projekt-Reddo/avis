@@ -1,6 +1,7 @@
 using MainService.Dtos;
 using MainService.Logic;
 using MainService.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MainService.Controllers;
@@ -16,6 +17,7 @@ public class ArtistsController : ControllerBase
         _artistLogic = artistLogic;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> CreateMany(ArtistManyCreateDto manyCreateDto)
     {
@@ -36,6 +38,7 @@ public class ArtistsController : ControllerBase
         });
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<ICollection<ArtistReadDto>>> GetAll()
     {

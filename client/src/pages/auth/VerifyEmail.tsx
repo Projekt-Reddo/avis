@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 
 import backgroundImage from "static/Flat_art_verify_email.webp";
-import Button from "components/Button/Button";
 import PageWrapperAuth from "components/PageWrapper/PageWrapperAuth";
+import Button from "components/Button/Button";
 
 const VerifyEmail = () => {
     const location: any = useLocation();
@@ -11,7 +11,7 @@ const VerifyEmail = () => {
     useEffect(() => {
         // Prevent normal user from access the email verify page by typing in the url
         if (!location?.state?.user) {
-            // window.location.replace("/");
+            window.location.replace("/");
         }
     }, []);
 
@@ -28,14 +28,15 @@ const VerifyEmail = () => {
                             We sent a verify link to your email address, please
                             check it!
                         </div>
-                        <Button
-                            className="mt-4"
-                            onClick={() => {
-                                window.location.replace("/");
-                            }}
-                        >
-                            Back to Home
-                        </Button>
+                        <div className="mt-4 ">
+                            <Button
+                                onClick={() => {
+                                    window.location.replace("/");
+                                }}
+                            >
+                                Back to Home
+                            </Button>
+                        </div>
                     </div>
                 </div>
             }

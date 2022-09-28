@@ -1,5 +1,3 @@
-using MainService.Models;
-
 namespace MainService.Dtos
 {
     public class AccountCreateDto
@@ -72,5 +70,9 @@ namespace MainService.Dtos
         public string SortBy { get; set; } = null!;
 
         public int ADESC { get; set; }
+    }
+
+    public class AccountIdFilter {
+        public string Id { get; set; } = null!;
     }
 }

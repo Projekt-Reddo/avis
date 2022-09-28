@@ -22,6 +22,9 @@ namespace MainService.Logic
 
         Account SetAccountDefaultValues(AccountCreateDto newAccount);
 
+        FilterDefinition<Account> AccountFilterId(string userId);
+
+        Task<Account> GetAccountById(string userId);
     }
     public class AccountLogic : IAccountLogic
     {
@@ -149,6 +152,17 @@ namespace MainService.Logic
             await FirebaseService.SetNameClaim(account.Uid, account.Name);
             await FirebaseService.SetNameClaim(account.Uid, account.Avatar);
             await FirebaseService.SetInitiatedClaim(account.Uid);
+        }
+
+        public FilterDefinition<Account> AccountFilterId(string userId){
+            var accountFilter = Builders<Account>.Filter.Empty;
+            return accountFilter;
+        }
+
+        public async Task<Account> GetAccountById(string userId){
+            var accountFilter = AccountFilterId(userId);
+            var accountsFromRepo = await _accountRepo.FindOneAsync(filter: accountFilter);
+            return accountsFromRepo;
         }
     }
 }

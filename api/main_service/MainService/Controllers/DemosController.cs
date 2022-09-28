@@ -3,6 +3,7 @@ using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -65,6 +66,7 @@ namespace MainService.Controllers
             return Ok(result.entities);
         }
 
+        [Authorize]
         [HttpGet("/sendMail")]
         public async Task<IActionResult> SendMail()
         {
