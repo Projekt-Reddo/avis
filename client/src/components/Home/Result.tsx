@@ -7,7 +7,7 @@ import Icon from "components/shared/Icon";
 
 interface TopSearchProp {
     result: {
-        status: "idle" | "loading" | "error";
+        status: StateStatus;
         data: {
             payload: Song[];
         };
@@ -125,5 +125,3 @@ const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
     );
 };
 export default TopSearch;
-
-
