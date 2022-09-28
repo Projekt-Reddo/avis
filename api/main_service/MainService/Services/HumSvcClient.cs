@@ -62,11 +62,18 @@ public class HumSvcClient : IHumSvcClient
         using var client = _httpClientFactory.CreateClient(PollyHttpClient.CLIENT_NAME);
         var url = $"{_humSvcUrl}/health";
 
-        var response = await client.GetAsync(url);
-        var content = await response.Content.ReadAsStringAsync();
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return true;
+            var response = await client.GetAsync(url);
+            var content = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+        }
+        catch
+        {
+            return false;
         }
 
         return false;

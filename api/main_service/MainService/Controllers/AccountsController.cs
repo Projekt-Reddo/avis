@@ -11,6 +11,7 @@ using FirebaseAdmin.Auth;
 using Hangfire;
 using System.Reflection.Metadata;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MainService.Controllers
 {
@@ -57,12 +58,13 @@ namespace MainService.Controllers
             {
                 return Ok(new ResponseDto(200, "This account is exist and no need to set up!"));
             }
-            
+
             var _ = _accountLogic.SetupNewAccount(newAccount);
 
             return Ok(new ResponseDto(200, "Account created successfully"));
         }
 
+        [Authorize]
         [HttpPost("filter")]
         public async Task<ActionResult<PaginationResDto<IEnumerable<AccountResponseDto>>>> ViewUser([FromBody] PaginationReqDto<AccountFilterDto> pagination)
         {

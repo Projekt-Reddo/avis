@@ -10,7 +10,9 @@ using MainService.Models;
 using MainService.Services;
 using MainService.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Polly;
@@ -104,7 +106,29 @@ builder.Services.AddRouting(opt => opt.LowercaseUrls = true); // Display lowerca
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Name = "JWT Authentication",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "Put **_ONLY_** your JWT Bearer token (Access Token) on textbox below!",
+
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+    opt.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
 
 var app = builder.Build();
 
@@ -118,6 +142,12 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("Cors:Allowe
                       .AllowCredentials());
 
 /*app.UseHttpsRedirection();*/
+
+app.UseExceptionHandler(e => e.Run(async context =>
+{
+    var exception = context.Features.Get<IExceptionHandlerPathFeature>()!.Error;
+    await context.Response.WriteAsJsonAsync(new ResponseDto(500, exception.Message));
+}));
 
 app.Use(async (context, next) =>
 {

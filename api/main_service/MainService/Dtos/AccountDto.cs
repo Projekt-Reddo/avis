@@ -1,5 +1,3 @@
-using MainService.Models;
-
 namespace MainService.Dtos
 {
     public class AccountCreateDto
