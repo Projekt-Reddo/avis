@@ -49,16 +49,16 @@ const MainRoute = () => {
                     <Notification />
                 </Route>
 
-                <Route exact path="/">
-                    <Home />
-                </Route>
-
                 <Route path="/feedback">
                     <Feedback />
                 </Route>
 
                 <Route path="/admin">
                     <AdminRoutes />
+                </Route>
+
+                <Route exact path="/">
+                    <Home />
                 </Route>
 
                 <Route

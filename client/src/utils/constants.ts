@@ -8,10 +8,11 @@ export const routes = [
     "/verify",
     "/admin",
     "/feedback",
-    "/notification"
+    "/notification",
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
+export const authRoutes = ["/login", "/signup"];
 
 export const leftNavAdmin: LeftNavItemData[] = [
     {

@@ -4,6 +4,8 @@ import { useAppSelector } from "utils/react-redux-hooks";
 const UserRoute: React.FC<any> = ({ component: Component, ...rest }) => {
     const authState = useAppSelector((state) => state.auth);
 
+    if (authState.status === "init") return <></>;
+
     if (!authState.data) {
         return <Redirect to="/" />;
     }

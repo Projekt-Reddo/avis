@@ -4,25 +4,27 @@ import { logout } from "store/slices/authSlice";
 import { useAppSelector, useAppDispatch } from "./react-redux-hooks";
 
 export const useUserChangeTracking = () => {
-    const user = useAppSelector((state) => state.auth.data);
+    const auth = useAppSelector((state) => state.auth.data);
     const dispatch = useAppDispatch();
     const history = useHistory();
 
     useEffect(() => {
         (async () => {
             const tempUser = {
-                ...user,
+                ...auth,
             };
 
-            if (user && !tempUser.emailVerified) {
+            if (auth && !tempUser.emailVerified) {
                 dispatch(logout());
 
                 history.replace("/verify", {
-                    ...tempUser,
+                    user: {
+                        ...tempUser,
+                    },
                 });
 
                 return;
             }
         })();
-    }, [user]);
+    }, [auth]);
 };
