@@ -4,13 +4,9 @@ import CreateSong from "pages/admin/Song/Create";
 
 import { useRouteMatch } from "react-router";
 import AdminRoute from "./AdminRoute";
-import { useAppSelector } from "utils/react-redux-hooks";
 
 const AdminRoutes = () => {
     let { path } = useRouteMatch();
-
-    const authState = useAppSelector((state) => state.auth);
-    if (authState.status === "init") return <></>;
 
     return (
         <>
