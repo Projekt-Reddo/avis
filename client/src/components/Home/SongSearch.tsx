@@ -162,7 +162,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             <Icon icon="microphone" className="text-[color:var(--teal-general-color)]"></Icon>
                         </div>
                     </div>
-                    <div className="listen text-xl font-bold absolute">Try to Hum something in 10 secs</div>
+                    <div className="listen text-xl font-bold absolute">Try to Hum something in 12 secs</div>
                     <div className="listen text-3xl font-bold absolute mt-10">Listening</div>
                 </div>
             )}
