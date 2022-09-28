@@ -71,12 +71,15 @@ const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
                                             : ""
                                     )
                                 }
-                                className="Container rounded-md min-h-[11rem] w-1/3 flex justify-center items-center"
+                                className="Container rounded-md min-h-[11rem]  flex justify-center items-center"
                                 style={{
                                     backgroundImage: `url(${song.thumbnail})`,
                                     backgroundRepeat: "no-repeat",
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
+                                    width: "33%",
+                                    maxWidth: "33%",
+                                    minWidth: "33%"
                                 }}
                             >
                                 <div className="Icon">
