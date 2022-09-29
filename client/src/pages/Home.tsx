@@ -6,11 +6,15 @@ import { useAppSelector } from "utils/react-redux-hooks";
 import "theme/Home.css";
 import PageWrapper from "components/PageWrapper/PageWrapper";
 import { useRef } from "react";
+import { MOBILE_BREAKPOINT } from "utils/constants";
+import { useWindowDimensions } from "utils/useWindowDimensions";
 
 const Home = () => {
     const result = useAppSelector((state) => state.search);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    const { width } = useWindowDimensions();
 
     return (
         <PageWrapper
@@ -20,20 +24,21 @@ const Home = () => {
             }}
         >
             <SongSearch scrollRef={scrollRef} />
-            <div className="bg-white text-black">
-                {result.status === "idle" &&
-                result.data.payload.length === 0 ? (
+            <div
+                ref={scrollRef}
+                className={`bg-white text-black ${
+                    width! <= MOBILE_BREAKPOINT // Margin the fixed navbar when scrollIntoView
+                        ? "scroll-mt-1"
+                        : "scroll-mt-[4.5rem]"
+                }`}
+            >
+                {!result || !result.data.payload ? (
                     <></>
                 ) : (
-                    <div>
-                        <Result result={result} scrollRef={scrollRef} />
-                    </div>
+                    <Result result={result} />
                 )}
-                <div>
-                    <Feature />
-                </div>
-                <div className="bg-white h-12"></div>
             </div>
+            <Feature />
             <Footer />
         </PageWrapper>
     );

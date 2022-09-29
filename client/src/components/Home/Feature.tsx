@@ -32,7 +32,7 @@ const features = [
 
 const FeatureSearch: React.FC<FeatureSearchProp> = () => {
     return (
-        <div className="px-3 lg:px-32 2xl:px-52 mt-10">
+        <div className="px-3 lg:px-32 2xl:px-52 mt-10 mb-4 lg:mb-10">
             <div className="text-2xl mb-2 text-black font-bold">Features</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
                 {features.map((item) => (

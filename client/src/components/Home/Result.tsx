@@ -1,8 +1,6 @@
 import Loading from "components/shared/Loading";
 import * as React from "react";
-import { MOBILE_BREAKPOINT } from "utils/constants";
-import { useWindowDimensions } from "utils/useWindowDimensions";
-import "../../theme/Result.css";
+import "theme/Result.css";
 import Icon from "components/shared/Icon";
 
 interface TopSearchProp {
@@ -12,13 +10,9 @@ interface TopSearchProp {
             payload: Song[];
         };
     };
-    scrollRef: React.RefObject<HTMLDivElement>;
 }
 
-const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
-    // For hiding nav bar in mobile view
-    const { width } = useWindowDimensions();
-
+const TopSearch: React.FC<TopSearchProp> = ({ result }) => {
     const audioRef = React.useRef(new Audio());
     const [songPlay, setSong] = React.useState("");
     const [isPlay, setPlay] = React.useState(false);
@@ -43,19 +37,14 @@ const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
     };
 
     return (
-        <div
-            ref={scrollRef}
-            className={`px-3 lg:px-32 2xl:px-52 mt-10 ${
-                width! <= MOBILE_BREAKPOINT // Margin the fixed navbar when scrollIntoView
-                    ? "scroll-mt-1"
-                    : "scroll-mt-[4.5rem]"
-            }`}
-        >
+        <div className={`px-3 lg:px-32 2xl:px-52 mt-10`}>
             <div className="text-2xl mb-3 text-black font-bold">Top Result</div>
             {result.status === "loading" ? (
                 <div className="px-3 lg:px-32 2xl:px-52 mt-10 h-48 flex justify-center items-center">
                     <Loading />
                 </div>
+            ) : result.data.payload.length <= 0 ? (
+                <div className="h-24">No song founded!</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
                     {result.data.payload.map((song) => (
@@ -79,7 +68,7 @@ const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
                                     backgroundPosition: "center",
                                     width: "33%",
                                     maxWidth: "33%",
-                                    minWidth: "33%"
+                                    minWidth: "33%",
                                 }}
                             >
                                 <div className="Icon">
@@ -109,7 +98,7 @@ const TopSearch: React.FC<TopSearchProp> = ({ result, scrollRef }) => {
                                     />
                                 </div>
                             </div>
-                            <div className="ml-3 mt-3">
+                            <div className="p-3">
                                 <div className="text-xl font-bold">
                                     {song.title}
                                 </div>
