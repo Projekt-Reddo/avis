@@ -4,6 +4,7 @@ using MainService.Dtos;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -33,6 +34,7 @@ namespace MainService.Controllers
             _accountLogic = accountLogic;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ResponseDto>> AddComment([FromForm] CommentCreateDto newComment)
         {
@@ -41,16 +43,19 @@ namespace MainService.Controllers
             // Add comment into the repo first
             var rs = await _commentRepo.AddOneAsync(comment);
 
-            if (newComment.PostId != null){// if that comment is the 1st level comment
+            if (newComment.PostId != null)
+            {// if that comment is the 1st level comment
                 // Update Post comment ids
                 var rss = await _commentLogic.UpdatePostComment(newComment.PostId, rs);
             }
 
-            if (newComment.CommentId != null){
+            if (newComment.CommentId != null)
+            {
                 // Update comment's child comment ids
                 var commentFromRepo = await _commentLogic.GetCommentById(newComment.CommentId);
 
-                if (commentFromRepo.Comments == null){
+                if (commentFromRepo.Comments == null)
+                {
                     commentFromRepo.Comments = new List<ObjectId>();
                 }
                 commentFromRepo.Comments.Add(new ObjectId(comment.Id));
@@ -59,33 +64,41 @@ namespace MainService.Controllers
             }
 
             var isMediaExist = newComment.Media != null;
-            if (isMediaExist){
+            if (isMediaExist)
+            {
 
-                (var isMp3File, var songCheckMessage) = FileExtension.CheckMp3Extension(newComment.Media);
-                (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(newComment.Media);
-                (var isVideoFile, var videoCheckMessage) = FileExtension.CheckVideoExtension(newComment.Media);
+                (var isMp3File, var songCheckMessage) = FileExtension.CheckMp3Extension(newComment.Media!);
+                (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(newComment.Media!);
+                (var isVideoFile, var videoCheckMessage) = FileExtension.CheckVideoExtension(newComment.Media!);
 
-                if (!isMp3File && !isImageFile && !isVideoFile){
+                if (!isMp3File && !isImageFile && !isVideoFile)
+                {
                     return BadRequest(new ResponseDto(400, ResponseMessage.COMMENT_CREATE_MEDIA_FAIL));
                 }
                 var mediaType = "";
                 var folderUpload = "";
-                if (isMp3File){
+                if (isMp3File)
+                {
                     folderUpload = S3Config.AUDIOS_FOLDER;
                     mediaType = "audio";
-                }else if (isImageFile){
+                }
+                else if (isImageFile)
+                {
                     folderUpload = S3Config.IMAGES_FOLDER;
                     mediaType = "image";
-                }else{// is video
+                }
+                else
+                {// is video
                     folderUpload = S3Config.VIDEOS_FOLDER;
                     mediaType = "video";
                 }
-                comment.Media = new Media(){
+                comment.Media = new Media()
+                {
                     Id = ObjectId.GenerateNewId().ToString(),
                 };
                 var commentUploadStatus = await _commentLogic.UploadNewComment(
                 comment,
-                newComment.Media.OpenReadStream(),
+                newComment.Media!.OpenReadStream(),
                 newComment.Media.ContentType,
                 FileExtension.GetFileExtension(newComment.Media),
                 folderUpload,
@@ -101,7 +114,7 @@ namespace MainService.Controllers
             // Pagination formula
             var skipPage = (pagination.Page - 1) * pagination.Size;
 
-            var comments = await _commentLogic.GetComments(pagination.Filter.ObjectId, pagination.Filter.IsPostChild);
+            var comments = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild);
 
             return Ok(comments);
         }
