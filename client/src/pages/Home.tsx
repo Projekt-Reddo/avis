@@ -26,17 +26,13 @@ const Home = () => {
             <SongSearch scrollRef={scrollRef} />
             <div
                 ref={scrollRef}
-                className={`bg-white text-black ${
+                className={`bg-white text-black h-auto ${
                     width! <= MOBILE_BREAKPOINT // Margin the fixed navbar when scrollIntoView
-                        ? "scroll-mt-1"
-                        : "scroll-mt-[4.5rem]"
+                        ? "scroll-mt-0"
+                        : "scroll-mt-16"
                 }`}
             >
-                {!result || !result.data.payload ? (
-                    <></>
-                ) : (
-                    <Result result={result} />
-                )}
+                <Result result={result} />
             </div>
             <Feature />
             <Footer />
