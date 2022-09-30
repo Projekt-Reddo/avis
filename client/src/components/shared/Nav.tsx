@@ -113,13 +113,13 @@ const Nav = () => {
                             menu={
                                 <Fragment>
                                     <img
-                                        className="inline-block h-9 w-9 rounded-full ring-2 ring-white"
+                                        className="inline-block h-9 w-9 rounded-full ring-2 ring-white mr-2"
                                         src="https://i.ibb.co/59tcmyp/96263453-p0.png"
                                         alt="avatar"
                                     />
-                                    <span className="ml-3 mr-1 font-bold">
+                                    {/* <span className="ml-3 mr-1 font-bold">
                                         {user.name}
-                                    </span>
+                                    </span> */}
                                     <Icon icon="angle-down" />
                                 </Fragment>
                             }
