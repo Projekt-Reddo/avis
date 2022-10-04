@@ -23,6 +23,8 @@ public class SongReadDto
 
     public ICollection<string> Genres { get; set; } = null!;
 
+    public ICollection<ArtistReadDto> Artists { get; set; } = null!;
+
     public UrlReadDto Url { get; set; } = null!;
 
     public bool IsDeleted { get; set; } = false;

@@ -166,4 +166,25 @@ public class SongsController : ControllerBase
 
         return Ok(new ResponseDto(200, ResponseMessage.SONG_DELETE_SUCCESS));
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SongReadDto>> GetSong(string id)
+    {
+        var song = await _songLogic.GetSongById(id);
+
+        if (song is null)
+        {
+            return NotFound(new ResponseDto(404));
+        }
+
+        return Ok(_mapper.Map<SongReadDto>(song));
+    }
+
+    [HttpPost("related")]
+    public async Task<ActionResult> GetRelatedSongs(RelatedSongFilter songFilter)
+    {
+        var songs = await _songLogic.GetSongByGenres(songFilter.Genres);
+
+        return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
+    }
 }
