@@ -13,7 +13,8 @@ public interface ISongLogic
     Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension);
     Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType, string fileExtension);
     FilterDefinition<Song> SongFilter(PaginationReqDto<SongFilterDto> pagination);
-
+    Task<Song?> GetSongById(string id);
+    Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres);
 }
 
 public class SongLogic : ISongLogic
@@ -21,12 +22,26 @@ public class SongLogic : ISongLogic
     private readonly IS3Service _s3Service;
     private readonly IConfiguration _configuration;
     private readonly ISongRepo _songRepo;
+    private readonly ILogger<SongLogic> _logger;
+    private BsonDocument artistLookup = new BsonDocument {
+            { "from", "artist" },
+            { "localField", "ArtistIds" },
+            { "foreignField", "_id" },
+            { "as", "Artists" }
+        };
+    private FilterDefinition<Song> availableSongFilter = Builders<Song>.Filter.Not(Builders<Song>.Filter.Eq(x => x.IsDeleted, true));
 
-    public SongLogic(IS3Service s3Service, IConfiguration configuration, ISongRepo songRepo)
+    public SongLogic(
+        IS3Service s3Service,
+        IConfiguration configuration,
+        ISongRepo songRepo,
+        ILogger<SongLogic> logger
+    )
     {
         _s3Service = s3Service;
         _configuration = configuration;
         _songRepo = songRepo;
+        _logger = logger;
     }
 
     public async Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension)
@@ -124,5 +139,46 @@ public class SongLogic : ISongLogic
         }
 
         return songFilter;
+    }
+
+    public async Task<Song?> GetSongById(string id)
+    {
+        try
+        {
+            var filter = Builders<Song>.Filter.Eq(x => x.Id, id)
+                         & availableSongFilter;
+
+            var song = await _songRepo.FindOneAsync(
+                filter: filter,
+                lookup: artistLookup
+            );
+
+            return song;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return null;
+        }
+    }
+
+    public async Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres)
+    {
+        try
+        {
+            var filter = Builders<Song>.Filter.AnyIn(x => x.Genres, genres) & availableSongFilter;
+
+            (_, var songs) = await _songRepo.FindManyAsync(
+                filter: filter,
+                lookup: artistLookup
+            );
+
+            return songs;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return Enumerable.Empty<Song>();
+        }
     }
 }
