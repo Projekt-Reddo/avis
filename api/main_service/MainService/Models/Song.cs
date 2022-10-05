@@ -19,7 +19,7 @@ public class Song : BaseModel
     [Url]
     public string Thumbnail { get; set; } = null!;
 
-    public string Lyric { get; set; } = null!;
+    public string Lyrics { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 

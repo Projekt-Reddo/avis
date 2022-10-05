@@ -11,7 +11,7 @@ import React from "react";
 import style from "components/Admin/Create/markdown-styles.module.css";
 import { useAppSelector } from "utils/react-redux-hooks";
 
-interface LyricInputProps {
+interface LyricsInputProps {
     song: SongCreate;
     setSong: Dispatch<React.SetStateAction<SongCreate>>;
     currentStep?: number;
@@ -19,7 +19,7 @@ interface LyricInputProps {
     previousFormStep: () => void;
 }
 
-const LyricInput: FunctionComponent<LyricInputProps> = ({
+const LyricsInput: FunctionComponent<LyricsInputProps> = ({
     song,
     setSong,
     currentStep,
@@ -49,14 +49,14 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
     const handleEditorChange = (md: any) => {
         const newValue = md.text.replace(/\d/g, "");
         setMdContent(newValue);
-        setValue("lyric", newValue);
-        setSong({ ...song, lyric: newValue });
+        setValue("lyrics", newValue);
+        setSong({ ...song, lyrics: newValue });
     };
 
     useEffect(() => {
-        const lyric = getValues("lyric");
-        if (lyric) {
-            setMdContent(lyric);
+        const lyrics = getValues("lyrics");
+        if (lyrics) {
+            setMdContent(lyrics);
         }
     }, []);
 
@@ -95,8 +95,8 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
                     className="rounded-md"
                 />
 
-                {errors.lyric?.message && (
-                    <span className="text-red-600 mt-3">{`${errors.lyric?.message}`}</span>
+                {errors.lyrics?.message && (
+                    <span className="text-red-600 mt-3">{`${errors.lyrics?.message}`}</span>
                 )}
             </div>
 
@@ -134,8 +134,8 @@ const LyricInput: FunctionComponent<LyricInputProps> = ({
     );
 };
 
-export default LyricInput;
+export default LyricsInput;
 
 const schema = yup.object().shape({
-    lyric: yup.string().required("Lyric is required!"),
+    lyrics: yup.string().required("Lyrics is required!"),
 });

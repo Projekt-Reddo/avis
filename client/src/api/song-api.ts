@@ -7,7 +7,7 @@ export const createSongApi = async (data: SongCreate) => {
     formData.append("Title", data.title);
     formData.append("Alias", data.alias);
     formData.append("Thumbnail", data.thumbnail!);
-    formData.append("Lyric", data.lyric);
+    formData.append("Lyrics", data.lyrics);
     formData.append("Description", data.description);
     for (let item of data.genres) {
         formData.append("Genres", item);
@@ -31,15 +31,16 @@ export const viewSongApi = async (data: SongFilter) => {
 };
 
 export const deleteSongApi = async (data: object) => {
-    const res = await axios.delete(apiRoute, {data: data});
+    const res = await axios.delete(apiRoute, { data: data });
     return res.data;
 };
 
-export const humToSongApi = async (data: Blob) => {
-    const formData = new FormData();
-    formData.append("inputFile", data);
+export const songDetailApi = async (data: string) => {
+    const res = await axios.get(`${apiRoute}/${data}`);
+    return res.data;
+};
 
-    const res = await axios.post("/search/song/hum", formData);
-
+export const relatedSongsApi = async (data: object) => {
+    const res = await axios.post(`${apiRoute}/related`, data);
     return res.data;
 };

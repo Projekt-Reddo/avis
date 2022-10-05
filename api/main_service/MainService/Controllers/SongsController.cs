@@ -181,9 +181,14 @@ public class SongsController : ControllerBase
     }
 
     [HttpPost("related")]
-    public async Task<ActionResult> GetRelatedSongs(RelatedSongFilter songFilter)
+    public async Task<ActionResult> GetRelatedSongs(RelatedSongFilter songsFilter)
     {
-        var songs = await _songLogic.GetSongByGenres(songFilter.Genres);
+        if (!songsFilter.Genres!.Any())
+        {
+            return Ok(new List<SongReadDto>());
+        }
+
+        var songs = await _songLogic.GetSongByGenres(songsFilter.Genres!, songsFilter.ExistedId);
 
         return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
     }

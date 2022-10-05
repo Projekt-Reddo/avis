@@ -31,6 +31,7 @@ namespace MainService.Dtos
 
     public class RelatedSongFilter
     {
-        public ICollection<string> Genres { get; set; } = null!;
+        public ICollection<string>? Genres { get; set; } = null!;
+        public string ExistedId { get; set; } = null!;
     }
 }

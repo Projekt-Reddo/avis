@@ -14,7 +14,7 @@ public interface ISongLogic
     Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType, string fileExtension);
     FilterDefinition<Song> SongFilter(PaginationReqDto<SongFilterDto> pagination);
     Task<Song?> GetSongById(string id);
-    Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres);
+    Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres, string existedId);
 }
 
 public class SongLogic : ISongLogic
@@ -162,11 +162,12 @@ public class SongLogic : ISongLogic
         }
     }
 
-    public async Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres)
+    public async Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres, string existedId)
     {
         try
         {
-            var filter = Builders<Song>.Filter.AnyIn(x => x.Genres, genres) & availableSongFilter;
+            var filter = Builders<Song>.Filter.AnyIn(x => x.Genres, genres) & availableSongFilter
+                & Builders<Song>.Filter.Not(Builders<Song>.Filter.Eq(x => x.Id, existedId));
 
             (_, var songs) = await _songRepo.FindManyAsync(
                 filter: filter,
