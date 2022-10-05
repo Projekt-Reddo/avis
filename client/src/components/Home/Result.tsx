@@ -2,6 +2,7 @@ import Loading from "components/shared/Loading";
 import * as React from "react";
 import "theme/Result.css";
 import Icon from "components/shared/Icon";
+import { useHistory } from "react-router-dom";
 
 interface ResultProp {
     result: {
@@ -10,12 +11,14 @@ interface ResultProp {
             payload: Song[];
         };
     };
+    title?: string;
 }
 
-const Result: React.FC<ResultProp> = ({ result }) => {
+const Result: React.FC<ResultProp> = ({ result, title }) => {
     const audioRef = React.useRef(new Audio());
     const [songPlay, setSong] = React.useState("");
     const [isPlay, setPlay] = React.useState(false);
+    let history = useHistory();
 
     const handlePausePlayClick = (e: string) => {
         audioRef.current.volume = 0.1;
@@ -38,20 +41,23 @@ const Result: React.FC<ResultProp> = ({ result }) => {
 
     if (result.status === "loading")
         return (
-            <div className={`px-3 lg:px-32 2xl:px-52 pt-10`}>
-                <div className="text-2xl mb-3 text-black font-bold">Top Result</div>
+            <div className={`px-3 lg:px-32 2xl:px-52 py-5 lg:pb-0`}>
+                <div className="text-2xl mb-3 text-black font-bold">
+                    {title ? title : "Top Result"}
+                </div>
                 <div className="px-3 lg:px-32 2xl:px-52 mt-10 h-48 flex justify-center items-center">
                     <Loading />
                 </div>
             </div>
         );
 
-    if (!result.data.payload)
-        return (<></>);
+    if (!result.data.payload) return <></>;
 
     return (
-        <div className={`px-3 lg:px-32 2xl:px-52 pt-10`}>
-            <div className="text-2xl mb-3 text-black font-bold">Top Result</div>
+        <div className={`px-3 lg:px-32 2xl:px-52 py-5 lg:pb-0`}>
+            <div className="text-2xl mb-3 text-black font-bold">
+                {title ? title : "Top Result"}
+            </div>
             {result.data.payload.length <= 0 ? (
                 <div className="h-24">No song founded!</div>
             ) : (
@@ -59,16 +65,20 @@ const Result: React.FC<ResultProp> = ({ result }) => {
                     {result.data.payload.map((song) => (
                         <div
                             key={song.id}
-                            className="flex flex-row rounded-md mb-6 shadow-md col-span-1"
+                            className="flex flex-row rounded-md mb-6 shadow-md col-span-1 cursor-pointer"
+                            onClick={() => {
+                                history.push(`/song/${song.id}`);
+                            }}
                         >
                             <div
-                                onClick={() =>
+                                onClick={(e) => {
+                                    e.stopPropagation(); // prevent parent click
                                     handlePausePlayClick(
                                         song.url?.internal
                                             ? song.url?.internal
                                             : ""
-                                    )
-                                }
+                                    );
+                                }}
                                 className="Container rounded-md min-h-[11rem]  flex justify-center items-center"
                                 style={{
                                     backgroundImage: `url(${song.thumbnail})`,
@@ -112,7 +122,12 @@ const Result: React.FC<ResultProp> = ({ result }) => {
                                     {song.title}
                                 </div>
                                 <div>
-                                    {song.artists && song.artists.join(", ")}
+                                    {song.artists &&
+                                        song.artists.map((artist, index) =>
+                                            index === song.artists.length - 1
+                                                ? artist.name
+                                                : artist.name + ", "
+                                        )}
                                 </div>
                                 <div>
                                     {song.genres && song.genres.join(", ")}
@@ -123,7 +138,7 @@ const Result: React.FC<ResultProp> = ({ result }) => {
                 </div>
             )}
         </div>
-    )
+    );
 };
 
 export default Result;
