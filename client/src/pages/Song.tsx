@@ -4,7 +4,7 @@ import SongDetail from "components/Song/SongDetail";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { songDetailAsync } from "store/slices/songSlice";
-import { relatedSongsAsync } from "store/slices/recommendSlice";
+import { relatedSongsAsync } from "store/slices/songRecommendSlice";
 import { useEffect, useRef } from "react";
 import Result from "components/Home/Result";
 
@@ -19,7 +19,7 @@ const Song = () => {
 
     const dispatch = useAppDispatch();
     const songState = useAppSelector((state) => state.song);
-    const relatedSongsState = useAppSelector((state) => state.recommend);
+    const relatedSongsState = useAppSelector((state) => state.songRecommend);
 
     useEffect(() => {
         if (songId) {

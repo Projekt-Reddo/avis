@@ -9,8 +9,8 @@ const initialState: AsyncReducerInitialState = {
     error: null,
 };
 
-const recommendSlice = createSlice({
-    name: "recommend",
+const songRecommendSlice = createSlice({
+    name: "songRecommend",
     initialState,
     reducers: {
         song: (state, action) => ({
@@ -39,5 +39,5 @@ export const relatedSongsAsync = createAsyncThunk(
     }
 );
 
-export const { song } = recommendSlice.actions;
-export default recommendSlice.reducer;
+export const { song } = songRecommendSlice.actions;
+export default songRecommendSlice.reducer;
