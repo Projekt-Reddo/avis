@@ -55,16 +55,16 @@ const View = () =>
     useEffect(() => {
         dispatch(
             viewUserAsync({
-                "page": 1,
-                "size": 10,
-                "filter": {
-                    "name": "",
-                    "sort": "",
-                    "joinedStart": "2000-10-06T09:27:19.798Z",
-                    "joinedEnd": "2022-10-06T09:27:19.798Z",
-                    "isModerator": false,
-                    "isBanned": false,
-                    "isMuted": false
+                page: 1,
+                size: 10,
+                filter: {
+                    name: "",
+                    sort: "",
+                    joinedStart: "2000-10-06T09:27:19.798Z",
+                    joinedEnd: "2022-10-06T09:27:19.798Z",
+                    isModerator: false,
+                    isBanned: false,
+                    isMuted: false
                 },
             })
         );
