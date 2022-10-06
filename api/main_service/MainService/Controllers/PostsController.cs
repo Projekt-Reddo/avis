@@ -81,8 +81,8 @@ namespace MainService.Controllers
                 { "PublishedAt", 1 },
                 { "UpvotedBy", 1 },
                 { "DownvotedBy", 1 },
-                { "HashTags", 1},
-                { "Comments", 1},
+                { "Hashtags", 1},
+                { "CommentIds", 1},
             };
 
             // Config to sort created date decrease

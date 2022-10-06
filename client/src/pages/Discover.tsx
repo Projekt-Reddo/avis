@@ -1,63 +1,100 @@
 // Libs
-import React from "react";
-import { IonContent, IonPage } from "@ionic/react";
-import { useQuery } from "react-query";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { FieldValues, useForm } from "react-hook-form";
 
 // Components
-import PostCard from "../components/Discover/PostCard";
-import HumCard from "../components/Discover/HumCard";
-import TrendingCard from "../components/Discover/TrendingCard";
-import SearchBox from "../components/Discover/SearchBox";
+import PostCard from "components/Discover/PostCard";
+import HumCard from "components/Discover/HumCard";
+import TrendingCard from "components/Discover/TrendingCard";
+import SearchBox from "components/Discover/SearchBox";
 
 // Constants
-import { MAIN_SERVICE_API } from "../utils/constants";
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import InDevelopment from "components/shared/InDevelopment";
+import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import { viewPostAsync } from "store/slices/postSlice";
+import Loading from "components/shared/Loading";
+
+interface pageFilterProps {
+    currentPage: number;
+    filter?: {
+        content?: string;
+        hashtags?: string[];
+    };
+}
 
 const Discover = () => {
-    // const { isLoading, isError, data, refetch } = useQuery(
-    //     "boards",
-    //     async () => {
-    //         const { data } = await axios.get(`${MAIN_SERVICE_API}/api/post`);
-    //         return data;
-    //     },
-    //     {
-    //         enabled: false,
-    //     }
-    // );
+    const dispatch = useAppDispatch();
 
-    // React.useEffect(() => {
-    //     refetch();
-    // }, []);
+    const postState = useAppSelector((state) => state.post);
+
+    const [pageFilter, setPageFilter] = React.useState<pageFilterProps>({
+        currentPage: 1,
+        filter: {},
+    });
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            content: "",
+            hashtags: [],
+        },
+    });
+
+    const handleSearch = (data: FieldValues) => {
+        setPageFilter({
+            currentPage: 1,
+            filter: {
+                content: data.content,
+            },
+        });
+    };
+
+    useEffect(() => {
+        dispatch(
+            viewPostAsync({
+                page: pageFilter.currentPage,
+                size: 10,
+                filter: pageFilter.filter,
+            })
+        );
+    }, [pageFilter]);
 
     return (
-        // <IonPage>
-        //     <IonContent>
-        //         <div className="flex justify-center lg:grid md:grid-cols-3 lg:gap-6 lg:m-16 pt-4">
-        //             <div className="w-full m-4 lg:m-0 lg:col-span-2">
-        //                 <PostCard />
-        //                 {isLoading || !data ? (
-        //                     <div>Loading</div>
-        //                 ) : isError ? (
-        //                     <div>error</div>
-        //                 ) : (
-        //                     data.map((post: any, objIndex: any) => (
-        //                         <div key={objIndex}>
-        //                             <HumCard post={post} />
-        //                         </div>
-        //                     ))
-        //                 )}
-        //             </div>
-        //             <div className=" hidden lg:col-span-1 lg:block">
-        //                 <SearchBox />
-        //                 <TrendingCard />
-        //             </div>
-        //         </div>
-        //     </IonContent>
-        // </IonPage>
         <PageWrapper>
-            <InDevelopment />
+            <div className="flex justify-center lg:grid lg:grid-cols-3 lg:gap-6 mt-4">
+                <div className="w-full lg:col-span-2">
+                    <PostCard />
+                    {postState.status === "loading" ||
+                    !postState.data.payload ? (
+                        // Loading Components
+                        <div className="flex justify-center items-center mt-8">
+                            <Loading />
+                        </div>
+                    ) : postState.status === "error" ? (
+                        // Error show
+                        <div className="flex justify-center items-center mt-8 text-lg">
+                            <div>{postState.status}</div>
+                        </div>
+                    ) : (
+                        postState.data.payload.map((post: any) => (
+                            <HumCard key={post.id} post={post} />
+                        ))
+                    )}
+                </div>
+                <div className="hidden col-span-1 lg:block">
+                    <div className="sticky top-4">
+                        <SearchBox
+                            register={register("content")}
+                            handleSubmit={handleSubmit(handleSearch)}
+                        />
+                        <TrendingCard setState={setPageFilter} />
+                    </div>
+                </div>
+            </div>
         </PageWrapper>
     );
 };
