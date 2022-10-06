@@ -13,13 +13,14 @@ import SelectRow from "components/shared/SelectRow";
 import Pagination from "components/shared/Pagination";
 
 import { FieldValues, useForm } from "react-hook-form";
-import { DayFormat } from "utils/constants";
+import { DayFormat, DefaultDay, DefaultDay_2 } from "utils/constants";
 import { recommendGenreApi } from "api/genre-api";
 import Loading from "components/shared/Loading";
+import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
 
 const View = () =>
 {
-    
+
     const dispatch = useAppDispatch();
 
     const userState = useAppSelector((state) => state.user);
@@ -54,37 +55,40 @@ const View = () =>
     useEffect(() => {
         dispatch(
             viewUserAsync({
-                page: 1,
-                size: 10,
-                filter: {
-                    name: "",
-                    sort: "",
-                    joinedStart: "1000-09-22T02:28:47.051Z",
-                    joinedEnd: "2022-09-22T02:28:47.052Z",
-                    isModerator: false,
-                    isBanned: false,
-                    isMuted: false
+                "page": 1,
+                "size": 10,
+                "filter": {
+                    "name": "",
+                    "sort": "",
+                    "joinedStart": "2000-10-06T09:27:19.798Z",
+                    "joinedEnd": "2022-10-06T09:27:19.798Z",
+                    "isModerator": false,
+                    "isBanned": false,
+                    "isMuted": false
                 },
             })
         );
     });
 
     return (
-        <PageWrapper className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
                 <>
                     {/* Data Table */}
                     <Table
                         className=""
                         columns={[
-                            "Avatar",
                             "Name",
+                            "Avatar",
                             "Joined Date",
                             "Role",
-                            "Ban"
+                            "Is Banned",
+                            "Post Mute Until",
+                            "Comment Mute Until"
                         ]}
-                        data={userState.tableData.payload}
+                        displayData={getUserData(userState.tableData)}
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setUser(data))}
+                        rawData={userState.tableData}
                         onRowClick={() => {
                             console.log("Clicked");
                         }}
@@ -104,13 +108,16 @@ const View = () =>
                         />
                     </div>
                 </>
-        </PageWrapper>
+        </PageWrapperWithLeftNav>
     );
 }
 
 export default View;
 export const getUserData = (data: any) => {
-    return data.payload.map((item: any) => ({
+
+    if (!data) return [];
+
+    return data.map((item: any) => ({
         id: item.id,
         avatar: (
             <div className="flex justify-center items-center">
@@ -132,5 +139,7 @@ export const getUserData = (data: any) => {
         joinedDate: item.joinedDate,
         role: item.role,
         isBanned: item.isBanned,
+        postMutedUntil: (item.postMutedUntil == DefaultDay || item.postMutedUntil == DefaultDay_2) ? "          " : item.postMutedUntil,
+        commentMutedUntil: (item.commentMutedUntil == DefaultDay || item.commentMutedUntil == DefaultDay_2) ? "          " : item.commentMutedUntil
     }));
 };

@@ -3,9 +3,13 @@ import { viewUserApi } from "api/account-api";
 import { getUserData } from "pages/admin/User/View";
 
 const initialState: AsyncReducerInitialState = {
-    status: "idle",
-    data: null,
+    status: "init",
+    data: {
+        total: 0,
+        payload: [],
+    },
     error: null,
+    tableData: [],
 };
 
 const userSlice = createSlice({
@@ -28,10 +32,7 @@ const userSlice = createSlice({
             .addCase(viewUserAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
-                state.tableData = {
-                    ...action.payload,
-                    payload: getUserData(action.payload),
-                };
+                state.tableData = action.payload.payload;
             });
     },
 });
