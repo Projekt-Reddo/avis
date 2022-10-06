@@ -6,6 +6,7 @@ import searchSlide from "./slices/searchSlice";
 import toastSlice from "./slices/toastSlice";
 import userSlice from "./slices/userSlice";
 import postSlice from "./slices/postSlice";
+import songRecommendSlice from "./slices/songRecommendSlice";
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         search: searchSlide,
         toast: toastSlice,
         leftNavShowing: leftNavSlice,
+        songRecommend: songRecommendSlice,
     },
 });
 

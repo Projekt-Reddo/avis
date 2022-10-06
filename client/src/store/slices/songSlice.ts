@@ -1,9 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createSongApi, viewSongApi, humToSongApi, deleteSongApi } from "api/song-api";
+import {
+    createSongApi,
+    viewSongApi,
+    deleteSongApi,
+    songDetailApi,
+} from "api/song-api";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
-    status: "idle",
+    status: "init",
     data: {
         total: 0,
         payload: [],
@@ -32,8 +37,7 @@ const songSlice = createSlice({
         deleteSongApi: (state, action) => ({
             ...state,
             data: action.payload,
-        })
-        ,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -52,13 +56,6 @@ const songSlice = createSlice({
                 state.data = action.payload;
                 state.tableData = action.payload.payload;
             })
-            .addCase(humToSongAsync.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(humToSongAsync.fulfilled, (state, action) => {
-                state.status = "idle";
-                state.data.payload = action.payload;
-            })
             .addCase(deleteSongAsync.pending, (state) => {
                 state.status = "loading";
             })
@@ -67,7 +64,13 @@ const songSlice = createSlice({
                 state.data = action.payload;
                 state.tableData = action.payload.payload;
             })
-            ;
+            .addCase(songDetailAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(songDetailAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+            });
     },
 });
 
@@ -103,13 +106,6 @@ export const viewSongAsync = createAsyncThunk(
     }
 );
 
-export const humToSongAsync = createAsyncThunk(
-    "song/hum",
-    async (blob: Blob) => {
-        return await humToSongApi(blob);
-    }
-);
-
 export const deleteSongAsync = createAsyncThunk(
     "song/deleteSong",
     async (songDelete: SongDelete, thunkApi) => {
@@ -124,7 +120,6 @@ export const deleteSongAsync = createAsyncThunk(
                     message: msg,
                 })
             );
-            
         } catch (e: any) {
             thunkApi.dispatch(
                 addToast({
@@ -137,8 +132,22 @@ export const deleteSongAsync = createAsyncThunk(
         return await viewSongApi({
             page: songDelete.searchFilter.currentPage,
             size: songDelete.searchFilter.rowShow.value,
-            filter: songDelete.searchFilter.filter
-        }); 
+            filter: songDelete.searchFilter.filter,
+        });
+    }
+);
+
+export const songDetailAsync = createAsyncThunk(
+    "song/detail",
+    async (id: string) => {
+        // try {
+        //     const res = await songDetailApi(id);
+        //     return res;
+        // } catch (e: any) {
+        //     console.log("🚀 ~ file: songSlice.ts ~ line 140 ~ e", e);
+        // }
+        const res = await songDetailApi(id);
+        return res;
     }
 );
 

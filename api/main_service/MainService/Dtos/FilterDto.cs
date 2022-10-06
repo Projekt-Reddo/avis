@@ -28,4 +28,10 @@ namespace MainService.Dtos
         public string? ObjectId { get; set; } = null!;
         public bool IsPostChild { get; set; } = false;
     }
+
+    public class RelatedSongFilter
+    {
+        public ICollection<string>? Genres { get; set; } = null!;
+        public string ExistedId { get; set; } = null!;
+    }
 }

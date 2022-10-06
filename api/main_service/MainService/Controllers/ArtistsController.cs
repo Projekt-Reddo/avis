@@ -46,6 +46,7 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
+    [Authorize]
     [HttpPost("recommend")]
     public async Task<ActionResult<ICollection<ArtistReadDto>>> Recommend(ArtistRecommendDto recommendDto)
     {
@@ -53,6 +54,7 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult<ResponseDto>> DeleteMany(ArtistManyDeleteDto manyDeleteDto)
     {

@@ -17,11 +17,13 @@ public class SongReadDto
 
     public string Thumbnail { get; set; } = null!;
 
-    public string Lyric { get; set; } = null!;
+    public string Lyrics { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 
     public ICollection<string> Genres { get; set; } = null!;
+
+    public ICollection<ArtistReadDto> Artists { get; set; } = null!;
 
     public UrlReadDto Url { get; set; } = null!;
 
@@ -37,7 +39,7 @@ public class SongCreateDto
 
     public IFormFile Thumbnail { get; set; } = null!;
 
-    public string Lyric { get; set; } = null!;
+    public string Lyrics { get; set; } = null!;
 
     public string? Description { get; set; } = null!;
 
@@ -59,7 +61,7 @@ public class SongUpdateDto
 
     public IFormFile Thumbnail { get; set; } = null!;
 
-    public string Lyric { get; set; } = null!;
+    public string Lyrics { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 

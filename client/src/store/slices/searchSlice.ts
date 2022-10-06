@@ -5,7 +5,7 @@ const initialState: AsyncReducerInitialState = {
     status: "idle",
     data: {
         total: 0,
-        payload: [],
+        payload: null,
     },
     error: null,
 };
