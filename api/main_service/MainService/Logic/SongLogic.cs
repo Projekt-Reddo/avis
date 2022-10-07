@@ -171,7 +171,8 @@ public class SongLogic : ISongLogic
 
             (_, var songs) = await _songRepo.FindManyAsync(
                 filter: filter,
-                lookup: artistLookup
+                lookup: artistLookup,
+                limit: 10
             );
 
             return songs;
