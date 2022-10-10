@@ -36,6 +36,13 @@ const Nav = () => {
             lable: "Display",
         },
         {
+            icon: "bars-progress",
+            lable: "Manage",
+            to: "/admin",
+            isShow:
+                user && (user.role === "admin" || user.role === "moderator"),
+        },
+        {
             icon: "sign-out-alt",
             lable: "Logout",
             onClick: handleLogout,
@@ -117,9 +124,6 @@ const Nav = () => {
                                         src="https://i.ibb.co/59tcmyp/96263453-p0.png"
                                         alt="avatar"
                                     />
-                                    {/* <span className="ml-3 mr-1 font-bold">
-                                        {user.name}
-                                    </span> */}
                                     <Icon icon="angle-down" />
                                 </Fragment>
                             }
