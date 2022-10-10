@@ -52,8 +52,6 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
     const wrapperRef = useRef(null);
     useOutsideAlerter(wrapperRef, setShowOptions);
 
-    console.log(authState);
-
     return (
         <div
             // to={`/discover/${post.id}`}
@@ -82,6 +80,10 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                             }
                             icon="caret-up"
                             onClick={() => {
+                                if (post.upvotedBy.includes(authState?.uid)) {
+                                    console.log("Voted");
+                                    return;
+                                }
                                 console.log("Like");
                             }}
                         />
@@ -96,6 +98,10 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                             }
                             icon="caret-down"
                             onClick={() => {
+                                if (post.downvotedBy.includes(authState?.uid)) {
+                                    console.log("Voted");
+                                    return;
+                                }
                                 console.log("Dislike");
                             }}
                         />
@@ -220,21 +226,21 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                 className="text-2xl cursor-pointer"
                                 icon="message"
                             />
-                            <div className="ml-2 sm:hidden">
+                            <div className="ml-1 sm:hidden">
                                 {post.commentCount}
                             </div>
-                            <div className="ml-2 hidden sm:block">
+                            <div className="ml-1 hidden sm:block">
                                 {post.commentCount} Comment
                             </div>
                         </div>
 
                         {/* Share */}
-                        <div className="flex mx-4 sm:mx-6">
+                        <div className="flex mx-2 sm:mx-4">
                             <Icon
                                 className="text-2xl cursor-pointer"
                                 icon="share"
                             />
-                            <div className="ml-2 hidden sm:block">Share</div>
+                            <div className="ml-1 hidden sm:block">Share</div>
                         </div>
 
                         {/* Save */}
@@ -243,11 +249,13 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                 className="text-2xl cursor-pointer"
                                 icon="bookmark"
                             />
-                            <div className="ml-2 hidden sm:block">Save</div>
+                            <div className="ml-1 hidden sm:block">Save</div>
                         </div>
                     </div>
                     <div className="text-xs self-center hidden sm:block">
-                        {post.upvotedBy >= post.downvotedBy
+                        {post.upvotedBy.length + post.downvotedBy.length === 0
+                            ? "No voted"
+                            : post.upvotedBy >= post.downvotedBy
                             ? (
                                   (post.upvotedBy.length * 100) /
                                   (post.upvotedBy.length +

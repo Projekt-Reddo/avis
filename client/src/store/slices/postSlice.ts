@@ -17,6 +17,10 @@ const postSlice = createSlice({
         viewPost: (state, action) => ({
             ...state,
             data: action.payload,
+        }),
+        viewMorePost: (state, action) => ({
+            ...state,
+            data: action.payload,
         })
     },
     extraReducers: (builder) => {
@@ -27,6 +31,13 @@ const postSlice = createSlice({
             .addCase(viewPostAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(viewMorePostAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = {
+                    total: action.payload.total,
+                    payload: [...state.data.payload, ...action.payload.payload]
+                };
             })
             ;
     },
@@ -39,5 +50,12 @@ export const viewPostAsync = createAsyncThunk(
     }
 );
 
-export const { viewPost } = postSlice.actions;
+export const viewMorePostAsync = createAsyncThunk(
+    "post/viewMorePost",
+    async (postFilter: PostFilter) => {
+        return await viewPostApi(postFilter);
+    }
+);
+
+export const { viewPost, viewMorePost } = postSlice.actions;
 export default postSlice.reducer;

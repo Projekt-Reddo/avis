@@ -4,5 +4,6 @@ interface PostFilter {
     filter?: {
         content?: string;
         hashtags?: string[];
+        isTrending?: boolean;
     };
 }

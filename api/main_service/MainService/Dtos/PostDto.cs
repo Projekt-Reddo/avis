@@ -81,3 +81,16 @@ public class PostListCommentDto
 {
     public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
 }
+
+public class HashtagsRecommend
+{
+    public HashtagsRecommend(string Popular, HashSet<string> randomHashtags)
+    {
+        this.Popular = Popular;
+        RandomHashtags = randomHashtags;
+    }
+
+    public string Popular { get; set; } = null!;
+    // public ICollection<string> Hot { get; set; } = null!;
+    public ICollection<string> RandomHashtags { get; set; } = null!;
+}

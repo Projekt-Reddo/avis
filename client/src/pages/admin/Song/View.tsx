@@ -177,21 +177,16 @@ const View = () => {
                 filterContent={filterContent}
             />
 
-            {isSelected ? (
-                <div className="mt-2">
-                    <Button
-                        className="none-shadow-button focus:outline-none"
-                        type="button"
-                        variant="danger"
-                        onClick={() => setOpenDelete(true)}
-                    >
-                        <Icon icon="trash" className="mr-2" />
-                        Delete
-                    </Button>
-                </div>
-            ) : (
-                ""
-            )}
+            <Button
+                className="none-shadow-button focus:outline-none mt-2"
+                type="button"
+                variant="danger"
+                onClick={() => setOpenDelete(true)}
+                disabled={isSelected ? false : true}
+            >
+                <Icon icon="trash" className="mr-2" />
+                Delete
+            </Button>
 
             <Modal
                 type="error"
@@ -290,7 +285,11 @@ export const getSongData = (data: any) => {
                 />
             </div>
         ),
-        title: item.title,
+        title: (
+            <div className="text-ellipsis overflow-hidden max-w-xs">
+                {item.title}
+            </div>
+        ),
         artist: item.artists ? (
             item.artists.map((item: any) => (
                 <div key={item.id}>{item.name}</div>

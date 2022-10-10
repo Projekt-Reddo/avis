@@ -1,25 +1,52 @@
 // Libs
 import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 // Components
 import PostCard from "components/Discover/PostCard";
 import HumCard from "components/Discover/HumCard";
 import TrendingCard from "components/Discover/TrendingCard";
 import SearchBox from "components/Discover/SearchBox";
+import PageWrapper from "components/PageWrapper/PageWrapper";
+import Loading from "components/shared/Loading";
+import Icon from "components/shared/Icon";
 
 // Constants
-import PageWrapper from "components/PageWrapper/PageWrapper";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { viewPostAsync } from "store/slices/postSlice";
-import Loading from "components/shared/Loading";
+import { viewMorePostAsync, viewPostAsync } from "store/slices/postSlice";
+import { useWindowDimensions } from "utils/useWindowDimensions";
+import { MOBILE_BREAKPOINT } from "utils/constants";
+import { Link } from "react-router-dom";
 
 interface pageFilterProps {
     currentPage: number;
+    rowShow: number;
     filter?: {
         content?: string;
         hashtags?: string[];
+        isTrending?: boolean;
     };
+}
+
+interface Post {
+    id: string;
+    user: {
+        id: string;
+        email: string;
+        name: string;
+        avatar: string;
+        role: string;
+    };
+    content: string;
+    medias: [{ id: string; mediaType: string; url: string }];
+    createdAt: string;
+    modifiedAt: string;
+    publishedA: string;
+    upvotedBy: string[];
+    downvotedBy: string[];
+    hashtags: [];
+    commentCount: number;
 }
 
 const Discover = () => {
@@ -27,10 +54,15 @@ const Discover = () => {
 
     const postState = useAppSelector((state) => state.post);
 
+    const { width, height } = useWindowDimensions();
+
     const [pageFilter, setPageFilter] = React.useState<pageFilterProps>({
         currentPage: 1,
+        rowShow: 3,
         filter: {},
     });
+
+    const [fetchMorePage, setFetchMorePage] = React.useState(2);
 
     const {
         register,
@@ -47,17 +79,30 @@ const Discover = () => {
     const handleSearch = (data: FieldValues) => {
         setPageFilter({
             currentPage: 1,
+            rowShow: pageFilter.rowShow,
             filter: {
                 content: data.content,
             },
         });
+        setFetchMorePage(2);
+    };
+
+    const fetchData = () => {
+        dispatch(
+            viewMorePostAsync({
+                page: fetchMorePage,
+                size: pageFilter.rowShow,
+                filter: pageFilter.filter,
+            })
+        );
+        setFetchMorePage(fetchMorePage + 1);
     };
 
     useEffect(() => {
         dispatch(
             viewPostAsync({
                 page: pageFilter.currentPage,
-                size: 10,
+                size: pageFilter.rowShow,
                 filter: pageFilter.filter,
             })
         );
@@ -65,34 +110,84 @@ const Discover = () => {
 
     return (
         <PageWrapper>
-            <div className="flex justify-center lg:grid lg:grid-cols-3 lg:gap-6 mt-4">
+            <div className="lg:hidden flex justify-between items-center p-4">
+                <div className="text-2xl">Discover</div>
+                <Link to="/discover/search">
+                    <Icon
+                        className="text-2xl text-[color:var(--teal-lighter-color)]"
+                        icon="search"
+                    />
+                </Link>
+            </div>
+            <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
+                {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    <PostCard />
                     {postState.status === "loading" ||
                     !postState.data.payload ? (
-                        // Loading Components
+                        // Loading
                         <div className="flex justify-center items-center mt-8">
                             <Loading />
                         </div>
                     ) : postState.status === "error" ? (
-                        // Error show
+                        // Error
                         <div className="flex justify-center items-center mt-8 text-lg">
                             <div>{postState.status}</div>
                         </div>
                     ) : (
-                        postState.data.payload.map((post: any) => (
-                            <HumCard key={post.id} post={post} />
-                        ))
+                        <InfiniteScroll
+                            dataLength={postState.data.payload.length}
+                            next={fetchData}
+                            hasMore={
+                                postState.data.total -
+                                    postState.data.payload.length >
+                                0
+                            }
+                            className="page-wrapper"
+                            style={{
+                                margin: "0 -1rem",
+                                padding: "0 1rem",
+                            }}
+                            height={
+                                width! > MOBILE_BREAKPOINT
+                                    ? height! - 80
+                                    : height! - 120
+                            }
+                            loader={
+                                // Loading
+                                <div className="flex justify-center items-center my-4">
+                                    <Loading />
+                                </div>
+                            }
+                            endMessage={
+                                <div className="flex justify-center items-center font-bold my-4">
+                                    Post to view more
+                                </div>
+                            }
+                        >
+                            <PostCard />
+
+                            {postState.data.payload.length === 0 ? (
+                                <div className="flex justify-center items-center font-bold my-4">
+                                    No result
+                                </div>
+                            ) : (
+                                postState.data?.payload?.map((post: Post) => (
+                                    <HumCard key={post.id} post={post} />
+                                ))
+                            )}
+                        </InfiniteScroll>
                     )}
                 </div>
+                {/* Right */}
                 <div className="hidden col-span-1 lg:block">
-                    <div className="sticky top-4">
-                        <SearchBox
-                            register={register("content")}
-                            handleSubmit={handleSubmit(handleSearch)}
-                        />
-                        <TrendingCard setState={setPageFilter} />
-                    </div>
+                    <SearchBox
+                        register={register("content")}
+                        handleSubmit={handleSubmit(handleSearch)}
+                    />
+                    <TrendingCard
+                        setFetchMorePage={setFetchMorePage}
+                        setState={setPageFilter}
+                    />
                 </div>
             </div>
         </PageWrapper>

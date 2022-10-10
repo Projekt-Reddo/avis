@@ -51,6 +51,11 @@ namespace MainService.Controllers
                 postFilter = postFilter & Builders<Post>.Filter.All(x => x.Hashtags, pagination.Filter.Hashtags);
             }
 
+            if (pagination.Filter.IsTrending)
+            {
+                postFilter = postFilter & Builders<Post>.Filter.Where(x => x.UpvotedBy.Count() >= 1);
+            }
+
             // Pagination formula
             var skipPage = (pagination.Page - 1) * pagination.Size;
 
@@ -131,6 +136,46 @@ namespace MainService.Controllers
             return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
         }
 
+        [HttpGet("recommend")]
+        public async Task<ActionResult<HashtagsRecommend>> RecommendTag()
+        {
+            // Create Post Filter
+            var postFilter = Builders<Post>.Filter.Empty;
+
+            // Created At Filter
+            postFilter = postFilter & Builders<Post>.Filter.Gte(x => x.CreatedAt, DateTime.Now.AddDays(-1));
+            postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.CreatedAt, DateTime.Now);
+
+            // Config to specify needed fields
+            BsonDocument project = new BsonDocument{
+                { "_id", 0 },
+                { "Hashtags", 1},
+            };
+
+            (var _, var postsFromRepo) = await _postRepo.FindManyAsync(
+                filter: postFilter,
+                project: project);
+
+            HashSet<string> randomHashtags = new HashSet<string>();
+
+            List<string> popularHashtags = new List<string>();
+
+            foreach (var post in postsFromRepo)
+            {
+                HashSet<string> postHashtags = new HashSet<string>(post.Hashtags);
+                randomHashtags.UnionWith(postHashtags);
+                popularHashtags.AddRange(post.Hashtags);
+            }
+
+            var commonHashtag = popularHashtags.GroupBy(p => p)
+                        .OrderByDescending(g => g.Count())
+                        .First()
+                        .Key;
+
+
+            return Ok(new HashtagsRecommend(commonHashtag, randomHashtags));
+
+        }
         // [HttpDelete("{id}")]
         // public async Task<ActionResult<ResponseDto>> DeletePost()
         // {
