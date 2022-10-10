@@ -77,7 +77,7 @@ namespace MainService.Logic
 
             if (pagination.Filter.isModerator)
             {
-                accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == "Moderator");
+                accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == "admin");
             }
 
             if (pagination.Filter.isMuted)
