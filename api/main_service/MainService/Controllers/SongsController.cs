@@ -181,7 +181,7 @@ public class SongsController : ControllerBase
     }
 
     [HttpPost("related")]
-    public async Task<ActionResult> GetRelatedSongs(RelatedSongFilter songsFilter)
+    public async Task<ActionResult<ICollection<SongReadDto>>> GetRelatedSongs(RelatedSongFilter songsFilter)
     {
         if (!songsFilter.Genres!.Any())
         {
@@ -191,5 +191,18 @@ public class SongsController : ControllerBase
         var songs = await _songLogic.GetSongByGenres(songsFilter.Genres!, songsFilter.ExistedId);
 
         return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ResponseDto>> UpdateSong(string id, [FromForm] SongUpdateDto songUpdate)
+    {
+        (bool status, string message) = await _songLogic.UpdateSong(id, songUpdate);
+
+        if (status is false)
+        {
+            return BadRequest(new ResponseDto(400, message));
+        }
+
+        return Ok(new ResponseDto(200, message));
     }
 }

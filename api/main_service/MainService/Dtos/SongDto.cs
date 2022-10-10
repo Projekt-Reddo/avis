@@ -25,6 +25,8 @@ public class SongReadDto
 
     public ICollection<ArtistReadDto> Artists { get; set; } = null!;
 
+    public ICollection<string> ArtistIds { get; set; } = null!;
+
     public UrlReadDto Url { get; set; } = null!;
 
     public bool IsDeleted { get; set; } = false;
@@ -57,17 +59,19 @@ public class SongUpdateDto
     [StringLength(300)]
     public string Title { get; set; } = null!;
 
-    public string Alias { get; set; } = null!;
+    public string? Alias { get; set; } = null!;
 
-    public IFormFile Thumbnail { get; set; } = null!;
+    public IFormFile? Thumbnail { get; set; } = null!;
 
     public string Lyrics { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string? Description { get; set; } = null!;
 
     public HashSet<string> Genres { get; set; } = null!;
 
-    public IFormFile File { get; set; } = null!;
+    public UrlUpdateDto? Url { get; set; } = null!;
+
+    public ICollection<string> ArtistIds { get; set; } = null!;
 }
 
 public class SongManageListDto
