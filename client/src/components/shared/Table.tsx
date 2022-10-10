@@ -8,7 +8,7 @@ interface TableProps {
     displayData: TableRowData[];
     rawData: any[];
     hasSelectOption: boolean;
-    onRowClick?: () => void;
+    onRowClick?: (obj: any) => void;
     setDataState: React.Dispatch<React.SetStateAction<TableRowData[]>>;
     setIsSelected?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -138,7 +138,9 @@ const Table: React.FC<TableProps> = ({
                         <tr
                             key={obj.id + index + "tr"}
                             className="hover:shadow-lg border-[length:var(--border-width)] border-[color:var(--border-color)]"
-                            onClick={onRowClick}
+                            onClick={() => {
+                                onRowClick(obj);
+                            }}
                         >
                             {hasSelectOption && (
                                 <td className="bg-white px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

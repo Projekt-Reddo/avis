@@ -79,6 +79,7 @@ namespace MainService.Data
         /// <param name="id">Document id</param>
         /// <param name="entity">New document</param>
         /// <returns>true(updated) / false(not update)</returns>
+        [Obsolete("Method is deprecated because conflict with old entity, please use UpdateOneAsync instead.")]
         Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
         /// <summary>
@@ -100,6 +101,27 @@ namespace MainService.Data
         /// <param name="listId">List Id to soft delete</param>
         /// <returns>true(deleted) / false(not delete)</returns>
         Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
+
+        /// <summary>
+        /// Update an document
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update">
+        /// <para>
+        /// Builders<TEntity>.Update.Set(x => x.Property, value)
+        /// </para>
+        /// </param>
+        /// <returns></returns>
+        Task<bool> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!);
+
+        /// <summary>
+        /// Update an document with session transaction
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        Task<bool> UpdateOneAsync(IClientSessionHandle session, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
@@ -187,6 +209,18 @@ namespace MainService.Data
             return rs.ModifiedCount > 0 ? true : false;
         }
 
+        public virtual async Task<bool> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!)
+        {
+            var rs = await _collection.UpdateOneAsync(filter, update);
+            return rs.ModifiedCount > 0 ? true : false;
+        }
+
+        public virtual async Task<bool> UpdateOneAsync(IClientSessionHandle session, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!)
+        {
+            var rs = await _collection.UpdateOneAsync(session: session, filter: filter, update: update);
+            return rs.ModifiedCount > 0 ? true : false;
+        }
+
         public virtual async Task<bool> DeleteOneAsync(string id)
         {
             var rs = await _collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("Id", id));
@@ -246,7 +280,6 @@ namespace MainService.Data
                     }
                 });
             }
-            // var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
             var entity = await query.FirstOrDefaultAsync();
             return entity;
         }

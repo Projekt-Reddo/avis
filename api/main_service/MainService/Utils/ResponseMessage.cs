@@ -9,6 +9,8 @@ public static class ResponseMessage
     public const string SONG_CREATE_FAIL = "Fail to create song please check your details";
     public const string SONG_DELETE_SUCCESS = "Song delete successfull";
     public const string SONG_DELETE_FAIL = "Fail to delete song";
+    public const string SONG_UPDATE_FAIL = "Fail to update song";
+    public const string SONG_UPDATE_SUCCESS = "Song update successfull";
 
 
     // Post msg

@@ -24,3 +24,15 @@ public class UrlCreateDto
     [Url]
     public string? Youtube { get; set; } = null!;
 }
+
+public class UrlUpdateDto
+{
+    [Url]
+    public string? Soundcloud { get; set; } = null!;
+
+    [Url]
+    public string? Spotify { get; set; } = null!;
+
+    [Url]
+    public string? Youtube { get; set; } = null!;
+}

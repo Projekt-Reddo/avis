@@ -88,8 +88,8 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
                         loadOptions={loadOptions}
                         defaultOptions
                         onInputChange={handleInputChange}
-                        value={options.filter((c: any) =>
-                            value!.includes(c.value)
+                        value={options.filter(
+                            (c: any) => value && value!.includes(c.value)
                         )}
                         onChange={(val: any) =>
                             onChange(val.map((c: any) => c.value))
