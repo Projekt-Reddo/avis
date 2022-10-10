@@ -1,84 +1,31 @@
 .card{
-    color: #373F41;
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    border: 0.5px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    color: var(--text-primary-color) !important;
+    background-color: var(--post-bg-color) !important;
+    border-radius: 8px; 
+    border: 0.5px solid var(--post-border-color) !important;
+    box-shadow: 4px 4px 8px var(--element-shadow-color) !important;
 }
 
 .avatar{
     background-size: cover;
     background-position: top;
     border-radius: 50%;
-    height: 5rem;
-    width: 5rem;
+    height: 3rem;
+    width: 3rem;
+    min-height: 3rem;
+    min-width: 3rem;
 }
 
 .hum-image-post{
-    background-size: cover;
-    background-position: top;
-    height: 20rem;
-    width: 100%;
     border-radius: 8px;
-}
-
-.color-5{
-    color: rgba(0, 0, 0, 0.5);
-}
-
-.color-65{
-    color: rgba(0, 0, 0, 0.65);
-
-}
-
-.color-75{
-    color: rgba(0, 0, 0, 0.75);
-
-}
-
-.card-icon{
-    font-size: 1.5rem;
-    color: rgba(0, 0, 0, 0.5);
-    cursor: pointer;
+    width: 100%;
+    height: auto;
+    aspect-ratio: attr(width) / attr(height);
+    margin-bottom: 1rem;
 }
 
 .post-icon{
     font-size: 20px;
-    color:  #1E9BF0BF;
+    color:  var(--teal-lighter-color);
     cursor: pointer;
-}
-
-.vote-icon{
-    font-size: 3rem;
-    cursor: pointer;
-}
-
-.btnPost {
-    width: 114px;
-    height: 40px;
-    background-color: #1E9BF0;
-    border-radius: 8px;
-}
-
-@media screen and (max-width: 540px) {
-
-    .avatar{
-        background-size: cover;
-        background-position: top;
-        border-radius: 50%;
-        height: 3rem;
-        width: 3rem;
-    }
-
-    .hum-image-post{
-        height: 10rem;
-    }
-
-    .post-icon{
-        font-size: 1rem;
-    }
-
-    .vote-icon{
-        font-size: 2rem;
-    }
 }

@@ -21,6 +21,8 @@ namespace MainService.Dtos
         public string? Content { get; set; } = null!;
 
         public ICollection<string>? Hashtags { get; set; } = null!;
+
+        public bool IsTrending { get; set; } = false!;
     }
 
     public class CommentFilterDto

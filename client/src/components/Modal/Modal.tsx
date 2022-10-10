@@ -129,29 +129,39 @@ export default Modal;
 
 const styleOptions = {
     info: {
-        icon: <Icon icon="file" className={`h-6 w-6 text-cyan-600`} />,
-        textColor: "text-cyan-600",
+        icon: (
+            <Icon
+                icon="file"
+                className={`h-6 w-6 text-[color:var(--blue-general-color)]`}
+            />
+        ),
+        textColor: "text-[color:var(--blue-general-color)]",
         iconCover: "bg-cyan-100",
-        btnColor: "bg-cyan-600",
-        btnHover: "hover:bg-cyan-700",
+        btnColor: "bg-[color:var(--blue-general-color)]",
+        btnHover: "hover:bg-[color:var(--blue-darker-color)]",
     },
     error: {
         icon: (
             <Icon
                 icon="exclamation-circle"
-                className={`h-6 w-6 text-red-600`}
+                className={`h-6 w-6 text-[color:var(--red-general-color)]`}
             />
         ),
-        textColor: "text-red-600",
+        textColor: "text-[color:var(--red-general-color)]",
         iconCover: "bg-red-100",
-        btnColor: "bg-red-600",
-        btnHover: "hover:bg-red-700",
+        btnColor: "bg-[color:var(--red-general-color)]",
+        btnHover: "hover:bg-[var(--red-darker-color)]",
     },
     warning: {
-        icon: <Icon icon="exclamation" className={`h-6 w-6 text-amber-600`} />,
-        textColor: "text-amber-600",
+        icon: (
+            <Icon
+                icon="exclamation"
+                className={`h-6 w-6 text-[color:var(--amber-general-color)]`}
+            />
+        ),
+        textColor: "text-[color:var(--amber-general-color)]",
         iconCover: "bg-amber-100",
-        btnColor: "bg-amber-600",
-        btnHover: "hover:bg-amber-700",
+        btnColor: "bg-[color:var(--amber-general-color)]",
+        btnHover: "hover:bg-[var(--amber-darker-color)]",
     },
 };

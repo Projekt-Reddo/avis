@@ -23,9 +23,9 @@ public class Post : BaseModel
 
     public string DisplayStatus { get; set; } = null!;
 
-    public ICollection<ObjectId> UpvotedBy { get; set; } = null!;
+    public ICollection<string> UpvotedBy { get; set; } = null!;
 
-    public ICollection<ObjectId> DownvotedBy { get; set; } = null!;
+    public ICollection<string> DownvotedBy { get; set; } = null!;
 
     public ICollection<string> Hashtags { get; set; } = null!;
 
