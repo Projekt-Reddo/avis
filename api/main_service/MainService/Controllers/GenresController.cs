@@ -26,7 +26,7 @@ public class GenresController : ControllerBase
         {
             return BadRequest(new ResponseDto(400, ResponseMessage.GENRE_CREATE_FAIL));
         }
-        if (rs <= genreManyCreateDto.Names.Count)
+        if (rs < genreManyCreateDto.Names.Count)
         {
             return BadRequest(new ResponseDto(200, ResponseMessage.GENRE_CREATE_SUCESS_AND_FAIL));
         }
@@ -57,7 +57,7 @@ public class GenresController : ControllerBase
         {
             return BadRequest(new ResponseDto(400, ResponseMessage.GENRE_DELETE_FAIL));
         }
-        if (rs <= genreManyDeleteDto.Ids.Count)
+        if (rs < genreManyDeleteDto.Ids.Count)
         {
             return BadRequest(new ResponseDto(200, ResponseMessage.GENRE_DELETE_SUCCESS_AND_FAIL));
         }

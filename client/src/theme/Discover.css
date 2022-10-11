@@ -1,9 +1,34 @@
 .card{
-    color: var(--text-primary-color) !important;
-    background-color: var(--post-bg-color) !important;
+    color: var(--text-primary-color);
+    background-color: var(--post-bg-color);
     border-radius: 8px; 
-    border: 0.5px solid var(--post-border-color) !important;
-    box-shadow: 4px 4px 8px var(--element-shadow-color) !important;
+    border: 0.5px solid var(--post-border-color);
+    box-shadow: 4px 4px 8px var(--element-shadow-color);
+}
+
+.hum-card{
+    color: var(--text-primary-color);
+    background-color: var(--post-bg-color);
+    border-radius: 8px; 
+    border: 0.5px solid var(--post-border-color);
+    box-shadow: 4px 4px 8px var(--element-shadow-color);
+}
+
+.search-card{
+    color: var(--text-primary-color);
+    background-color: var(--post-bg-color);
+    border-radius: 8px; 
+    border: 0.5px solid var(--post-border-color);
+    box-shadow: 4px 4px 8px var(--element-shadow-color);
+}
+
+.circle{
+    border-radius: 50%;
+    padding: 0.5rem;
+    background-color: var(--text-tertiary-color);
+    color: var(--body-bg-color);
+    height: 2rem;
+    width: 2rem;
 }
 
 .avatar{
@@ -28,4 +53,21 @@
     font-size: 20px;
     color:  var(--teal-lighter-color);
     cursor: pointer;
+}
+
+@media only screen and (max-width: 1024px) {
+    .card{
+        border-radius: 0px; 
+        box-shadow: none;
+    }
+
+    .hum-card{
+        border-radius: 0px; 
+        border-top: 0;
+        box-shadow: none;
+    }
+
+    .search-card{
+        box-shadow: none;
+    }
 }

@@ -131,7 +131,7 @@ const styleOptions = {
     info: {
         icon: (
             <Icon
-                icon="file"
+                icon="circle-info"
                 className={`h-6 w-6 text-[color:var(--blue-general-color)]`}
             />
         ),
@@ -155,7 +155,7 @@ const styleOptions = {
     warning: {
         icon: (
             <Icon
-                icon="exclamation"
+                icon="triangle-exclamation"
                 className={`h-6 w-6 text-[color:var(--amber-general-color)]`}
             />
         ),

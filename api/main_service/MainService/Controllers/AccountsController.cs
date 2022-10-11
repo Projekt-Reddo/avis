@@ -83,5 +83,21 @@ namespace MainService.Controllers
 
             return Ok(new PaginationResDto<AccountResponseDto>((Int32)totalAccount, accounts));
         }
+
+        [HttpGet("profile/{uid}")]
+        public async Task<ActionResult<AccountProfileReadDto>> ViewProfile([FromRoute] string uid) {
+            // To check whether account exist or not.
+            var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", uid));
+
+            // Account not found
+            if (accountFromRepo is null)
+            {
+                return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+            }
+
+            var returnedAccount = _mapper.Map<AccountProfileReadDto>(accountFromRepo);
+
+            return returnedAccount;
+        }
     }
 }
