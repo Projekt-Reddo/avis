@@ -10,6 +10,7 @@ import Discover from "pages/Discover";
 import VerifyEmail from "pages/auth/VerifyEmail";
 
 import AdminRoutes from "./admin-routes";
+import UserRoutes from "./user-routes";
 
 import { routes } from "../utils/constants";
 import Feedback from "pages/Feedback";
@@ -65,6 +66,8 @@ const MainRoute = () => {
                 <Route exact path="/">
                     <Home />
                 </Route>
+
+                <UserRoutes />
 
                 <Route
                     render={({ location }) =>
