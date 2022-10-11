@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Link } from "react-router-dom";
 
 // Components
 import PostCard from "components/Discover/PostCard";
@@ -17,7 +18,6 @@ import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { viewMorePostAsync, viewPostAsync } from "store/slices/postSlice";
 import { useWindowDimensions } from "utils/useWindowDimensions";
 import { MOBILE_BREAKPOINT } from "utils/constants";
-import { Link } from "react-router-dom";
 
 interface pageFilterProps {
     currentPage: number;
@@ -58,7 +58,7 @@ const Discover = () => {
 
     const [pageFilter, setPageFilter] = React.useState<pageFilterProps>({
         currentPage: 1,
-        rowShow: 3,
+        rowShow: 10,
         filter: {},
     });
 
@@ -150,7 +150,7 @@ const Discover = () => {
                             height={
                                 width! > MOBILE_BREAKPOINT
                                     ? height! - 80
-                                    : height! - 120
+                                    : height! - 128
                             }
                             loader={
                                 // Loading
