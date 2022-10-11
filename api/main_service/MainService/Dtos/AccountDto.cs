@@ -75,4 +75,14 @@ namespace MainService.Dtos
     public class AccountIdFilter {
         public string Id { get; set; } = null!;
     }
+
+    public class AccountProfileReadDto {
+        public string Name { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
+        public string Avatar { get; set; } = null!;
+
+        public DateTime? JoinedDate { get; set; }
+    }
 }
