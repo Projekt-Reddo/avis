@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 // Libs
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import { useAppSelector } from "utils/react-redux-hooks";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -13,10 +13,10 @@ import Modal from "components/Modal/Modal";
 // Constants
 import { DayFormat } from "utils/constants";
 import { useModal } from "components/Modal";
-import { addToast } from "store/slices/toastSlice";
 
 // Styles
 import "theme/Discover.css";
+import { addNewToast } from "components/Toast";
 
 interface HumCardProps {
     post: {
@@ -41,8 +41,6 @@ interface HumCardProps {
 }
 
 const HumCard: React.FC<HumCardProps> = ({ post }) => {
-    const dispatch = useAppDispatch();
-
     const authState = useAppSelector((state) => state.auth.data);
 
     const [showOptions, setShowOptions] = useState<string>();
@@ -277,13 +275,11 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                         `${window.location.origin}${location.pathname}/${post.id}`
                                     );
 
-                                    dispatch(
-                                        addToast({
-                                            variant: "primary",
-                                            message:
-                                                "Copy to clipboard successfully",
-                                        })
-                                    );
+                                    addNewToast({
+                                        variant: "primary",
+                                        message:
+                                            "Copy to clipboard successfully",
+                                    });
                                 }}
                                 className="flex mx-2 cursor-pointer sm:mx-4 hover:text-[color:var(--teal-general-color)]"
                             >
