@@ -8,6 +8,7 @@ import userSlice from "./slices/userSlice";
 import postSlice from "./slices/postSlice";
 import songRecommendSlice from "./slices/songRecommendSlice";
 import hashtagSlice from "./slices/hashtagSlice";
+import genreSlice from "./slices/genreSlice";
 
 const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
         toast: toastSlice,
         leftNavShowing: leftNavSlice,
         songRecommend: songRecommendSlice,
+        genre: genreSlice,
     },
 });
 
