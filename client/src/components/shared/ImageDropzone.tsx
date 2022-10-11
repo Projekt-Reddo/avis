@@ -7,26 +7,30 @@ interface ImageDropzoneProps {
     maxFile?: number;
     maxSize?: number;
     className?: string;
+    defaultPreview?: string;
+    fieldName?: string; // useForm field name
     getValues: any; // useForm object
     setValue: any; // useForm object
     error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
 }
 
 const byteToMB = 1000000;
-const thumbnailInputField = "thumbnail";
+const thumbnailInputField = "thumbnailFile";
 
 const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
     accept = {
         "image/*": [".png", ".jpg", ".jpeg", ".jfif", ".webp"],
     },
     maxFile = 1,
-    maxSize = 5 * byteToMB, // 5MB
+    maxSize = 15 * byteToMB, // 15MB
     className,
+    defaultPreview = "",
+    fieldName = thumbnailInputField,
     getValues,
     setValue,
     error,
 }) => {
-    const savedImage = getValues(thumbnailInputField);
+    const savedImage = getValues(fieldName);
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         accept: accept,
@@ -34,10 +38,10 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
         maxSize: maxSize,
     });
 
-    const [preview, setPreview] = useState<string>();
+    const [preview, setPreview] = useState<string>(defaultPreview);
 
     useEffect(() => {
-        if (savedImage) {
+        if (savedImage && defaultPreview !== "") {
             const objectUrl = URL.createObjectURL(savedImage);
             setPreview(objectUrl);
         }
@@ -74,7 +78,7 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
                 })}
             >
                 <input {...getInputProps()} />
-                {acceptedFiles.length > 0 || savedImage ? (
+                {acceptedFiles.length > 0 || preview ? (
                     <div
                         className="w-full h-full"
                         style={{

@@ -38,24 +38,28 @@ const Dropdown: React.FC<DropdownProps> = ({
                     <div className="py-1">
                         {options.map((option, index) => (
                             <Menu.Item key={index}>
-                                {({ active }) => (
-                                    <Link
-                                        to={option.to || "#"}
-                                        className={`block px-4 py-2 text-sm ${
-                                            active
-                                                ? "bg-gray-100 text-gray-900"
-                                                : "text-gray-700"
-                                        }`}
-                                        onClick={option.onClick}
-                                    >
-                                        <Icon
-                                            className="mr-3"
-                                            icon={option.icon}
-                                            size="lg"
-                                        />
-                                        {option.lable}
-                                    </Link>
-                                )}
+                                {({ active }) =>
+                                    option.isShow === false ? (
+                                        <></>
+                                    ) : (
+                                        <Link
+                                            to={option.to || "#"}
+                                            className={`block px-4 py-2 text-sm ${
+                                                active
+                                                    ? "bg-gray-100 text-gray-900"
+                                                    : "text-gray-700"
+                                            }`}
+                                            onClick={option.onClick}
+                                        >
+                                            <Icon
+                                                className="mr-3"
+                                                icon={option.icon}
+                                                size="lg"
+                                            />
+                                            {option.lable}
+                                        </Link>
+                                    )
+                                }
                             </Menu.Item>
                         ))}
                     </div>

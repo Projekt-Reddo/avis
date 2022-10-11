@@ -15,7 +15,7 @@ namespace MainService.Profiles
             CreateMap<PostUpdateDto, Post>();
 
             CreateMap<Post, ListPostDto>()
-                .ForMember(dest => dest.CommentCount, src => src.MapFrom(x => x.Comments!.Count()));
+                .ForMember(dest => dest.CommentCount, src => src.MapFrom(x => x.CommentIds!.Count()));
 
             CreateMap<Post, PostListCommentDto>();
         }

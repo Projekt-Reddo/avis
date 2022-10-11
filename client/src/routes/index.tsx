@@ -14,6 +14,7 @@ import AdminRoutes from "./admin-routes";
 import { routes } from "../utils/constants";
 import Feedback from "pages/Feedback";
 import AuthRoute from "./AuthRoute";
+import Search from "pages/Search";
 
 const MainRoute = () => {
     return (
@@ -35,6 +36,10 @@ const MainRoute = () => {
             <>
                 <Route path="/song/:songId">
                     <Song />
+                </Route>
+
+                <Route exact path="/discover/search">
+                    <Search />
                 </Route>
 
                 <Route path="/discover/:postId">

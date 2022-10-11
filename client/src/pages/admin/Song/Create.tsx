@@ -4,7 +4,7 @@ import TrackInput from "components/Admin/Create/TrackInput";
 import InfoInput from "components/Admin/Create/InfoInput";
 import ThumbnailInput from "components/Admin/Create/ThumbnailInput";
 import UrlInput from "components/Admin/Create/UrlInput";
-import LyricInput from "components/Admin/Create/LyricInput";
+import LyricsInput from "components/Admin/Create/LyricsInput";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { createAsync } from "store/slices/songSlice";
 import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
@@ -12,8 +12,8 @@ import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNa
 const initValue = {
     title: "",
     alias: "",
-    thumbnail: null,
-    lyric: "",
+    thumbnailFile: null,
+    lyrics: "",
     description: "",
     genres: [],
     url: {
@@ -49,7 +49,7 @@ const Create = () => {
         }
     }, [songState]);
 
-    const stepTitles = ["Track", "Info", "Thumbnail", "Urls", "Lyric"];
+    const stepTitles = ["Track", "Info", "Thumbnail", "Urls", "Lyrics"];
 
     const stepContents = [
         <TrackInput
@@ -80,7 +80,7 @@ const Create = () => {
             nextFormStep={nextFormStep}
             previousFormStep={previousFormStep}
         />,
-        <LyricInput
+        <LyricsInput
             song={songCreate}
             setSong={setSongCreate}
             currentStep={currentStep}

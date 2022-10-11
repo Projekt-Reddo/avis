@@ -11,5 +11,7 @@ public class UrlProfile : Profile
         CreateMap<Url, UrlReadDto>();
 
         CreateMap<UrlCreateDto, Url>();
+
+        CreateMap<UrlUpdateDto, Url>();
     }
 }

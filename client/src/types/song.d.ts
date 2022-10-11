@@ -3,7 +3,7 @@ interface Song {
     title: string;
     alias: string;
     thumbnail: string;
-    lyric: string;
+    lyrics: string;
     description: string;
     genres: string[];
     url?: {
@@ -29,10 +29,12 @@ interface SongFilter {
 }
 
 interface SongCreate {
+    id?: string;
     title: string;
     alias: string;
-    thumbnail: File | null;
-    lyric: string;
+    thumbnail?: string;
+    thumbnailFile: File | null;
+    lyrics: string;
     description: string;
     genres: string[];
     url: {
@@ -44,9 +46,9 @@ interface SongCreate {
     file: File | null;
 }
 
-interface SongDelete{
+interface SongDelete {
     deleteObject: {
-        listId: string[]
+        listId: string[];
     };
     searchFilter: any;
 }

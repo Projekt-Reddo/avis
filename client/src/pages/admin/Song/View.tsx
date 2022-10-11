@@ -7,7 +7,7 @@ import {
     setTableData,
     viewSongAsync,
 } from "store/slices/songSlice";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
 
@@ -47,6 +47,8 @@ interface pageRowFilterProps {
 
 const View = () => {
     const dispatch = useAppDispatch();
+
+    const history = useHistory();
 
     const songState = useAppSelector((state) => state.song);
 
@@ -177,21 +179,16 @@ const View = () => {
                 filterContent={filterContent}
             />
 
-            {isSelected ? (
-                <div className="mt-2">
-                    <Button
-                        className="none-shadow-button focus:outline-none"
-                        type="button"
-                        variant="danger"
-                        onClick={() => setOpenDelete(true)}
-                    >
-                        <Icon icon="trash" className="mr-2" />
-                        Delete
-                    </Button>
-                </div>
-            ) : (
-                ""
-            )}
+            <Button
+                className="none-shadow-button focus:outline-none mt-2"
+                type="button"
+                variant="danger"
+                onClick={() => setOpenDelete(true)}
+                disabled={isSelected ? false : true}
+            >
+                <Icon icon="trash" className="mr-2" />
+                Delete
+            </Button>
 
             <Modal
                 type="error"
@@ -239,8 +236,8 @@ const View = () => {
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setTableData(data))}
                         rawData={songState.tableData}
-                        onRowClick={() => {
-                            console.log("Clicked");
+                        onRowClick={(obj) => {
+                            history.push(`/admin/song/edit/${obj.id}`);
                         }}
                         setIsSelected={setIsSelected}
                     />
@@ -290,7 +287,11 @@ export const getSongData = (data: any) => {
                 />
             </div>
         ),
-        title: item.title,
+        title: (
+            <div className="text-ellipsis overflow-hidden max-w-xs">
+                {item.title}
+            </div>
+        ),
         artist: item.artists ? (
             item.artists.map((item: any) => (
                 <div key={item.id}>{item.name}</div>

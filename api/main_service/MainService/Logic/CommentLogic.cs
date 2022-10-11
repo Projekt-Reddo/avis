@@ -109,6 +109,8 @@ public class CommentLogic : ICommentLogic
                             new BsonArray{ "$Users", 0 }
                         },
                     }},
+                    {"UpvotedBy", 1},
+                    {"DownvotedBy", 1},
                     {"Media", 1}
             };
         var filterComments = Builders<Comment>.Filter.Empty;

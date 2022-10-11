@@ -1,3 +1,5 @@
+using MongoDB.Bson;
+
 namespace MainService.Dtos;
 
 public class PostCreateDto
@@ -66,11 +68,11 @@ public class ListPostDto
 
     public DateTime PublishedAt { get; set; }
 
-    public int UpvotedBy { get; set; } = 0;
+    public ICollection<string> UpvotedBy { get; set; } = null!;
 
-    public int DownvotedBy { get; set; } = 0;
+    public ICollection<string> DownvotedBy { get; set; } = null!;
 
-    public List<string> HashTags { get; set; } = null!;
+    public ICollection<string> Hashtags { get; set; } = null!;
 
     public int CommentCount { get; set; }
 }
@@ -78,4 +80,17 @@ public class ListPostDto
 public class PostListCommentDto
 {
     public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
+}
+
+public class HashtagsRecommend
+{
+    public HashtagsRecommend(string Popular, HashSet<string> randomHashtags)
+    {
+        this.Popular = Popular;
+        RandomHashtags = randomHashtags;
+    }
+
+    public string Popular { get; set; } = null!;
+    // public ICollection<string> Hot { get; set; } = null!;
+    public ICollection<string> RandomHashtags { get; set; } = null!;
 }

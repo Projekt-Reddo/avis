@@ -16,4 +16,17 @@ public static class MongoIdUtils
 
         return list;
     }
+
+    public static ICollection<string>? ConvertObjectIdArrToStringArr(ICollection<ObjectId> src)
+    {
+        var list = new List<string>();
+
+        foreach (var item in src)
+        {
+            string id = item.ToString();
+            list.Add(id);
+        }
+
+        return list;
+    }
 }

@@ -97,6 +97,7 @@ public class SongsController : ControllerBase
     /// </summary>
     /// <param name="pagination">Pagination metrics and Search filters</param>
     /// <returns>200 / 400 / 404</returns>
+    [Authorize]
     [HttpPost("filter")]
     public async Task<ActionResult<PaginationResDto<IEnumerable<SongManageListDto>>>> ViewSong(PaginationReqDto<SongFilterDto> pagination)
     {
@@ -164,5 +165,44 @@ public class SongsController : ControllerBase
         }
 
         return Ok(new ResponseDto(200, ResponseMessage.SONG_DELETE_SUCCESS));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SongReadDto>> GetSong(string id)
+    {
+        var song = await _songLogic.GetSongById(id);
+
+        if (song is null)
+        {
+            return NotFound(new ResponseDto(404));
+        }
+
+        return Ok(_mapper.Map<SongReadDto>(song));
+    }
+
+    [HttpPost("related")]
+    public async Task<ActionResult<ICollection<SongReadDto>>> GetRelatedSongs(RelatedSongFilter songsFilter)
+    {
+        if (!songsFilter.Genres!.Any())
+        {
+            return Ok(new List<SongReadDto>());
+        }
+
+        var songs = await _songLogic.GetSongByGenres(songsFilter.Genres!, songsFilter.ExistedId);
+
+        return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ResponseDto>> UpdateSong(string id, [FromForm] SongUpdateDto songUpdate)
+    {
+        (bool status, string message) = await _songLogic.UpdateSong(id, songUpdate);
+
+        if (status is false)
+        {
+            return BadRequest(new ResponseDto(400, message));
+        }
+
+        return Ok(new ResponseDto(200, message));
     }
 }

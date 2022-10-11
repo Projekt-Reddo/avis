@@ -21,11 +21,19 @@ namespace MainService.Dtos
         public string? Content { get; set; } = null!;
 
         public ICollection<string>? Hashtags { get; set; } = null!;
+
+        public bool IsTrending { get; set; } = false!;
     }
 
     public class CommentFilterDto
     {
         public string? ObjectId { get; set; } = null!;
         public bool IsPostChild { get; set; } = false;
+    }
+
+    public class RelatedSongFilter
+    {
+        public ICollection<string>? Genres { get; set; } = null!;
+        public string ExistedId { get; set; } = null!;
     }
 }

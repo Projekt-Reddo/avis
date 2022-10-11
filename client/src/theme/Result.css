@@ -1,8 +1,6 @@
 
 .Icon{
-    opacity: 0;
+    opacity: 1;
 }
 
-.Container:hover .Icon{
-    opacity: 1
-}
+
