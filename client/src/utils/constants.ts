@@ -57,3 +57,5 @@ export const MOBILE_BREAKPOINT = 1024;
 export const HISTORY = "history";
 
 export const TIME_TO_HUM = 12;
+
+export const LEFT_NAV_MIN_SWIPE_DISTANCE = 150;
