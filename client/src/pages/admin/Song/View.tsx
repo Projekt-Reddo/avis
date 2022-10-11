@@ -7,7 +7,7 @@ import {
     setTableData,
     viewSongAsync,
 } from "store/slices/songSlice";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
 
@@ -47,6 +47,8 @@ interface pageRowFilterProps {
 
 const View = () => {
     const dispatch = useAppDispatch();
+
+    const history = useHistory();
 
     const songState = useAppSelector((state) => state.song);
 
@@ -234,8 +236,8 @@ const View = () => {
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setTableData(data))}
                         rawData={songState.tableData}
-                        onRowClick={() => {
-                            console.log("Clicked");
+                        onRowClick={(obj) => {
+                            history.push(`/admin/song/edit/${obj.id}`);
                         }}
                         setIsSelected={setIsSelected}
                     />

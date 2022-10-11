@@ -13,9 +13,12 @@ namespace MainService.Profiles
                 .ForMember(dest => dest.Thumbnail, src => src.Ignore())
                 .ForMember(dest => dest.ArtistIds, src => src.MapFrom(src => MongoIdUtils.ConvertStringArrToObjectIdArr(src.ArtistIds)));
 
-            CreateMap<Song, SongReadDto>();
+            CreateMap<Song, SongReadDto>()
+                .ForMember(dest => dest.ArtistIds, src => src.MapFrom(src => MongoIdUtils.ConvertObjectIdArrToStringArr(src.ArtistIds)));
 
-            CreateMap<SongUpdateDto, Song>();
+            CreateMap<SongUpdateDto, Song>()
+                .ForMember(dest => dest.Thumbnail, src => src.Ignore())
+                .ForMember(dest => dest.ArtistIds, src => src.MapFrom(src => MongoIdUtils.ConvertStringArrToObjectIdArr(src.ArtistIds)));
 
             CreateMap<Song, SongManageListDto>();
         }

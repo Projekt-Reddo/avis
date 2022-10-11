@@ -5,16 +5,16 @@ const apiRoute = "/songs";
 export const createSongApi = async (data: SongCreate) => {
     const formData = new FormData();
     formData.append("Title", data.title);
-    formData.append("Alias", data.alias);
-    formData.append("Thumbnail", data.thumbnail!);
+    formData.append("Alias", data.alias ?? "");
+    formData.append("Thumbnail", data.thumbnailFile!);
     formData.append("Lyrics", data.lyrics);
-    formData.append("Description", data.description);
+    formData.append("Description", data.description ?? "");
     for (let item of data.genres) {
         formData.append("Genres", item);
     }
-    formData.append("Url.Soundcloud", data.url.soundcloud);
-    formData.append("Url.Spotify", data.url.spotify);
-    formData.append("Url.Youtube", data.url.youtube);
+    formData.append("Url.Soundcloud", data.url.soundcloud ?? "");
+    formData.append("Url.Spotify", data.url.spotify ?? "");
+    formData.append("Url.Youtube", data.url.youtube ?? "");
     for (let item of data.artistIds) {
         formData.append("ArtistIds", item);
     }
@@ -42,5 +42,27 @@ export const songDetailApi = async (data: string) => {
 
 export const relatedSongsApi = async (data: object) => {
     const res = await axios.post(`${apiRoute}/related`, data);
+    return res.data;
+};
+
+export const editSongApi = async (data: SongCreate) => {
+    const formData = new FormData();
+    formData.append("Title", data.title);
+    formData.append("Alias", data.alias ?? "");
+    formData.append("Thumbnail", data.thumbnailFile!);
+    formData.append("Lyrics", data.lyrics);
+    formData.append("Description", data.description ?? "");
+    for (let item of data.genres) {
+        formData.append("Genres", item);
+    }
+    formData.append("Url.Soundcloud", data.url.soundcloud ?? "");
+    formData.append("Url.Spotify", data.url.spotify ?? "");
+    formData.append("Url.Youtube", data.url.youtube ?? "");
+    for (let item of data.artistIds) {
+        formData.append("ArtistIds", item);
+    }
+
+    const res = await axios.put(`${apiRoute}/${data.id}`, formData);
+
     return res.data;
 };

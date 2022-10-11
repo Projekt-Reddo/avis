@@ -33,6 +33,15 @@ namespace MainService.Services
         /// <param name="acl">S3 access control list</param>
         /// <returns>True (Upload done) and object access url / False (Fail to upload)</returns>
         Task<(bool status, string url)> UploadFileAsync(string bucketName, string? folder, string fileName, Stream fileStream, string contentType, S3CannedACL acl = null!);
+
+        /// <summary>
+        /// Delete an object in S3
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        /// <returns>Delete status</returns>
+        Task<bool> DeleteFileAsync(string bucketName, string? folder, string fileName);
     }
 
     /// <summary>
@@ -103,6 +112,19 @@ namespace MainService.Services
             }
 
             return (false, String.Empty);
+        }
+
+        public async Task<bool> DeleteFileAsync(string bucketName, string? folder, string fileName)
+        {
+            var key = String.IsNullOrEmpty(folder) ? fileName : $"{folder}/{fileName}";
+
+            var rs = await _s3Client.DeleteObjectAsync(bucketName: bucketName, key: key);
+
+            if (rs.HttpStatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

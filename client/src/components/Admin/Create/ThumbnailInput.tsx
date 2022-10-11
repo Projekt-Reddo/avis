@@ -12,6 +12,7 @@ interface ThumbnailInputProps {
     currentStep?: number;
     nextFormStep: () => void;
     previousFormStep: () => void;
+    isRequired?: boolean;
 }
 
 const ThumbnailInput: FunctionComponent<ThumbnailInputProps> = ({
@@ -20,7 +21,16 @@ const ThumbnailInput: FunctionComponent<ThumbnailInputProps> = ({
     currentStep,
     nextFormStep,
     previousFormStep,
+    isRequired = true,
 }) => {
+    const schema = isRequired
+        ? yup.object().shape({
+              thumbnailFile: yup.mixed().required(),
+          })
+        : yup.object().shape({
+              thumbnailFile: yup.mixed().nullable(true),
+          });
+
     const {
         handleSubmit,
         formState: { errors },
@@ -56,7 +66,8 @@ const ThumbnailInput: FunctionComponent<ThumbnailInputProps> = ({
                         className="w-72 h-72"
                         getValues={getValues}
                         setValue={setValue}
-                        error={errors.thumbnail}
+                        error={errors.thumbnailFile}
+                        defaultPreview={song.thumbnail}
                     />
                 </div>
             </div>
@@ -95,7 +106,3 @@ const ThumbnailInput: FunctionComponent<ThumbnailInputProps> = ({
 };
 
 export default ThumbnailInput;
-
-const schema = yup.object().shape({
-    thumbnail: yup.mixed().required(),
-});

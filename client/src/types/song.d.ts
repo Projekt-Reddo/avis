@@ -29,9 +29,11 @@ interface SongFilter {
 }
 
 interface SongCreate {
+    id?: string;
     title: string;
     alias: string;
-    thumbnail: File | null;
+    thumbnail?: string;
+    thumbnailFile: File | null;
     lyrics: string;
     description: string;
     genres: string[];

@@ -20,7 +20,7 @@ const FileDropzone: FunctionComponent<FileDropzoneProps> = ({
         "audio/mpeg": [".mp3"],
     },
     maxFile = 1,
-    maxSize = 5 * byteToMB, // 5MB
+    maxSize = 75 * byteToMB, // 75MB
     getValues,
     setValue,
     error,

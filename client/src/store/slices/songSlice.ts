@@ -4,6 +4,7 @@ import {
     viewSongApi,
     deleteSongApi,
     songDetailApi,
+    editSongApi,
 } from "api/song-api";
 import { addToast } from "./toastSlice";
 
@@ -68,6 +69,17 @@ const songSlice = createSlice({
                 state.status = "loading";
             })
             .addCase(songDetailAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+            })
+            .addCase(songDetailAsync.rejected, (state, action) => {
+                state.status = "error";
+                state.data = action.payload;
+            })
+            .addCase(editAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(editAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
             });
@@ -139,15 +151,38 @@ export const deleteSongAsync = createAsyncThunk(
 
 export const songDetailAsync = createAsyncThunk(
     "song/detail",
-    async (id: string) => {
-        // try {
-        //     const res = await songDetailApi(id);
-        //     return res;
-        // } catch (e: any) {
-        //     console.log("🚀 ~ file: songSlice.ts ~ line 140 ~ e", e);
-        // }
-        const res = await songDetailApi(id);
-        return res;
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const res = await songDetailApi(id);
+            return res;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
+        }
+    }
+);
+
+export const editAsync = createAsyncThunk(
+    "song/edit",
+    async (songEdit: SongCreate, thunkApi) => {
+        try {
+            const res = await editSongApi(songEdit);
+            const msg = res.message;
+
+            thunkApi.dispatch(
+                addToast({
+                    variant: "primary",
+                    message: msg,
+                })
+            );
+            return msg;
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "danger",
+                    message: e.response.data.message,
+                })
+            );
+        }
     }
 );
 
