@@ -85,4 +85,11 @@ namespace MainService.Dtos
 
         public DateTime? JoinedDate { get; set; }
     }
+
+    public class AccountProfileUpdateDto
+    {
+        public string Name { get; set; } = null!;
+
+        public IFormFile AvatarFile { get; set; } = null!;
+    }
 }

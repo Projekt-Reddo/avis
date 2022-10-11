@@ -23,12 +23,14 @@ namespace MainService.Controllers
         private readonly IMapper _mapper;
         private readonly IAccountRepo _accountRepo;
         private readonly IAccountLogic _accountLogic;
+        private readonly ILogger<SongsController> _logger;
 
-        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic)
+        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic, ILogger<SongsController> logger)
         {
             _mapper = mapper;
             _accountRepo = accountRepo;
             _accountLogic = accountLogic;
+            _logger = logger;
         }
 
         [HttpPost("signup")]
@@ -94,6 +96,40 @@ namespace MainService.Controllers
             {
                 return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
             }
+
+            var returnedAccount = _mapper.Map<AccountProfileReadDto>(accountFromRepo);
+
+            return returnedAccount;
+        }
+
+        [HttpPut("profile/{uid}")]
+        public async Task<ActionResult<AccountProfileReadDto>> UpdateProfile([FromRoute] string uid, [FromBody] AccountProfileUpdateDto accountProfileUpdateDto)
+        {
+            // To check whether account exist or not.
+            var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", uid));
+
+            // Account not found
+            if (accountFromRepo is null)
+            {
+                return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+            }
+
+            using var session = await _accountRepo.StartSessionAsync();
+
+            try
+        {
+            session.StartTransaction();
+            
+
+            await session.CommitTransactionAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            await session.AbortTransactionAsync();
+            return BadRequest(new ResponseDto(400, ResponseMessage.SONG_CREATE_FAIL));
+        }
+
 
             var returnedAccount = _mapper.Map<AccountProfileReadDto>(accountFromRepo);
 
