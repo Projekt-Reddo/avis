@@ -1,15 +1,11 @@
 // Libs
 import React from "react";
-import { IonButton, IonInput } from "@ionic/react";
-import { useForm, Controller } from "react-hook-form";
-import { useMutation } from "react-query";
-import axios from "axios";
 
 // Components
 import Icon from "components/shared/Icon";
-// Constants
-import { MAIN_SERVICE_API } from "utils/constants";
+import Button from "components/Button/Button";
 
+// Constants
 import Ayame from "static/Ayame.png";
 
 // Style
@@ -27,24 +23,8 @@ interface Post {
 }
 
 const PostCard: React.FC<PostCardProps> = () => {
-    const { control, handleSubmit } = useForm<Post>();
-
-    const createPostMutation = useMutation(async (newPost: Post) => {
-        const { data } = await axios({
-            method: "post",
-            url: `${MAIN_SERVICE_API}/api/Post`,
-            data: newPost,
-        });
-    });
-
-    const handlePost = async (newPost: Post) => {
-        newPost.UserId = "999999999999999999999999";
-
-        createPostMutation.mutate(newPost);
-    };
-
     return (
-        <div className="card grid grid-cols-5 gap-4 mb-6 p-4">
+        <div className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4">
             {/* Avatar */}
             <div className="col-span-1 flex justify-center ">
                 <div
@@ -56,19 +36,12 @@ const PostCard: React.FC<PostCardProps> = () => {
                 <div />
             </div>
 
-            <div className="col-span-4">
-                <Controller
-                    control={control}
-                    name="Content"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <IonInput
-                            className="col-span-4 border-b-2 text-base md:text-2xl h-12 md:h-20 mb-4"
-                            placeholder="What's happening?"
-                            onIonChange={onChange}
-                            value={value}
-                            onBlur={onBlur}
-                        />
-                    )}
+            <div className="col-span-4 sm:col-span-9">
+                <textarea
+                    className="focus:outline-none text-2xl h-12 sm:h-20 w-full border-b-2 mb-4"
+                    style={{ backgroundColor: "white" }}
+                    placeholder="What's happening?"
+                    rows={3}
                 />
 
                 <div className="flex justify-between m-0">
@@ -82,6 +55,7 @@ const PostCard: React.FC<PostCardProps> = () => {
                             type="file"
                             hidden
                         />
+
                         <label htmlFor="emoji">
                             <Icon
                                 className="post-icon mx-7"
@@ -89,17 +63,13 @@ const PostCard: React.FC<PostCardProps> = () => {
                             />
                         </label>
                         <div id="emoji" />
+
                         <label htmlFor="calendar">
                             <Icon className="post-icon" icon="calendar-days" />
+                            <input id="calendar" type="date" hidden />
                         </label>
-                        <div id="calendar" />
                     </div>
-                    <IonButton
-                        className="btnPost"
-                        onClick={handleSubmit(handlePost)}
-                    >
-                        Post
-                    </IonButton>
+                    <Button type="button">Post</Button>
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@ interface InfoInputProps {
     setSong: Dispatch<React.SetStateAction<SongCreate>>;
     currentStep?: number;
     nextFormStep: () => void;
-    previousFormStep: () => void;
+    previousFormStep?: () => void;
 }
 
 const InfoInput: FunctionComponent<InfoInputProps> = ({
@@ -127,20 +127,22 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
             {/* Form navigate btn */}
             <div className="">
                 <div className="flex flex-row justify-end mt-4">
-                    <Button
-                        className="mr-5 border-2 border-blue-500"
-                        style={{
-                            boxShadow: "none !important",
-                        }}
-                        variant="secondary"
-                        onClick={() => {
-                            previousFormStep();
-                            setSong({ ...song, ...getValues() });
-                        }}
-                    >
-                        <Icon icon="arrow-left" />
-                        <span className="ml-2">Back</span>
-                    </Button>
+                    {previousFormStep && (
+                        <Button
+                            className="mr-5 border-2 border-blue-500"
+                            style={{
+                                boxShadow: "none !important",
+                            }}
+                            variant="secondary"
+                            onClick={() => {
+                                previousFormStep();
+                                setSong({ ...song, ...getValues() });
+                            }}
+                        >
+                            <Icon icon="arrow-left" />
+                            <span className="ml-2">Back</span>
+                        </Button>
+                    )}
                     <Button
                         type="submit"
                         style={{
@@ -158,8 +160,8 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
 
 const schema = yup.object().shape({
     title: yup.string().required("Name is required!"),
-    alias: yup.string(),
-    description: yup.string(),
+    alias: yup.string().nullable(true),
+    description: yup.string().nullable(true),
     genres: yup.array().min(1, "At least a genre must be selected"),
     artistIds: yup.array().min(1, "At least an artist must be selected"),
 });

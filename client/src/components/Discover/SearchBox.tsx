@@ -1,17 +1,37 @@
-import { IonInput } from "@ionic/react";
-import "theme/Discover.css";
-import Icon from "../shared/Icon";
+// Libs
+import { UseFormRegisterReturn } from "react-hook-form";
 
-interface SearchBoxProps {}
+// Components
+import Icon from "components/shared/Icon";
 
-const SearchBox: React.FC<SearchBoxProps> = () => {
+interface SearchBoxProps {
+    register: UseFormRegisterReturn;
+    handleSubmit: () => void;
+}
+
+const SearchBox: React.FC<SearchBoxProps> = ({ register, handleSubmit }) => {
     return (
-        <div className="card flex mb-6 px-2">
-            <div className="flex justify-center items-center">
-                <Icon icon="search" color="rgba(30, 155, 240, 0.5)" />
-            </div>
-            <IonInput placeholder="Search" />
-        </div>
+        <form className="card flex" onSubmit={handleSubmit}>
+            {/* Search Button */}
+            <button
+                type="submit"
+                className="flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 focus:outline-none"
+                style={{ borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
+            >
+                <Icon
+                    icon="search"
+                    className="text-[color:var(--teal-lighter-color)]"
+                />
+            </button>
+
+            {/* Search Input */}
+            <input
+                className="w-full focus:outline-none bg-[color:var(--body-bg-color)] p-2"
+                style={{ borderTopRightRadius: 8, borderBottomRightRadius: 8 }}
+                placeholder="Search"
+                {...register}
+            />
+        </form>
     );
 };
 

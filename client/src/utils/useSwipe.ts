@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { LEFT_NAV_MIN_SWIPE_DISTANCE } from "./constants";
 
 export const useHorizontalSwipe = ({
-    minSwipeDistance = 50,
+    minSwipeDistance = LEFT_NAV_MIN_SWIPE_DISTANCE,
     handleLeftSwipe = () => {},
     handleRightSwipe = () => {},
 } = {}) => {

@@ -1,7 +1,9 @@
+using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
+using MainService.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using static Constants;
@@ -15,6 +17,7 @@ public interface ISongLogic
     FilterDefinition<Song> SongFilter(PaginationReqDto<SongFilterDto> pagination);
     Task<Song?> GetSongById(string id);
     Task<IEnumerable<Song>> GetSongByGenres(ICollection<string> genres, string existedId);
+    Task<(bool status, string message)> UpdateSong(string id, SongUpdateDto songUpdate);
 }
 
 public class SongLogic : ISongLogic
@@ -23,6 +26,7 @@ public class SongLogic : ISongLogic
     private readonly IConfiguration _configuration;
     private readonly ISongRepo _songRepo;
     private readonly ILogger<SongLogic> _logger;
+    private readonly IMapper _mapper;
     private BsonDocument artistLookup = new BsonDocument {
             { "from", "artist" },
             { "localField", "ArtistIds" },
@@ -35,13 +39,15 @@ public class SongLogic : ISongLogic
         IS3Service s3Service,
         IConfiguration configuration,
         ISongRepo songRepo,
-        ILogger<SongLogic> logger
+        ILogger<SongLogic> logger,
+        IMapper mapper
     )
     {
         _s3Service = s3Service;
         _configuration = configuration;
         _songRepo = songRepo;
         _logger = logger;
+        _mapper = mapper;
     }
 
     public async Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension)
@@ -65,7 +71,9 @@ public class SongLogic : ISongLogic
             song.Url = new Url();
         }
         song.Url.Internal = songUrl;
-        var rs = await UpdateSong(song.Id, song);
+        var filter = Builders<Song>.Filter.Eq(x => x.Id, song.Id);
+        var update = Builders<Song>.Update.Set(x => x.Url.Internal, song.Thumbnail);
+        var rs = await _songRepo.UpdateOneAsync(filter, update);
         return rs;
     }
 
@@ -89,13 +97,9 @@ public class SongLogic : ISongLogic
             song.Thumbnail = thumbnailUrl;
         }
 
-        var rs = await UpdateSong(song.Id, song);
-        return rs;
-    }
-
-    public async Task<bool> UpdateSong(string songId, Song song)
-    {
-        var rs = await _songRepo.ReplaceOneAsync(songId, song);
+        var filter = Builders<Song>.Filter.Eq(x => x.Id, song.Id);
+        var update = Builders<Song>.Update.Set(x => x.Thumbnail, song.Thumbnail);
+        var rs = await _songRepo.UpdateOneAsync(filter, update);
         return rs;
     }
 
@@ -171,7 +175,8 @@ public class SongLogic : ISongLogic
 
             (_, var songs) = await _songRepo.FindManyAsync(
                 filter: filter,
-                lookup: artistLookup
+                lookup: artistLookup,
+                limit: 10
             );
 
             return songs;
@@ -180,6 +185,77 @@ public class SongLogic : ISongLogic
         {
             _logger.LogError(e.Message);
             return Enumerable.Empty<Song>();
+        }
+    }
+
+    public async Task<(bool status, string message)> UpdateSong(string id, SongUpdateDto songUpdate)
+    {
+        using var session = await _songRepo.StartSessionAsync();
+        try
+        {
+            session.StartTransaction();
+
+            var existedSong = await GetSongById(id);
+            if (existedSong is null)
+            {
+                return (false, ResponseMessage.SONG_NOT_FOUND);
+            }
+
+            var song = _mapper.Map<Song>(songUpdate);
+
+            // Keep some old critical values
+            song.Artists = null!;
+            song.Id = id;
+            if (song.Url is null)
+            {
+                song.Url = new Url();
+            }
+            song.Url.Internal = existedSong.Url.Internal;
+
+            if (songUpdate.Thumbnail is not null)
+            {
+                (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(songUpdate.Thumbnail);
+                if (isImageFile is false)
+                {
+                    return (false, imageCheckMessage);
+                }
+
+                await _s3Service.DeleteFileAsync(
+                    _configuration.GetValue<string>("S3:ResourcesBucket"),
+                    S3Config.IMAGES_FOLDER,
+                    $"{id}{FileExtension.GetFileExtension(songUpdate.Thumbnail)}"
+                );
+                var uploadStatus = await UploadNewThumbnail(
+                    song,
+                    songUpdate.Thumbnail.OpenReadStream(),
+                    songUpdate.Thumbnail.ContentType,
+                    FileExtension.GetFileExtension(songUpdate.Thumbnail));
+            }
+
+            var filter = Builders<Song>.Filter.Eq(x => x.Id, id);
+            var update = Builders<Song>.Update.Set(x => x.Title, song.Title)
+                                              .Set(x => x.Alias, song.Alias)
+                                              .Set(x => x.Lyrics, song.Lyrics)
+                                              .Set(x => x.Description, song.Description)
+                                              .Set(x => x.Genres, song.Genres)
+                                              .Set(x => x.Url, song.Url)
+                                              .Set(x => x.ArtistIds, song.ArtistIds)
+                                              .Set(x => x.ModifiedAt, DateTime.UtcNow);
+
+            var rs = await _songRepo.UpdateOneAsync(session, filter, update);
+            await session.CommitTransactionAsync();
+
+            if (rs is false)
+            {
+                return (false, ResponseMessage.SONG_UPDATE_FAIL);
+            }
+            return (true, ResponseMessage.SONG_UPDATE_SUCCESS);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            await session.AbortTransactionAsync();
+            return (false, ResponseMessage.SONG_UPDATE_FAIL);
         }
     }
 }

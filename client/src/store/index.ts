@@ -5,13 +5,17 @@ import songSlice from "./slices/songSlice";
 import searchSlide from "./slices/searchSlice";
 import toastSlice from "./slices/toastSlice";
 import userSlice from "./slices/userSlice";
+import postSlice from "./slices/postSlice";
 import songRecommendSlice from "./slices/songRecommendSlice";
+import hashtagSlice from "./slices/hashtagSlice";
 
 const store = configureStore({
     reducer: {
         auth: authSlice,
         user: userSlice,
         song: songSlice,
+        post: postSlice,
+        hashtag: hashtagSlice,
         search: searchSlide,
         toast: toastSlice,
         leftNavShowing: leftNavSlice,

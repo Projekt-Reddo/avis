@@ -12,7 +12,7 @@ import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNa
 const initValue = {
     title: "",
     alias: "",
-    thumbnail: null,
+    thumbnailFile: null,
     lyrics: "",
     description: "",
     genres: [],
