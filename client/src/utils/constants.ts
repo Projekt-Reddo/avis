@@ -36,6 +36,11 @@ export const leftNavAdmin: LeftNavItemData[] = [
         title: "Artist",
     },
     {
+        icon: "guitar",
+        path: "/admin/genre",
+        title: "Genre",
+    },
+    {
         icon: "flag",
         path: "/admin/report",
         title: "Report",
