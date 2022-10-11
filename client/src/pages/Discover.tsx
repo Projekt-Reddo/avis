@@ -29,26 +29,6 @@ interface pageFilterProps {
     };
 }
 
-interface Post {
-    id: string;
-    user: {
-        id: string;
-        email: string;
-        name: string;
-        avatar: string;
-        role: string;
-    };
-    content: string;
-    medias: [{ id: string; mediaType: string; url: string }];
-    createdAt: string;
-    modifiedAt: string;
-    publishedA: string;
-    upvotedBy: string[];
-    downvotedBy: string[];
-    hashtags: [];
-    commentCount: number;
-}
-
 const Discover = () => {
     const dispatch = useAppDispatch();
 

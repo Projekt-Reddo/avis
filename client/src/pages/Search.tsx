@@ -5,7 +5,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 
 // Components
-import PostCard from "components/Discover/PostCard";
 import HumCard from "components/Discover/HumCard";
 import TrendingCard from "components/Discover/TrendingCard";
 import SearchBox from "components/Discover/SearchBox";
@@ -27,26 +26,6 @@ interface pageFilterProps {
         hashtags?: string[];
         isTrending?: boolean;
     };
-}
-
-interface Post {
-    id: string;
-    user: {
-        id: string;
-        email: string;
-        name: string;
-        avatar: string;
-        role: string;
-    };
-    content: string;
-    medias: [{ id: string; mediaType: string; url: string }];
-    createdAt: string;
-    modifiedAt: string;
-    publishedA: string;
-    upvotedBy: string[];
-    downvotedBy: string[];
-    hashtags: [];
-    commentCount: number;
 }
 
 const Search = () => {

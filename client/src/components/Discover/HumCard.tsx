@@ -9,6 +9,7 @@ import moment from "moment";
 // Components
 import Icon from "components/shared/Icon";
 import Modal from "components/Modal/Modal";
+import { addNewToast } from "components/Toast";
 
 // Constants
 import { DayFormat } from "utils/constants";
@@ -16,28 +17,9 @@ import { useModal } from "components/Modal";
 
 // Styles
 import "theme/Discover.css";
-import { addNewToast } from "components/Toast";
 
 interface HumCardProps {
-    post: {
-        id: string;
-        user: {
-            id: string;
-            email: string;
-            name: string;
-            avatar: string;
-            role: string;
-        };
-        content: string;
-        medias: [{ id: string; mediaType: string; url: string }];
-        createdAt: string;
-        modifiedAt: string;
-        publishedA: string;
-        upvotedBy: string[];
-        downvotedBy: string[];
-        hashtags: [];
-        commentCount: number;
-    };
+    post: Post;
 }
 
 const HumCard: React.FC<HumCardProps> = ({ post }) => {
