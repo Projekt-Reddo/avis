@@ -19,6 +19,9 @@ namespace MainService.Profiles
                     .ForMember(a => a.IsBanned,opt => opt.MapFrom(src => src.Status.IsBanned))
                     .ForMember(a => a.PostMutedUntil,opt => opt.MapFrom(src => src.Status.PostMutedUntil))
                     .ForMember(a => a.CommentMutedUntil,opt => opt.MapFrom(src => src.Status.CommentMutedUntil));
+
+            CreateMap<Account, AccountProfileReadDto>()
+                    .ForMember(a => a.JoinedDate,opt => opt.MapFrom(src => src.CreatedAt));
         }
     }
 }
