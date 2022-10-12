@@ -18,7 +18,6 @@ public class SongsController : ControllerBase
 {
     private readonly ISongRepo _songRepo;
     private readonly IMapper _mapper;
-    private readonly IS3Service _s3Service;
     private readonly IConfiguration _configuration;
     private readonly ISongLogic _songLogic;
     private readonly ILogger<SongsController> _logger;
@@ -26,7 +25,6 @@ public class SongsController : ControllerBase
     public SongsController(
         ISongRepo songRepo,
         IMapper mapper,
-        IS3Service s3Service,
         IConfiguration configuration,
         ISongLogic songLogic,
         ILogger<SongsController> logger
@@ -34,7 +32,6 @@ public class SongsController : ControllerBase
     {
         _songRepo = songRepo;
         _mapper = mapper;
-        _s3Service = s3Service;
         _configuration = configuration;
         _songLogic = songLogic;
         _logger = logger;

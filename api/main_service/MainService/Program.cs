@@ -55,6 +55,7 @@ builder.Services.AddScoped<IHumSvcClient, HumSvcClient>();
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddSingleton<IS3Service, S3Service>();
+builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 
 // Mail settings
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
