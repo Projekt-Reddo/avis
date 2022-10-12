@@ -27,6 +27,7 @@ public class SongLogic : ISongLogic
     private readonly ISongRepo _songRepo;
     private readonly ILogger<SongLogic> _logger;
     private readonly IMapper _mapper;
+    private readonly IFileStorageService _fileStorage;
     private BsonDocument artistLookup = new BsonDocument {
             { "from", "artist" },
             { "localField", "ArtistIds" },
@@ -40,7 +41,8 @@ public class SongLogic : ISongLogic
         IConfiguration configuration,
         ISongRepo songRepo,
         ILogger<SongLogic> logger,
-        IMapper mapper
+        IMapper mapper,
+        IFileStorageService fileStorage
     )
     {
         _s3Service = s3Service;
@@ -48,17 +50,15 @@ public class SongLogic : ISongLogic
         _songRepo = songRepo;
         _logger = logger;
         _mapper = mapper;
+        _fileStorage = fileStorage;
     }
 
     public async Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension)
     {
-        (var songUploadStatus, var songUrl) = await _s3Service.UploadFileAsync(
-            _configuration.GetValue<string>("S3:SongsBucket"),
-            S3Config.SONGS_FOLDER,
+        (var songUploadStatus, var songUrl) = await _fileStorage.UploadSong(
             $"{song.Id}{fileExtension}",
             stream,
-            contentType,
-            null!
+            contentType
         );
 
         if (songUploadStatus is false)
@@ -79,13 +79,10 @@ public class SongLogic : ISongLogic
 
     public async Task<bool> UploadNewThumbnail(Song song, Stream stream, string contentType, string fileExtension)
     {
-        (var thumbnailUploadStatus, var thumbnailUrl) = await _s3Service.UploadFileAsync(
-            _configuration.GetValue<string>("S3:ResourcesBucket"),
-            S3Config.IMAGES_FOLDER,
+        (var thumbnailUploadStatus, var thumbnailUrl) = await _fileStorage.UploadImage(
             $"{song.Id}{fileExtension}",
             stream,
-            contentType,
-            null!
+            contentType
         );
 
         if (thumbnailUploadStatus is false)
