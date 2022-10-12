@@ -176,6 +176,39 @@ namespace MainService.Controllers
             return Ok(new HashtagsRecommend(commonHashtag, randomHashtags));
 
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PostReadDto>> GetPostById(string id)
+        {
+            var filter = Builders<Post>.Filter.Eq(x => x.Id, id)
+                         & Builders<Post>.Filter.Not(Builders<Post>.Filter.Eq(x => x.IsDeleted, true));
+
+            var stages = new List<BsonDocument>(){
+                new BsonDocument
+                {
+                    {
+                        "$lookup", new BsonDocument{
+                            { "from", "account" },
+                            { "localField", "UserId" },
+                            { "foreignField", "_id" },
+                            { "as", "User" }
+                        }
+                    }
+                },
+                new BsonDocument {
+                    { "$unwind", "$User" }
+                }
+            };
+
+            var post = await _postRepo.FindOneAsync(filter: filter, stages: stages);
+
+            if (post is null)
+            {
+                return BadRequest(new ResponseDto(404));
+            }
+            return _mapper.Map<PostReadDto>(post);
+        }
+
         // [HttpDelete("{id}")]
         // public async Task<ActionResult<ResponseDto>> DeletePost()
         // {

@@ -60,11 +60,35 @@ namespace MainService.Data
         Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
 
         /// <summary>
+        /// Find documents by using combine of aggregate stages and filter
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="stages"></param>
+        /// <returns></returns>
+        Task<IEnumerable<TEntity>> FindManyAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
+
+        /// <summary>
+        /// Count document by using combine of aggregate stages and filter
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="stages"></param>
+        /// <returns></returns>
+        Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
+
+        /// <summary>
         /// Get a document by fitler
         /// </summary>
         /// <param name="filter">Bson filter</param>
         /// <returns>Fit condition document</returns>
         Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? project = null!, BsonDocument? lookup = null!);
+
+        /// <summary>
+        /// Get a document by filter then aggregate with stages
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="stages"></param>
+        /// <returns></returns>
+        Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
 
         /// <summary>
         /// Add new document to selected collection
@@ -79,7 +103,6 @@ namespace MainService.Data
         /// <param name="id">Document id</param>
         /// <param name="entity">New document</param>
         /// <returns>true(updated) / false(not update)</returns>
-        [Obsolete("Method is deprecated because conflict with old entity, please use UpdateOneAsync instead.")]
         Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
         /// <summary>
@@ -203,6 +226,38 @@ namespace MainService.Data
             return (total, entities);
         }
 
+        public async Task<IEnumerable<TEntity>> FindManyAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+        {
+            var query = _collection.Aggregate();
+            stages = stages ?? Enumerable.Empty<BsonDocument>();
+
+            foreach (var stage in stages)
+            {
+                query = query.AppendStage<TEntity>(stage);
+            }
+
+            query = query.Match(filter);
+
+            var entities = await query.ToListAsync();
+            return entities;
+        }
+
+        public async Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+        {
+            var query = _collection.Aggregate();
+            stages = stages ?? Enumerable.Empty<BsonDocument>();
+
+            foreach (var stage in stages)
+            {
+                query = query.AppendStage<TEntity>(stage);
+            }
+
+            query = query.Match(filter);
+
+            var entities = await query.ToListAsync();
+            return entities.Count();
+        }
+
         public virtual async Task<bool> ReplaceOneAsync(string id, TEntity entity)
         {
             var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
@@ -280,6 +335,20 @@ namespace MainService.Data
                     }
                 });
             }
+            var entity = await query.FirstOrDefaultAsync();
+            return entity;
+        }
+
+        public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+        {
+            var query = _collection.Aggregate().Match(filter);
+            stages = stages ?? Enumerable.Empty<BsonDocument>();
+
+            foreach (var stage in stages)
+            {
+                query = query.AppendStage<TEntity>(stage);
+            }
+
             var entity = await query.FirstOrDefaultAsync();
             return entity;
         }

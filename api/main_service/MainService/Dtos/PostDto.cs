@@ -31,11 +31,15 @@ public class PostReadDto
 
     public int Downvote { get; set; } = 0;
 
-    public List<string> Tags { get; set; } = null!;
+    public ICollection<string> UpvotedBy { get; set; } = null!;
+
+    public ICollection<string> DownvotedBy { get; set; } = null!;
+
+    public ICollection<string> Hashtags { get; set; } = null!;
 
     public AccountReadDto? User { get; set; } = null!;
 
-    public IEnumerable<CommentReadDto>? Comments { get; set; } = null!;
+    public int Comment { get; set; }
 
     public bool IsDeleted { get; set; } = false;
 }

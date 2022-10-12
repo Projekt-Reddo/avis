@@ -8,15 +8,18 @@ namespace MainService.Models;
 [BsonIgnoreExtraElements]
 public class Report : BaseModel
 {
-
-    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; } = null!;
 
+    [BsonIgnoreIfNull]
     public Account? User { get; set; } = null!;
 
     public string Content { get; set; } = null!;
 
+    public string Type { get; set; } = null!;
+
+    [BsonIgnoreIfNull]
     public Post? Post { get; set; }
 
+    [BsonIgnoreIfNull]
     public Comment? Comment { get; set; }
 }

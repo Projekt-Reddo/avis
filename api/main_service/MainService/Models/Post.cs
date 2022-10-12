@@ -9,7 +9,6 @@ namespace MainService.Models;
 [BsonIgnoreExtraElements]
 public class Post : BaseModel
 {
-    [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
     public string UserId { get; set; } = null!;
 
     [BsonIgnoreIfNull]
