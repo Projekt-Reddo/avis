@@ -1,10 +1,13 @@
+using Amazon.Auth.AccessControlPolicy;
 using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
+using MainService.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.IO;
 using System.Security.Principal;
 using static Constants;
 
@@ -24,7 +27,11 @@ namespace MainService.Logic
 
         FilterDefinition<Account> AccountFilterId(string userId);
 
-        Task<Account> GetAccountById(string userId);
+        Task<Account?> GetAccountById(string userId);
+
+        Task<Account?> AccountGetAccountByUid(string uid);
+
+        Task<(bool status, string message)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto);
     }
     public class AccountLogic : IAccountLogic
     {
@@ -34,8 +41,19 @@ namespace MainService.Logic
         private IPostRepo _postRepo;
         private IReportRepo _reportRepo;
         private readonly IMapper _mapper;
+        private readonly IFileStorageService _fileStorage;
+        private readonly ILogger<SongLogic> _logger;
 
-        public AccountLogic(IS3Service s3Service, IConfiguration configuration, IAccountRepo accountRepo, IPostRepo postRepo, IReportRepo reportRepo, IMapper mapper)
+        public AccountLogic(
+            IS3Service s3Service,
+            IConfiguration configuration,
+            IAccountRepo accountRepo,
+            IPostRepo postRepo,
+            IReportRepo reportRepo,
+            IMapper mapper,
+            IFileStorageService fileStorage,
+            ILogger<SongLogic> logger
+        )
         {
             _s3Service = s3Service;
             _configuration = configuration;
@@ -43,6 +61,8 @@ namespace MainService.Logic
             _postRepo = postRepo;
             _reportRepo = reportRepo;
             _mapper = mapper;
+            _fileStorage = fileStorage;
+            _logger = logger;
         }
 
         public FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination)
@@ -57,7 +77,8 @@ namespace MainService.Logic
             if (pagination.Filter.JoinedStart == null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Gte(x => x.CreatedAt, DateTime.MinValue);
-            } else
+            }
+            else
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Gte(x => x.CreatedAt, pagination.Filter.JoinedStart);
             }
@@ -65,7 +86,8 @@ namespace MainService.Logic
             if (pagination.Filter.JoinedEnd == null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Lte(x => x.CreatedAt, DateTime.MaxValue);
-            } else
+            }
+            else
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Lte(x => x.CreatedAt, pagination.Filter.JoinedEnd);
             }
@@ -142,6 +164,7 @@ namespace MainService.Logic
             var account = _mapper.Map<Account>(newAccount);
 
             account.Role = AccountRoles.USER;
+            account.Id = newAccount.Uid;
 
             return account;
         }
@@ -150,19 +173,107 @@ namespace MainService.Logic
         {
             await FirebaseService.SetRoleClaim(account.Uid, AccountRoles.USER);
             await FirebaseService.SetNameClaim(account.Uid, account.Name);
-            await FirebaseService.SetNameClaim(account.Uid, account.Avatar);
+            await FirebaseService.SetAvatarClaim(account.Uid, account.Avatar);
             await FirebaseService.SetInitiatedClaim(account.Uid);
         }
 
-        public FilterDefinition<Account> AccountFilterId(string userId){
+        public async Task SetClaimWhenUpdateProfile(Account account)
+        {
+            await FirebaseService.SetNameClaim(account.Uid, account.Name);
+            await FirebaseService.SetAvatarClaim(account.Uid, account.Avatar);
+        }
+
+        public FilterDefinition<Account> AccountFilterId(string userId)
+        {
             var accountFilter = Builders<Account>.Filter.Empty;
             return accountFilter;
         }
 
-        public async Task<Account> GetAccountById(string userId){
+        public async Task<Account?> GetAccountById(string userId)
+        {
             var accountFilter = AccountFilterId(userId);
             var accountsFromRepo = await _accountRepo.FindOneAsync(filter: accountFilter);
             return accountsFromRepo;
+        }
+
+        public async Task<(bool status, string message)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto)
+        {
+            using var session = await _accountRepo.StartSessionAsync();
+            try
+            {
+                session.StartTransaction();
+
+                // To check whether account exist or not.
+                var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", uid));
+
+                // Account not found
+                if (accountFromRepo is null)
+                {
+                    return (false, ResponseMessage.ACCOUNT_NOT_FOUND);
+                }
+
+                // Update properties
+                _mapper.Map(accountProfileUpdateDto, accountFromRepo);
+
+                // Upload new avatar
+                if (accountProfileUpdateDto.AvatarFile is not null)
+                {
+                    // Check file extension
+                    (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(accountProfileUpdateDto.AvatarFile);
+                    if (isImageFile is false)
+                    {
+                        return (false, imageCheckMessage!);
+                    }
+
+                    var fileExtension = FileExtension.GetFileExtension(accountProfileUpdateDto.AvatarFile);
+                    var filename = $"{uid}{fileExtension}";
+
+                    // Delete old file, if possible
+                    await _s3Service.DeleteFileAsync(
+                        _configuration.GetValue<string>("S3:ResourcesBucket"),
+                        S3Config.IMAGES_FOLDER,
+                        filename
+                    );
+
+                    // Upload new avatar
+                    (bool avatarUploadStatus, string avatarUrl) = await _fileStorage.UploadImage(
+                        filename,
+                        accountProfileUpdateDto.AvatarFile.OpenReadStream(),
+                        accountProfileUpdateDto.AvatarFile.ContentType
+                    );
+
+                    accountFromRepo.Avatar = avatarUrl;
+                }
+
+                var rs = await _accountRepo.ReplaceOneAsync(accountFromRepo.Id, accountFromRepo);
+
+                if (rs is true)
+                {
+                    // Set Firebase new claim
+                    await SetClaimWhenUpdateProfile(accountFromRepo);
+                }
+
+                await session.CommitTransactionAsync();
+
+                return (
+                    rs,
+                    rs is false ? ResponseMessage.ACCOUNT_PROFILE_UPDATE_FAIL
+                                : ResponseMessage.ACCOUNT_PROFILE_UPDATE_SUCCESS
+                );
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                await session.AbortTransactionAsync();
+                return (false, ResponseMessage.ACCOUNT_PROFILE_UPDATE_FAIL);
+            }
+        }
+
+        public async Task<Account?> AccountGetAccountByUid(string uid)
+        {
+            var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", uid));
+
+            return accountFromRepo;
         }
     }
 }

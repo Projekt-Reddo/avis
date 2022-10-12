@@ -43,4 +43,19 @@ public static class Constants
     }
 
     public const string DEFAULT_AVATAR = "https://static.wikia.nocookie.net/virtualyoutuber/images/8/8b/Hoshimachi_Suisei_2019_Portrait.png";
+
+    public static class ReportType
+    {
+        public const string NUDITY = "Nudity";
+        public const string VIOLENCE = "Violence";
+        public const string SPAM = "Spam";
+        public const string HATE_SPEECH = "Hate Speech";
+        public const string TERROISM = "Terroism";
+        public const string SOMETHING_ELSE = "Something Else";
+    }
+
+    public static class JwtTokenPayload
+    {
+        public const string USER_ID = "user_id";
+    }
 }

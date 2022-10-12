@@ -22,17 +22,17 @@ public class ArtistLogic : IArtistLogic
 {
     private readonly IArtistRepo _artistRepo;
     private readonly IMapper _mapper;
-    private readonly IS3Service _s3Service;
+    private readonly IFileStorageService _fileStorage;
 
     public ArtistLogic(
         IArtistRepo artistRepo,
         IMapper mapper,
-        IS3Service s3Service
+        IFileStorageService fileStorage
     )
     {
         _artistRepo = artistRepo;
         _mapper = mapper;
-        _s3Service = s3Service;
+        _fileStorage = fileStorage;
     }
 
     public async Task<bool> Create(ArtistCreateDto createDto)

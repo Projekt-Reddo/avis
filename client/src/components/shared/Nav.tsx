@@ -30,6 +30,7 @@ const Nav = () => {
         {
             icon: "user-circle",
             lable: "Profile",
+            to: "/user/profile",
         },
         {
             icon: "moon",
