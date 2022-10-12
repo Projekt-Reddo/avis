@@ -23,14 +23,12 @@ namespace MainService.Controllers
         private readonly IMapper _mapper;
         private readonly IAccountRepo _accountRepo;
         private readonly IAccountLogic _accountLogic;
-        private readonly ILogger<SongsController> _logger;
 
-        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic, ILogger<SongsController> logger)
+        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic)
         {
             _mapper = mapper;
             _accountRepo = accountRepo;
             _accountLogic = accountLogic;
-            _logger = logger;
         }
 
         [HttpPost("signup")]
