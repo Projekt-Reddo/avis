@@ -6,3 +6,13 @@ type ButtonVariantsType = {
 };
 
 type ButtonVariantNameType = "primary" | "secondary" | "danger";
+
+interface PageFilterProps {
+    currentPage: number;
+    rowShow: number;
+    filter?: {
+        content?: string;
+        hashtags?: string[];
+        isTrending?: boolean;
+    };
+}

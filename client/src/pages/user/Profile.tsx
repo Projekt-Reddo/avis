@@ -1,24 +1,25 @@
-// Components
-import PostCard from "components/Discover/PostCard";
-import PageWrapper from "components/PageWrapper/PageWrapper";
+import React from "react";
 
-// Constants
-import { viewMorePostAsync, viewPostAsync } from "store/slices/postSlice";
 import DiscoverHeader from "components/Discover/DiscoverHeader";
+import PageWrapper from "components/PageWrapper/PageWrapper";
 import createPostInfiniteScrollLayout from "components/Posts/createPostInfiniteScrollLayout";
 
-const Discover = () => {
+import { viewMorePostAsync, viewPostAsync } from "store/slices/postSlice";
+import ProfileCard from "components/Profile/ProfileCard";
+
+const Profile = () => {
     return (
         <PageWrapper>
+            {" "}
             {createPostInfiniteScrollLayout({
                 storeSelector: (state: RootState) => state.post,
                 getInitDataAction: viewPostAsync,
                 getMoreDataAction: viewMorePostAsync,
                 Header: DiscoverHeader,
-                LeftComponent: PostCard,
+                LeftComponent: ProfileCard,
             })}
         </PageWrapper>
     );
 };
 
-export default Discover;
+export default Profile;

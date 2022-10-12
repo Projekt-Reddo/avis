@@ -99,5 +99,14 @@ namespace MainService.Controllers
 
             return returnedAccount;
         }
+
+        [HttpPut("profile/{uid}")]
+        public async Task<ActionResult<ResponseDto>> UpdateProfile([FromRoute] string uid, [FromForm] AccountProfileUpdateDto accountProfileUpdateDto)
+        {
+            (bool status, string message) = await _accountLogic.UpdateAccountProfile(uid, accountProfileUpdateDto);
+
+            return status ? Ok(new ResponseDto(200, message))
+                          : BadRequest(new ResponseDto(400, message));
+        }
     }
 }

@@ -103,7 +103,6 @@ namespace MainService.Data
         /// <param name="id">Document id</param>
         /// <param name="entity">New document</param>
         /// <returns>true(updated) / false(not update)</returns>
-        [Obsolete("Method is deprecated because conflict with old entity, please use UpdateOneAsync instead.")]
         Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
         /// <summary>
