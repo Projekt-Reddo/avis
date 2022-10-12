@@ -181,7 +181,6 @@ public class PostsController : ControllerBase
 
 
         return Ok(new HashtagsRecommend(commonHashtag, randomHashtags));
-
     }
 
     [HttpGet("{id}")]
