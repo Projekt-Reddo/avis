@@ -24,7 +24,7 @@ namespace MainService.Controllers
         private readonly IAccountRepo _accountRepo;
         private readonly IAccountLogic _accountLogic;
 
-        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic  )
+        public AccountsController(IMapper mapper, IAccountRepo accountRepo, IAccountLogic accountLogic)
         {
             _mapper = mapper;
             _accountRepo = accountRepo;
