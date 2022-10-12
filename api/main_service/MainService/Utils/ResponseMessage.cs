@@ -14,10 +14,11 @@ public static class ResponseMessage
 
 
     // Post msg
+    public const string POST_NOT_FOUND = "No post found";
 
-
-    // User msg
-
+    // Report msg
+    public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
+    public const string REPORT_NO_IDS = "A postId or commentId is required for reporting";
 
     // File extension check msg
     public const string NO_FILE_UPLOAD = "No upload file";
@@ -47,6 +48,8 @@ public static class ResponseMessage
     public const string COMMENT_CREATE_SUCCESS = "Add new comment successfully";
     public const string COMMENT_CREATE_FAIL = "Add new comment failed";
     public const string COMMENT_CREATE_MEDIA_FAIL = "Media type is not supported";
+    public const string COMMENT_NOT_FOUND = "No comment found";
+
 
     // Account msg
     public const string ACCOUNT_EMAIL_DUPLICATED = "Email duplicated!";
