@@ -11,18 +11,11 @@ import Ayame from "static/Ayame.png";
 // Style
 import "theme/Discover.css";
 
-interface PostCardProps {}
-
-interface Post {
-    Content: string;
-    Images?: string[];
-    Audios?: string;
-    Videos?: string;
-    Tags?: string[];
-    UserId: string;
+interface PostCardProps {
+    loading: boolean;
 }
 
-const PostCard: React.FC<PostCardProps> = () => {
+const PostCard: React.FC<PostCardProps> = ({ loading }) => {
     return (
         <div className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4">
             {/* Avatar */}
@@ -40,7 +33,7 @@ const PostCard: React.FC<PostCardProps> = () => {
                 <textarea
                     className="focus:outline-none text-2xl h-12 sm:h-20 w-full border-b-2 mb-4"
                     style={{ backgroundColor: "white" }}
-                    placeholder="What's happening?"
+                    placeholder="How do do feel today?"
                     rows={3}
                 />
 
@@ -69,7 +62,9 @@ const PostCard: React.FC<PostCardProps> = () => {
                             <input id="calendar" type="date" hidden />
                         </label>
                     </div>
-                    <Button type="button">Post</Button>
+                    <Button type="button" disabled={loading}>
+                        Post
+                    </Button>
                 </div>
             </div>
         </div>

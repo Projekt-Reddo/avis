@@ -22,6 +22,9 @@ namespace MainService.Profiles
 
             CreateMap<Account, AccountProfileReadDto>()
                     .ForMember(a => a.JoinedDate,opt => opt.MapFrom(src => src.CreatedAt));
+
+            CreateMap<AccountProfileUpdateDto, Account>()
+                .ForMember(dest => dest.Avatar, src => src.Ignore());
         }
     }
 }

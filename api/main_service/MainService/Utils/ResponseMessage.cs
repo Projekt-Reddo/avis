@@ -53,4 +53,6 @@ public static class ResponseMessage
     public const string ACCOUNT_CREATE_SUCCESS = "Account created successfully";
     public const string ACCOUNT_GOOGLE_LOGIN_SUCCESS = "This account is exist and no need to set up!";
     public const string ACCOUNT_NOT_FOUND = "Cannot find your account!";
+    public const string ACCOUNT_PROFILE_UPDATE_SUCCESS = "Profile updated!";
+    public const string ACCOUNT_PROFILE_UPDATE_FAIL = "Profile failed to update";
 }
