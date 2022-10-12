@@ -103,37 +103,12 @@ namespace MainService.Controllers
         }
 
         [HttpPut("profile/{uid}")]
-        public async Task<ActionResult<AccountProfileReadDto>> UpdateProfile([FromRoute] string uid, [FromBody] AccountProfileUpdateDto accountProfileUpdateDto)
+        public async Task<ActionResult<ResponseDto>> UpdateProfile([FromRoute] string uid, [FromForm] AccountProfileUpdateDto accountProfileUpdateDto)
         {
-            // To check whether account exist or not.
-            var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", uid));
+            (bool status, string message) = await _accountLogic.UpdateAccountProfile(uid, accountProfileUpdateDto);
 
-            // Account not found
-            if (accountFromRepo is null)
-            {
-                return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
-            }
-
-            using var session = await _accountRepo.StartSessionAsync();
-
-            try
-        {
-            session.StartTransaction();
-            
-
-            await session.CommitTransactionAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            await session.AbortTransactionAsync();
-            return BadRequest(new ResponseDto(400, ResponseMessage.SONG_CREATE_FAIL));
-        }
-
-
-            var returnedAccount = _mapper.Map<AccountProfileReadDto>(accountFromRepo);
-
-            return returnedAccount;
+            return status ? Ok(new ResponseDto(200, message))
+                          : BadRequest(new ResponseDto(400, message));
         }
     }
 }

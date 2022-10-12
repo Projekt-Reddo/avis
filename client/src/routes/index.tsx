@@ -67,7 +67,9 @@ const MainRoute = () => {
                     <Home />
                 </Route>
 
-                <UserRoutes />
+                <Route path="/user">
+                    <UserRoutes />
+                </Route>
 
                 <Route
                     render={({ location }) =>

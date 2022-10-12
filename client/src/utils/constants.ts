@@ -9,7 +9,7 @@ export const routes = [
     "/admin",
     "/feedback",
     "/notification",
-    "/profile",
+    "/user",
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];

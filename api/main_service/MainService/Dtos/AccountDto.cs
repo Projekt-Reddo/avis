@@ -90,6 +90,6 @@ namespace MainService.Dtos
     {
         public string Name { get; set; } = null!;
 
-        public IFormFile AvatarFile { get; set; } = null!;
+        public IFormFile? AvatarFile { get; set; }
     }
 }
