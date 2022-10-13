@@ -13,8 +13,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import { DefaultDay, DefaultDay_2 } from "utils/constants";
 import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
 import SearchFilter from "components/shared/SearchFilter";
-import { recommendGenreApi } from "api/genre-api";
 import Icon from "components/shared/Icon";
+import { sortListApi } from "api/account-api";
 
 
 interface pageRowFilterProps {
@@ -34,33 +34,10 @@ interface pageRowFilterProps {
     };
 }
 
-const View = () =>
-{
-
+const View = () =>  {
     const dispatch = useAppDispatch();
 
     const userState = useAppSelector((state) => state.user);
-
-    const [currentPage, setCurrentPage] = React.useState(1);
-
-    const sortOption = async (keyword: string) => {
-
-        const res = await getSortOptions();
-
-        return res;
-    };
-
-    const getSortOptions = () =>
-    {
-        const sortOptions = [
-            "Name Ascending",
-            "Name Descending",
-            "Joined Date Ascending",
-            "Joined Date Descending"
-        ]
-        return sortOption;
-    }
-
 
     const [pageRowFilter, setPageRowFilter] =
         React.useState<pageRowFilterProps>({
@@ -102,7 +79,6 @@ const View = () =>
     });
 
     const handleSearch = (data: FieldValues) => {
-        console.log(data);
         setPageRowFilter({
             currentPage: 1,
             rowShow: {
@@ -126,10 +102,10 @@ const View = () =>
         selectMultiple: [
             {
                 label: "Sort By",
-                isMulti: true,
-                loadOptionsCallback: sortOption,
+                isMulti: false,
+                loadOptionsCallback: sortListApi,
                 control: control,
-                controlName: "Sort",
+                controlName: "sort",
             },
         ],
         dateInput: [
@@ -162,7 +138,7 @@ const View = () =>
                 size: pageRowFilter.rowShow.value,
                 filter: {
                     name: pageRowFilter.filter?.name,
-                    sort: "",
+                    sort: pageRowFilter.filter?.sort,
                     joinedStart: pageRowFilter.filter?.joinedStart,
                     joinedEnd: pageRowFilter.filter?.joinedEnd,
                     isModerator: pageRowFilter.filter?.isModerator,
@@ -204,15 +180,18 @@ const View = () =>
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setUser(data))}
                         rawData={userState.tableData}
-                        onRowClick={() => {
-                            console.log("Clicked");
-                        }}
                         setIsSelected={setIsSelected}
                     />
 
                     <div className="sm:flex sm:justify-between">
                         {/* Show rows select */}
-                        <SelectRow state={pageRowFilter.rowShow} setState={setPageRowFilter} />
+                        <div>
+                            {/* Show rows select */}
+                            <SelectRow
+                                state={pageRowFilter.rowShow}
+                                setState={setPageRowFilter}
+                            />
+                        </div>
 
                         {/* Pagination */}
                         <Pagination
