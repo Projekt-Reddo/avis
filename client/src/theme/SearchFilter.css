@@ -46,3 +46,12 @@
     border-bottom-right-radius: 8px;
     padding: 0.5rem;
 }
+
+
+.toggle-checkbox:checked {
+    right: 0;
+    border-color: var(--blue-darker-color);
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    background-color: var(--blue-darker-color);
+  }

@@ -18,3 +18,27 @@ export const viewUserApi = async (data: UserFilter) => {
     const res = await axios.post(apiRoute + "/filter", data);
     return res.data;
 };
+
+export const sortListApi = async (keyword: string) => {
+
+    const sortOptions = [
+        {
+            "id": "631",
+            "name": "Name Ascending"
+          },
+          {
+            "id": "631",
+            "name": "Name Descending"
+          },
+          {
+            "id": "631",
+            "name": "Joined Date Ascending"
+          },
+          {
+            "id": "631",
+            "name": "Joined Date Descending"
+          },
+    ]
+
+    return sortOptions;
+};

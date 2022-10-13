@@ -92,7 +92,9 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
                             (c: any) => value && value!.includes(c.value)
                         )}
                         onChange={(val: any) =>
+                            (isMulti) ?
                             onChange(val.map((c: any) => c.value))
+                            : onChange(val.value)
                         }
                     />
                 )}

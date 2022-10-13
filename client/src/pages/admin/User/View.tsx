@@ -3,34 +3,59 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { setUser, viewUserAsync } from "store/slices/userSlice";
 
-import moment from "moment";
 
 // Components
-import Icon from "components/shared/Icon";
 import Table from "components/shared/Table";
-import PageWrapper from "components/PageWrapper/PageWrapper";
 import SelectRow from "components/shared/SelectRow";
 import Pagination from "components/shared/Pagination";
 
 import { FieldValues, useForm } from "react-hook-form";
-import { DayFormat, DefaultDay, DefaultDay_2 } from "utils/constants";
-import { recommendGenreApi } from "api/genre-api";
-import Loading from "components/shared/Loading";
+import { DefaultDay, DefaultDay_2 } from "utils/constants";
 import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
+import SearchFilter from "components/shared/SearchFilter";
+import Icon from "components/shared/Icon";
+import { sortListApi } from "api/account-api";
 
-const View = () =>
-{
 
+interface pageRowFilterProps {
+    currentPage: number;
+    rowShow: {
+        value: number;
+        label: string;
+    };
+    filter?: {
+        name?: string;
+        sort?: string;
+        joinedStart?: string;
+        joinedEnd?: string;
+        isModerator?: boolean;
+        isBanned?: boolean;
+        isMuted?: boolean;
+    };
+}
+
+const View = () =>  {
     const dispatch = useAppDispatch();
 
     const userState = useAppSelector((state) => state.user);
 
-    const [currentPage, setCurrentPage] = React.useState(1);
-
-    const [rowShow, setRowShow] = React.useState({
-        value: 10,
-        label: "10 rows",
-    });
+    const [pageRowFilter, setPageRowFilter] =
+        React.useState<pageRowFilterProps>({
+            currentPage: 1,
+            rowShow: {
+                value: 10,
+                label: "10 rows",
+            },
+            filter: {
+                name: "",
+                sort: "",
+                joinedStart: "2000-10-11T10:29:56.693Z",
+                joinedEnd: "2022-10-11T10:29:56.693Z",
+                isModerator: false,
+                isBanned: false,
+                isMuted: false
+            },
+        });
 
     const [isSelected, setIsSelected] = React.useState<boolean>(false);
 
@@ -44,35 +69,101 @@ const View = () =>
         mode: "onChange",
         defaultValues: {
             name: "",
-            genres: [],
-            createdStart: "",
-            createdEnd: "",
-            modifiedStart: "",
-            modifiedEnd: "",
+            sort: "",
+            joinedStart: "",
+            joinedEnd: "",
+            isModerator: false,
+            isBanned: false,
+            isMuted: false
         },
     });
+
+    const handleSearch = (data: FieldValues) => {
+        setPageRowFilter({
+            currentPage: 1,
+            rowShow: {
+                value: pageRowFilter.rowShow.value,
+                label: pageRowFilter.rowShow.label,
+            },
+            filter: {
+                name: data.name,
+                sort: data.sort,
+                joinedStart:
+                    data.joinedStart !== "" ? data.joinedStart : null,
+                joinedEnd: data.joinedEnd !== "" ? data.joinedEnd : null,
+                isModerator: data.isModerator,
+                isBanned: data.isBanned,
+                isMuted: data.isMuted
+            },
+        });
+    };
+
+    const filterContent = {
+        selectMultiple: [
+            {
+                label: "Sort By",
+                isMulti: false,
+                loadOptionsCallback: sortListApi,
+                control: control,
+                controlName: "sort",
+            },
+        ],
+        dateInput: [
+            {
+                label: "Joined Date",
+                registerStart: register("joinedStart"),
+                registerEnd: register("joinedEnd"),
+            },
+        ],
+        radioBox: [
+            {
+                label: "Moderator",
+                checkBox: register("isModerator"),
+            },
+            {
+                label: "Banned",
+                checkBox: register("isBanned"),
+            },
+            {
+                label: "Muted",
+                checkBox: register("isMuted"),
+            }
+        ]
+    };
 
     useEffect(() => {
         dispatch(
             viewUserAsync({
-                page: 1,
-                size: 10,
+                page: pageRowFilter.currentPage,
+                size: pageRowFilter.rowShow.value,
                 filter: {
-                    name: "",
-                    sort: "",
-                    joinedStart: "2000-10-06T09:27:19.798Z",
-                    joinedEnd: "2022-10-06T09:27:19.798Z",
-                    isModerator: false,
-                    isBanned: false,
-                    isMuted: false
+                    name: pageRowFilter.filter?.name,
+                    sort: pageRowFilter.filter?.sort,
+                    joinedStart: pageRowFilter.filter?.joinedStart,
+                    joinedEnd: pageRowFilter.filter?.joinedEnd,
+                    isModerator: pageRowFilter.filter?.isModerator,
+                    isBanned: pageRowFilter.filter?.isBanned,
+                    isMuted: pageRowFilter.filter?.isMuted
                 },
             })
         );
-    });
+    },[pageRowFilter]);
 
     return (
         <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
                 <>
+                {/* Header */}
+            <div className="flex justify-between pt-6">
+                <div className="text-lg font-bold">User</div>
+            </div>
+                {/* Search Bar */}
+                    <SearchFilter
+                        placeholder="Enter name of user"
+                        register={register("name")}
+                        handleSubmit={handleSubmit(handleSearch)}
+                        setValue={setValue}
+                        filterContent={filterContent}
+                    />
                     {/* Data Table */}
                     <Table
                         className=""
@@ -89,22 +180,25 @@ const View = () =>
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setUser(data))}
                         rawData={userState.tableData}
-                        onRowClick={() => {
-                            console.log("Clicked");
-                        }}
                         setIsSelected={setIsSelected}
                     />
 
                     <div className="sm:flex sm:justify-between">
                         {/* Show rows select */}
-                        <SelectRow state={rowShow} setState={setRowShow} />
+                        <div>
+                            {/* Show rows select */}
+                            <SelectRow
+                                state={pageRowFilter.rowShow}
+                                setState={setPageRowFilter}
+                            />
+                        </div>
 
                         {/* Pagination */}
                         <Pagination
                             totalRecords={userState.data.total}
-                            currentPage={currentPage}
-                            pageSize={rowShow.value}
-                            onPageChange={setCurrentPage}
+                            currentPage={pageRowFilter.currentPage}
+                            pageSize={pageRowFilter.rowShow.value}
+                            onPageChange={setPageRowFilter}
                         />
                     </div>
                 </>
@@ -136,10 +230,28 @@ export const getUserData = (data: any) => {
             </div>
         ),
         name: item.name,
-        joinedDate: item.joinedDate,
+        joinedDate: item.joinedDate.substring(0,10),
         role: item.role,
-        isBanned: item.isBanned,
-        postMutedUntil: (item.postMutedUntil == DefaultDay || item.postMutedUntil == DefaultDay_2) ? "          " : item.postMutedUntil,
-        commentMutedUntil: (item.commentMutedUntil == DefaultDay || item.commentMutedUntil == DefaultDay_2) ? "          " : item.commentMutedUntil
+        isBanned: (
+            !item.isBanned ? <>
+            <div className="w-10 h-10 rounded-full bg-[color:var(--teal-lighter-color)] flex items-center justify-center ml-5">
+                <Icon
+                icon="lock-open"
+                className="w-10 text-[color:var(--white-color)]"
+                size="xl"
+                />
+            </div>
+            </> : <>
+            <div className="w-10 h-10 rounded-full bg-[color:var(--red-darker-color)] flex items-center justify-center ml-5">
+                <Icon
+                icon="lock"
+                className="w-10 text-[color:var(--white-color)]"
+                size="xl"
+                />
+            </div>
+            </>
+        ),
+        postMutedUntil: (item.postMutedUntil == DefaultDay || item.postMutedUntil == DefaultDay_2) ? "          " : item.postMutedUntil.substring(0,10),
+        commentMutedUntil: (item.commentMutedUntil == DefaultDay || item.commentMutedUntil == DefaultDay_2) ? "          " : item.commentMutedUntil.substring(0,10)
     }));
 };

@@ -27,9 +27,10 @@ public static class Constants
 
     public static class UserSortFilterOption
     {
-        public const string NAME_DESC = "Name Desc";
-        public const string JOIN_ASC = "Join Asc";
-        public const string JOIN_DESC = "Join Desc";
+        public const string NAME_ASC = "Name Ascending";
+        public const string NAME_DESC = "Name Descending";
+        public const string JOIN_ASC = "Joined Date Ascending";
+        public const string JOIN_DESC = "Joined Date Descending";
     }
 
     /// <summary>
