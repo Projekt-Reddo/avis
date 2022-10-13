@@ -76,7 +76,7 @@ const ProfileCard = () => {
                                 </div>
                                 <div className="py-1 text-gray-500">
                                     <Icon icon="calendar-days" />
-                                    {"  Joined"}
+                                    {"  Joined "}
                                     {moment(profile.joinedDate).format(
                                         "MMMM YYYY"
                                     )}
