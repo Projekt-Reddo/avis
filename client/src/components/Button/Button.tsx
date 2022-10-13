@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <button
             className={`btn-app ${className} ${
-                `${border}` === "true" && "border"
+                `${border}` === "true" ? "border" : ""
             }`}
             style={{ ...buttonVariants[variant], ...style }}
             {...props}

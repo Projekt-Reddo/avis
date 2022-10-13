@@ -10,7 +10,6 @@ import ProfileCard from "components/Profile/ProfileCard";
 const Profile = () => {
     return (
         <PageWrapper>
-            {" "}
             {createPostInfiniteScrollLayout({
                 storeSelector: (state: RootState) => state.post,
                 getInitDataAction: viewPostAsync,
