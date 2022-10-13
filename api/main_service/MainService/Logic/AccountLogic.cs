@@ -15,7 +15,7 @@ namespace MainService.Logic
 {
     public interface IAccountLogic
     {
-        FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination);
+        FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination,string role);
 
         BsonDocument SortFilter(string Sort);
 
@@ -65,7 +65,7 @@ namespace MainService.Logic
             _logger = logger;
         }
 
-        public FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination)
+        public FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination, string role)
         {
             var accountFilter = Builders<Account>.Filter.Empty;
 
@@ -99,13 +99,25 @@ namespace MainService.Logic
 
             if (pagination.Filter.isModerator)
             {
-                accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == "admin");
+                if (role != AccountRoles.ADMIN)
+                {
+                    accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == AccountRoles.USER);
+                } else {
+                    accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == AccountRoles.MODERATOR);
+                }
+            } else {
+                if (role != AccountRoles.ADMIN)
+                {
+                    accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role == AccountRoles.USER);
+                }
             }
 
             if (pagination.Filter.isMuted)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Status.CommentMutedUntil >= DateTime.Now || x.Status.PostMutedUntil >= DateTime.Now);
             }
+
+            accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role != AccountRoles.ADMIN);
 
             return accountFilter;
         }

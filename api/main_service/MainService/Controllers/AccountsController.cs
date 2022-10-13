@@ -69,8 +69,10 @@ namespace MainService.Controllers
         [HttpPost("filter")]
         public async Task<ActionResult<PaginationResDto<IEnumerable<AccountResponseDto>>>> ViewUser([FromBody] PaginationReqDto<AccountFilterDto> pagination)
         {
+            var role = User.FindFirst(ClaimTypes.Role)!.Value;
+
             // Create Account Filter
-            var accountFilter = _accountLogic.AccountFilter(pagination);
+            var accountFilter = _accountLogic.AccountFilter(pagination, role);
 
             // Pagination formula
             var skipPage = (pagination.Page - 1) * pagination.Size;

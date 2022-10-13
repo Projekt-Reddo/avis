@@ -102,6 +102,7 @@ const View = () =>
     });
 
     const handleSearch = (data: FieldValues) => {
+        console.log(data);
         setPageRowFilter({
             currentPage: 1,
             rowShow: {
@@ -124,7 +125,7 @@ const View = () =>
     const filterContent = {
         selectMultiple: [
             {
-                label: "Sort",
+                label: "Sort By",
                 isMulti: true,
                 loadOptionsCallback: sortOption,
                 control: control,
@@ -138,6 +139,20 @@ const View = () =>
                 registerEnd: register("joinedEnd"),
             },
         ],
+        radioBox: [
+            {
+                label: "Moderator",
+                checkBox: register("isModerator"),
+            },
+            {
+                label: "Banned",
+                checkBox: register("isBanned"),
+            },
+            {
+                label: "Muted",
+                checkBox: register("isMuted"),
+            }
+        ]
     };
 
     useEffect(() => {
@@ -150,9 +165,9 @@ const View = () =>
                     sort: "",
                     joinedStart: pageRowFilter.filter?.joinedStart,
                     joinedEnd: pageRowFilter.filter?.joinedEnd,
-                    isModerator: false,
-                    isBanned: false,
-                    isMuted: false
+                    isModerator: pageRowFilter.filter?.isModerator,
+                    isBanned: pageRowFilter.filter?.isBanned,
+                    isMuted: pageRowFilter.filter?.isMuted
                 },
             })
         );
@@ -202,9 +217,9 @@ const View = () =>
                         {/* Pagination */}
                         <Pagination
                             totalRecords={userState.data.total}
-                            currentPage={currentPage}
+                            currentPage={pageRowFilter.currentPage}
                             pageSize={pageRowFilter.rowShow.value}
-                            onPageChange={setCurrentPage}
+                            onPageChange={setPageRowFilter}
                         />
                     </div>
                 </>
@@ -239,12 +254,22 @@ export const getUserData = (data: any) => {
         joinedDate: item.joinedDate.substring(0,10),
         role: item.role,
         isBanned: (
-            !item.isBanned ? <></> : <>
-            <Icon
-            icon="ban"
-            className="w-10 text-[color:var(--teal-general-color)]"
-            size="2xl"
-            />
+            !item.isBanned ? <>
+            <div className="w-10 h-10 rounded-full bg-[color:var(--teal-lighter-color)] flex items-center justify-center ml-5">
+                <Icon
+                icon="lock-open"
+                className="w-10 text-[color:var(--white-color)]"
+                size="xl"
+                />
+            </div>
+            </> : <>
+            <div className="w-10 h-10 rounded-full bg-[color:var(--red-darker-color)] flex items-center justify-center ml-5">
+                <Icon
+                icon="lock"
+                className="w-10 text-[color:var(--white-color)]"
+                size="xl"
+                />
+            </div>
             </>
         ),
         postMutedUntil: (item.postMutedUntil == DefaultDay || item.postMutedUntil == DefaultDay_2) ? "          " : item.postMutedUntil.substring(0,10),

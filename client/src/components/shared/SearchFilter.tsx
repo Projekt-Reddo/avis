@@ -1,7 +1,5 @@
 import React from "react";
 import {
-    Control,
-    FieldValues,
     UseFormRegisterReturn,
     UseFormSetValue,
 } from "react-hook-form";
@@ -10,6 +8,7 @@ import {
 import Button from "../Button/Button";
 import Icon from "./Icon";
 import SelectAsync from "./SelectAsync";
+
 
 // Styles
 import "theme/SearchFilter.css";
@@ -32,7 +31,10 @@ interface SearchFilterProps {
             registerStart: InputRegister;
             registerEnd: InputRegister;
         }[];
-        radioBox?: any;
+        radioBox?: {
+            label?: string;
+            checkBox: InputRegister;
+        }[];
     };
 }
 
@@ -55,6 +57,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
             setValue(element.registerStart.name, "");
             setValue(element.registerEnd.name, "");
         });
+
+        filterContent?.radioBox?.forEach((element) =>
+        {
+            setValue(element.checkBox.name, false)
+        })
     };
 
     return (
@@ -135,18 +142,32 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                                 <div className="text-base font-bold pb-2">
                                     {item.label}
                                 </div>
-                                <div className="flex">
+                                <div className="flex relative">
                                     <input
                                         className="input-date px-2 py-1"
                                         {...item.registerStart}
                                         type="date"
                                     />
+                                    <div className="absolute ml-[8rem] mt-1.5">
+                                        <Icon
+                                            icon="calendar"
+                                            className="w-5 text-[color:var(--text-secondary-color)]"
+                                            size="l"
+                                        />
+                                    </div>
                                     <div className="self-center px-4">-</div>
                                     <input
                                         className="input-date px-2 py-1"
                                         {...item.registerEnd}
                                         type="date"
                                     />
+                                    <div className="absolute ml-[20rem] mt-1.5">
+                                        <Icon
+                                            icon="calendar"
+                                            className="w-5 text-[color:var(--text-secondary-color)]"
+                                            size="l"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -154,8 +175,26 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
 
                     <div className="h-[0.25px] w-full bg-[color:var(--text-primary-color)]" />
 
+                    <div className="text-base font-bold self-center mt-3">
+                        Status
+                    </div>
+
                     {/* Radio Box Filter */}
-                    {/* Up comming in future */}
+                    <div className="grid grid-cols-6 gap-2 justify-start py-4">
+                        {filterContent?.radioBox?.map((item) => (
+                                <div className="grid justify-start">
+                                    <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in ml-2">
+                                        <input type="checkbox"
+                                        {...item.checkBox}
+                                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer"/>
+                                        <label className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                    </div>
+                                <div className="text-base self-center mt-3 mb-3 text-center ">
+                                    {item.label}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
                     {/* Clear, Close, Apply Filter  */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 justify-end py-4">
