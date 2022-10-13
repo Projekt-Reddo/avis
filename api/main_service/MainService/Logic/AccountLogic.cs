@@ -77,7 +77,8 @@ namespace MainService.Logic
             if (pagination.Filter.JoinedStart == null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Gte(x => x.CreatedAt, DateTime.MinValue);
-            } else
+            }
+            else
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Gte(x => x.CreatedAt, pagination.Filter.JoinedStart);
             }
@@ -85,7 +86,8 @@ namespace MainService.Logic
             if (pagination.Filter.JoinedEnd == null)
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Lte(x => x.CreatedAt, DateTime.MaxValue);
-            } else
+            }
+            else
             {
                 accountFilter = accountFilter & Builders<Account>.Filter.Lte(x => x.CreatedAt, pagination.Filter.JoinedEnd);
             }
@@ -162,6 +164,7 @@ namespace MainService.Logic
             var account = _mapper.Map<Account>(newAccount);
 
             account.Role = AccountRoles.USER;
+            account.Id = newAccount.Uid;
 
             return account;
         }
@@ -180,12 +183,14 @@ namespace MainService.Logic
             await FirebaseService.SetAvatarClaim(account.Uid, account.Avatar);
         }
 
-        public FilterDefinition<Account> AccountFilterId(string userId){
+        public FilterDefinition<Account> AccountFilterId(string userId)
+        {
             var accountFilter = Builders<Account>.Filter.Empty;
             return accountFilter;
         }
 
-        public async Task<Account?> GetAccountById(string userId){
+        public async Task<Account?> GetAccountById(string userId)
+        {
             var accountFilter = AccountFilterId(userId);
             var accountsFromRepo = await _accountRepo.FindOneAsync(filter: accountFilter);
             return accountsFromRepo;

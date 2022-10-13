@@ -8,8 +8,15 @@ namespace MainService.Models;
 /// Account model storing all information about a account
 /// </summary>
 [BsonIgnoreExtraElements]
-public class Account : BaseModel
+public class Account
 {
+    [BsonId]
+    public string Id { get; set; } = "";
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    public DateTime ModifiedAt { get; set; }
+
     [StringLength(100, MinimumLength = 6)]
     public string Name { get; set; } = null!;
 
@@ -29,5 +36,5 @@ public class Account : BaseModel
 
     // public string Issuer { get; set; } = null!;
 
-    public List<ObjectId>? SavedPosts { get; set; }
+    public ICollection<ObjectId>? SavedPosts { get; set; }
 }
