@@ -1,8 +1,7 @@
 import Icon from "components/shared/Icon";
-import { useLocation } from "react-router";
+
 import { loginWithGoogleAsync } from "store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { useRedirectAfterLoggedIn } from "./login-hooks";
 
 interface GoogleLoginButtonProps {}
 
@@ -11,9 +10,6 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = () => {
     const authStatus = useAppSelector((state) => state.auth.status);
 
     const disabled = authStatus === "loading" || authStatus === "init";
-
-    const location = useLocation();
-    useRedirectAfterLoggedIn(() => location.pathname === "/signup");
 
     return (
         <button

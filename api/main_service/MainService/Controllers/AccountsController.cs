@@ -43,9 +43,14 @@ namespace MainService.Controllers
                 return BadRequest(new ResponseDto(400, ResponseMessage.ACCOUNT_EMAIL_DUPLICATED));
             }
 
-            var _ = _accountLogic.SetupNewAccount(newAccount);
+            var account = await _accountLogic.SetupNewAccount(newAccount);
 
-            return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_CREATE_SUCCESS));
+            if (account != null)
+            {
+                return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_CREATE_SUCCESS));
+            }
+
+            return new ResponseDto(500, ResponseMessage.ACCOUNT_CREATE_FAILED);
         }
 
         [HttpPost("google-login")]
@@ -60,9 +65,14 @@ namespace MainService.Controllers
                 return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_GOOGLE_LOGIN_SUCCESS));
             }
 
-            var _ = _accountLogic.SetupNewAccount(newAccount);
+            var account = await _accountLogic.SetupNewAccount(newAccount);
 
-            return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_CREATE_SUCCESS));
+            if (account != null)
+            {
+                return Ok(new ResponseDto(200, ResponseMessage.ACCOUNT_CREATE_SUCCESS));
+            }
+
+            return new ResponseDto(500, ResponseMessage.ACCOUNT_CREATE_FAILED);
         }
 
         [Authorize]
@@ -103,12 +113,18 @@ namespace MainService.Controllers
         }
 
         [HttpPut("profile/{uid}")]
-        public async Task<ActionResult<ResponseDto>> UpdateProfile([FromRoute] string uid, [FromForm] AccountProfileUpdateDto accountProfileUpdateDto)
+        public async Task<ActionResult<AccountProfileReadDto>> UpdateProfile([FromRoute] string uid, [FromForm] AccountProfileUpdateDto accountProfileUpdateDto)
         {
-            (bool status, string message) = await _accountLogic.UpdateAccountProfile(uid, accountProfileUpdateDto);
+            (bool _, string message, Account? data) = await _accountLogic.UpdateAccountProfile(uid, accountProfileUpdateDto);
 
-            return status ? Ok(new ResponseDto(200, message))
-                          : BadRequest(new ResponseDto(400, message));
+            if (data is null)
+            {
+                return BadRequest(new ResponseDto(400, message));
+            }
+
+            var returnedAccount = _mapper.Map<AccountProfileReadDto>(data);
+
+            return returnedAccount;
         }
     }
 }

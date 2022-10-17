@@ -53,7 +53,7 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
             const objectUrl = URL.createObjectURL(file);
             setPreview(objectUrl);
 
-            setValue(thumbnailInputField, file);
+            setValue(fieldName, file);
         }
     }, [acceptedFiles]);
 
