@@ -69,7 +69,7 @@ public class PostsController : ControllerBase
         post.PublishedAt = newPost.PublishedAt ?? DateTime.Now;
 
         // Normalizing Hashtags
-        if (newPost.HashTags!.Count() > 0)
+        if (newPost.HashTags != null)
         {
             List<string> hashtagsNormal = new List<string>();
 
@@ -162,8 +162,34 @@ public class PostsController : ControllerBase
     [HttpPost("filter")]
     public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewPost(PaginationReqDto<PostFilterDto> pagination)
     {
+        var userId = "";
+
         // Create Post Filter
         var postFilter = Builders<Post>.Filter.Empty;
+
+        // Public Post Filter
+        postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
+
+        // Published At Filter
+        postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
+
+        // Get User Id
+        try
+        {
+            userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+        }
+#pragma warning disable CS0168
+        catch (Exception e)
+#pragma warning restore CS0168
+        {
+            userId = null;
+        }
+
+        // Private Post Filter
+        if (userId != null)
+        {
+            postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE) & Builders<Post>.Filter.Eq(x => x.UserId, userId);
+        }
 
         // Hashtags Filter
         if (pagination.Filter.Hashtags != null)
@@ -171,6 +197,7 @@ public class PostsController : ControllerBase
             postFilter = postFilter & Builders<Post>.Filter.All(x => x.Hashtags, pagination.Filter.Hashtags);
         }
 
+        // Trending Post Filter
         if (pagination.Filter.IsTrending)
         {
             postFilter = postFilter & Builders<Post>.Filter.Where(x => x.UpvotedBy.Count() >= 1);
@@ -212,7 +239,7 @@ public class PostsController : ControllerBase
 
         // Config to sort created date decrease
         BsonDocument sort = new BsonDocument{
-                { "CreatedAt", -1 },
+                { "PublishedAt", -1 },
                 { "_id", 1 }
             };
 
@@ -230,7 +257,7 @@ public class PostsController : ControllerBase
                     }}
                 };
 
-            (var totalPostFTS, var postsFromRepoFTS) = await _postRepo.FindManyAsync(
+            (var _, var postsFromRepoFTS) = await _postRepo.FindManyAsync(
                 indexFilter: searchfilter,
                 filter: postFilter,
                 lookup: lookup,
@@ -238,6 +265,12 @@ public class PostsController : ControllerBase
                 sort: sort,
                 limit: pagination.Size,
                 skip: skipPage);
+
+            IEnumerable<BsonDocument> stages = new List<BsonDocument>();
+
+            var totalPostFTS = await _postRepo.CountDocumentAsync(
+                filter: searchfilter,
+                stages: stages);
 
             var postsFTS = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepoFTS);
 

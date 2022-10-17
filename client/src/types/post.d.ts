@@ -21,7 +21,7 @@ interface Post {
     medias: [{ id: string; mediaType: string; url: string }];
     createdAt: string;
     modifiedAt: string;
-    publishedA: string;
+    publishedAt: string;
     upvotedBy: string[];
     downvotedBy: string[];
     hashtags: [];

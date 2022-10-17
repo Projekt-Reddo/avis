@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 // Libs
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAppSelector } from "utils/react-redux-hooks";
 import ReactPlayer from "react-player";
 import moment from "moment";
@@ -29,7 +29,40 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
 
     const { open: openReport, setOpen: setOpenReport } = useModal();
 
+    const history = useHistory();
+
     const handleReport = () => {};
+
+    const handleSave = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        console.log("Save");
+    };
+
+    const handleUpvote = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        if (post.upvotedBy.includes(authState?.uid)) {
+            console.log("Voted");
+            return;
+        }
+        console.log("Like");
+    };
+
+    const handleDownvote = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        if (post.downvotedBy.includes(authState?.uid)) {
+            console.log("Voted");
+            return;
+        }
+        console.log("Dislike");
+    };
+
+    const handleUnauthorize = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        addNewToast({
+            variant: "warning",
+            message: "Please login to use this function",
+        });
+    };
 
     // State click outside
     const wrapperRef = useRef(null);
@@ -44,8 +77,11 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                 <div className="col-span-1">
                     {/* Avatar */}
                     <div className="flex justify-center mb-4">
-                        <Link
-                            to={`/profile/${post.user.id}`}
+                        <div
+                            onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                event.preventDefault();
+                                history.push(`/profile/${post.user.id}`);
+                            }}
                             className="avatar"
                             style={{
                                 backgroundImage: `url(${post.user.avatar})`,
@@ -63,18 +99,9 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                         : "text-5xl cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
                                 }
                                 icon="caret-up"
-                                onClick={(
-                                    event: React.MouseEvent<HTMLElement>
-                                ) => {
-                                    event.preventDefault();
-                                    if (
-                                        post.upvotedBy.includes(authState?.uid)
-                                    ) {
-                                        console.log("Voted");
-                                        return;
-                                    }
-                                    console.log("Like");
-                                }}
+                                onClick={
+                                    authState ? handleUpvote : handleUnauthorize
+                                }
                             />
                             <div className="text-center text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[4rem]">
                                 {post.upvotedBy.length -
@@ -87,20 +114,11 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                         : "text-5xl cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
                                 }
                                 icon="caret-down"
-                                onClick={(
-                                    event: React.MouseEvent<HTMLElement>
-                                ) => {
-                                    event.preventDefault();
-                                    if (
-                                        post.downvotedBy.includes(
-                                            authState?.uid
-                                        )
-                                    ) {
-                                        console.log("Voted");
-                                        return;
-                                    }
-                                    console.log("Dislike");
-                                }}
+                                onClick={
+                                    authState
+                                        ? handleDownvote
+                                        : handleUnauthorize
+                                }
                             />
                         </div>
                     </div>
@@ -110,14 +128,19 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                     {/* Post Info */}
                     <div className="flex justify-between relative">
                         <div className="flex">
-                            <Link
-                                to={`/profile/${post.user.id}`}
+                            <div
+                                onClick={(
+                                    event: React.MouseEvent<HTMLElement>
+                                ) => {
+                                    event.preventDefault();
+                                    history.push(`/profile/${post.user.id}`);
+                                }}
                                 className="font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[5rem] sm:max-w-[10rem] hover:underline"
                             >
                                 {post.user.name}
-                            </Link>
+                            </div>
                             <div className="ml-4 text-ellipsis">
-                                {moment(post.createdAt).format(DayFormat)}
+                                {moment(post.publishedAt).format(DayFormat)}
                             </div>
                         </div>
                         <div
@@ -134,12 +157,16 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                         {showOptions === post.id ? (
                             <button
                                 ref={wrapperRef}
-                                onClick={(
-                                    event: React.MouseEvent<HTMLElement>
-                                ) => {
-                                    event.preventDefault();
-                                    setOpenReport(true);
-                                }}
+                                onClick={
+                                    authState
+                                        ? (
+                                              event: React.MouseEvent<HTMLElement>
+                                          ) => {
+                                              event.preventDefault();
+                                              setOpenReport(true);
+                                          }
+                                        : handleUnauthorize
+                                }
                                 className="search-card font-bold top-0 right-0 absolute px-8 py-2 z-50 hover:bg-[color:var(--post-bg-hover-color)]"
                             >
                                 <Icon icon="flag" className="mr-4" />
@@ -272,7 +299,12 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                             </div>
 
                             {/* Save */}
-                            <div className="flex cursor-pointer hover:text-[color:var(--teal-general-color)]">
+                            <div
+                                onClick={
+                                    authState ? handleSave : handleUnauthorize
+                                }
+                                className="flex cursor-pointer hover:text-[color:var(--teal-general-color)]"
+                            >
                                 <Icon className="text-2xl" icon="bookmark" />
                                 <div className="ml-1 hidden sm:block">Save</div>
                             </div>
