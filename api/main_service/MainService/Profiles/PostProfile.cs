@@ -8,7 +8,8 @@ namespace MainService.Profiles
     {
         public PostProfile()
         {
-            CreateMap<PostCreateDto, Post>();
+            CreateMap<PostCreateDto, Post>()
+                .ForMember(dest => dest.Medias, src => src.Ignore()); ;
 
             CreateMap<Post, PostReadDto>()
                 .ForMember(dest => dest.Comment, src => src.MapFrom(x => x.CommentIds!.Count()))

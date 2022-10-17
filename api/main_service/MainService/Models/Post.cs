@@ -32,6 +32,7 @@ public class Post : BaseModel
 
     public ICollection<ObjectId>? CommentIds { get; set; } = null!; // This post's comments id
 
+    [BsonIgnoreIfNull]
     public ICollection<Comment> Comments { get; set; } = null!;
 
     public bool IsDeleted { get; set; } = false;

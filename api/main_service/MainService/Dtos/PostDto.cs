@@ -4,13 +4,13 @@ namespace MainService.Dtos;
 
 public class PostCreateDto
 {
-    public string Content { get; set; } = null!;
+    public string? Content { get; set; } = null!;
 
-    public ICollection<IFormFile> Medias { get; set; } = null!;
+    public ICollection<IFormFile>? Medias { get; set; } = null!;
 
     public List<string>? HashTags { get; set; } = null!;
 
-    public DateTime PublishedAt { get; set; }
+    public DateTime? PublishedAt { get; set; }
 
     public string UserId { get; set; } = null!;
 }
