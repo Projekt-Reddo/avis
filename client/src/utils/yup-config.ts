@@ -2,7 +2,8 @@ import * as yup from "yup";
 import { AnyObject, Maybe } from "yup/lib/types";
 
 const REGEX_PASSWORD = /^[a-zA-Z0-9!@#$%^&*_-]{6,32}$/;
-const REGEX_NAME = /^(?![\s.]+$)[a-zA-Z\s.]*$/;
+const REGEX_NAME =
+    /^(?![\s.]+$)[a-zA-Z0-9aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s.]*$/;
 const REGEX_ONLY_NUMBER = /^\d+$/;
 
 yup.addMethod<yup.StringSchema>(yup.string, "password", function (message) {

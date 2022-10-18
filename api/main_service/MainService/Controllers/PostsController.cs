@@ -3,10 +3,13 @@ using MainService.Data;
 using MainService.Dtos;
 using MainService.Logic;
 using MainService.Models;
+using MainService.Services;
+using MainService.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using static Constants;
 
 namespace MainService.Controllers;
 
@@ -16,29 +19,139 @@ public class PostsController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IPostRepo _postRepo;
+    private readonly IAccountRepo _accountRepo;
     private readonly IConfiguration _configuration;
     private readonly IPostLogic _postLogic;
+    private readonly IS3Service _s3Service;
+
 
     public PostsController(
         IMapper mapper,
         IPostRepo postRepo,
         IConfiguration configuration,
-        IPostLogic postLogic
+        IPostLogic postLogic,
+        IAccountRepo accountRepo,
+        IS3Service s3Service
     )
     {
         _mapper = mapper;
         _postRepo = postRepo;
         _configuration = configuration;
         _postLogic = postLogic;
+        _accountRepo = accountRepo;
+        _s3Service = s3Service;
+
     }
 
+    /// <summary>
+    /// Create a new post in database
+    /// </summary>
+    /// <param name="newPost">Post information</param>
+    /// <returns>200 / 400 / 404</returns>
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ResponseDto>> AddPost([FromBody] PostCreateDto newPost)
+    public async Task<ActionResult<ResponseDto>> AddPost([FromForm] PostCreateDto newPost)
     {
+
+        // To check whether account exist or not.
+        var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", newPost.UserId));
+
+        // Account not found
+        if (accountFromRepo is null)
+        {
+            return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+        }
+
+        // Mapping Post
         var post = _mapper.Map<Post>(newPost);
+
+        post.CreatedAt = DateTime.Now;
+        post.PublishedAt = newPost.PublishedAt ?? DateTime.Now;
+
+        // Normalizing Hashtags
+        if (newPost.HashTags!.Count() > 0)
+        {
+            List<string> hashtagsNormal = new List<string>();
+
+            foreach (var hashtag in newPost.HashTags!)
+            {
+                hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag));
+            }
+
+            post.HashtagsNormalized = hashtagsNormal;
+        }
+
+        // Handle upload file to AWS
+        if (newPost.Medias != null)
+        {
+            List<Media> medias = new List<Media>();
+
+            foreach (var media in newPost.Medias)
+            {
+                // Check files type
+                (var isMp3File, var songCheckMessage) = FileExtension.CheckMp3Extension(media);
+                (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(media);
+                (var isVideoFile, var videoCheckMessage) = FileExtension.CheckVideoExtension(media);
+
+                if (!isMp3File && !isImageFile && !isVideoFile)
+                {
+                    return BadRequest(new ResponseDto(400, ResponseMessage.POST_CREATE_MEDIA_TYPE));
+                }
+
+                var mediaType = "";
+                var folderUpload = "";
+
+                if (isMp3File)
+                {
+                    folderUpload = S3Config.AUDIOS_FOLDER;
+                    mediaType = "audio";
+                }
+
+                if (isImageFile)
+                {
+                    folderUpload = S3Config.IMAGES_FOLDER;
+                    mediaType = "image";
+                }
+
+                if (isVideoFile)
+                {
+                    folderUpload = S3Config.VIDEOS_FOLDER;
+                    mediaType = "video";
+                }
+
+                var newMedia = new Media()
+                {
+                    Id = ObjectId.GenerateNewId().ToString()
+                };
+
+                (var fileUploadStatus, var fileUrl) = await _s3Service.UploadFileAsync(
+                        _configuration.GetValue<string>("S3:ResourcesBucket"),
+                        folderUpload,
+                        $"{newMedia.Id}{FileExtension.GetFileExtension(media)}",
+                        media.OpenReadStream(),
+                        media.ContentType,
+                        null!
+                    );
+
+                if (fileUploadStatus is false)
+                {
+                    return BadRequest(new ResponseDto(400, ResponseMessage.POST_UPLOAD_FILE_FAIL));
+                }
+
+                newMedia.Url = fileUrl;
+                newMedia.MediaType = mediaType;
+                newMedia.MimeType = media.ContentType;
+
+                medias.Add(newMedia);
+            }
+
+            post.Medias = medias;
+        }
+
+        // Insert new Post to Database
         var rs = await _postRepo.AddOneAsync(post);
-        return Ok(new ResponseDto(200, "Add new post successfully"));
+
+        return Ok(new ResponseDto(200, ResponseMessage.POST_CREATE_SUCCESS));
     }
 
     /// <summary>
@@ -99,7 +212,8 @@ public class PostsController : ControllerBase
 
         // Config to sort created date decrease
         BsonDocument sort = new BsonDocument{
-                { "CreatedAt", -1 }
+                { "CreatedAt", -1 },
+                { "_id", 1 }
             };
 
         // Handle full text search if content field is null or empty

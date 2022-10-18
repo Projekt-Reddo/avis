@@ -6,7 +6,7 @@ public class ReportCreateDto
 {
     public string? UserId { get; set; } = null!;
 
-    public string Content { get; set; } = null!;
+    public string? Content { get; set; } = null!;
 
     private string type = string.Empty;
     [Required(ErrorMessage = "Type must be in an element in accepted list")]

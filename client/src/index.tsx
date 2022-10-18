@@ -12,6 +12,7 @@ import "utils/firebase/firebase-config";
 
 import { Provider } from "react-redux";
 import store from "./store";
+import ToastManager from "components/Toast/ToastManager";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -26,6 +27,8 @@ root.render(
                 </IonReactRouter>
             </IonApp>
         </QueryClientProvider>
+
+        <ToastManager />
     </Provider>
 );
 

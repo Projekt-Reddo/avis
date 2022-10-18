@@ -47,14 +47,14 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                 placeholder="Please enter your name"
                 register={register("name")}
                 error={errors.name}
-            ></Input>
+            />
             <Input
                 className="py-3 w-full"
                 label="Email"
                 placeholder="Please enter your Email"
                 register={register("email")}
                 error={errors.email}
-            ></Input>
+            />
             <Input
                 className="py-3 w-full"
                 label="Password"
@@ -62,7 +62,7 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                 register={register("password")}
                 type="password"
                 error={errors.password}
-            ></Input>
+            />
             <Button
                 className="mt-2.5"
                 type="submit"

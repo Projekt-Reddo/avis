@@ -65,3 +65,12 @@ export const HISTORY = "history";
 export const TIME_TO_HUM = 12;
 
 export const LEFT_NAV_MIN_SWIPE_DISTANCE = 150;
+
+export const REPORT_TYPE = {
+    NUDITY: "Nudity",
+    VIOLENCE: "Violence",
+    SPAM: "Spam",
+    HATE_SPEECH: "Hate Speech",
+    TERROISM: "Terroism",
+    SOMETHING_ELSE: "Something Else",
+};

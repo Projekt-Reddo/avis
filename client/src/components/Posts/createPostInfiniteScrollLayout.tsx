@@ -20,7 +20,7 @@ interface PostInfiniteScrollLayoutProps {
     storeSelector: (state: RootState) => AsyncReducerInitialState;
     getInitDataAction: (arg: any) => AsyncThunkAction<any, any, {}>;
     getMoreDataAction: (arg: any) => AsyncThunkAction<any, any, {}>;
-    Header: React.FC<any>;
+    Header?: React.FC<any>;
     LeftComponent: React.FC<any>;
 }
 
@@ -91,7 +91,7 @@ export default function createPostInfiniteScrollLayout({
 
     return (
         <>
-            <Header />
+            {Header && <Header />}
             <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
@@ -120,6 +120,7 @@ export default function createPostInfiniteScrollLayout({
                             style={{
                                 margin: "0 -1rem",
                                 padding: "0 1rem",
+                                minHeight: "100vh",
                             }}
                             height={
                                 width! > MOBILE_BREAKPOINT

@@ -15,6 +15,10 @@ public static class ResponseMessage
 
     // Post msg
     public const string POST_NOT_FOUND = "No post found";
+    public const string POST_CREATE_SUCCESS = "Create a post successfully";
+    public const string POST_CREATE_MEDIA_TYPE = "Media type is not supported";
+    public const string POST_UPLOAD_FILE_FAIL = "Fail to upload files";
+
 
     // Report msg
     public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
@@ -54,6 +58,7 @@ public static class ResponseMessage
     // Account msg
     public const string ACCOUNT_EMAIL_DUPLICATED = "Email duplicated!";
     public const string ACCOUNT_CREATE_SUCCESS = "Account created successfully";
+    public const string ACCOUNT_CREATE_FAILED = "Account failed to create";
     public const string ACCOUNT_GOOGLE_LOGIN_SUCCESS = "This account is exist and no need to set up!";
     public const string ACCOUNT_NOT_FOUND = "Cannot find your account!";
     public const string ACCOUNT_PROFILE_UPDATE_SUCCESS = "Profile updated!";
