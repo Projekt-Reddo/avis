@@ -9,6 +9,8 @@ import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";
 import { firebaseLogout } from "api/firebase-api";
 
+import WHITE_IMG from "static/white.png";
+
 const Nav = () => {
     const location = useLocation();
 
@@ -122,7 +124,7 @@ const Nav = () => {
                                 <Fragment>
                                     <img
                                         className="inline-block h-9 w-9 rounded-full ring-2 ring-white mr-2"
-                                        src="https://i.ibb.co/59tcmyp/96263453-p0.png"
+                                        src={user.avatar || WHITE_IMG}
                                         alt="avatar"
                                     />
                                     <Icon icon="angle-down" />

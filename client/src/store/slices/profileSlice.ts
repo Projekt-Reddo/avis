@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { currentFirebaseUser } from "api/firebase-api";
-import { getUserProfile } from "api/profile-api";
+import { getUserProfile, updateUserProfile } from "api/profile-api";
 
 const initialState: AsyncReducerInitialState = {
     status: "init",
@@ -20,6 +20,12 @@ const profileSlice = createSlice({
             .addCase(viewProfileAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(updateProfileAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(updateProfileAsync.fulfilled, (state, action) => {
+                state.status = "idle";
             });
     },
 });
@@ -31,5 +37,25 @@ export const viewProfileAsync = createAsyncThunk("profile/view", async () => {
 
     return data;
 });
+
+export const updateProfileAsync = createAsyncThunk(
+    "profile/update",
+    async (userProfileUpdateDto: ProfileUpdateDto) => {
+        try {
+            const currentUserData = currentFirebaseUser();
+
+            const data = await updateUserProfile(
+                currentUserData?.uid!,
+                userProfileUpdateDto
+            );
+
+            if (data) window.location.reload();
+
+            return data;
+        } catch (e: unknown) {
+            console.log(e);
+        }
+    }
+);
 
 export default profileSlice.reducer;

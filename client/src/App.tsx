@@ -46,8 +46,6 @@ const App: React.FC = () => {
             </IonRouterOutlet>
 
             <TabsNav />
-
-            <ToastManager />
         </>
     );
 };

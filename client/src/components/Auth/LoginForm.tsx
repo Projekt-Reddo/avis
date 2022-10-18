@@ -10,7 +10,6 @@ import { loginAsync } from "store/slices/authSlice";
 import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 import { Link } from "react-router-dom";
-import { useRedirectAfterLoggedIn } from "./login-hooks";
 
 interface LoginFormProps {}
 
@@ -39,8 +38,6 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
         );
     };
 
-    useRedirectAfterLoggedIn();
-
     return (
         <form
             className="w-full h-max md:mt-8"
@@ -52,7 +49,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
                 placeholder="Please enter your Email"
                 register={register("email")}
                 error={errors.email}
-            ></Input>
+            />
             <Input
                 className="py-3 w-full"
                 label="Password"
@@ -60,7 +57,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
                 register={register("password")}
                 type="password"
                 error={errors.password}
-            ></Input>
+            />
             <Link className="mt-2 block text-sm text-gray-500" to="/">
                 Forgot password?
             </Link>

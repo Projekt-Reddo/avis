@@ -143,14 +143,15 @@ export default authSlice.reducer;
 
 // Get data from Firebase return to add to Redux
 async function getUserDataState(userFirebaseData: User) {
-    const tokenResult = await userFirebaseData.getIdTokenResult();
+    const tokenResult = await userFirebaseData.getIdTokenResult(true);
 
     return {
         emailVerified: userFirebaseData.emailVerified,
         uid: userFirebaseData.uid,
         role: tokenResult.claims["role"],
         email: userFirebaseData.email,
-        name:
+        displayName:
+            tokenResult.claims["displayName"] ||
             tokenResult.claims["name"] ||
             userFirebaseData.displayName ||
             "Kuhaku",
