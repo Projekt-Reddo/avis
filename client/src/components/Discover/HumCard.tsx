@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
 // Libs
 import { Link, useHistory } from "react-router-dom";
 import { useAppSelector } from "utils/react-redux-hooks";
@@ -8,15 +6,14 @@ import moment from "moment";
 
 // Components
 import Icon from "components/shared/Icon";
-import Modal from "components/Modal/Modal";
 import { addNewToast } from "components/Toast";
 
 // Constants
 import { DayFormat } from "utils/constants";
-import { useModal } from "components/Modal";
 
 // Styles
 import "theme/Discover.css";
+import PostReport from "components/Report/PostReport";
 
 interface HumCardProps {
     post: Post;
@@ -25,13 +22,7 @@ interface HumCardProps {
 const HumCard: React.FC<HumCardProps> = ({ post }) => {
     const authState = useAppSelector((state) => state.auth.data);
 
-    const [showOptions, setShowOptions] = useState<string>();
-
-    const { open: openReport, setOpen: setOpenReport } = useModal();
-
     const history = useHistory();
-
-    const handleReport = () => {};
 
     const handleSave = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
@@ -63,10 +54,6 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
             message: "Please login to use this function",
         });
     };
-
-    // State click outside
-    const wrapperRef = useRef(null);
-    useOutsideAlerter(wrapperRef, setShowOptions);
 
     return (
         <>
@@ -143,38 +130,8 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                 {moment(post.publishedAt).format(DayFormat)}
                             </div>
                         </div>
-                        <div
-                            onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                event.preventDefault();
-                                setShowOptions(post.id);
-                            }}
-                        >
-                            <Icon
-                                className="text-2xl cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                                icon="ellipsis"
-                            />
-                        </div>
-                        {showOptions === post.id ? (
-                            <button
-                                ref={wrapperRef}
-                                onClick={
-                                    authState
-                                        ? (
-                                              event: React.MouseEvent<HTMLElement>
-                                          ) => {
-                                              event.preventDefault();
-                                              setOpenReport(true);
-                                          }
-                                        : handleUnauthorize
-                                }
-                                className="search-card font-bold top-0 right-0 absolute px-8 py-2 z-50 hover:bg-[color:var(--post-bg-hover-color)]"
-                            >
-                                <Icon icon="flag" className="mr-4" />
-                                Report Post
-                            </button>
-                        ) : (
-                            ""
-                        )}
+
+                        <PostReport id={post.id} />
                     </div>
 
                     {/* Content */}
@@ -210,6 +167,7 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                                         />
                                     ))}
                             </div>
+
                             {/* Audio */}
                             {post.medias
                                 .filter(
@@ -328,44 +286,8 @@ const HumCard: React.FC<HumCardProps> = ({ post }) => {
                     </div>
                 </div>
             </Link>
-
-            <Modal
-                type="warning"
-                open={openReport}
-                setOpen={setOpenReport}
-                title="Report"
-                message=""
-                modalBody={
-                    <div className="w-[25rem] rounded p-2 border-solid border-2 border-sky-500s">
-                        In Development
-                    </div>
-                }
-                confirmTitle="Delete"
-                onConfirm={handleReport}
-            />
         </>
     );
 };
-
-// Handle click outside
-export function useOutsideAlerter(ref: any, setShowOption: any) {
-    useEffect(() => {
-        /**
-         * Set listData to null
-         */
-        function handleClickOutside(event: any) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                setShowOption();
-            }
-        }
-
-        // Bind the event listener
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref]);
-}
 
 export default HumCard;
