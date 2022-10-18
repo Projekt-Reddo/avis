@@ -9,16 +9,16 @@ namespace MainService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReportController : ControllerBase
+public class ReportsController : ControllerBase
 {
     private readonly IReportLogic _reportLogic;
 
-    public ReportController(IReportLogic reportLogic)
+    public ReportsController(IReportLogic reportLogic)
     {
         _reportLogic = reportLogic;
     }
 
-    // [Authorize]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> ReportPost(ReportCreateDto reportDto)
     {
