@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import Button from "components/Button/Button";
 import Icon from "components/shared/Icon";
 
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
@@ -11,8 +10,13 @@ import "./Profile.css";
 import { viewProfileAsync } from "store/slices/profileSlice";
 import TextLoading from "components/SkeletonLoading/TextLoading";
 import moment from "moment";
+import ProfileEditButton from "../ProfileEdit/ProfileEditButton";
 
-const ProfileCard = () => {
+interface ProfileCardProps {
+    loading: boolean;
+}
+
+const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
     const dispatch = useAppDispatch();
 
     const profileState = useAppSelector((state) => state.profile);
@@ -52,7 +56,7 @@ const ProfileCard = () => {
             <div className="w-full h-full flex flex-col items-center">
                 {/* Wallpaper */}
                 <div
-                    className="w-full profile-bg-img-position profile-wallpaper rounded-t-lg"
+                    className="w-full profile-bg-img-position profile-wallpaper lg:rounded-t-lg"
                     style={{
                         backgroundImage: `url(${WALLPAPER_BG})`,
                         backgroundSize: "cover",
@@ -87,21 +91,12 @@ const ProfileCard = () => {
 
                     {/* Right button */}
                     <div className="flex flex-row justify-end w-1/2">
-                        <Button
-                            variant="white"
-                            className="rounded-full font-bold"
-                            style={{
-                                boxShadow: "none",
-                                border: "1px solid black",
-                                height: "fit-content",
-                            }}
+                        <ProfileEditButton
                             disabled={
                                 profileState.status === "init" ||
                                 profileState.status === "loading"
                             }
-                        >
-                            Edit Profile
-                        </Button>
+                        />
                     </div>
                 </div>
             </div>

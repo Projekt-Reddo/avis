@@ -1,4 +1,5 @@
 using Amazon.Auth.AccessControlPolicy;
+using Amazon.S3.Model;
 using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
@@ -31,7 +32,7 @@ namespace MainService.Logic
 
         Task<Account?> AccountGetAccountByUid(string uid);
 
-        Task<(bool status, string message)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto);
+        Task<(bool status, string message, Account? data)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto);
     }
     public class AccountLogic : IAccountLogic
     {
@@ -183,16 +184,12 @@ namespace MainService.Logic
 
         public async Task SetClaimWhenSignUp(Account account)
         {
-            await FirebaseService.SetRoleClaim(account.Uid, AccountRoles.USER);
-            await FirebaseService.SetNameClaim(account.Uid, account.Name);
-            await FirebaseService.SetAvatarClaim(account.Uid, account.Avatar);
-            await FirebaseService.SetInitiatedClaim(account.Uid);
+            await FirebaseService.SetClaims(account);
         }
 
         public async Task SetClaimWhenUpdateProfile(Account account)
         {
-            await FirebaseService.SetNameClaim(account.Uid, account.Name);
-            await FirebaseService.SetAvatarClaim(account.Uid, account.Avatar);
+            await FirebaseService.SetClaims(account);
         }
 
         public FilterDefinition<Account> AccountFilterId(string userId)
@@ -208,7 +205,7 @@ namespace MainService.Logic
             return accountsFromRepo;
         }
 
-        public async Task<(bool status, string message)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto)
+        public async Task<(bool status, string message, Account? data)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto)
         {
             using var session = await _accountRepo.StartSessionAsync();
             try
@@ -221,11 +218,13 @@ namespace MainService.Logic
                 // Account not found
                 if (accountFromRepo is null)
                 {
-                    return (false, ResponseMessage.ACCOUNT_NOT_FOUND);
+                    return (false, ResponseMessage.ACCOUNT_NOT_FOUND, null);
                 }
 
                 // Update properties
                 _mapper.Map(accountProfileUpdateDto, accountFromRepo);
+
+                var update = Builders<Account>.Update.Set(x => x.Name, accountProfileUpdateDto.Name);
 
                 // Upload new avatar
                 if (accountProfileUpdateDto.AvatarFile is not null)
@@ -234,7 +233,7 @@ namespace MainService.Logic
                     (var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(accountProfileUpdateDto.AvatarFile);
                     if (isImageFile is false)
                     {
-                        return (false, imageCheckMessage!);
+                        return (false, imageCheckMessage!, null);
                     }
 
                     var fileExtension = FileExtension.GetFileExtension(accountProfileUpdateDto.AvatarFile);
@@ -255,29 +254,22 @@ namespace MainService.Logic
                     );
 
                     accountFromRepo.Avatar = avatarUrl;
+                    update = update.Set(x => x.Avatar, avatarUrl);
                 }
 
-                var rs = await _accountRepo.ReplaceOneAsync(accountFromRepo.Id, accountFromRepo);
+                var filter = Builders<Account>.Filter.Eq(x => x.Uid, uid);
+                var rs = await _accountRepo.UpdateOneAsync(session, filter, update);
 
-                if (rs is true)
-                {
-                    // Set Firebase new claim
-                    await SetClaimWhenUpdateProfile(accountFromRepo);
-                }
-
+                await SetClaimWhenUpdateProfile(accountFromRepo);
                 await session.CommitTransactionAsync();
 
-                return (
-                    rs,
-                    rs is false ? ResponseMessage.ACCOUNT_PROFILE_UPDATE_FAIL
-                                : ResponseMessage.ACCOUNT_PROFILE_UPDATE_SUCCESS
-                );
+                return (rs, ResponseMessage.ACCOUNT_PROFILE_UPDATE_SUCCESS, accountFromRepo);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
                 await session.AbortTransactionAsync();
-                return (false, ResponseMessage.ACCOUNT_PROFILE_UPDATE_FAIL);
+                return (false, ResponseMessage.ACCOUNT_PROFILE_UPDATE_FAIL, null);
             }
         }
 
