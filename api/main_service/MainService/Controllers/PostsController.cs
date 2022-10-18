@@ -178,9 +178,7 @@ public class PostsController : ControllerBase
         {
             userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
         }
-#pragma warning disable CS0168
-        catch (Exception e)
-#pragma warning restore CS0168
+        catch (Exception)
         {
             userId = null;
         }
