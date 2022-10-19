@@ -52,19 +52,31 @@ public class PostsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> AddPost([FromForm] PostCreateDto newPost)
     {
+        var userId = "";
 
-        // To check whether account exist or not.
-        var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", newPost.UserId));
-
-        // Account not found
-        if (accountFromRepo is null)
+        // Get User Id
+        try
         {
-            return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+            userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+            // To check whether account exist or not.
+            var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", userId));
+
+            // Account not found
+            if (accountFromRepo is null)
+            {
+                return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+            }
+        }
+        catch (Exception)
+        {
+            userId = null;
         }
 
         // Mapping Post
         var post = _mapper.Map<Post>(newPost);
 
+        post.UserId = userId!;
         post.CreatedAt = DateTime.Now;
         post.PublishedAt = newPost.PublishedAt ?? DateTime.Now;
 
