@@ -12,7 +12,7 @@ public class PostCreateDto
 
     public DateTime? PublishedAt { get; set; }
 
-    public string UserId { get; set; } = null!;
+    public string DisplayStatus { get; set; } = null!;
 }
 
 public class PostReadDto
