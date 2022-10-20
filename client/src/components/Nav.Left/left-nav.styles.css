@@ -51,6 +51,7 @@
 
 .page-wrapper-left-nav {
     transition: var(--left-nav-transition-duration);
+    padding-bottom: 3rem;
 }
 
 @media screen and (min-width: 1024px) {
@@ -100,6 +101,8 @@
                 0.25rem
         ) !important;
         padding-right: var(--page-wrapper-left-nav-padding) !important;
+
+        padding-bottom: 0;
     }
 
     .page-wrapper-left-nav.show {

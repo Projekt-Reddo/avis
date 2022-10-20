@@ -38,9 +38,9 @@ namespace MainService.Logic
     {
         private readonly IS3Service _s3Service;
         private readonly IConfiguration _configuration;
-        private IAccountRepo _accountRepo;
-        private IPostRepo _postRepo;
-        private IReportRepo _reportRepo;
+        private readonly IAccountRepo _accountRepo;
+        private readonly IPostRepo _postRepo;
+        private readonly IReportRepo _reportRepo;
         private readonly IMapper _mapper;
         private readonly IFileStorageService _fileStorage;
         private readonly ILogger<SongLogic> _logger;
@@ -182,15 +182,10 @@ namespace MainService.Logic
             return account;
         }
 
-        public async Task SetClaimWhenSignUp(Account account)
-        {
-            await FirebaseService.SetClaims(account);
-        }
+        public async Task SetClaimWhenSignUp(Account account) => await FirebaseService.SetClaims(account);
 
-        public async Task SetClaimWhenUpdateProfile(Account account)
-        {
-            await FirebaseService.SetClaims(account);
-        }
+		public async Task SetClaimWhenUpdateProfile(Account account) => await FirebaseService.SetClaims(account);
+
 
         public FilterDefinition<Account> AccountFilterId(string userId)
         {
