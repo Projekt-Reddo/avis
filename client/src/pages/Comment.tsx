@@ -6,10 +6,12 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 
 interface CommentParams {
-    postId: string;
+    commentId: string;
 }
-const Post = () => {
-    const { postId } = useParams<CommentParams>();
+
+const Comment = () => {
+    const { commentId } = useParams<CommentParams>();
+    console.log(commentId);
     return (
         <PageWrapper>
             <div className="lg:hidden flex justify-between items-center p-4">
@@ -24,23 +26,14 @@ const Post = () => {
             <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    <HumCardDetail />
-                    <CommentSection postId={postId} isPostChild={true} />
+                    {/* <HumCardDetail></HumCardDetail> */}
+                    <CommentSection postId={commentId} isPostChild={false} />
                 </div>
                 {/* Right */}
-                <div className="hidden col-span-1 lg:block">
-                    {/* <SearchBox
-            register={register("content")}
-            handleSubmit={handleSubmit(handleSearch)}
-          />
-          <TrendingCard
-            setFetchMorePage={setFetchMorePage}
-            setState={setPageFilter}
-          /> */}
-                </div>
+                <div className="hidden col-span-1 lg:block"></div>
             </div>
         </PageWrapper>
     );
 };
 
-export default Post;
+export default Comment;

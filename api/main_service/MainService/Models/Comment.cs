@@ -9,6 +9,8 @@ namespace MainService.Models;
 [BsonIgnoreExtraElements]
 public class Comment : BaseModel
 {
+    // [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+
     public string UserId { get; set; } = null!;
 
     [BsonIgnoreIfNull]
@@ -16,9 +18,9 @@ public class Comment : BaseModel
 
     public string Content { get; set; } = null!;
 
-    public ICollection<ObjectId> UpvotedBy { get; set; } = null!;
+    public ICollection<string> UpvotedBy { get; set; } = null!;
 
-    public ICollection<ObjectId> DownvotedBy { get; set; } = null!;
+    public ICollection<string> DownvotedBy { get; set; } = null!;
 
     public ICollection<ObjectId> Comments { get; set; } = null!;
 

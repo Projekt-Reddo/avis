@@ -16,7 +16,7 @@ public interface ICommentLogic
     Task<bool> UpdateComment(string commentId, Comment comment);
     Task<bool> UpdatePostComment(string postId, Comment comment);
     Task<Comment> GetCommentById(string commentId);
-    Task<IEnumerable<Comment>> GetComments(string queryId, bool IsPostChild);
+    Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
 }
 
 public class CommentLogic : ICommentLogic
@@ -89,7 +89,7 @@ public class CommentLogic : ICommentLogic
             return commentFromRepo;
         }
 
-    public async Task<IEnumerable<Comment>> GetComments(string queryId, bool IsPostChild){
+    public async Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage){
         BsonDocument lookup = new BsonDocument{
                         { "from", "account" },
                         { "localField", "UserId" },
@@ -111,7 +111,8 @@ public class CommentLogic : ICommentLogic
                     }},
                     {"UpvotedBy", 1},
                     {"DownvotedBy", 1},
-                    {"Media", 1}
+                    {"Media", 1},
+                    {"Comments", 1}
             };
         var filterComments = Builders<Comment>.Filter.Empty;
         if (IsPostChild){
@@ -124,8 +125,11 @@ public class CommentLogic : ICommentLogic
             var commentFromRepo = await _commentRepo.FindOneAsync(filter: Builders<Comment>.Filter.Eq(x => x.Id, queryId));
             filterComments = Builders<Comment>.Filter.In("_id", commentFromRepo.Comments);
         }
-        (_, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project);
+        (var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
+                limit: Size,
+                skip: skipPage
+                );
 
-        return comments;
+        return (totals, comments);
     }
 }
