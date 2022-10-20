@@ -11,22 +11,24 @@ import hashtagSlice from "./slices/hashtagSlice";
 import genreSlice from "./slices/genreSlice";
 import profileSlice from "./slices/profileSlice";
 import reportSlice from "./slices/reportSlice";
+import commentSlice from "./slices/commentSlice";
 
 const store = configureStore({
-    reducer: {
-        auth: authSlice,
-        user: userSlice,
-        song: songSlice,
-        post: postSlice,
-        hashtag: hashtagSlice,
-        search: searchSlide,
-        toast: toastSlice,
-        leftNavShowing: leftNavSlice,
-        songRecommend: songRecommendSlice,
-        genre: genreSlice,
-        profile: profileSlice,
-        report: reportSlice,
-    },
+  reducer: {
+    auth: authSlice,
+    user: userSlice,
+    song: songSlice,
+    post: postSlice,
+    hashtag: hashtagSlice,
+    search: searchSlide,
+    toast: toastSlice,
+    leftNavShowing: leftNavSlice,
+    songRecommend: songRecommendSlice,
+    genre: genreSlice,
+    profile: profileSlice,
+    report: reportSlice,
+    comment: commentSlice,
+  },
 });
 
 export default store;

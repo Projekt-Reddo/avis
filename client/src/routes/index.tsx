@@ -3,6 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import Home from "pages/Home";
 import Login from "pages/auth/Login";
 import Post from "pages/Post";
+import Comment from "pages/Comment";
 import Signup from "pages/auth/Signup";
 import Song from "pages/Song";
 import Notification from "pages/Notification";
@@ -45,6 +46,10 @@ const MainRoute = () => {
 
                 <Route path="/discover/:postId">
                     <Post />
+                </Route>
+
+                <Route path="/discover/comment/:commentId">
+                    <Comment />
                 </Route>
 
                 <Route exact path="/discover">
