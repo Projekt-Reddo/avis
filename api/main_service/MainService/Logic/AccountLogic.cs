@@ -24,7 +24,9 @@ namespace MainService.Logic
 
         Task SetClaimWhenSignUp(Account account);
 
-        Account SetAccountDefaultValues(AccountCreateDto newAccount);
+		Task SetClaimWhenUpdateProfile(Account account);
+
+		Account SetAccountDefaultValues(AccountCreateDto newAccount);
 
         FilterDefinition<Account> AccountFilterId(string userId);
 
