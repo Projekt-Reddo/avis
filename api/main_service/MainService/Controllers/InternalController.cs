@@ -1,5 +1,6 @@
 using MainService.Data;
 using MainService.Dtos;
+using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,15 @@ public class InternalController : ControllerBase // Health check controller
     private readonly IHumSvcClient _humSvcClient;
     private readonly IConfiguration _configuration;
     private readonly IAccountRepo _accountRepo;
+	private readonly IAccountLogic _accountLogic;
 
-    public InternalController(IHumSvcClient humSvcClient, IConfiguration configuration, IAccountRepo accountRepo)
+	public InternalController(IHumSvcClient humSvcClient, IConfiguration configuration, IAccountRepo accountRepo, IAccountLogic accountLogic)
     {
         _humSvcClient = humSvcClient;
         _configuration = configuration;
         _accountRepo = accountRepo;
-    }
+		_accountLogic = accountLogic;
+	}
 
     [HttpGet("health-check")]
     public async Task<ActionResult> HealthCheck()
@@ -56,12 +59,12 @@ public class InternalController : ControllerBase // Health check controller
             return BadRequest(new ResponseDto(400, "No Uid found!"));
         }
 
-        await FirebaseService.SetRoleClaim(adminRoleCreateDto.Uid, AccountRoles.ADMIN);
-
         // Assign role to database
         accountFromRepo.Role = AccountRoles.ADMIN;
         await _accountRepo.ReplaceOneAsync(accountFromRepo.Id, accountFromRepo);
 
-        return Ok(new ResponseDto(200, "Admin role granted!"));
+		await _accountLogic.SetClaimWhenUpdateProfile(accountFromRepo);
+
+		return Ok(new ResponseDto(200, "Admin role granted!"));
     }
 }
