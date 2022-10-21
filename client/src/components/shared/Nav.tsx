@@ -126,6 +126,9 @@ const Nav = () => {
                                         className="inline-block h-9 w-9 rounded-full ring-2 ring-white mr-2"
                                         src={user.avatar || WHITE_IMG}
                                         alt="avatar"
+                                        style={{
+                                            objectFit: "cover",
+                                        }}
                                     />
                                     <Icon icon="angle-down" />
                                 </Fragment>
