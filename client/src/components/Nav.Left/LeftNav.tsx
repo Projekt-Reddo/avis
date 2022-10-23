@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useLocation } from "react-router";
 import { toggleLeftNav } from "store/slices/leftNavSlice";
 import { leftNavAdmin } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
@@ -8,7 +8,7 @@ import LeftNavFloatingButton from "./LeftNav.FloatingButton";
 import LeftNavItem from "./LeftNav.Item";
 
 const LeftNav = () => {
-    const [active, setActive] = useState("/admin/dashboard");
+    const location = useLocation();
 
     const isShowing = useAppSelector((state) => state.leftNavShowing);
 
@@ -31,7 +31,7 @@ const LeftNav = () => {
                         <LeftNavItem
                             key={item.title}
                             itemData={item}
-                            isActive={active === item.path}
+                            isActive={location.pathname.startsWith(item.path)}
                             isShowing={isShowing}
                         />
                     );

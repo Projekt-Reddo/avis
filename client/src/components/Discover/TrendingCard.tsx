@@ -69,6 +69,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
                     ) : (
                         ""
                     )}
+
                     <div
                         onClick={() => {
                             setFetchMorePage(2);
@@ -83,9 +84,11 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
                     >
                         #New
                     </div>
+
                     <div className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2">
                         Your Favorite
                     </div>
+
                     {hashtagState?.randomHashtags.length > 0 ? (
                         <div
                             onClick={() => {
@@ -127,16 +130,19 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
                                     setState((state: any) => ({
                                         ...state,
                                         currentPage: 1,
-                                        filter: { hashtags: [hashtag] },
+                                        filter: {
+                                            hashtags: [hashtag],
+                                        },
                                     }));
                                 }}
                                 className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2"
                             >
-                                {hashtag}
+                                #{hashtag}
                             </div>
                         ))}
                 </div>
             </div>
+
             <div className="hidden lg:block card mt-4 p-4">
                 <div className="grid grid-cols-2">
                     <div>Help</div>

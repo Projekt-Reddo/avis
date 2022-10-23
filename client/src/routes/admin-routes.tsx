@@ -7,6 +7,7 @@ import Genre from "pages/admin/Genre";
 
 import { useRouteMatch } from "react-router";
 import AdminRoute from "./AdminRoute";
+import ViewArtist from "pages/admin/Artist/View";
 
 const AdminRoutes = () => {
     let { path } = useRouteMatch();
@@ -35,6 +36,10 @@ const AdminRoutes = () => {
 
             <AdminRoute exact path={`${path}/genre`}>
                 <Genre />
+            </AdminRoute>
+
+            <AdminRoute exact path={`${path}/artist`}>
+                <ViewArtist />
             </AdminRoute>
         </>
     );

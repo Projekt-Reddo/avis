@@ -59,4 +59,10 @@ public static class Constants
     {
         public const string USER_ID = "user_id";
     }
+
+    public static class PostStatus
+    {
+        public const string PUBLIC = "public";
+        public const string PRIVATE = "private";
+    }
 }

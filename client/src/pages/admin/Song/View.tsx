@@ -194,14 +194,19 @@ const View = () => {
                 type="error"
                 open={openDelete}
                 setOpen={setOpenDelete}
-                title="Are you sure you want to delete those songs!!!"
-                message=""
+                title="Delete Song"
+                message="After you delete those songs, it's permanently deleted. Songs can't be undeleted."
                 modalBody={
-                    <div className="w-[25rem] rounded p-2 border-solid border-2 border-sky-500s">
+                    <div className="w-full">
+                        <div className="text-sm mb-2 text-[color:var(--text-tertiary-color)]">
+                            Song
+                        </div>
                         {songState.tableData
                             ?.filter((s: any) => s.isSelected === true)
                             .map((song: any) => (
-                                <div key={song.id}>{song.title}</div>
+                                <div key={song.id} className="mt-1">
+                                    {song.title}
+                                </div>
                             ))}
                     </div>
                 }
