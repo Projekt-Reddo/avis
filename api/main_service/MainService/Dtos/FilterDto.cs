@@ -36,4 +36,9 @@ namespace MainService.Dtos
         public ICollection<string>? Genres { get; set; } = null!;
         public string ExistedId { get; set; } = null!;
     }
+
+	public class ArtistFilterDto
+	{
+		public string? Name { get; set; } = null!;
+	}
 }

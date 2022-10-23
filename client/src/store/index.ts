@@ -11,6 +11,7 @@ import hashtagSlice from "./slices/hashtagSlice";
 import genreSlice from "./slices/genreSlice";
 import profileSlice from "./slices/profileSlice";
 import reportSlice from "./slices/reportSlice";
+import artistSlice from "./slices/artistSlice";
 
 const store = configureStore({
     reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
         genre: genreSlice,
         profile: profileSlice,
         report: reportSlice,
+        artist: artistSlice,
     },
 });
 
