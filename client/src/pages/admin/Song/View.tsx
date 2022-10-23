@@ -28,6 +28,7 @@ import { DayFormat } from "utils/constants";
 import { recommendGenreApi } from "api/genre-api";
 import { useModal } from "components/Modal";
 import Modal from "components/Modal/Modal";
+import ViewHeader from "components/Admin/View/ViewHeader";
 
 interface pageRowFilterProps {
     currentPage: number;
@@ -155,20 +156,7 @@ const View = () => {
     return (
         <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
             {/* Header */}
-            <div className="flex justify-between pt-6">
-                <div className="text-lg font-bold">Song</div>
-                <Link to="/admin/song/create">
-                    <div
-                        className="h-9 w-9 flex justify-center items-center text-[color:var(--teal-lighter-color)] bg-[color:var(--body-bg-color)]"
-                        style={{
-                            borderRadius: "50%",
-                            border: "3px solid var(--teal-lighter-color)",
-                        }}
-                    >
-                        <Icon icon="plus" />
-                    </div>
-                </Link>
-            </div>
+            <ViewHeader title="Song" addButtonUrl="/admin/song/create" />
 
             {/* Search Bar */}
             <SearchFilter

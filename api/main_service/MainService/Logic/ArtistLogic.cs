@@ -1,10 +1,11 @@
+using System.Linq;
 using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
+using MongoDB.Bson;
 using MongoDB.Driver;
-
 namespace MainService.Logic;
 
 public interface IArtistLogic
@@ -12,7 +13,8 @@ public interface IArtistLogic
     Task<bool> Create(ArtistCreateDto createDto);
     Task<string> CreateMany(ICollection<ArtistCreateDto> createManyDto);
     Task<ICollection<ArtistReadDto>> GetAll();
-    Task<bool> Delete(string id);
+	Task<PaginationResDto<ArtistReadDto>> List(PaginationReqDto<ArtistFilterDto> pagination);
+	Task<bool> Delete(string id);
     Task<int> DeleteMany(ArtistManyDeleteDto deleteManyDto);
     Task<ArtistReadDto> GetById(string id);
     Task<IEnumerable<Artist>> GetByName(string name);
@@ -86,7 +88,30 @@ public class ArtistLogic : IArtistLogic
         return successCount;
     }
 
-    public async Task<ICollection<ArtistReadDto>> GetAll()
+	public async Task<PaginationResDto<ArtistReadDto>> List(PaginationReqDto<ArtistFilterDto> pagination)
+	{
+		var artistFilter = Builders<Artist>.Filter.Not(Builders<Artist>.Filter.Eq(x => x.IsDeleted, true));
+
+		// Name Filter
+		if (!String.IsNullOrWhiteSpace(pagination.Filter.Name))
+		{
+			artistFilter = artistFilter & ( Builders<Artist>.Filter.Regex("Name", new BsonRegularExpression(pagination.Filter.Name, "i")) | Builders<Artist>.Filter.Regex("Alias", new BsonRegularExpression(pagination.Filter.Name, "i")));
+		}
+
+		// Pagination formula
+		var skipPage = (pagination.Page - 1) * pagination.Size;
+
+		(long total, IEnumerable<Artist> entities) = await _artistRepo.FindManyAsync(
+			filter: artistFilter,
+			limit: pagination.Size,
+			skip: skipPage);
+
+		IEnumerable<ArtistReadDto> artistData = _mapper.Map<IEnumerable<ArtistReadDto>>(entities);
+
+		return new PaginationResDto<ArtistReadDto>((Int32)total, artistData);
+	}
+
+	public async Task<ICollection<ArtistReadDto>> GetAll()
     {
         (_, var entities) = await _artistRepo.FindManyAsync();
         return _mapper.Map<ICollection<ArtistReadDto>>(entities);

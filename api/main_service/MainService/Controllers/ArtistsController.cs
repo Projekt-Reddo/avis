@@ -46,7 +46,15 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
-    [Authorize]
+	[Authorize]
+	[HttpPost("filter")]
+	public async Task<ActionResult<ICollection<ArtistReadDto>>> GetAll(PaginationReqDto<ArtistFilterDto> pagination)
+	{
+		var rs = await _artistLogic.List(pagination);
+		return Ok(rs);
+	}
+
+	[Authorize]
     [HttpPost("recommend")]
     public async Task<ActionResult<ICollection<ArtistReadDto>>> Recommend(ArtistRecommendDto recommendDto)
     {
