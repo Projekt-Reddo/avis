@@ -98,3 +98,12 @@ public class HashtagsRecommend
     // public ICollection<string> Hot { get; set; } = null!;
     public ICollection<string> RandomHashtags { get; set; } = null!;
 }
+
+public class VoteDto
+{
+    public string VoteId { get; set; } = null!;
+
+    public bool isUpvote { get; set; }
+
+    public bool isVotePost { get; set; }
+}

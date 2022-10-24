@@ -17,6 +17,7 @@ public interface ICommentLogic
     Task<bool> UpdatePostComment(string postId, Comment comment);
     Task<Comment> GetCommentById(string commentId);
     Task<IEnumerable<Comment>> GetComments(string queryId, bool IsPostChild);
+    Task<bool> VoteComment(string userId, string commentId, bool isUpVote);
 }
 
 public class CommentLogic : ICommentLogic
@@ -127,5 +128,51 @@ public class CommentLogic : ICommentLogic
         (_, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project);
 
         return comments;
+    }
+
+    public async Task<bool> VoteComment(string userId, string commentId, bool isUpVote)
+    {
+        var filter = Builders<Comment>.Filter.Eq(p => p.Id, commentId);
+
+        var comment = await _commentRepo.FindOneAsync(filter: filter);
+
+        if (comment.UpvotedBy.Contains(userId))
+        {
+
+            comment.UpvotedBy.Remove(userId);
+
+            if (!isUpVote)
+            {
+                comment.DownvotedBy.Add(userId);
+            }
+
+            return true;
+        }
+        else if (comment.DownvotedBy.Contains(userId))
+        {
+
+            comment.DownvotedBy.Remove(userId);
+
+            if (isUpVote)
+            {
+                comment.UpvotedBy.Add(userId);
+            }
+
+            return true;
+        } else {
+
+            if (isUpVote)
+            {
+
+                comment.UpvotedBy.Add(userId);
+
+            } else {
+
+                comment.DownvotedBy.Add(userId);
+
+            }
+
+            return true;
+        }
     }
 }

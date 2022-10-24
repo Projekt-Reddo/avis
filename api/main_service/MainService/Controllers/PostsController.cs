@@ -22,6 +22,7 @@ public class PostsController : ControllerBase
     private readonly IAccountRepo _accountRepo;
     private readonly IConfiguration _configuration;
     private readonly IPostLogic _postLogic;
+    private readonly ICommentLogic _commentLogic;
     private readonly IS3Service _s3Service;
 
 
@@ -31,7 +32,8 @@ public class PostsController : ControllerBase
         IConfiguration configuration,
         IPostLogic postLogic,
         IAccountRepo accountRepo,
-        IS3Service s3Service
+        IS3Service s3Service,
+        ICommentLogic commentLogic
     )
     {
         _mapper = mapper;
@@ -40,6 +42,7 @@ public class PostsController : ControllerBase
         _postLogic = postLogic;
         _accountRepo = accountRepo;
         _s3Service = s3Service;
+        _commentLogic = commentLogic;
 
     }
 
@@ -364,9 +367,34 @@ public class PostsController : ControllerBase
     //     return Ok();
     // }
 
-    // [HttpPut("vote/{id}")]
-    // public async Task<ActionResult<ResponseDto>> UpDownVotePost()
-    // {
-    //     return Ok();
-    // }
+    [HttpPut("vote/{id}")]
+    public async Task<ActionResult<ResponseDto>> UpDownVotePost(VoteDto voteDto)
+    {
+        if (voteDto.isVotePost)
+        {
+            var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+            var rs = await _postLogic.VotePost(userId, voteDto.VoteId, voteDto.isUpvote);
+
+            if (!rs)
+            {
+                return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
+            }
+
+            return Ok(new ResponseDto(200, ResponseMessage.POST_VOTE_SUCCESS));
+
+        } else
+        {
+            var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+            var rs = await _commentLogic.VoteComment(userId, voteDto.VoteId, voteDto.isUpvote);
+
+            if (!rs)
+            {
+                return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
+            }
+
+            return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
+        }
+    }
 }
