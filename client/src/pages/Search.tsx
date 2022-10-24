@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
 
 // Components
-import HumCard from "components/Discover/HumCard";
+import PostCard from "components/Discover/PostCard";
 import TrendingCard from "components/Discover/TrendingCard";
 import SearchBox from "components/Discover/SearchBox";
 import PageWrapper from "components/PageWrapper/PageWrapper";
@@ -153,7 +153,7 @@ const Search = () => {
                         </div>
                     ) : (
                         postState.data?.payload?.map((post: Post) => (
-                            <HumCard key={post.id} post={post} />
+                            <PostCard key={post.id} post={post} />
                         ))
                     )}
                 </InfiniteScroll>

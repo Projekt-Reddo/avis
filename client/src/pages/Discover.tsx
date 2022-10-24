@@ -1,5 +1,5 @@
 // Components
-import PostCard from "components/Discover/PostCard";
+import PostCreate from "components/Discover/PostCreate";
 import PageWrapper from "components/PageWrapper/PageWrapper";
 
 // Constants
@@ -15,7 +15,7 @@ const Discover = () => {
                 getInitDataAction: viewPostAsync,
                 getMoreDataAction: viewMorePostAsync,
                 Header: DiscoverHeader,
-                LeftComponent: PostCard,
+                LeftComponent: PostCreate,
             })}
         </PageWrapper>
     );

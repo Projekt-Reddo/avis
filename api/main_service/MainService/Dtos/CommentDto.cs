@@ -1,3 +1,5 @@
+using MongoDB.Bson;
+
 namespace MainService.Dtos;
 
 public class CommentCreateDto
@@ -27,6 +29,12 @@ public class CommentReadDto
 
     public int Downvote { get; set; } = 0;
 
+    public ICollection<string> UpvotedBy { get; set; } = null!;
+
+    public ICollection<string> DownvotedBy { get; set; } = null!;
+
+    public ICollection<ObjectId> Comments { get; set; } = null!;
+    
     public MediaReadDto Media { get; set; } = null!;
 
     public string UserId { get; set; } = null!;

@@ -11,6 +11,7 @@ import hashtagSlice from "./slices/hashtagSlice";
 import genreSlice from "./slices/genreSlice";
 import profileSlice from "./slices/profileSlice";
 import reportSlice from "./slices/reportSlice";
+import commentSlice from "./slices/commentSlice";
 import artistSlice from "./slices/artistSlice";
 
 const store = configureStore({
@@ -27,6 +28,7 @@ const store = configureStore({
         genre: genreSlice,
         profile: profileSlice,
         report: reportSlice,
+        comment: commentSlice,
         artist: artistSlice,
     },
 });

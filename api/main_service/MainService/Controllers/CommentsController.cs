@@ -57,8 +57,10 @@ namespace MainService.Controllers
                 if (commentFromRepo.Comments == null)
                 {
                     commentFromRepo.Comments = new List<ObjectId>();
+                    // commentFromRepo.Comments = new List<string>();
                 }
                 commentFromRepo.Comments.Add(new ObjectId(comment.Id));
+                // commentFromRepo.Comments.Add(comment.Id);
 
                 var rss = await _commentLogic.UpdateComment(newComment.CommentId, commentFromRepo);
             }
@@ -108,15 +110,18 @@ namespace MainService.Controllers
             return Ok(new ResponseDto(200, ResponseMessage.COMMENT_CREATE_SUCCESS));
         }
 
+        // [Authorize]
         [HttpPost("filter")]
-        public async Task<ActionResult> GetComments(PaginationReqDto<CommentFilterDto> pagination)
+        public async Task<ActionResult<PaginationResDto<CommentReadDto>>> GetComments(PaginationReqDto<CommentFilterDto> pagination)
         {
             // Pagination formula
             var skipPage = (pagination.Page - 1) * pagination.Size;
 
-            var comments = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild);
+            (var total, var comments) = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild, pagination.Size, skipPage);
 
-            return Ok(comments);
+            var commentDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
+
+            return Ok(new PaginationResDto<CommentReadDto>((int)total, commentDtos));
         }
     }
 }

@@ -8,7 +8,7 @@ import { useWindowDimensions } from "utils/useWindowDimensions";
 
 // Components
 import InfiniteScroll from "react-infinite-scroll-component";
-import HumCard from "components/Discover/HumCard";
+import PostCard from "components/Discover/PostCard";
 import SearchBox from "components/Discover/SearchBox";
 import TrendingCard from "components/Discover/TrendingCard";
 import Loading from "components/shared/Loading";
@@ -145,7 +145,7 @@ export default function createPostInfiniteScrollLayout({
                                 </div>
                             ) : (
                                 dataState.data?.payload?.map((post: Post) => (
-                                    <HumCard key={post.id} post={post} />
+                                    <PostCard key={post.id} post={post} />
                                 ))
                             )}
                         </InfiniteScroll>
