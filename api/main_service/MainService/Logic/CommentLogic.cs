@@ -148,6 +148,16 @@ public class CommentLogic : ICommentLogic
 
 		var comment = await _commentRepo.FindOneAsync(filter: filter);
 
+		if(comment.UpvotedBy == null)
+		{
+			comment.UpvotedBy = new List<string>();
+		}
+
+		if(comment.DownvotedBy == null)
+		{
+			comment.DownvotedBy = new List<string>();
+		}
+
 		if (comment.UpvotedBy.Contains(userId))
 		{
 
@@ -157,6 +167,8 @@ public class CommentLogic : ICommentLogic
 			{
 				comment.DownvotedBy.Add(userId);
 			}
+
+			await _commentRepo.ReplaceOneAsync(commentId, comment);
 
 			return true;
 		}
@@ -169,6 +181,8 @@ public class CommentLogic : ICommentLogic
 			{
 				comment.UpvotedBy.Add(userId);
 			}
+
+			await _commentRepo.ReplaceOneAsync(commentId, comment);
 
 			return true;
 		}
@@ -187,6 +201,8 @@ public class CommentLogic : ICommentLogic
 				comment.DownvotedBy.Add(userId);
 
 			}
+
+			await _commentRepo.ReplaceOneAsync(commentId, comment);
 
 			return true;
 		}

@@ -57,6 +57,16 @@ public class PostLogic : IPostLogic
 
         var post = await _postRepo.FindOneAsync(filter: filter);
 
+        if(post.UpvotedBy == null)
+		{
+			post.UpvotedBy = new List<string>();
+		}
+
+		if(post.DownvotedBy == null)
+		{
+			post.DownvotedBy = new List<string>();
+		}
+
         if (post.UpvotedBy.Contains(userId))
         {
 
@@ -67,7 +77,10 @@ public class PostLogic : IPostLogic
                 post.DownvotedBy.Add(userId);
             }
 
-            return true;
+			await _postRepo.ReplaceOneAsync(postId, post);
+
+			return true;
+
         }
         else if (post.DownvotedBy.Contains(userId))
         {
@@ -79,7 +92,10 @@ public class PostLogic : IPostLogic
                 post.UpvotedBy.Add(userId);
             }
 
+            await _postRepo.ReplaceOneAsync(postId, post);
+
             return true;
+
         } else {
 
             if (isUpVote)
@@ -92,6 +108,8 @@ public class PostLogic : IPostLogic
                 post.DownvotedBy.Add(userId);
 
             }
+
+            await _postRepo.ReplaceOneAsync(postId, post);
 
             return true;
         }
