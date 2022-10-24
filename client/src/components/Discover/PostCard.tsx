@@ -26,12 +26,12 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
     const history = useHistory();
 
     const handleSave = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
+        event.stopPropagation();
         console.log("Save");
     };
 
     const handleUpvote = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
+        event.stopPropagation();
         if (post.upvotedBy.includes(authState?.uid)) {
             console.log("Voted");
             return;
@@ -40,7 +40,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
     };
 
     const handleDownvote = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
+        event.stopPropagation();
         if (post.downvotedBy.includes(authState?.uid)) {
             console.log("Voted");
             return;
@@ -49,7 +49,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
     };
 
     const handleUnauthorize = (event: React.MouseEvent<HTMLElement>) => {
-        event.preventDefault();
+        event.stopPropagation();
         addNewToast({
             variant: "warning",
             message: "Please login to use this function",
@@ -76,7 +76,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     <div className="flex justify-center mb-4 cursor-pointer">
                         <div
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                event.preventDefault();
+                                event.stopPropagation();
                                 history.push(`/profile/${post.user.id}`);
                             }}
                             className="avatar"
@@ -129,7 +129,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 onClick={(
                                     event: React.MouseEvent<HTMLElement>
                                 ) => {
-                                    event.preventDefault();
+                                    event.stopPropagation();
                                     history.push(`/profile/${post.user.id}`);
                                 }}
                                 className="font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[5rem] sm:max-w-[10rem] hover:underline cursor-pointer"
@@ -150,7 +150,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                event.preventDefault();
+                                event.stopPropagation();
                             }}
                         >
                             {/* Image */}
@@ -245,7 +245,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 onClick={(
                                     event: React.MouseEvent<HTMLElement>
                                 ) => {
-                                    event.preventDefault();
+                                    event.stopPropagation();
 
                                     // Copy current url to clipboard
                                     navigator.clipboard.writeText(
