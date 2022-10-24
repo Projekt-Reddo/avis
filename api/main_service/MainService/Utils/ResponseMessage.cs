@@ -18,6 +18,8 @@ public static class ResponseMessage
     public const string POST_CREATE_SUCCESS = "Create a post successfully";
     public const string POST_CREATE_MEDIA_TYPE = "Media type is not supported";
     public const string POST_UPLOAD_FILE_FAIL = "Fail to upload files";
+    public const string POST_VOTE_SUCCESS = "Post Vote Successfully";
+    public const string POST_VOTE_FAIL = "Post Vote Failed";
 
 
     // Report msg
@@ -53,6 +55,8 @@ public static class ResponseMessage
     public const string COMMENT_CREATE_FAIL = "Add new comment failed";
     public const string COMMENT_CREATE_MEDIA_FAIL = "Media type is not supported";
     public const string COMMENT_NOT_FOUND = "No comment found";
+    public const string COMMENT_VOTE_SUCCESS = "Comment Vote Successfully";
+    public const string COMMENT_VOTE_FAIL = "Post Vote Failed";
 
 
     // Account msg

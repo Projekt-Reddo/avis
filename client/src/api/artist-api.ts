@@ -9,3 +9,8 @@ export const recommendArtistApi = async (keyword: string) => {
 
     return res.data;
 };
+
+export const listArtistsApi = async (filter: ArtistFilter) => {
+    const res = await axios.post(apiRoute + "/filter", filter);
+    return res.data;
+};
