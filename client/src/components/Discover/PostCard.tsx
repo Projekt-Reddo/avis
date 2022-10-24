@@ -17,9 +17,10 @@ import PostReport from "components/Report/PostReport";
 
 interface PostCardProps {
     post: Post;
+    isDetailPage?: boolean;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
     const authState = useAppSelector((state) => state.auth.data);
 
     const history = useHistory();
@@ -55,15 +56,24 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         });
     };
 
+    const handleViewDetail = () => {
+        if (isDetailPage) {
+            return;
+        }
+        history.push(`/discover/${post.id}`);
+    };
+
     return (
         <>
-            <Link
-                to={`/discover/${post.id}`}
-                className="hum-card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mt-4 border-t-0"
+            <div
+                className={`hum-card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mt-4 border-t-0 ${
+                    isDetailPage ? "" : "cursor-pointer"
+                }`}
+                onClick={handleViewDetail}
             >
                 <div className="col-span-1">
                     {/* Avatar */}
-                    <div className="flex justify-center mb-4">
+                    <div className="flex justify-center mb-4 cursor-pointer">
                         <div
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
                                 event.preventDefault();
@@ -122,7 +132,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                                     event.preventDefault();
                                     history.push(`/profile/${post.user.id}`);
                                 }}
-                                className="font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[5rem] sm:max-w-[10rem] hover:underline"
+                                className="font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[5rem] sm:max-w-[10rem] hover:underline cursor-pointer"
                             >
                                 {post.user.name}
                             </div>
@@ -285,7 +295,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                         </div>
                     </div>
                 </div>
-            </Link>
+            </div>
         </>
     );
 };
