@@ -11,3 +11,8 @@ export const recommednHashtagsApi = async () => {
     const res = await axios.get(apiRoute + "/recommend");
     return res.data;
 };
+
+export const postDetailApi = async (id: string) => {
+    const res = await axios.get(`${apiRoute}/${id}`);
+    return res.data;
+};
