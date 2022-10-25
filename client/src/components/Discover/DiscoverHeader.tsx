@@ -6,7 +6,7 @@ const DiscoverHeader = () => {
     return (
         <div className="lg:hidden flex justify-between items-center p-4">
             <div className="text-2xl">Discover</div>
-            <Link to="/discover/search">
+            <Link to="/search/discover">
                 <Icon
                     className="text-2xl text-[color:var(--teal-lighter-color)]"
                     icon="search"
