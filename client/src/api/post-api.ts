@@ -1,3 +1,4 @@
+import { dataURLtoFile } from "utils/helpers";
 import axios from "./api-instance";
 
 const apiRoute = "/posts";
@@ -9,6 +10,23 @@ export const viewPostApi = async (data: PostFilter) => {
 
 export const recommednHashtagsApi = async () => {
     const res = await axios.get(apiRoute + "/recommend");
+    return res.data;
+};
+
+export const createPostApi = async (data: PostCreate) => {
+    const formData = new FormData();
+    formData.append("Content", data.content ?? "");
+    for(let item of data.medias!){
+        formData.append("Medias", dataURLtoFile(item));
+    }
+    for (let item of data.hashtags) {
+        formData.append("HashTags", item);
+    }
+    formData.append("PublishedAt", data.publishedAt ?? "");
+    formData.append("DisplayStatus", data.displayStatus ?? "public");
+
+    const res = await axios.post(apiRoute, formData);
+
     return res.data;
 };
 
