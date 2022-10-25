@@ -123,5 +123,17 @@ namespace MainService.Controllers
 
             return Ok(new PaginationResDto<CommentReadDto>((int)total, commentDtos));
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CommentReadDto>> GetCommentById(string id)
+        {
+            var comment = await _commentLogic.GetCommentById(id);
+
+            if (comment is null)
+            {
+                return BadRequest(new ResponseDto(404));
+            }
+            return _mapper.Map<CommentReadDto>(comment);
+        }
     }
 }

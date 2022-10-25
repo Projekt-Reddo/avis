@@ -49,6 +49,7 @@ const Post = () => {
                                 isDetailPage={true}
                             />
                             <CommentSection
+                                key={postId}
                                 postId={postId}
                                 isPostChild={true}
                             />
