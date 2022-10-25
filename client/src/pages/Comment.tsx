@@ -24,7 +24,6 @@ const Comment = () => {
         }
     }, [commentId]);
 
-    console.log(commentDetailState);
     return (
         <PageWrapper>
             <div className="lg:hidden flex justify-between items-center p-4">
