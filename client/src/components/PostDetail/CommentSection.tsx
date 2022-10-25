@@ -10,13 +10,10 @@ import CommentCard from "./CommentCard";
 import Loading from "components/shared/Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-interface CommentParams {
-    postId: string;
-}
-
 interface CommentSectionProps {
     postId: string;
     isPostChild: boolean;
+    commentData?: Comment;
 }
 
 interface PageFilterCommentProps {
@@ -31,6 +28,7 @@ interface PageFilterCommentProps {
 const CommentSection: React.FC<CommentSectionProps> = ({
     postId,
     isPostChild,
+    commentData,
 }) => {
     const dispatch = useAppDispatch();
 
@@ -42,7 +40,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
     const [pageFilter, setPageFilter] = React.useState<PageFilterCommentProps>({
         currentPage: 1,
-        rowShow: 5,
+        rowShow: 10,
         filter: {
             objectId: postId,
             isPostChild: isPostChild,
@@ -118,15 +116,21 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     {commentState?.data?.payload.map((comment: Comment) => (
                         <div
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                // event.preventDefault();
-                                if (isPostChild) {
-                                    history.push(
-                                        `/discover/comment/${comment.id}`
-                                    );
+                                if (
+                                    isPostChild &&
+                                    comment.comments.length > 0
+                                ) {
+                                    history.push({
+                                        pathname: `/discover/comment/${comment.id}`,
+                                    });
                                 }
                             }}
+                            key={comment.id + Date.now()}
                         >
-                            <CommentCard comment={comment} key={comment.id} />
+                            <CommentCard
+                                comment={comment}
+                                key={comment.id + Date.now()}
+                            />
                         </div>
                     ))}
                 </InfiniteScroll>

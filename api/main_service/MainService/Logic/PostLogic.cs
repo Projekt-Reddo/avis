@@ -8,6 +8,8 @@ namespace MainService.Logic;
 public interface IPostLogic
 {
     Task<Post?> GetPostById(string id);
+
+    Task<bool> VotePost(string userId, string voteId, bool isUpVote);
 }
 
 public class PostLogic : IPostLogic
@@ -46,5 +48,52 @@ public class PostLogic : IPostLogic
 
         var post = await _postRepo.FindOneAsync(filter: filter, stages: stages);
         return post;
+    }
+
+    public async Task<bool> VotePost(string userId, string postId, bool isUpVote)
+    {
+
+        var filter = Builders<Post>.Filter.Eq(p => p.Id, postId);
+
+        var post = await _postRepo.FindOneAsync(filter: filter);
+
+        if (post.UpvotedBy.Contains(userId))
+        {
+
+            post.UpvotedBy.Remove(userId);
+
+            if (!isUpVote)
+            {
+                post.DownvotedBy.Add(userId);
+            }
+
+            return true;
+        }
+        else if (post.DownvotedBy.Contains(userId))
+        {
+
+            post.DownvotedBy.Remove(userId);
+
+            if (isUpVote)
+            {
+                post.UpvotedBy.Add(userId);
+            }
+
+            return true;
+        } else {
+
+            if (isUpVote)
+            {
+
+                post.UpvotedBy.Add(userId);
+
+            } else {
+
+                post.DownvotedBy.Add(userId);
+
+            }
+
+            return true;
+        }
     }
 }

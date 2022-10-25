@@ -44,7 +44,7 @@ const MainRoute = () => {
                     <Search />
                 </Route>
 
-                <Route path="/discover/:postId">
+                <Route exact path="/discover/:postId">
                     <Post />
                 </Route>
 

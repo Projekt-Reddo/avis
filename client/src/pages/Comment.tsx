@@ -1,6 +1,5 @@
 import PageWrapper from "components/PageWrapper/PageWrapper";
 import CommentSection from "components/PostDetail/CommentSection";
-import HumCardDetail from "components/PostDetail/HumCardDetail";
 import Icon from "components/shared/Icon";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
@@ -11,7 +10,6 @@ interface CommentParams {
 
 const Comment = () => {
     const { commentId } = useParams<CommentParams>();
-    console.log(commentId);
     return (
         <PageWrapper>
             <div className="lg:hidden flex justify-between items-center p-4">
@@ -27,7 +25,11 @@ const Comment = () => {
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
                     {/* <HumCardDetail></HumCardDetail> */}
-                    <CommentSection postId={commentId} isPostChild={false} />
+                    <CommentSection
+                        key={commentId}
+                        postId={commentId}
+                        isPostChild={false}
+                    />
                 </div>
                 {/* Right */}
                 <div className="hidden col-span-1 lg:block"></div>
