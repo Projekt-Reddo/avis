@@ -116,16 +116,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     {commentState?.data?.payload.map((comment: Comment) => (
                         <div
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                if (
-                                    isPostChild &&
-                                    comment.comments.length > 0
-                                ) {
+                                if (isPostChild) {
                                     history.push({
                                         pathname: `/discover/comment/${comment.id}`,
                                     });
                                 }
                             }}
                             key={comment.id + Date.now()}
+                            className={isPostChild ? `cursor-pointer` : ``}
                         >
                             <CommentCard
                                 comment={comment}

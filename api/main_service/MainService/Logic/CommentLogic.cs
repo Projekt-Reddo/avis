@@ -87,13 +87,37 @@ public class CommentLogic : ICommentLogic
 
 	public async Task<Comment> GetCommentById(string commentId)
 	{
+		BsonDocument lookup = new BsonDocument{
+						{ "from", "account" },
+						{ "localField", "UserId" },
+						{ "foreignField", "_id" },
+						{ "as", "Users" },
+					};
 		var commentFilter = CommentFilterId(commentId);
 
-		var commentFromRepo = await _commentRepo.FindOneAsync(filter: commentFilter);
+		// Config to specify needed fields
+		BsonDocument project = new BsonDocument{
+					{"_id", 1},
+					{"CreatedAt", 1},
+					{"ModifiedAt", 1},
+					{"Content", 1},
+					{ "UserId", 1},
+						{ "User", new BsonDocument{
+						{"$arrayElemAt",
+							new BsonArray{ "$Users", 0 }
+						},
+					}},
+					{"UpvotedBy", 1},
+					{"DownvotedBy", 1},
+					{"Media", 1},
+					{"Comments", 1}
+			};
+
+		var commentFromRepo = await _commentRepo.FindOneAsync(filter: commentFilter, lookup:lookup, project: project);
 
 		return commentFromRepo;
 	}
-	
+
 	public async Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage)
 	{
 		BsonDocument lookup = new BsonDocument{
