@@ -76,7 +76,7 @@ export const viewMorePostAsync = createAsyncThunk(
 );
 
 export const createPostAsync = createAsyncThunk(
-    "song/create",
+    "post/createPost",
     async (postCreate: PostCreate, thunkApi) => {
         try {
             const res = await createPostApi(postCreate);
