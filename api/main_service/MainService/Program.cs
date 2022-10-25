@@ -2,7 +2,9 @@ using Amazon.S3;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
+using HangfireBasicAuthenticationFilter;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Logic;
@@ -97,7 +99,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors();
 
 // Hangfire
-builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(builder.Configuration.GetConnectionString("Hangfire")));
+builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(Environment.GetEnvironmentVariable("HANGFIRE_CONNECTION_STRING") ?? builder.Configuration.GetConnectionString("Hangfire")));
 builder.Services.AddHangfireServer();
 
 // Auto mapper
@@ -188,7 +190,17 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapHangfireDashboard();
+app.UseHangfireDashboard(
+	"/hangfire",
+	new DashboardOptions
+	{
+		Authorization = new[]  {
+				new HangfireCustomBasicAuthenticationFilter{
+					User = Environment.GetEnvironmentVariable("HANGFIRE_USERNAME") ?? builder.Configuration.GetValue<string>("HangfireSettings:UserName"),
+					Pass = Environment.GetEnvironmentVariable("HANGFIRE_PASSWORD") ?? builder.Configuration.GetValue<string>("HangfireSettings:Password")
+				}
+			}
+	});
 
 app.MapControllers();
 
