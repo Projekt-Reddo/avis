@@ -27,3 +27,11 @@ interface Post {
     hashtags: [];
     commentCount: number;
 }
+
+interface PostCreate {
+    content: string;
+    medias: string[];
+    hashtags: string[];
+    publishedAt: string;
+    displayStatus: string;
+}
