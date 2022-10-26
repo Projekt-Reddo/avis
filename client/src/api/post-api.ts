@@ -1,4 +1,3 @@
-import { dataURLtoFile } from "utils/helpers";
 import axios from "./api-instance";
 
 const apiRoute = "/posts";
@@ -17,7 +16,7 @@ export const createPostApi = async (data: PostCreate) => {
     const formData = new FormData();
     formData.append("Content", data.content ?? "");
     for(let item of data.medias!){
-        formData.append("Medias", dataURLtoFile(item));
+        formData.append("Medias", item);
     }
     for (let item of data.hashtags) {
         formData.append("HashTags", item);

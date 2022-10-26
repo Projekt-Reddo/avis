@@ -319,9 +319,9 @@ public class PostsController : ControllerBase
 		// Create Post Filter
 		var postFilter = Builders<Post>.Filter.Empty;
 
-		// Created At Filter
-		postFilter = postFilter & Builders<Post>.Filter.Gte(x => x.CreatedAt, DateTime.Now.AddDays(-1));
-		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.CreatedAt, DateTime.Now);
+		// Published At Filter
+		postFilter = postFilter & Builders<Post>.Filter.Gte(x => x.PublishedAt, DateTime.Now.AddDays(-7));
+		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
 
 		// Config to specify needed fields
 		BsonDocument project = new BsonDocument{
