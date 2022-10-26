@@ -13,6 +13,7 @@ import profileSlice from "./slices/profileSlice";
 import reportSlice from "./slices/reportSlice";
 import commentSlice from "./slices/commentSlice";
 import artistSlice from "./slices/artistSlice";
+import commentDetailSlice from "./slices/commentDetailSlice";
 
 const store = configureStore({
     reducer: {
@@ -29,6 +30,7 @@ const store = configureStore({
         profile: profileSlice,
         report: reportSlice,
         comment: commentSlice,
+        commentDetail: commentDetailSlice,
         artist: artistSlice,
     },
 });
