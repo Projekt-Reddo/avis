@@ -7,6 +7,8 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import DatePicker from "react-datepicker";
 import { Link } from "react-router-dom";
 import Select from "react-select";
+import { v4 as uuidv4 } from "uuid";
+import { useOutsideClick } from "utils/useOutsideClick";
 
 // Components
 import Icon from "components/shared/Icon";
@@ -24,6 +26,11 @@ interface PostCreateProps {
 interface DisplayStatusProps {
     value: string;
     label: string;
+}
+
+interface ImageUploadProps {
+    id: string;
+    file: File;
 }
 
 const fileType = {
@@ -48,19 +55,30 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
     const inputRef = React.useRef<any>(null);
     const [content, setContent] = React.useState<string>("");
 
-    const [uploadedImages, setUploadedImages] = React.useState<string[]>([]);
+    const [uploadedImages, setUploadedImages] = React.useState<
+        ImageUploadProps[]
+    >([]);
     const [uploadedAudio, setUploadedAudio] = React.useState<any>(null);
     const [uploadedVideo, setUploadedVideo] = React.useState<any>(null);
     const [typeUpload, setTypeUpload] = React.useState("");
 
     const [showPicker, setShowPicker] = React.useState<boolean>(false);
+    const pickerRef = React.useRef(null);
+    useOutsideClick(pickerRef, () => {
+        setShowPicker(false);
+    });
 
+    const [isOpenCalendar, setIsOpenCalendar] = React.useState<boolean>(false);
     const [publishedAt, setPublishedAt] = React.useState<Date | null>(null);
+    const calendarRef = React.useRef(null);
+    useOutsideClick(calendarRef, () => {
+        setIsOpenCalendar(false);
+    });
 
     const [displayStatus, setDisplayStatus] =
         React.useState<DisplayStatusProps>({
             value: "public",
-            label: "Public",
+            label: "Public: Everyone can see this Post",
         });
     const [isOpenSelect, setIsOpenSelect] = React.useState(false);
 
@@ -82,7 +100,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                     typeUpload === ""
                         ? []
                         : typeUpload === fileType.IMAGE
-                        ? uploadedImages
+                        ? uploadedImages.map((img) => img.file)
                         : typeUpload === fileType.AUDIO
                         ? [uploadedAudio]
                         : [uploadedVideo],
@@ -134,14 +152,13 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
             setUploadedVideo(null);
 
             for (const file of event.target.files) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    setUploadedImages((imgs: any) => [...imgs, reader.result]);
-                };
-                reader.onerror = () => {
-                    console.log(reader.error);
-                };
+                // Generate unique Id
+                const uniqueId = uuidv4();
+
+                setUploadedImages((imgs: any) => [
+                    ...imgs,
+                    { id: uniqueId, file: file },
+                ]);
             }
 
             return;
@@ -152,14 +169,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
             setUploadedImages([]);
             setUploadedVideo(null);
 
-            const reader = new FileReader();
-            reader.readAsDataURL(event.target.files[0]);
-            reader.onload = () => {
-                setUploadedAudio(reader.result);
-            };
-            reader.onerror = () => {
-                console.log(reader.error);
-            };
+            setUploadedAudio(event.target.files[0]);
             return;
         }
 
@@ -168,14 +178,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
             setUploadedImages([]);
             setUploadedAudio(null);
 
-            const reader = new FileReader();
-            reader.readAsDataURL(event.target.files[0]);
-            reader.onload = () => {
-                setUploadedVideo(reader.result);
-            };
-            reader.onerror = () => {
-                console.log(reader.error);
-            };
+            setUploadedVideo(event.target.files[0]);
             return;
         }
 
@@ -225,8 +228,12 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
         return true;
     };
 
-    const handleRemoveImageFile = (file: any) => {
-        setUploadedImages(uploadedImages.filter((img: string) => img !== file));
+    const handleRemoveImageFile = (id: string) => {
+        setUploadedImages(
+            uploadedImages.filter(
+                (imageUpload: ImageUploadProps) => imageUpload.id !== id
+            )
+        );
     };
 
     const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
@@ -261,7 +268,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
 
     return (
         <form
-            className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
+            className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 mb-4"
             onSubmit={handleCreatePost}
         >
             {/* Avatar */}
@@ -277,14 +284,30 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
             </div>
 
             <div className="col-span-4 sm:col-span-9">
+                {publishedAt && (
+                    <div className="flex items-center">
+                        <div className="text-[color:var(--text-secondary-color)] mb-2 text-xs sm:text-base">
+                            Will publish at {publishedAt.toLocaleString()}
+                        </div>
+                        <div
+                            className="cancel-circle flex justify-center items-center cursor-pointer w-[1rem] h-[1rem] text-[0.75rem] mb-2 ml-2"
+                            onClick={() => setPublishedAt(null)}
+                        >
+                            <Icon icon="times" />
+                        </div>
+                    </div>
+                )}
+
                 {/* Select Display Status */}
-                {isOpenSelect ? (
+                {isOpenSelect && !publishedAt ? (
                     <Select
                         options={options}
                         defaultValue={displayStatus}
                         onChange={(val: any) => setDisplayStatus(val)}
-                        className="w-40"
                         styles={customStyles}
+                        components={{
+                            IndicatorSeparator: () => null,
+                        }}
                     />
                 ) : (
                     ""
@@ -292,8 +315,8 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
 
                 {/* Content */}
                 <textarea
-                    className="focus:outline-none text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 bg-[color:var(--post-bg-color)] pt-2"
-                    placeholder="What's happening?"
+                    className="focus:outline-none text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 bg-[color:var(--post-bg-color)] pt-2"
+                    placeholder="How do you feel today?"
                     rows={3}
                     ref={inputRef}
                     onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -317,13 +340,15 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                             }
                         >
                             {uploadedImages.map(
-                                (base64ImageUrl: string, index: number) => (
+                                (imageUpload: ImageUploadProps) => (
                                     <div
-                                        key={index}
+                                        key={imageUpload.id}
                                         className="relative flex justify-end pt-2 sm:pt-4"
                                     >
                                         <img
-                                            src={base64ImageUrl}
+                                            src={URL.createObjectURL(
+                                                imageUpload.file
+                                            )}
                                             className="hum-image-post"
                                             height={1000}
                                             width={1000}
@@ -332,7 +357,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                             className="cancel-circle absolute flex justify-center items-center cursor-pointer w-[1rem] h-[1rem] sm:w-[1.5rem] sm:h-[1.5rem] mt-[-0.5rem] mr-[-0.5rem] sm:mt-[-0.75rem] sm:mr-[-0.75rem] text-[0.75rem] sm:text-[1rem]"
                                             onClick={() =>
                                                 handleRemoveImageFile(
-                                                    base64ImageUrl
+                                                    imageUpload.id
                                                 )
                                             }
                                         >
@@ -349,7 +374,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                         ""
                     ) : (
                         <ReactPlayer
-                            url={uploadedAudio}
+                            url={URL.createObjectURL(uploadedAudio)}
                             controls={true}
                             width="100%"
                             height={50}
@@ -365,7 +390,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                     ) : (
                         <div className="relative pt-[56.25%] mb-4">
                             <ReactPlayer
-                                url={uploadedVideo}
+                                url={URL.createObjectURL(uploadedVideo)}
                                 controls={true}
                                 width="100%"
                                 height="100%"
@@ -398,41 +423,61 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                         />
 
                         {/* Select Icons */}
-                        <button type="button">
-                            <Icon
-                                onClick={() => setShowPicker(!showPicker)}
-                                className="post-icon mx-4 sm:mx-8"
-                                icon="face-smile"
-                            />
-                        </button>
-                        {showPicker && (
-                            <div className="relative">
-                                <div className="absolute z-50 mt-6 ml-[-12rem]">
-                                    <EmojiPicker
-                                        onEmojiClick={onEmojiClick}
-                                        skinTonesDisabled
-                                        width={320}
-                                        height={400}
-                                    />
+                        <div ref={pickerRef}>
+                            <button type="button">
+                                <Icon
+                                    onClick={() => setShowPicker(!showPicker)}
+                                    className="post-icon mx-4 sm:mx-8"
+                                    icon="face-smile"
+                                />
+                            </button>
+                            {showPicker && (
+                                <div className="relative">
+                                    <div className="absolute z-50 mt-4 ml-[-6rem] sm:ml-[-7rem]">
+                                        <EmojiPicker
+                                            onEmojiClick={onEmojiClick}
+                                            skinTonesDisabled
+                                            width={320}
+                                            height={400}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
 
                         {/* Set Publish Date */}
-                        <DatePicker
-                            selected={publishedAt}
-                            onChange={handleSelectPublishedAt}
-                            placeholderText="Set Publish Time"
-                            showTimeSelect
-                            timeFormat="HH:mm"
-                            timeIntervals={15}
-                            timeCaption="time"
-                            dateFormat="MMM d, yyyy h:mm aa"
-                            minDate={new Date()}
-                            className="bg-[color:var(--teal-general-color)] text-[color:white] rounded focus:outline-none text-center placeholder-[color:white]"
-                        />
+                        <div ref={calendarRef}>
+                            <button type="button">
+                                <Icon
+                                    onClick={() =>
+                                        setIsOpenCalendar(!isOpenCalendar)
+                                    }
+                                    className="post-icon"
+                                    icon="calendar-days"
+                                />
+                            </button>
+                            {isOpenCalendar && (
+                                <div className="relative">
+                                    <div className="absolute z-50 w-96 mt-4 ml-[-10rem]">
+                                        <DatePicker
+                                            selected={publishedAt}
+                                            onChange={handleSelectPublishedAt}
+                                            showTimeSelect
+                                            inline
+                                            isClearable
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            timeCaption="time"
+                                            dateFormat="MMM d, yyyy h:mm aa"
+                                            minDate={new Date()}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
+                    {/* Create Post Button */}
                     <Button
                         className="mt-4 sm:mt-0 px-10"
                         type="submit"
@@ -468,9 +513,29 @@ const customStyles = {
             border: "2px solid var(--teal-general-color)",
         },
         borderRadius: "9999px",
-        color: "var(--teal-general-color)",
-        fontSize: "1rem",
+        fontSize: "0.75rem",
+        fontWeight: 700,
         marginBottom: "0.5rem",
+        width: 105,
+        height: 30,
+        minHeight: 30,
+    }),
+    menu: (base: any) => ({
+        ...base,
+        width: 278,
+        marginLeft: "-3rem",
+    }),
+    valueContainer: (base: any) => ({
+        ...base,
+        padding: "0 8px",
+    }),
+    dropdownIndicator: (provided: any) => ({
+        ...provided,
+        padding: "0px",
+        paddingLeft: "0px",
+        paddingTop: "0px",
+        paddingRight: "8px",
+        paddingDown: "0px",
     }),
     singleValue: (provided: any) => {
         return { ...provided };

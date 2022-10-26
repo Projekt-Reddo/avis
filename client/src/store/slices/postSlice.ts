@@ -79,15 +79,7 @@ export const createPostAsync = createAsyncThunk(
     "post/createPost",
     async (postCreate: PostCreate, thunkApi) => {
         try {
-            const res = await createPostApi(postCreate);
-            const msg = res.message;
-
-            thunkApi.dispatch(
-                addToast({
-                    variant: "primary",
-                    message: msg,
-                })
-            );
+            await createPostApi(postCreate);
         } catch (e: any) {
             thunkApi.dispatch(
                 addToast({
