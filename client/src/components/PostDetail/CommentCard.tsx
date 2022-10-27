@@ -100,8 +100,8 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                     </div>
 
                     {/* Content */}
-                    <div className="pb-8">
-                        <div className="mb-4">{comment.content}</div>
+                    <div className="pb-8 rounded-md bg-[color:var(--comment-bg-body-color)]">
+                        <div className="mb-4 p-4">{comment.content}</div>
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
