@@ -57,7 +57,7 @@ public class VoteController : ControllerBase
 
             if (!rs)
             {
-                return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL);
+                return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
             }
 
             var count = await _postLogic.PostVoteCount(voteDto.VoteId);
