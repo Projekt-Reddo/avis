@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { viewPostApi } from "api/post-api";
+import { createPostApi, postDetailApi, viewPostApi } from "api/post-api";
+import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
-    status: "idle",
+    status: "init",
     data: {
         total: 0,
         payload: [],
@@ -21,10 +22,21 @@ const postSlice = createSlice({
         viewMorePost: (state, action) => ({
             ...state,
             data: action.payload,
-        })
+        }),
+        createPost: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
+            .addCase(createPostAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(createPostAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+            })
             .addCase(viewPostAsync.pending, (state) => {
                 state.status = "loading";
             })
@@ -36,10 +48,16 @@ const postSlice = createSlice({
                 state.status = "idle";
                 state.data = {
                     total: action.payload.total,
-                    payload: [...state.data.payload, ...action.payload.payload]
+                    payload: [...state.data.payload, ...action.payload.payload],
                 };
             })
-            ;
+            .addCase(postDetailAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(postDetailAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+            });
     },
 });
 
@@ -54,6 +72,39 @@ export const viewMorePostAsync = createAsyncThunk(
     "post/viewMorePost",
     async (postFilter: PostFilter) => {
         return await viewPostApi(postFilter);
+    }
+);
+
+export const createPostAsync = createAsyncThunk(
+    "post/createPost",
+    async (postCreate: PostCreate, thunkApi) => {
+        try {
+            await createPostApi(postCreate);
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "danger",
+                    message: e.response.data.message,
+                })
+            );
+        }
+        return await viewPostApi({
+            page: 1,
+            size: 10,
+            filter: {},
+        });
+    }
+);
+
+export const postDetailAsync = createAsyncThunk(
+    "post/detail",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const res = await postDetailApi(id);
+            return res;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
+        }
     }
 );
 

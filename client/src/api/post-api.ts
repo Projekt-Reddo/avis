@@ -11,3 +11,25 @@ export const recommednHashtagsApi = async () => {
     const res = await axios.get(apiRoute + "/recommend");
     return res.data;
 };
+
+export const createPostApi = async (data: PostCreate) => {
+    const formData = new FormData();
+    formData.append("Content", data.content ?? "");
+    for(let item of data.medias!){
+        formData.append("Medias", item);
+    }
+    for (let item of data.hashtags) {
+        formData.append("HashTags", item);
+    }
+    formData.append("PublishedAt", data.publishedAt ?? "");
+    formData.append("DisplayStatus", data.displayStatus ?? "public");
+
+    const res = await axios.post(apiRoute, formData);
+
+    return res.data;
+};
+
+export const postDetailApi = async (id: string) => {
+    const res = await axios.get(`${apiRoute}/${id}`);
+    return res.data;
+};

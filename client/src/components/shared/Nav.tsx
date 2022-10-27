@@ -71,9 +71,9 @@ const Nav = () => {
     }
 
     return (
-        <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
-            {/* <div className="ml-24"> */}
-            <div className="">
+        // <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
+        <nav className="grid grid-cols-3 py-2 px-0 lg:px-32 2xl:px-52 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
+            <div className="flex items-center">
                 <Link to="/">
                     <img
                         className="inline-block h-9 w-9 rounded-full"
@@ -95,7 +95,7 @@ const Nav = () => {
                 </Link>
             </div>
 
-            <div className="flex items-center font-bold">
+            <div className="flex items-center justify-end font-bold">
                 {authStatus === "init" || authStatus === "loading" ? (
                     <></>
                 ) : !user ? (

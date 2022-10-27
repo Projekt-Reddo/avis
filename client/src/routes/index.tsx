@@ -3,6 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import Home from "pages/Home";
 import Login from "pages/auth/Login";
 import Post from "pages/Post";
+import Comment from "pages/Comment";
 import Signup from "pages/auth/Signup";
 import Song from "pages/Song";
 import Notification from "pages/Notification";
@@ -39,12 +40,16 @@ const MainRoute = () => {
                     <Song />
                 </Route>
 
-                <Route exact path="/discover/search">
+                <Route exact path="/search/discover">
                     <Search />
                 </Route>
 
-                <Route path="/discover/:postId">
+                <Route exact path="/discover/:postId">
                     <Post />
+                </Route>
+
+                <Route path="/discover/comment/:commentId">
+                    <Comment />
                 </Route>
 
                 <Route exact path="/discover">

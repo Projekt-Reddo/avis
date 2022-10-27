@@ -11,6 +11,7 @@ using MongoDB.Driver;
 using System.IO;
 using System.Security.Principal;
 using static Constants;
+using static System.Net.WebRequestMethods;
 
 namespace MainService.Logic
 {
@@ -35,7 +36,8 @@ namespace MainService.Logic
         Task<Account?> AccountGetAccountByUid(string uid);
 
         Task<(bool status, string message, Account? data)> UpdateAccountProfile(string uid, AccountProfileUpdateDto accountProfileUpdateDto);
-    }
+		Task<(bool status, string message, Account? data)> Promote(string uid);
+	}
     public class AccountLogic : IAccountLogic
     {
         private readonly IS3Service _s3Service;
@@ -276,5 +278,37 @@ namespace MainService.Logic
 
             return accountFromRepo;
         }
-    }
+
+		public async Task<(bool status, string message, Account? data)> Promote(string uid)
+		{
+			var filterUid = Builders<Account>.Filter.Eq(x => x.Uid, uid);
+
+			// To check whether account exist or not.
+			var accountFromRepo = await _accountRepo.FindOneAsync(
+				filterUid &
+				Builders<Account>.Filter.Not(Builders<Account>.Filter.Eq(x => x.Role, AccountRoles.ADMIN))
+			);
+
+			// Account not found
+			if (accountFromRepo is null)
+			{
+				return (false, ResponseMessage.ACCOUNT_NOT_FOUND, null);
+			}
+
+			var update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.MODERATOR);
+			var responseMessage = ResponseMessage.ACCOUNT_PROMOTED;
+
+			// Switch roles
+			if (accountFromRepo.Role == AccountRoles.MODERATOR)
+			{
+				update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.USER);
+				responseMessage = ResponseMessage.ACCOUNT_DEMOTED;
+			}
+
+			var rs = await _accountRepo.UpdateOneAsync(filterUid, update);
+			await SetClaimWhenUpdateProfile(accountFromRepo);
+
+			return (rs, responseMessage, accountFromRepo);
+		}
+	}
 }

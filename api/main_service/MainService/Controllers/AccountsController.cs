@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
@@ -113,6 +113,7 @@ namespace MainService.Controllers
 			return returnedAccount;
 		}
 
+		[Authorize]
 		[HttpPut("profile/{uid}")]
 		public async Task<ActionResult<AccountProfileReadDto>> UpdateProfile([FromRoute] string uid, [FromForm] AccountProfileUpdateDto accountProfileUpdateDto)
 		{
@@ -126,6 +127,19 @@ namespace MainService.Controllers
 			var returnedAccount = _mapper.Map<AccountProfileReadDto>(data);
 
 			return returnedAccount;
+		}
+
+		[HttpPut("promote/{uid}")]
+		public async Task<ActionResult<ResponseDto>> Promote([FromRoute] string uid)
+		{
+			(bool _, string message, Account? data) = await _accountLogic.Promote(uid);
+
+			if (data is null)
+			{
+				return BadRequest(new ResponseDto(400, message));
+			}
+
+			return Ok(new ResponseDto(200, message));
 		}
 	}
 }

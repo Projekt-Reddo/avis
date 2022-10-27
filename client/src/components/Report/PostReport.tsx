@@ -22,7 +22,7 @@ const PostReport: FunctionComponent<PostReportProps> = ({ id }) => {
         <>
             <div
                 onClick={(event: React.MouseEvent<HTMLElement>) => {
-                    event.preventDefault();
+                    event.stopPropagation();
                     setShowOptions(id);
                 }}
             >
@@ -36,7 +36,7 @@ const PostReport: FunctionComponent<PostReportProps> = ({ id }) => {
                 <button
                     ref={wrapperRef}
                     onClick={(event: React.MouseEvent<HTMLElement>) => {
-                        event.preventDefault();
+                        event.stopPropagation();
                         setOpenReport(true);
                     }}
                     className="search-card font-bold top-0 right-0 absolute px-8 py-3 z-50 hover:bg-[color:var(--post-bg-hover-color)]"

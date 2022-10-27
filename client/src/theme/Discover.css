@@ -27,8 +27,6 @@
     padding: 0.5rem;
     background-color: var(--text-tertiary-color);
     color: var(--body-bg-color);
-    height: 2rem;
-    width: 2rem;
 }
 
 .avatar{
@@ -53,6 +51,14 @@
     font-size: 20px;
     color:  var(--teal-lighter-color);
     cursor: pointer;
+}
+
+.cancel-circle{
+    border-radius: 50%;
+    height: 1.5rem;
+    width: 1.5rem;
+    background-color: var(--red-general-color);
+    color: var(--white-color);
 }
 
 @media only screen and (max-width: 1024px) {
