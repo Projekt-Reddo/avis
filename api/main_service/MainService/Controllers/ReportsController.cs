@@ -44,6 +44,7 @@ public class ReportsController : ControllerBase
 		return StatusCode(rs.StatusCode, new ResponseDto(rs.StatusCode, rs.Message));
 	}
 
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 	[HttpPost("filter")]
 	public async Task<ActionResult<PaginationResDto<ReportReadDto>>> GetReports(PaginationReqDto<ReportFilterDto> pagination)
 	{
