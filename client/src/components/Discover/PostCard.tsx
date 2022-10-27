@@ -1,6 +1,6 @@
 // Libs
 import { Link, useHistory } from "react-router-dom";
-import { useAppSelector } from "utils/react-redux-hooks";
+import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -14,6 +14,8 @@ import { DayFormat } from "utils/constants";
 // Styles
 import "theme/Discover.css";
 import PostReport from "components/Report/PostReport";
+import { voteApi } from "api/vote-api";
+import Vote from "./Vote";
 
 interface PostCardProps {
     post: Post;
@@ -30,22 +32,22 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
         console.log("Save");
     };
 
-    const handleUpvote = (event: React.MouseEvent<HTMLElement>) => {
+    const handleUpvote = async (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
-        if (post.upvotedBy.includes(authState?.uid)) {
-            console.log("Voted");
-            return;
-        }
-        console.log("Like");
+        await voteApi({
+            voteId: post.id,
+            isUpvote: true,
+            isVotePost: true
+        });
     };
 
-    const handleDownvote = (event: React.MouseEvent<HTMLElement>) => {
+    const handleDownvote = async (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
-        if (post.downvotedBy.includes(authState?.uid)) {
-            console.log("Voted");
-            return;
-        }
-        console.log("Dislike");
+        await voteApi({
+            voteId: post.id,
+            isUpvote: false,
+            isVotePost: true
+        });
     };
 
     const handleUnauthorize = (event: React.MouseEvent<HTMLElement>) => {
@@ -87,38 +89,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     </div>
 
                     {/* Vote */}
-                    <div className="flex justify-center items-center">
-                        <div>
-                            <Icon
-                                className={
-                                    post.upvotedBy.includes(authState?.uid)
-                                        ? "text-5xl cursor-pointer text-[color:var(--teal-lighter-color)]"
-                                        : "text-5xl cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
-                                }
-                                icon="caret-up"
-                                onClick={
-                                    authState ? handleUpvote : handleUnauthorize
-                                }
-                            />
-                            <div className="text-center text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[4rem]">
-                                {post.upvotedBy.length -
-                                    post.downvotedBy.length}
-                            </div>
-                            <Icon
-                                className={
-                                    post.downvotedBy.includes(authState?.uid)
-                                        ? "text-5xl cursor-pointer text-[color:var(--teal-lighter-color)]"
-                                        : "text-5xl cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
-                                }
-                                icon="caret-down"
-                                onClick={
-                                    authState
-                                        ? handleDownvote
-                                        : handleUnauthorize
-                                }
-                            />
-                        </div>
-                    </div>
+                    <Vote post= {post}/>
                 </div>
 
                 <div className="col-span-4 sm:col-span-9 relative">
