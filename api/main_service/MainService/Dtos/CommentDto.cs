@@ -34,7 +34,7 @@ public class CommentReadDto
     public ICollection<string> DownvotedBy { get; set; } = null!;
 
     public ICollection<ObjectId> Comments { get; set; } = null!;
-    
+
     public MediaReadDto Media { get; set; } = null!;
 
     public string UserId { get; set; } = null!;

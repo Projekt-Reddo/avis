@@ -18,6 +18,7 @@ public interface ICommentLogic
     Task<Comment> GetCommentById(string commentId);
     Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
 	Task<bool> VoteComment(string userId, string commentId, bool isUpVote);
+	Task<VoteResponeDto> CommentVoteCount(string commentId);
 }
 
 public class CommentLogic : ICommentLogic
@@ -172,6 +173,16 @@ public class CommentLogic : ICommentLogic
 
 		var comment = await _commentRepo.FindOneAsync(filter: filter);
 
+		if(comment.UpvotedBy == null)
+		{
+			comment.UpvotedBy = new List<string>();
+		}
+
+		if(comment.DownvotedBy == null)
+		{
+			comment.DownvotedBy = new List<string>();
+		}
+
 		if (comment.UpvotedBy.Contains(userId))
 		{
 
@@ -181,6 +192,8 @@ public class CommentLogic : ICommentLogic
 			{
 				comment.DownvotedBy.Add(userId);
 			}
+
+			await _commentRepo.ReplaceOneAsync(commentId, comment);
 
 			return true;
 		}
@@ -193,6 +206,8 @@ public class CommentLogic : ICommentLogic
 			{
 				comment.UpvotedBy.Add(userId);
 			}
+
+			await _commentRepo.ReplaceOneAsync(commentId, comment);
 
 			return true;
 		}
@@ -212,7 +227,24 @@ public class CommentLogic : ICommentLogic
 
 			}
 
+			await _commentRepo.ReplaceOneAsync(commentId, comment);
+
 			return true;
 		}
 	}
+
+	public async Task<VoteResponeDto> CommentVoteCount(string commentId)
+		{
+			var filter = Builders<Comment>.Filter.Eq(p => p.Id, commentId);
+
+			var comment = await _commentRepo.FindOneAsync(filter: filter);
+
+			VoteResponeDto res = new VoteResponeDto();
+
+			res.UpVote = comment.UpvotedBy;
+
+			res.DownVote = comment.DownvotedBy;
+
+			return res;
+		}
 }
