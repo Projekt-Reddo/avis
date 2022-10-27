@@ -12,7 +12,7 @@ public interface IPostLogic
 
     Task<bool> VotePost(string userId, string voteId, bool isUpVote);
 
-	Task<VoteResponeDto> PostVote(string postId);
+	Task<VoteResponeDto> PostVoteCount(string postId);
 }
 
 public class PostLogic : IPostLogic
@@ -53,7 +53,7 @@ public class PostLogic : IPostLogic
         return post;
     }
 
-    public async Task<VoteResponeDto> PostVote(string postId)
+    public async Task<VoteResponeDto> PostVoteCount(string postId)
     {
 		var filter = Builders<Post>.Filter.Eq(p => p.Id, postId);
 
