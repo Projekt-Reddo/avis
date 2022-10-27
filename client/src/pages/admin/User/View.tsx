@@ -168,8 +168,8 @@ const View = () =>  {
                     <Table
                         className=""
                         columns={[
-                            "Name",
                             "Avatar",
+                            "Name",
                             "Joined Date",
                             "Role",
                             "Is Banned",

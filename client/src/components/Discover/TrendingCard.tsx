@@ -43,7 +43,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
                             }}
                             className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2"
                         >
-                            #Popular
+                            Popular
                         </div>
                     ) : (
                         ""
@@ -64,7 +64,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
                             }}
                             className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2"
                         >
-                            #Hot
+                            Hot
                         </div>
                     ) : (
                         ""
@@ -82,7 +82,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
                         }}
                         className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2"
                     >
-                        #New
+                        New
                     </div>
 
                     <div className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2">

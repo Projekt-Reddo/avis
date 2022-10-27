@@ -40,11 +40,11 @@ const MainRoute = () => {
                     <Song />
                 </Route>
 
-                <Route exact path="/discover/search">
+                <Route exact path="/search/discover">
                     <Search />
                 </Route>
 
-                <Route path="/discover/:postId">
+                <Route exact path="/discover/:postId">
                     <Post />
                 </Route>
 

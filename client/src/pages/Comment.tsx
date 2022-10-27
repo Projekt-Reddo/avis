@@ -1,9 +1,12 @@
 import PageWrapper from "components/PageWrapper/PageWrapper";
+import CommentCard from "components/PostDetail/CommentCard";
 import CommentSection from "components/PostDetail/CommentSection";
-import HumCardDetail from "components/PostDetail/HumCardDetail";
 import Icon from "components/shared/Icon";
-import React from "react";
+import Loading from "components/shared/Loading";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { commentDetailAsync } from "store/slices/commentDetailSlice";
+import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 interface CommentParams {
     commentId: string;
@@ -11,7 +14,16 @@ interface CommentParams {
 
 const Comment = () => {
     const { commentId } = useParams<CommentParams>();
-    console.log(commentId);
+
+    const dispatch = useAppDispatch();
+    const commentDetailState = useAppSelector((state) => state.commentDetail);
+
+    useEffect(() => {
+        if (commentId) {
+            dispatch(commentDetailAsync(commentId));
+        }
+    }, [commentId]);
+
     return (
         <PageWrapper>
             <div className="lg:hidden flex justify-between items-center p-4">
@@ -26,8 +38,16 @@ const Comment = () => {
             <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    {/* <HumCardDetail></HumCardDetail> */}
-                    <CommentSection postId={commentId} isPostChild={false} />
+                    {commentDetailState?.status !== "idle" ? (
+                        ""
+                    ) : (
+                        <CommentCard comment={commentDetailState?.data} />
+                    )}
+                    <CommentSection
+                        key={commentId}
+                        postId={commentId}
+                        isPostChild={false}
+                    />
                 </div>
                 {/* Right */}
                 <div className="hidden col-span-1 lg:block"></div>
