@@ -1,4 +1,5 @@
 using MainService.Data;
+using MainService.Dtos;
 using MainService.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -10,6 +11,8 @@ public interface IPostLogic
     Task<Post?> GetPostById(string id);
 
     Task<bool> VotePost(string userId, string voteId, bool isUpVote);
+
+	Task<VoteResponeDto> PostVote(string postId);
 }
 
 public class PostLogic : IPostLogic
@@ -49,6 +52,21 @@ public class PostLogic : IPostLogic
         var post = await _postRepo.FindOneAsync(filter: filter, stages: stages);
         return post;
     }
+
+    public async Task<VoteResponeDto> PostVote(string postId)
+    {
+		var filter = Builders<Post>.Filter.Eq(p => p.Id, postId);
+
+		var post = await _postRepo.FindOneAsync(filter: filter);
+
+		VoteResponeDto res = new VoteResponeDto();
+
+		res.UpVote = post.UpvotedBy;
+
+		res.DownVote = post.DownvotedBy;
+
+		return res;
+	}
 
     public async Task<bool> VotePost(string userId, string postId, bool isUpVote)
     {

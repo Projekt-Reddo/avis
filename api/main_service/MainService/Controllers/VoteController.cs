@@ -31,7 +31,7 @@ public class VoteController : ControllerBase
 		_commentLogic = commentLogic;
 	}
     [HttpPut]
-    public async Task<ActionResult<ResponseDto>> UpDownVote(VoteDto voteDto)
+    public async Task<ActionResult<VoteResponeDto>> UpDownVote(VoteDto voteDto)
     {
         if (voteDto.isVotePost)
         {
@@ -44,7 +44,9 @@ public class VoteController : ControllerBase
                 return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
             }
 
-            return Ok(new ResponseDto(200, ResponseMessage.POST_VOTE_SUCCESS));
+			var count = await _postLogic.PostVote(voteDto.VoteId);
+
+			return Ok(count);
 
         } else
         {
@@ -54,10 +56,10 @@ public class VoteController : ControllerBase
 
             if (!rs)
             {
-                return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
+                return BadRequest(0);
             }
 
-            return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
+            return Ok(0);
         }
     }
 
