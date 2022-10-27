@@ -66,7 +66,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
     return (
         <>
             <div
-                className={`hum-card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mt-4 border-t-0 ${
+                className={`hum-card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mb-4 border-t-0 ${
                     isDetailPage ? "" : "cursor-pointer"
                 }`}
                 onClick={handleViewDetail}

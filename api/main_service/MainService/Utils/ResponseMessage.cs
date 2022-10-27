@@ -67,4 +67,6 @@ public static class ResponseMessage
 	public const string ACCOUNT_NOT_FOUND = "Cannot find your account!";
 	public const string ACCOUNT_PROFILE_UPDATE_SUCCESS = "Profile updated!";
 	public const string ACCOUNT_PROFILE_UPDATE_FAIL = "Profile failed to update";
+	public const string ACCOUNT_PROMOTED = "Account promoted!";
+	public const string ACCOUNT_DEMOTED = "Account demoted!";
 }
