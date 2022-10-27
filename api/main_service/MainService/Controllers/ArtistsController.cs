@@ -3,6 +3,7 @@ using MainService.Logic;
 using MainService.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Constants;
 
 namespace MainService.Controllers;
 
@@ -17,8 +18,8 @@ public class ArtistsController : ControllerBase
         _artistLogic = artistLogic;
     }
 
-    [Authorize]
-    [HttpPost]
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpPost]
     public async Task<ActionResult<ResponseDto>> CreateMany(ArtistManyCreateDto manyCreateDto)
     {
         var msg = await _artistLogic.CreateMany(manyCreateDto.Artists);
@@ -46,7 +47,7 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
-	[Authorize]
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 	[HttpPost("filter")]
 	public async Task<ActionResult<ICollection<ArtistReadDto>>> GetAll(PaginationReqDto<ArtistFilterDto> pagination)
 	{
@@ -62,8 +63,8 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
-    [Authorize]
-    [HttpDelete]
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpDelete]
     public async Task<ActionResult<ResponseDto>> DeleteMany(ArtistManyDeleteDto manyDeleteDto)
     {
         var rs = await _artistLogic.DeleteMany(manyDeleteDto);
