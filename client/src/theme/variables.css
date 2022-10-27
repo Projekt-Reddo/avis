@@ -28,6 +28,7 @@ http://ionicframework.com/docs/theming/ */
     --post-border-color: rgb(0 0 0 / 8%);
     --post-bg-hover-color: #f8f9fa;
 
+    --comment-bg-body-color: #f0f2f5;
     /* Theme color */
 
     --teal-darker-color: #0d9488;
