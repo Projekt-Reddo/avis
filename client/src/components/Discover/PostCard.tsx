@@ -83,7 +83,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
 
                     {/* Content */}
                     <div className="pb-8">
-                        <div className="mb-4">{post.content}</div>
+                        <div className="whitespace-pre-wrap mb-4">
+                            {post.content}
+                        </div>
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
