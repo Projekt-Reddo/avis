@@ -397,35 +397,19 @@ public class PostsController : ControllerBase
 	//     return Ok();
 	// }
 
-	[HttpPut("vote/{id}")]
-	public async Task<ActionResult<ResponseDto>> UpDownVotePost(VoteDto voteDto)
+	[HttpPut("save/{id}")]
+	public async Task<ActionResult<ResponseDto>> SavePost(string id)
 	{
-		if (voteDto.isVotePost)
+		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+		var rs = await _postLogic.SavePost(id, userId);
+
+		if (rs == 0)
 		{
-			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-
-			var rs = await _postLogic.VotePost(userId, voteDto.VoteId, voteDto.isUpvote);
-
-			if (!rs)
-			{
-				return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
-			}
-
-			return Ok(new ResponseDto(200, ResponseMessage.POST_VOTE_SUCCESS));
-
-		}
-		else
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_SAVE_FAIL));
+		}  else
 		{
-			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-
-			var rs = await _commentLogic.VoteComment(userId, voteDto.VoteId, voteDto.isUpvote);
-
-			if (!rs)
-			{
-				return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
-			}
-
-			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
+			return Ok(new ResponseDto(200, ResponseMessage.POST_SAVE_SUCCESS));
 		}
 	}
 }

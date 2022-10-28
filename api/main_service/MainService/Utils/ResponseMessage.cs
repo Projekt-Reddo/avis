@@ -21,6 +21,8 @@ public static class ResponseMessage
 	public const string POST_VOTE_SUCCESS = "Post Vote Successfully";
 	public const string POST_VOTE_FAIL = "Post Vote Failed";
 	public const string POST_UPDATE_STATUS_SUCCESS = "Updated status of the post";
+	public const string POST_SAVE_FAIL = "You already save this post";
+	public const string POST_SAVE_SUCCESS = "Save post successfully";
 
 	// Report msg
 	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
