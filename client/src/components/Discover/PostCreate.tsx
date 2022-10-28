@@ -523,7 +523,6 @@ const customStyles = {
     menu: (base: any) => ({
         ...base,
         width: 278,
-        marginLeft: "-3rem",
     }),
     valueContainer: (base: any) => ({
         ...base,

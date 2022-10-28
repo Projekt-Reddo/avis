@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { FieldValues, useForm } from "react-hook-form";
 
 // Logic
 import { MOBILE_BREAKPOINT } from "utils/constants";
@@ -9,9 +8,8 @@ import { useWindowDimensions } from "utils/useWindowDimensions";
 // Components
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostCard from "components/Discover/PostCard";
-import SearchBox from "components/Discover/SearchBox";
-import TrendingCard from "components/Discover/TrendingCard";
 import Loading from "components/shared/Loading";
+import RightComponent from "components/Discover/RightComponent";
 
 // Types
 import { AsyncThunkAction } from "@reduxjs/toolkit";
@@ -44,29 +42,6 @@ export default function createPostInfiniteScrollLayout({
     });
 
     const [fetchMorePage, setFetchMorePage] = React.useState(2);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        mode: "onChange",
-        defaultValues: {
-            content: "",
-            hashtags: [],
-        },
-    });
-
-    const handleSearch = (data: FieldValues) => {
-        setPageFilter({
-            currentPage: 1,
-            rowShow: pageFilter.rowShow,
-            filter: {
-                content: data.content,
-            },
-        });
-        setFetchMorePage(2);
-    };
 
     const fetchData = () => {
         dispatch(
@@ -151,16 +126,12 @@ export default function createPostInfiniteScrollLayout({
                         </InfiniteScroll>
                     )}
                 </div>
+
                 {/* Right */}
                 <div className="hidden col-span-1 lg:block">
-                    <SearchBox
-                        register={register("content")}
-                        handleSubmit={handleSubmit(handleSearch)}
-                    />
-                    <TrendingCard
-                        setFetchMorePage={setFetchMorePage}
-                        setState={setPageFilter}
-                    />
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
                 </div>
             </div>
         </>

@@ -27,6 +27,8 @@
     padding: 0.5rem;
     background-color: var(--text-tertiary-color);
     color: var(--body-bg-color);
+    height: 2rem;
+    width: 2rem;
 }
 
 .avatar{

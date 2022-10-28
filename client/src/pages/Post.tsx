@@ -1,6 +1,5 @@
 import PostCard from "components/Discover/PostCard";
-import SearchBox from "components/Discover/SearchBox";
-import TrendingCard from "components/Discover/TrendingCard";
+import RightComponent from "components/Discover/RightComponent";
 import PageWrapper from "components/PageWrapper/PageWrapper";
 import CommentSection from "components/PostDetail/CommentSection";
 import Icon from "components/shared/Icon";
@@ -58,14 +57,7 @@ const Post = () => {
                 </div>
                 {/* Right */}
                 <div className="hidden col-span-1 lg:block">
-                    {/* <SearchBox
-                        register={register("content")}
-                        handleSubmit={handleSubmit(handleSearch)}
-                    />
-                    <TrendingCard
-                        setFetchMorePage={setFetchMorePage}
-                        setState={setPageFilter}
-                    /> */}
+                    <RightComponent />
                 </div>
             </div>
         </PageWrapper>
