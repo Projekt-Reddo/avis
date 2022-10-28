@@ -13,12 +13,16 @@ public interface IPostLogic
     Task<bool> VotePost(string userId, string voteId, bool isUpVote);
 
 	Task<VoteResponeDto> PostVoteCount(string postId);
+
+	Task<int> SavePost(string postId, string userId);
 }
 
 public class PostLogic : IPostLogic
 {
     private readonly IPostRepo _postRepo;
-    private readonly List<BsonDocument> userLookUp = new List<BsonDocument>(){
+
+	private readonly IAccountRepo _accountRepo;
+	private readonly List<BsonDocument> userLookUp = new List<BsonDocument>(){
         new BsonDocument
         {
             {
@@ -35,10 +39,11 @@ public class PostLogic : IPostLogic
         }
     };
 
-    public PostLogic(IPostRepo postRepo)
+    public PostLogic(IPostRepo postRepo, IAccountRepo accountRepo)
     {
         _postRepo = postRepo;
-    }
+		_accountRepo = accountRepo;
+	}
 
     public async Task<Post?> GetPostById(string id)
     {
@@ -132,4 +137,30 @@ public class PostLogic : IPostLogic
             return true;
         }
     }
+
+    public async Task<int> SavePost(string postId, string userId)
+    {
+
+		var userFilter = Builders<Account>.Filter.Eq(u => u.Id, userId);
+
+		var user = await _accountRepo.FindOneAsync(userFilter);
+
+        if (user.SavedPosts == null)
+        {
+			user.SavedPosts = new List<ObjectId>();
+		}
+
+		if (user.SavedPosts.Contains(new ObjectId(postId)))
+        {
+			return 0;
+		} else
+        {
+			user.SavedPosts.Add(new ObjectId(postId));
+		}
+
+		await _accountRepo.ReplaceOneAsync(userId, user);
+
+		return 1;
+
+	}
 }

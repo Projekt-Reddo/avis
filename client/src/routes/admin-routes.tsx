@@ -4,6 +4,7 @@ import CreateSong from "pages/admin/Song/Create";
 import EditSong from "pages/admin/Song/Edit";
 import Dashboard from "pages/admin/Dashboard";
 import Genre from "pages/admin/Genre";
+import Report from "pages/admin/Report/View";
 
 import { useRouteMatch } from "react-router";
 import AdminRoute from "./AdminRoute";
@@ -40,6 +41,10 @@ const AdminRoutes = () => {
 
             <AdminRoute exact path={`${path}/artist`}>
                 <ViewArtist />
+            </AdminRoute>
+
+            <AdminRoute exact path={`${path}/report`}>
+                <Report />
             </AdminRoute>
         </>
     );

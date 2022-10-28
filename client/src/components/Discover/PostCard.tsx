@@ -1,6 +1,5 @@
 // Libs
-import { Link, useHistory } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import { useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -9,13 +8,13 @@ import Icon from "components/shared/Icon";
 import { addNewToast } from "components/Toast";
 
 // Constants
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
 import PostReport from "components/Report/PostReport";
-import { voteApi } from "api/vote-api";
 import Vote from "./Vote";
+import SavePost from "./SavePost";
 
 interface PostCardProps {
     post: Post;
@@ -23,40 +22,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
-    const authState = useAppSelector((state) => state.auth.data);
-
     const history = useHistory();
-
-    const handleSave = (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        console.log("Save");
-    };
-
-    const handleUpvote = async (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        await voteApi({
-            voteId: post.id,
-            isUpvote: true,
-            isVotePost: true
-        });
-    };
-
-    const handleDownvote = async (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        await voteApi({
-            voteId: post.id,
-            isUpvote: false,
-            isVotePost: true
-        });
-    };
-
-    const handleUnauthorize = (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        addNewToast({
-            variant: "warning",
-            message: "Please login to use this function",
-        });
-    };
 
     const handleViewDetail = () => {
         if (isDetailPage) {
@@ -89,7 +55,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     </div>
 
                     {/* Vote */}
-                    <Vote post= {post}/>
+                    <Vote post={post} />
                 </div>
 
                 <div className="col-span-4 sm:col-span-9 relative">
@@ -108,7 +74,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 {post.user.name}
                             </div>
                             <div className="ml-4 text-ellipsis">
-                                {moment(post.publishedAt).format(DayFormat)}
+                                {moment(post.publishedAt).format(DAY_FORMAT)}
                             </div>
                         </div>
 
@@ -117,7 +83,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
 
                     {/* Content */}
                     <div className="pb-8">
-                        <div className="mb-4">{post.content}</div>
+                        <div className="whitespace-pre-wrap mb-4">
+                            {post.content}
+                        </div>
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
@@ -238,15 +206,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                             </div>
 
                             {/* Save */}
-                            <div
-                                onClick={
-                                    authState ? handleSave : handleUnauthorize
-                                }
-                                className="flex cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                            >
-                                <Icon className="text-2xl" icon="bookmark" />
-                                <div className="ml-1 hidden sm:block">Save</div>
-                            </div>
+                            <SavePost post={post} />
                         </div>
                         <div className="text-xs self-center">
                             {post.upvotedBy.length + post.downvotedBy.length ===
