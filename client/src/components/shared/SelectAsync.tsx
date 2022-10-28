@@ -70,7 +70,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
     };
 
     return (
-        <div>
+        <>
             <Controller
                 control={control}
                 name={controlName}
@@ -92,9 +92,9 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
                             (c: any) => value && value!.includes(c.value)
                         )}
                         onChange={(val: any) =>
-                            (isMulti) ?
-                            onChange(val.map((c: any) => c.value))
-                            : onChange(val.value)
+                            isMulti
+                                ? onChange(val.map((c: any) => c.value))
+                                : onChange(val.value)
                         }
                     />
                 )}
@@ -103,7 +103,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
             {error?.message && (
                 <span className="text-red-600">{`${error.message}`}</span>
             )}
-        </div>
+        </>
     );
 };
 

@@ -1,6 +1,5 @@
 // Libs
 import { useHistory } from "react-router-dom";
-import { useAppSelector } from "utils/react-redux-hooks";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -9,12 +8,13 @@ import Icon from "components/shared/Icon";
 import { addNewToast } from "components/Toast";
 
 // Constants
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
 import PostReport from "components/Report/PostReport";
 import Vote from "./Vote";
+import SavePost from "./SavePost";
 
 interface PostCardProps {
     post: Post;
@@ -22,22 +22,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
-    const authState = useAppSelector((state) => state.auth.data);
-
     const history = useHistory();
-
-    const handleSave = (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        console.log("Save");
-    };
-
-    const handleUnauthorize = (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        addNewToast({
-            variant: "warning",
-            message: "Please login to use this function",
-        });
-    };
 
     const handleViewDetail = () => {
         if (isDetailPage) {
@@ -89,7 +74,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 {post.user.name}
                             </div>
                             <div className="ml-4 text-ellipsis">
-                                {moment(post.publishedAt).format(DayFormat)}
+                                {moment(post.publishedAt).format(DAY_FORMAT)}
                             </div>
                         </div>
 
@@ -221,15 +206,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                             </div>
 
                             {/* Save */}
-                            <div
-                                onClick={
-                                    authState ? handleSave : handleUnauthorize
-                                }
-                                className="flex cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                            >
-                                <Icon className="text-2xl" icon="bookmark" />
-                                <div className="ml-1 hidden sm:block">Save</div>
-                            </div>
+                            <SavePost post={post} />
                         </div>
                         <div className="text-xs self-center">
                             {post.upvotedBy.length + post.downvotedBy.length ===

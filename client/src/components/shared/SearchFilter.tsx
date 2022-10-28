@@ -1,17 +1,14 @@
 import React from "react";
-import {
-    UseFormRegisterReturn,
-    UseFormSetValue,
-} from "react-hook-form";
+import { UseFormRegisterReturn, UseFormSetValue } from "react-hook-form";
 
 // Components
 import Button from "../Button/Button";
 import Icon from "./Icon";
 import SelectAsync from "./SelectAsync";
 
-
 // Styles
 import "theme/SearchFilter.css";
+import Input from "./Input";
 
 interface SearchFilterProps {
     placeholder?: string;
@@ -58,10 +55,9 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
             setValue(element.registerEnd.name, "");
         });
 
-        filterContent?.radioBox?.forEach((element) =>
-        {
-            setValue(element.checkBox.name, false)
-        })
+        filterContent?.radioBox?.forEach((element) => {
+            setValue(element.checkBox.name, false);
+        });
     };
 
     return (
@@ -111,16 +107,15 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
             {/* Search Filter */}
 
             {showSearchFilter ? (
-                <div className="radius-border text-[color:--text-primary-color] bg-[color:var(--body-bg-color)] px-4">
+                <div className="radius-border text-[color:--text-primary-color] bg-[color:var(--body-bg-color)] p-4 grid grid-cols-1 gap-4">
                     {/* Select Multiple Filter */}
-
                     {filterContent?.selectMultiple?.map((item) => (
-                        <div key={item.label} className="w-full py-4">
-                            <div className="text-base font-bold self-center mb-2">
+                        <div key={item.label} className="grid grid-cols-6">
+                            <div className="text-base font-bold self-center">
                                 {item.label}
                             </div>
                             <SelectAsync
-                                className="w-full"
+                                className="w-full col-span-5"
                                 isMulti={item.isMulti}
                                 loadOptionsCallback={item.loadOptionsCallback}
                                 control={item.control}
@@ -133,76 +128,85 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         </div>
                     ))}
 
-                    <div className="h-[0.25px] w-full bg-[color:var(--text-primary-color)]" />
+                    <div className="h-[0.25px] w-full bg-[color:var(--border-color)]" />
 
                     {/* Date Input Filter */}
-                    <div className={(filterContent?.radioBox != null) ? "grid grid-cols-1 md:flex"  : "grid grid-cols-1" } >
-                        <div className="grid grid-cols-1 md:grid-cols-2 justify-start py-4 ">
+                    <div
+                        className={
+                            filterContent?.radioBox != null
+                                ? "grid grid-cols-1 md:grid-cols-2 gap-4"
+                                : "grid grid-cols-1"
+                        }
+                    >
+                        <div
+                            className={`grid grid-cols-1 md:grid-cols-2 ${
+                                filterContent?.radioBox && "md:grid-cols-1"
+                            } gap-10 justify-start`}
+                        >
                             {filterContent?.dateInput?.map((item) => (
                                 <div key={item.label}>
-                                    <div className="text-base font-bold pb-2  mb-5">
+                                    <div className="text-base font-bold pb-2">
                                         {item.label}
                                     </div>
-                                    <div className="flex relative">
-                                        <input
-                                            className="input-date px-2 py-1"
-                                            {...item.registerStart}
+                                    <div className="flex flex-row justify-between">
+                                        <Input
                                             type="date"
+                                            className="w-[45%]"
+                                            register={item.registerStart}
                                         />
-                                        <div className="absolute ml-[8rem] mt-1.5">
-                                            <Icon
-                                                icon="calendar"
-                                                className="w-5 text-[color:var(--text-secondary-color)]"
-                                                size="l"
-                                            />
-                                        </div>
-                                        <div className="self-center px-4">-</div>
-                                        <input
-                                            className="input-date px-2 py-1"
-                                            {...item.registerEnd}
+
+                                        <div className="self-center">-</div>
+
+                                        <Input
                                             type="date"
+                                            className="w-[45%]"
+                                            register={item.registerEnd}
                                         />
-                                        <div className="absolute ml-[20rem] mt-1.5">
-                                            <Icon
-                                                icon="calendar"
-                                                className="w-5 text-[color:var(--text-secondary-color)]"
-                                                size="l"
-                                            />
-                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        {(filterContent?.radioBox != null) ?
-                        <>
-                        <div className="search-bar h-[0.25px] w-full bg-[color:var(--text-primary-color)]" />
-                        <div className="">
-                            <div className="text-base font-bold self-center mt-3 mb-5 md:ml-[7rem]">
-                                Status
-                            </div>
-                            {/* Radio Box Filter */}
-                            <div className="grid grid-cols-3 gap-6 py-2">
-                                {filterContent?.radioBox?.map((item) => (
-                                        <div className="grid justify-start">
-                                            <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in ml-2">
-                                                <input type="checkbox"
-                                                {...item.checkBox}
-                                                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer"/>
-                                                <label className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                            </div>
-                                        <div className="text-base self-center mt-3 mb-3 text-center ">
-                                            {item.label}
-                                        </div>
+
+                        {filterContent?.radioBox != null ? (
+                            <>
+                                <div className="">
+                                    <div className="text-base font-bold self-center pb-2">
+                                        Status
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                        </>
-                        :
-                        <></>}
+                                    {/* Radio Box Filter */}
+                                    <div className="grid grid-cols-3 gap-6 mt-0 md:mt-3">
+                                        {filterContent?.radioBox?.map(
+                                            (item) => (
+                                                <div
+                                                    className="flex flex-col md:flex-row gap-3"
+                                                    key={item.label}
+                                                >
+                                                    <div className="text-base">
+                                                        {item.label}
+                                                    </div>
+                                                    <div className="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+                                                        <input
+                                                            type="checkbox"
+                                                            {...item.checkBox}
+                                                            className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer"
+                                                        />
+                                                        <label className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <></>
+                        )}
                     </div>
+
+                    <div className="h-[0.25px] w-full bg-[color:var(--border-color)]" />
+
                     {/* Clear, Close, Apply Filter  */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 justify-end py-4">
+                    <div className="flex flex-row justify-between">
                         {/* Clear Filter Button */}
                         <Button
                             className="none-shadow-button mr-4 w-fit"
@@ -212,7 +216,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         >
                             Clear filter
                         </Button>
-                        <div className="flex justify-start sm:justify-end pt-4 sm:pt-0">
+
+                        <div className="flex justify-start sm:justify-end sm:pt-0">
                             {/* Close Filter Button */}
                             <Button
                                 className="none-shadow-button mr-4"
