@@ -86,8 +86,6 @@ const Search = () => {
     };
 
     useEffect(() => {
-        console.log(pageFilter);
-
         dispatch(
             viewPostAsync({
                 page: pageFilter.currentPage,
