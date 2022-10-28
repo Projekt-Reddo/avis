@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createReportApi } from "api/report-api";
+import { createReportApi, getReportApi } from "api/report-api";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
@@ -16,6 +16,10 @@ const reportSlice = createSlice({
             ...state,
             data: action.payload,
         }),
+        setTableData: (state, action) => ({
+            ...state,
+            tableData: action.payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -25,6 +29,14 @@ const reportSlice = createSlice({
             .addCase(createAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(getAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(getAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+                state.tableData = action.payload.payload;
             });
     },
 });
@@ -52,5 +64,19 @@ export const createAsync = createAsyncThunk(
     }
 );
 
-export const { recommend } = reportSlice.actions;
+export const getAsync = createAsyncThunk(
+    "report/get",
+    async (filter: ReportFilter, { rejectWithValue }) => {
+        try {
+            const res = await getReportApi(filter);
+            return res;
+        } catch (e: any) {
+            return rejectWithValue(
+                e.response.data.message ?? "Fail to load reports"
+            );
+        }
+    }
+);
+
+export const { recommend, setTableData } = reportSlice.actions;
 export default reportSlice.reducer;
