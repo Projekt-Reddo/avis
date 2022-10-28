@@ -1,6 +1,6 @@
 // Libs
-import { Link, useHistory } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import { useHistory } from "react-router-dom";
+import { useAppSelector } from "utils/react-redux-hooks";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -14,7 +14,6 @@ import { DayFormat } from "utils/constants";
 // Styles
 import "theme/Discover.css";
 import PostReport from "components/Report/PostReport";
-import { voteApi } from "api/vote-api";
 import Vote from "./Vote";
 
 interface PostCardProps {
@@ -30,24 +29,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
     const handleSave = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         console.log("Save");
-    };
-
-    const handleUpvote = async (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        await voteApi({
-            voteId: post.id,
-            isUpvote: true,
-            isVotePost: true
-        });
-    };
-
-    const handleDownvote = async (event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-        await voteApi({
-            voteId: post.id,
-            isUpvote: false,
-            isVotePost: true
-        });
     };
 
     const handleUnauthorize = (event: React.MouseEvent<HTMLElement>) => {
@@ -89,7 +70,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     </div>
 
                     {/* Vote */}
-                    <Vote post= {post}/>
+                    <Vote post={post} />
                 </div>
 
                 <div className="col-span-4 sm:col-span-9 relative">
@@ -117,7 +98,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
 
                     {/* Content */}
                     <div className="pb-8">
-                        <div className="mb-4">{post.content}</div>
+                        <div className="whitespace-pre-wrap mb-4">
+                            {post.content}
+                        </div>
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
