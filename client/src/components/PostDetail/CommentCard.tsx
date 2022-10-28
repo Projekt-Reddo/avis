@@ -4,7 +4,7 @@ import moment from "moment";
 import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 import { useAppSelector } from "utils/react-redux-hooks";
 
 interface commentData {
@@ -67,7 +67,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                                 {comment.user.name}
                             </Link>
                             <div className="ml-4 text-ellipsis">
-                                {moment(comment.createdAt).format(DayFormat)}
+                                {moment(comment.createdAt).format(DAY_FORMAT)}
                             </div>
                         </div>
                         <div

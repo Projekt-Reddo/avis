@@ -8,7 +8,7 @@ import Icon from "components/shared/Icon";
 import { addNewToast } from "components/Toast";
 
 // Constants
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
@@ -22,7 +22,6 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
-
     const history = useHistory();
 
     const handleViewDetail = () => {
@@ -56,7 +55,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     </div>
 
                     {/* Vote */}
-                    <Vote post= {post}/>
+                    <Vote post={post} />
                 </div>
 
                 <div className="col-span-4 sm:col-span-9 relative">
@@ -75,7 +74,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 {post.user.name}
                             </div>
                             <div className="ml-4 text-ellipsis">
-                                {moment(post.publishedAt).format(DayFormat)}
+                                {moment(post.publishedAt).format(DAY_FORMAT)}
                             </div>
                         </div>
 
@@ -205,7 +204,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                             </div>
 
                             {/* Save */}
-                            <SavePost post={post}/>
+                            <SavePost post={post} />
                         </div>
                         <div className="text-xs self-center">
                             {post.upvotedBy.length + post.downvotedBy.length ===

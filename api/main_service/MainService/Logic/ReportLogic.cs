@@ -4,6 +4,7 @@ using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Utils;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace MainService.Logic;
@@ -141,11 +142,34 @@ public class ReportLogic : IReportLogic
 			filter = filter & isPostFilter;
 		}
 
+		IEnumerable<BsonDocument> stages = new List<BsonDocument>() {
+			new BsonDocument {
+				{ "$limit", pagination.Size }
+			},
+			new BsonDocument {
+				{ "$skip", (pagination.Page - 1) * pagination.Size }
+			},
+			new BsonDocument {
+				{
+					"$lookup", new BsonDocument{
+						{ "from", "account" },
+						{ "localField", "UserId" },
+						{ "foreignField", "_id" },
+						{ "as", "User" }
+					}
+				}
+			},
+			new BsonDocument {
+				{ "$unwind", "$User" }
+			}
+		};
+
 		var skipPage = (pagination.Page - 1) * pagination.Size;
-		(var total, var reports) = await _reportRepo.FindManyAsync(
+		var reports = await _reportRepo.FindManyAsync(
 			filter: filter,
-			limit: pagination.Size,
-			skip: skipPage);
+			stages: stages);
+
+		var total = await _reportRepo.CountDocumentAsync(filter: filter, stages: new List<BsonDocument>() { });
 
 		return new PaginationResDto<ReportReadDto>
 		{
