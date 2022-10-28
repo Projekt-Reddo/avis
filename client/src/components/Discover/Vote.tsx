@@ -1,21 +1,14 @@
 // Libs
-import { Link, useHistory } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import ReactPlayer from "react-player";
-import moment from "moment";
+import { useAppSelector } from "utils/react-redux-hooks";
 
 // Components
 import Icon from "components/shared/Icon";
 import { addNewToast } from "components/Toast";
 
-// Constants
-import { DAY_FORMAT } from "utils/constants";
-
 // Styles
 import "theme/Discover.css";
-import PostReport from "components/Report/PostReport";
 import { voteApi } from "api/vote-api";
-import React, { useEffect } from "react";
+import React from "react";
 
 interface VoteProps {
     post: Post;
