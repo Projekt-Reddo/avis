@@ -142,12 +142,18 @@ public class ReportLogic : IReportLogic
 			filter = filter & isPostFilter;
 		}
 
+		var skipPage = (pagination.Page - 1) * pagination.Size;
 		IEnumerable<BsonDocument> stages = new List<BsonDocument>() {
 			new BsonDocument {
-				{ "$limit", pagination.Size }
+				{ "$sort", new BsonDocument {
+					{ "CreatedAt", -1}
+				}}
 			},
 			new BsonDocument {
-				{ "$skip", (pagination.Page - 1) * pagination.Size }
+				{ "$skip", skipPage }
+			},
+			new BsonDocument {
+				{ "$limit", pagination.Size }
 			},
 			new BsonDocument {
 				{
@@ -164,7 +170,6 @@ public class ReportLogic : IReportLogic
 			}
 		};
 
-		var skipPage = (pagination.Page - 1) * pagination.Size;
 		var reports = await _reportRepo.FindManyAsync(
 			filter: filter,
 			stages: stages);

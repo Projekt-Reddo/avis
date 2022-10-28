@@ -105,8 +105,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
             </div>
 
             {/* Search Filter */}
-
-            {showSearchFilter ? (
+            {showSearchFilter && (
                 <div className="radius-border text-[color:--text-primary-color] bg-[color:var(--body-bg-color)] p-4 grid grid-cols-1 gap-4">
                     {/* Select Multiple Filter */}
                     {filterContent?.selectMultiple?.map((item) => (
@@ -238,8 +237,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         </div>
                     </div>
                 </div>
-            ) : (
-                " "
             )}
         </form>
     );
