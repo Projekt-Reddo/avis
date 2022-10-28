@@ -9,7 +9,7 @@ import Icon from "components/shared/Icon";
 import { addNewToast } from "components/Toast";
 
 // Constants
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
@@ -37,7 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
         await voteApi({
             voteId: post.id,
             isUpvote: true,
-            isVotePost: true
+            isVotePost: true,
         });
     };
 
@@ -46,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
         await voteApi({
             voteId: post.id,
             isUpvote: false,
-            isVotePost: true
+            isVotePost: true,
         });
     };
 
@@ -89,7 +89,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     </div>
 
                     {/* Vote */}
-                    <Vote post= {post}/>
+                    <Vote post={post} />
                 </div>
 
                 <div className="col-span-4 sm:col-span-9 relative">
@@ -108,7 +108,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 {post.user.name}
                             </div>
                             <div className="ml-4 text-ellipsis">
-                                {moment(post.publishedAt).format(DayFormat)}
+                                {moment(post.publishedAt).format(DAY_FORMAT)}
                             </div>
                         </div>
 
