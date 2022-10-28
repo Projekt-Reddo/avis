@@ -33,3 +33,8 @@ export const postDetailApi = async (id: string) => {
     const res = await axios.get(`${apiRoute}/${id}`);
     return res.data;
 };
+
+export const savePost = async (id: string) => {
+    const res = await axios.put(`${apiRoute}/save/${id}`);
+    return res.data;
+}
