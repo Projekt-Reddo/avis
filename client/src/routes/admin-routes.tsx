@@ -9,6 +9,7 @@ import Report from "pages/admin/Report/View";
 import { useRouteMatch } from "react-router";
 import AdminRoute from "./AdminRoute";
 import ViewArtist from "pages/admin/Artist/View";
+import CreateArtist from "pages/admin/Artist/Create";
 
 const AdminRoutes = () => {
     let { path } = useRouteMatch();
@@ -41,6 +42,10 @@ const AdminRoutes = () => {
 
             <AdminRoute exact path={`${path}/artist`}>
                 <ViewArtist />
+            </AdminRoute>
+
+            <AdminRoute exact path={`${path}/artist/create`}>
+                <CreateArtist />
             </AdminRoute>
 
             <AdminRoute exact path={`${path}/report`}>
