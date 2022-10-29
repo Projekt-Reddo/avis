@@ -58,7 +58,7 @@ const Search = () => {
     } = useForm({
         mode: "onChange",
         defaultValues: {
-            content: "",
+            content: location.state.content,
             hashtags: [],
         },
     });
@@ -97,9 +97,9 @@ const Search = () => {
 
     return (
         <PageWrapper>
-            <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4 ">
+            <div className="lg:grid lg:grid-cols-3 lg:gap-6">
                 {/* Right */}
-                <div className="flex items-center p-4 lg:block lg:col-span-1 lg:items-start lg:p-0 order-2">
+                <div className="flex items-center p-4 lg:block lg:col-span-1 lg:items-start lg:p-0 order-2 lg:mt-4">
                     <Link
                         to="/discover"
                         className="circle flex justify-center items-center mr-4 lg:hidden"
@@ -107,7 +107,6 @@ const Search = () => {
                         <Icon className="text-lg" icon="arrow-left" />
                     </Link>
                     <SearchBox
-                        content={pageFilter.filter?.content}
                         register={register("content")}
                         handleSubmit={handleSubmit(handleSearch)}
                     />
@@ -148,7 +147,7 @@ const Search = () => {
                             }}
                             height={
                                 width! > MOBILE_BREAKPOINT
-                                    ? height! - 137
+                                    ? height! - 64
                                     : height! - 138
                             }
                             loader={
@@ -159,7 +158,7 @@ const Search = () => {
                             }
                             endMessage={
                                 <div className="flex justify-center items-center font-bold my-4">
-                                    Post to view more
+                                    No more results
                                 </div>
                             }
                         >
@@ -175,9 +174,16 @@ const Search = () => {
                                     No result
                                 </div>
                             ) : (
-                                postState.data?.payload?.map((post: Post) => (
-                                    <PostCard key={post.id} post={post} />
-                                ))
+                                <div className="lg:pt-4">
+                                    {postState.data?.payload?.map(
+                                        (post: Post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                post={post}
+                                            />
+                                        )
+                                    )}
+                                </div>
                             )}
                         </InfiniteScroll>
                     )}
