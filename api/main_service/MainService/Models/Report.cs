@@ -23,10 +23,12 @@ public class Report : BaseModel
 	[BsonIgnoreIfNull]
 	public Comment? Comment { get; set; }
 
-	public string Status { get; set; } = null!;
+	[BsonIgnoreIfNull]
+	public string? Status { get; set; } = null!;
 
 	// Confirm admin id
-	public string ConfirmedId { get; set; } = null!;
+	[BsonIgnoreIfNull]
+	public string? ConfirmedId { get; set; } = null!;
 
 	[BsonIgnoreIfNull]
 	public Account? ConfirmedBy { get; set; } = null!;

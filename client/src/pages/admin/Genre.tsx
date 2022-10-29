@@ -47,7 +47,7 @@ const Genre = () => {
             <TextArea
                 register={register("genres")}
                 error={errors.title}
-                className={"w-[20rem] lg:w-[25rem]"}
+                className={"w-full"}
             />
         ),
         confirmTitle: "Create",
