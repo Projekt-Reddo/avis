@@ -85,6 +85,7 @@ public class PostsController : ControllerBase
 		post.UserId = userId!;
 		post.CreatedAt = DateTime.Now;
 		post.PublishedAt = newPost.PublishedAt ?? DateTime.Now;
+		post.HashtagsNormalized = new List<string>();
 
 		// Normalizing Hashtags
 		if (newPost.HashTags != null)
@@ -93,7 +94,7 @@ public class PostsController : ControllerBase
 
 			foreach (var hashtag in newPost.HashTags!)
 			{
-				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag));
+				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
 			}
 
 			post.HashtagsNormalized = hashtagsNormal;
@@ -217,7 +218,14 @@ public class PostsController : ControllerBase
 		// Hashtags Filter
 		if (pagination.Filter.Hashtags != null)
 		{
-			postFilter = postFilter & Builders<Post>.Filter.All(x => x.Hashtags, pagination.Filter.Hashtags);
+			List<string> hashtagsNormal = new List<string>();
+
+			foreach (var hashtag in pagination.Filter.Hashtags!)
+			{
+				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
+			}
+
+			postFilter = postFilter & Builders<Post>.Filter.All(x => x.HashtagsNormalized, hashtagsNormal);
 		}
 
 		// Trending Post Filter
@@ -407,7 +415,8 @@ public class PostsController : ControllerBase
 		if (rs == 0)
 		{
 			return BadRequest(new ResponseDto(400, ResponseMessage.POST_SAVE_FAIL));
-		}  else
+		}
+		else
 		{
 			return Ok(new ResponseDto(200, ResponseMessage.POST_SAVE_SUCCESS));
 		}
