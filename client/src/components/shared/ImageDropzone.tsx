@@ -57,6 +57,12 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
         }
     }, [acceptedFiles]);
 
+    useEffect(() => {
+        if (!getValues(fieldName)) {
+            setPreview("");
+        }
+    }, [getValues(fieldName)]);
+
     const displayAccept = (item: Accept) => {
         var result: string[] = [];
         for (var key in item) {
@@ -78,7 +84,7 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
                 })}
             >
                 <input {...getInputProps()} />
-                {acceptedFiles.length > 0 || preview ? (
+                {getValues(fieldName) || preview ? (
                     <div
                         className="w-full h-full"
                         style={{

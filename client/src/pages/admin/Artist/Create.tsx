@@ -1,27 +1,46 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createArtistApi } from "api/artist-api";
 import Button from "components/Button/Button";
 import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNav";
 import Icon from "components/shared/Icon";
 import ImageDropzone from "components/shared/ImageDropzone";
 import Input from "components/shared/Input";
+import { addNewToast } from "components/Toast";
+import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useHistory } from "react-router";
 import yup from "utils/yup-config";
 
 const CreateArtist = () => {
+    const [loading, setLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
         setValue,
         getValues,
+        reset,
     } = useForm({
         mode: "onChange",
         resolver: yupResolver(schema),
     });
 
     const handleCreateArtist = (data: FieldValues) => {
-        console.log(data);
+        setLoading(true);
+        createArtistApi(data as ArtistCreateDto).then((data) => {
+            addNewToast({
+                variant: "primary",
+                message: data.message,
+            });
+
+            reset({
+                name: "",
+                alias: "",
+                thumbnailFile: undefined,
+            });
+            setLoading(false);
+        });
     };
 
     const history = useHistory();
@@ -70,7 +89,10 @@ const CreateArtist = () => {
                     >
                         <Icon icon="arrow-left" className="mr-3" /> Back
                     </Button>
-                    <Button onClick={handleSubmit(handleCreateArtist)}>
+                    <Button
+                        onClick={handleSubmit(handleCreateArtist)}
+                        disabled={loading}
+                    >
                         Create
                     </Button>
                 </div>

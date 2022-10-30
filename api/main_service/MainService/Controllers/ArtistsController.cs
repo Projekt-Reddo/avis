@@ -18,7 +18,7 @@ public class ArtistsController : ControllerBase
         _artistLogic = artistLogic;
     }
 
-	
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 	[HttpPost]
 	public async Task<ActionResult<ResponseDto>> Create([FromForm] ArtistCreateDto createDto)
 	{
