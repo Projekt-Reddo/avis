@@ -1,5 +1,5 @@
 // Libs
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -29,6 +29,35 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
             return;
         }
         history.push(`/discover/${post.id}`);
+    };
+
+    const HASHTAG_FORMATTER = (string: string) => {
+        return string
+            .split(/((?:^|\s)(?:#[a-z\d-] || @[a-z\d-]+))/gi)
+            .filter(Boolean)
+            .map((v, i) => {
+                if (v.includes("#")) {
+                    return (
+                        <Link
+                            key={i}
+                            to={{
+                                pathname: "/search/discover",
+                                state: {
+                                    hashtags: [v.split("#")[1]],
+                                },
+                            }}
+                            onClick={(event: React.MouseEvent<HTMLElement>) =>
+                                event.stopPropagation()
+                            }
+                            style={{ color: "var(--teal-general-color)" }}
+                        >
+                            {v}
+                        </Link>
+                    );
+                } else {
+                    return v;
+                }
+            });
     };
 
     return (
@@ -84,7 +113,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     {/* Content */}
                     <div className="pb-8">
                         <div className="whitespace-pre-wrap mb-4">
-                            {post.content}
+                            {post.content
+                                ? HASHTAG_FORMATTER(post.content)
+                                : ""}
                         </div>
                         <div
                             className="cursor-auto"

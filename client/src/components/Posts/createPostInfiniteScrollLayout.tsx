@@ -67,10 +67,14 @@ export default function createPostInfiniteScrollLayout({
     return (
         <>
             {Header && <Header />}
-            <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
+            <div className="lg:grid lg:grid-cols-3 lg:gap-6">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    <LeftComponent loading={dataState.status === "loading"} />
+                    <div className="lg:pt-4">
+                        <LeftComponent
+                            loading={dataState.status === "loading"}
+                        />
+                    </div>
                     {dataState.status === "loading" ||
                     !dataState.data.payload ? (
                         // Loading
@@ -119,16 +123,23 @@ export default function createPostInfiniteScrollLayout({
                                     No result
                                 </div>
                             ) : (
-                                dataState.data?.payload?.map((post: Post) => (
-                                    <PostCard key={post.id} post={post} />
-                                ))
+                                <div className="pt-4">
+                                    {dataState.data?.payload?.map(
+                                        (post: Post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                post={post}
+                                            />
+                                        )
+                                    )}
+                                </div>
                             )}
                         </InfiniteScroll>
                     )}
                 </div>
 
                 {/* Right */}
-                <div className="hidden col-span-1 lg:block">
+                <div className="hidden col-span-1 lg:block lg:mt-4">
                     <div className="sticky top-4">
                         <RightComponent />
                     </div>

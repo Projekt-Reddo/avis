@@ -5,16 +5,11 @@ import { UseFormRegisterReturn } from "react-hook-form";
 import Icon from "components/shared/Icon";
 
 interface SearchBoxProps {
-    content?: string;
     register: UseFormRegisterReturn;
     handleSubmit: () => void;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({
-    content,
-    register,
-    handleSubmit,
-}) => {
+const SearchBox: React.FC<SearchBoxProps> = ({ register, handleSubmit }) => {
     return (
         <form className="search-card flex w-full" onSubmit={handleSubmit}>
             {/* Search Button */}
@@ -33,7 +28,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             <input
                 className="w-full focus:outline-none bg-[color:var(--body-bg-color)] p-2"
                 style={{ borderTopRightRadius: 8, borderBottomRightRadius: 8 }}
-                value={content}
                 placeholder="Search"
                 {...register}
             />
