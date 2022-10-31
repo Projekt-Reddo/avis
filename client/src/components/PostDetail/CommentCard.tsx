@@ -42,7 +42,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
 
     return (
         <>
-            <div className="hum-card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mt-4 border-t-0">
+            <div className="grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mt-1 border-t-0">
                 <div className="col-span-1">
                     {/* Avatar */}
                     <div className="flex justify-center mb-4">
@@ -56,7 +56,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                     </div>
                 </div>
 
-                <div className="col-span-4 sm:col-span-9 relative">
+                <div className="col-span-4 sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] p-4 rounded-md">
                     {/* comment Info */}
                     <div className="flex justify-between relative">
                         <div className="flex">
@@ -70,37 +70,10 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                                 {moment(comment.createdAt).format(DAY_FORMAT)}
                             </div>
                         </div>
-                        <div
-                            onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                event.preventDefault();
-                                setShowOptions(comment.id);
-                            }}
-                        >
-                            <Icon
-                                className="text-2xl cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                                icon="ellipsis"
-                            />
-                        </div>
-                        {showOptions === comment.id ? (
-                            <button
-                                onClick={(
-                                    event: React.MouseEvent<HTMLElement>
-                                ) => {
-                                    event.preventDefault();
-                                    //   setOpenReport(true);
-                                }}
-                                className="search-card font-bold top-0 right-0 absolute px-8 py-2 z-50 hover:bg-[color:var(--post-bg-hover-color)]"
-                            >
-                                <Icon icon="flag" className="mr-4" />
-                                Report Post
-                            </button>
-                        ) : (
-                            ""
-                        )}
                     </div>
 
                     {/* Content */}
-                    <div className="pb-8 rounded-md bg-[color:var(--comment-bg-body-color)]">
+                    <div className="pb-8 ">
                         <div className="mb-4 p-4">{comment.content}</div>
                         <div
                             className="cursor-auto"
@@ -111,7 +84,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                             {!comment.media ? (
                                 ""
                             ) : comment.media.mediaType == "image" ? (
-                                <div className={"mb-4 columns-2"}>
+                                <div className={"mb-4 columns-2 p-4"}>
                                     <img
                                         key={comment.media.id}
                                         src={comment.media.url}
@@ -119,29 +92,33 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                                     />
                                 </div>
                             ) : comment.media.mediaType == "audio" ? (
-                                <ReactPlayer
-                                    key={comment.media.id}
-                                    url={comment.media.url}
-                                    controls={true}
-                                    width="100%"
-                                    height={50}
-                                    style={{
-                                        marginBottom: "1rem",
-                                    }}
-                                />
-                            ) : comment.media.mediaType == "video" ? (
-                                <div className="relative pt-[56.25%] mb-4">
+                                <div className={"mb-4 p-4"}>
                                     <ReactPlayer
+                                        key={comment.media.id}
                                         url={comment.media.url}
                                         controls={true}
                                         width="100%"
-                                        height="100%"
+                                        height={50}
                                         style={{
-                                            position: "absolute",
-                                            top: 0,
-                                            left: 0,
+                                            marginBottom: "1rem",
                                         }}
                                     />
+                                </div>
+                            ) : comment.media.mediaType == "video" ? (
+                                <div className="relative pt-[56.25%] mb-4">
+                                    <div className={"mb-4 p-4"}>
+                                        <ReactPlayer
+                                            url={comment.media.url}
+                                            controls={true}
+                                            width="100%"
+                                            height="100%"
+                                            style={{
+                                                position: "absolute",
+                                                top: 0,
+                                                left: 0,
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             ) : (
                                 ""
@@ -161,8 +138,8 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                                         comment.upvotedBy.includes(
                                             authState?.uid
                                         )
-                                            ? "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)]"
-                                            : "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)]"
+                                            ? "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)] mt-1"
+                                            : "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)] mt-1"
                                     }
                                     icon="caret-up"
                                     onClick={(
@@ -213,50 +190,35 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                                 />
                             </div>
 
-                            {/* Comment */}
-                            {/* {!comment.comments ? (
-                                ""
-                            ) : (
-                                <div className="flex cursor-pointer hover:text-[color:var(--teal-general-color)]">
-                                    <Icon className="text-2xl" icon="message" />
-                                    <div className="ml-1 sm:hidden">
-                                        {comment.comments.length}
-                                    </div>
-                                    <div className="ml-1 hidden sm:block">
-                                        {comment} Comment
-                                    </div>
-                                </div>
-                            )} */}
-
                             {/* Share */}
                             <div
                                 onClick={(
                                     event: React.MouseEvent<HTMLElement>
                                 ) => {
-                                    event.preventDefault();
-
-                                    // Copy current url to clipboard
-                                    navigator.clipboard.writeText(
-                                        `${window.location.origin}${location.pathname}/${comment.id}`
-                                    );
-
+                                    // event.preventDefault();
+                                    // // Copy current url to clipboard
+                                    // navigator.clipboard.writeText(
+                                    //     `${window.location.origin}${location.pathname}/${comment.id}`
+                                    // );
                                     //   addNewToast({
                                     //     variant: "primary",
                                     //     message: "Copy to clipboard successfully",
                                     //   });
                                 }}
-                                className="flex mx-2 cursor-pointer sm:mx-4 hover:text-[color:var(--teal-general-color)]"
+                                className="flex mx-2 cursor-pointer sm:mx-4 hover:text-[color:var(--teal-general-color)] mt-1"
                             >
-                                <Icon className="text-2xl" icon="share" />
-                                <div className="ml-1 hidden sm:block">
+                                <Icon className="text-2xl mt-1" icon="reply" />
+                                {/* <div className="ml-1 hidden sm:block">
                                     Share
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Save */}
-                            <div className="flex cursor-pointer hover:text-[color:var(--teal-general-color)]">
-                                <Icon className="text-2xl" icon="bookmark" />
-                                <div className="ml-1 hidden sm:block">Save</div>
+                            <div className="flex cursor-pointer hover:text-[color:var(--teasl-general-color)] mt-1">
+                                <Icon className="text-2xl mt-1" icon="flag" />
+                                {/* <div className="ml-1 hidden sm:block mt-1">
+                                    Save
+                                </div> */}
                             </div>
                         </div>
                     </div>

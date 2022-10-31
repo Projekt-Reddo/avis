@@ -22,3 +22,9 @@ interface ArtistFilterState {
         name?: string;
     };
 }
+
+interface ArtistCreateDto {
+    name: string;
+    alias?: string;
+    thumbnailFile?: File;
+}

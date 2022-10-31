@@ -57,7 +57,9 @@ const Post = () => {
                 </div>
                 {/* Right */}
                 <div className="hidden col-span-1 lg:block">
-                    <RightComponent />
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
                 </div>
             </div>
         </PageWrapper>

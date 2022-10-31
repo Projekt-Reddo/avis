@@ -28,7 +28,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
     const profile = profileState.data;
 
     return (
-        <div className="card mb-4 relative profile-wrapper">
+        <div className="card relative profile-wrapper">
             {/* Avatar */}
             {profileState.status === "init" ||
             profileState.status === "loading" ? (
