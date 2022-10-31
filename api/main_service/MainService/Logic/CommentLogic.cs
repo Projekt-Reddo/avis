@@ -11,14 +11,15 @@ namespace MainService.Logic;
 
 public interface ICommentLogic
 {
-    Task<bool> UploadNewComment(Comment comment, Stream stream, string contentType, string fileExtension,
-    string folderUpload, string mediaType);
-    Task<bool> UpdateComment(string commentId, Comment comment);
-    Task<bool> UpdatePostComment(string postId, Comment comment);
-    Task<Comment> GetCommentById(string commentId);
-    Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
+	Task<bool> UploadNewComment(Comment comment, Stream stream, string contentType, string fileExtension,
+	string folderUpload, string mediaType);
+	Task<bool> UpdateComment(string commentId, Comment comment);
+	Task<bool> UpdatePostComment(string postId, Comment comment);
+	Task<Comment> GetCommentById(string commentId);
+	Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
 	Task<bool> VoteComment(string userId, string commentId, bool isUpVote);
 	Task<VoteResponeDto> CommentVoteCount(string commentId);
+	Task<bool> DeleteComment(string id);
 }
 
 public class CommentLogic : ICommentLogic
@@ -114,7 +115,7 @@ public class CommentLogic : ICommentLogic
 					{"Comments", 1}
 			};
 
-		var commentFromRepo = await _commentRepo.FindOneAsync(filter: commentFilter, lookup:lookup, project: project);
+		var commentFromRepo = await _commentRepo.FindOneAsync(filter: commentFilter, lookup: lookup, project: project);
 
 		return commentFromRepo;
 	}
@@ -170,81 +171,82 @@ public class CommentLogic : ICommentLogic
 	public async Task<bool> VoteComment(string userId, string commentId, bool isUpVote)
 	{
 		var filter = Builders<Comment>.Filter.Eq(p => p.Id, commentId);
-
 		var comment = await _commentRepo.FindOneAsync(filter: filter);
 
-		if(comment.UpvotedBy == null)
+		if (comment.UpvotedBy == null)
 		{
 			comment.UpvotedBy = new List<string>();
 		}
 
-		if(comment.DownvotedBy == null)
+		if (comment.DownvotedBy == null)
 		{
 			comment.DownvotedBy = new List<string>();
 		}
 
 		if (comment.UpvotedBy.Contains(userId))
 		{
-
 			comment.UpvotedBy.Remove(userId);
-
 			if (!isUpVote)
 			{
 				comment.DownvotedBy.Add(userId);
 			}
 
 			await _commentRepo.ReplaceOneAsync(commentId, comment);
-
 			return true;
 		}
 		else if (comment.DownvotedBy.Contains(userId))
 		{
-
 			comment.DownvotedBy.Remove(userId);
-
 			if (isUpVote)
 			{
 				comment.UpvotedBy.Add(userId);
 			}
 
 			await _commentRepo.ReplaceOneAsync(commentId, comment);
-
 			return true;
 		}
 		else
 		{
-
 			if (isUpVote)
 			{
-
 				comment.UpvotedBy.Add(userId);
-
 			}
 			else
 			{
-
 				comment.DownvotedBy.Add(userId);
-
 			}
 
 			await _commentRepo.ReplaceOneAsync(commentId, comment);
-
 			return true;
 		}
 	}
 
 	public async Task<VoteResponeDto> CommentVoteCount(string commentId)
+	{
+		var filter = Builders<Comment>.Filter.Eq(p => p.Id, commentId);
+
+		var comment = await _commentRepo.FindOneAsync(filter: filter);
+
+		VoteResponeDto res = new VoteResponeDto();
+
+		res.UpVote = comment.UpvotedBy;
+
+		res.DownVote = comment.DownvotedBy;
+
+		return res;
+	}
+
+	public async Task<bool> DeleteComment(string id)
+	{
+		var filter = Builders<Comment>.Filter.Eq(x => x.Id, id);
+		var comment = await _commentRepo.FindOneAsync(filter: filter);
+		if (comment is null)
 		{
-			var filter = Builders<Comment>.Filter.Eq(p => p.Id, commentId);
-
-			var comment = await _commentRepo.FindOneAsync(filter: filter);
-
-			VoteResponeDto res = new VoteResponeDto();
-
-			res.UpVote = comment.UpvotedBy;
-
-			res.DownVote = comment.DownvotedBy;
-
-			return res;
+			return false;
 		}
+
+		var update = Builders<Comment>.Update.Set(x => x.IsDeleted, true);
+		var rs = await _commentRepo.UpdateOneAsync(filter: filter, update: update);
+		return rs;
+	}
 }

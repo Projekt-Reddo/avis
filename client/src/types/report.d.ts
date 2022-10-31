@@ -14,6 +14,8 @@ interface Report {
     type: string;
     post?: Post;
     comment?: Comment;
+    status?: string;
+    confirmedBy: User;
 }
 
 interface ReportFilter {

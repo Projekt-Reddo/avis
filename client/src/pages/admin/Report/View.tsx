@@ -192,6 +192,8 @@ const ViewReport = () => {
                             "Reportee",
                             "Type",
                             "Object",
+                            "Status",
+                            "Confirmed by",
                             "Created",
                         ]}
                         displayData={getTableDisplayData(reportState.tableData)}
@@ -238,9 +240,11 @@ function getTableDisplayData(data: any) {
     return data.map((item: any) => ({
         id: item.id,
         reporter: item.user.name,
-        reportee: item.post ? item.post.user.name : item.post.user.name,
+        reportee: item.post ? item.post.user.name : item.comment!.user.name,
         type: item.type,
         object: item.post ? "Post" : "Comment",
+        status: item.status ? item.status : "waiting",
+        confirmBy: item.confirmedBy ? item.confirmedBy.name : "",
         createdAt: moment(item.createdAt).format(DAY_FORMAT),
         isSelected: item.isSelected,
     }));
