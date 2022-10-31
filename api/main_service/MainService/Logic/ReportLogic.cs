@@ -6,6 +6,7 @@ using MainService.Models;
 using MainService.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using static Constants;
 
 namespace MainService.Logic;
 
@@ -14,6 +15,8 @@ public interface IReportLogic
 	Task<ReportLogicResponse> PostReport(ReportCreateDto reportDto);
 	Task<ReportLogicResponse> CommentReport(ReportCreateDto reportDto);
 	Task<PaginationResDto<ReportReadDto>> List(PaginationReqDto<ReportFilterDto> pagination);
+	Task<Report?> GetById(string id);
+	Task<ReportLogicResponse> ConfirmReport(string id, ReportConfirmDto confirmDto, string accountId);
 }
 
 public class ReportLogic : IReportLogic
@@ -23,6 +26,22 @@ public class ReportLogic : IReportLogic
 	private readonly ICommentLogic _commentLogic;
 	private readonly IMapper _mapper;
 	private readonly ILogger<ReportLogic> _logger;
+	private readonly List<BsonDocument> userLookUpStages = new List<BsonDocument>(){
+		new BsonDocument
+		{
+			{
+				"$lookup", new BsonDocument{
+					{ "from", "account" },
+					{ "localField", "UserId" },
+					{ "foreignField", "_id" },
+					{ "as", "User" }
+				}
+			}
+		},
+		new BsonDocument {
+			{ "$unwind", "$User" }
+		}
+	};
 
 	public ReportLogic(
 		IReportRepo reportRepo,
@@ -155,20 +174,28 @@ public class ReportLogic : IReportLogic
 			new BsonDocument {
 				{ "$limit", pagination.Size }
 			},
-			new BsonDocument {
+		};
+		stages = stages.Concat(userLookUpStages);
+		var confirmedByLookup = new List<BsonDocument>(){
+			new BsonDocument
+			{
 				{
 					"$lookup", new BsonDocument{
 						{ "from", "account" },
-						{ "localField", "UserId" },
+						{ "localField", "ConfirmedId" },
 						{ "foreignField", "_id" },
-						{ "as", "User" }
+						{ "as", "ConfirmedBy" }
 					}
 				}
 			},
 			new BsonDocument {
-				{ "$unwind", "$User" }
+				{ "$unwind", new BsonDocument {
+					{"path", "$ConfirmedBy"},
+					{"preserveNullAndEmptyArrays", true}
+				} }
 			}
 		};
+		stages = stages.Concat(confirmedByLookup);
 
 		var reports = await _reportRepo.FindManyAsync(
 			filter: filter,
@@ -181,5 +208,94 @@ public class ReportLogic : IReportLogic
 			Total = (Int32)total,
 			Payload = _mapper.Map<ICollection<ReportReadDto>>(reports)
 		};
+	}
+
+	public async Task<Report?> GetById(string id)
+	{
+		try
+		{
+			var report = await _reportRepo.FindOneAsync(
+				filter: Builders<Report>.Filter.Eq(x => x.Id, id),
+				stages: userLookUpStages);
+			return report;
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	public async Task<ReportLogicResponse> ConfirmReport(string id, ReportConfirmDto confirmDto, string accountId)
+	{
+		var report = await GetById(id);
+		if (report is null)
+		{
+			return new ReportLogicResponse()
+			{
+				StatusCode = 404,
+				Status = false,
+				Message = "Report not found"
+			};
+		}
+
+		using var session = await _reportRepo.StartSessionAsync();
+		try
+		{
+			session.StartTransaction();
+
+			if (confirmDto.IsAccepted is true && report.Post is not null)
+			{
+				var status = await _postLogic.DeletePost(report.Post.Id);
+				if (status is false)
+				{
+					return new ReportLogicResponse()
+					{
+						StatusCode = 400,
+						Status = false,
+						Message = "Fail to delete post"
+					};
+				}
+			}
+
+			if (confirmDto.IsAccepted is true && report.Comment is not null)
+			{
+				var status = await _commentLogic.DeleteComment(report.Comment.Id);
+				if (status is false)
+				{
+					return new ReportLogicResponse()
+					{
+						StatusCode = 400,
+						Status = false,
+						Message = "Fail to delete comment"
+					};
+				}
+			}
+
+			var filter = Builders<Report>.Filter.Eq(x => x.Id, id);
+			var update = Builders<Report>.Update.Set(x => x.Status, (confirmDto.IsAccepted is true) ? ReportStatus.APPROVE : ReportStatus.REJECT)
+				.Set(x => x.ModifiedAt, DateTime.UtcNow)
+				.Set(x => x.ConfirmedId, accountId);
+
+			var rs = await _reportRepo.UpdateOneAsync(session, filter, update);
+			await session.CommitTransactionAsync();
+
+			return new ReportLogicResponse()
+			{
+				StatusCode = 200,
+				Status = true,
+				Message = "Report comfirm successfully"
+			};
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e.Message);
+			await session.AbortTransactionAsync();
+			return new ReportLogicResponse()
+			{
+				StatusCode = 500,
+				Status = true,
+				Message = "Fail to update report"
+			};
+		}
 	}
 }

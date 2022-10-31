@@ -1,3 +1,4 @@
+using AutoMapper;
 using MainService.Dtos;
 using MainService.Logic;
 using MainService.Utils;
@@ -12,10 +13,12 @@ namespace MainService.Controllers;
 public class ReportsController : ControllerBase
 {
 	private readonly IReportLogic _reportLogic;
+	private readonly IMapper _mapper;
 
-	public ReportsController(IReportLogic reportLogic)
+	public ReportsController(IReportLogic reportLogic, IMapper mapper)
 	{
 		_reportLogic = reportLogic;
+		_mapper = mapper;
 	}
 
 	[Authorize]
@@ -49,5 +52,26 @@ public class ReportsController : ControllerBase
 	public async Task<ActionResult<PaginationResDto<ReportReadDto>>> GetReports(PaginationReqDto<ReportFilterDto> pagination)
 	{
 		return Ok(await _reportLogic.List(pagination));
+	}
+
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpPost("{id}")]
+	public async Task<ActionResult<ReportReadDto>> GetReportById(string id)
+	{
+		var rs = await _reportLogic.GetById(id);
+
+		if (rs is null)
+		{
+			return NotFound(new ResponseDto(404));
+		}
+		return Ok(_mapper.Map<ReportReadDto>(rs));
+	}
+
+	[HttpPut("{id}")]
+	public async Task<ActionResult<ResponseDto>> ConfirmReport(string id, ReportConfirmDto confirmDto)
+	{
+		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value; // Get user id from token
+		var rs = await _reportLogic.ConfirmReport(id, confirmDto, userId);
+		return StatusCode(rs.StatusCode, new ResponseDto(rs.StatusCode, rs.Message));
 	}
 }
