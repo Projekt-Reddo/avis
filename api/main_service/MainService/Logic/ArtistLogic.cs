@@ -4,8 +4,12 @@ using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
 using MainService.Services;
+using MainService.Utils;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using static Constants;
+
 namespace MainService.Logic;
 
 public interface IArtistLogic
@@ -25,25 +29,65 @@ public class ArtistLogic : IArtistLogic
     private readonly IArtistRepo _artistRepo;
     private readonly IMapper _mapper;
     private readonly IFileStorageService _fileStorage;
+	private readonly IS3Service _s3Service;
+	private readonly IConfiguration _configuration;
 
-    public ArtistLogic(
+	public ArtistLogic(
         IArtistRepo artistRepo,
         IMapper mapper,
-        IFileStorageService fileStorage
-    )
+        IFileStorageService fileStorage,
+		IS3Service s3Service,
+		IConfiguration configuration
+	)
     {
         _artistRepo = artistRepo;
         _mapper = mapper;
         _fileStorage = fileStorage;
-    }
+		_s3Service = s3Service;
+		_configuration = configuration;
+	}
 
     public async Task<bool> Create(ArtistCreateDto createDto)
     {
         try
         {
             var entity = _mapper.Map<Artist>(createDto);
-            await _artistRepo.AddOneAsync(entity);
-            return true;
+			entity.Id = ObjectId.GenerateNewId().ToString();
+
+			if (createDto.ThumbnailFile is null)
+			{
+				entity.Thumbnail = Constants.DEFAULT_AVATAR;
+			} else
+			{
+				// Check file extension
+				(var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(createDto.ThumbnailFile);
+				if (isImageFile is false)
+				{
+					return false;
+				}
+
+				var fileExtension = FileExtension.GetFileExtension(createDto.ThumbnailFile);
+				var filename = $"{entity.Id}{fileExtension}";
+
+				// Upload new thumbnail
+				(bool imageUploadStatus, string imageUrl) = await _fileStorage.UploadImage(
+					filename,
+					createDto.ThumbnailFile.OpenReadStream(),
+					createDto.ThumbnailFile.ContentType
+				);
+
+				if (imageUploadStatus)
+				{
+					entity.Thumbnail = imageUrl;
+				} else
+				{
+					entity.Thumbnail = Constants.DEFAULT_AVATAR;
+				}
+			}
+
+			await _artistRepo.AddOneAsync(entity);
+
+			return true;
         }
         catch
         {
