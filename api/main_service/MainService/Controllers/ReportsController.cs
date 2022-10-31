@@ -67,11 +67,11 @@ public class ReportsController : ControllerBase
 		return Ok(_mapper.Map<ReportReadDto>(rs));
 	}
 
-	[HttpPut("{id}")]
-	public async Task<ActionResult<ResponseDto>> ConfirmReport(string id, ReportConfirmDto confirmDto)
+	[HttpPut]
+	public async Task<ActionResult<ResponseDto>> ConfirmReport(ReportConfirmDto confirmDto)
 	{
 		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value; // Get user id from token
-		var rs = await _reportLogic.ConfirmReport(id, confirmDto, userId);
+		var rs = await _reportLogic.ConfirmReports(confirmDto, userId);
 		return StatusCode(rs.StatusCode, new ResponseDto(rs.StatusCode, rs.Message));
 	}
 }

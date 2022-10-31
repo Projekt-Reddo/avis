@@ -11,6 +11,7 @@ import { getAsync, setTableData } from "store/slices/reportSlice";
 import { DAY_FORMAT, REPORT_TYPE } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import Input from "components/shared/Input";
+import ReportConfirm from "components/Report/ReportConfirm";
 
 const ViewReport = () => {
     const dispatch = useAppDispatch();
@@ -170,6 +171,20 @@ const ViewReport = () => {
                 filterContent={filterContent}
             />
 
+            <div className="w-full mx-2 flex flex-row gap-2">
+                <ReportConfirm
+                    isSelected={haveAnyItemSelected}
+                    isAccepted={true}
+                    filter={pageRowFilter}
+                />
+
+                <ReportConfirm
+                    isSelected={haveAnyItemSelected}
+                    isAccepted={false}
+                    filter={pageRowFilter}
+                />
+            </div>
+
             {/* Data Table */}
             {reportState.status === "loading" || !reportState.tableData ? (
                 // Loading Components
@@ -186,7 +201,7 @@ const ViewReport = () => {
                 <>
                     {/* Data Table */}
                     <Table
-                        className=""
+                        className="max-w-full"
                         columns={[
                             "Reporter",
                             "Reportee",

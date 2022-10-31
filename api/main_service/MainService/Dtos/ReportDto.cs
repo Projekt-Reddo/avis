@@ -61,6 +61,7 @@ public class ReportReadDto
 
 public class ReportConfirmDto
 {
+	public IEnumerable<string> Ids { get; set; } = null!;
 	public bool IsAccepted { get; set; } = false;
 }
 

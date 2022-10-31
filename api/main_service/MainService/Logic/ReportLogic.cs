@@ -16,7 +16,7 @@ public interface IReportLogic
 	Task<ReportLogicResponse> CommentReport(ReportCreateDto reportDto);
 	Task<PaginationResDto<ReportReadDto>> List(PaginationReqDto<ReportFilterDto> pagination);
 	Task<Report?> GetById(string id);
-	Task<ReportLogicResponse> ConfirmReport(string id, ReportConfirmDto confirmDto, string accountId);
+	Task<ReportLogicResponse> ConfirmReports(ReportConfirmDto confirmDto, string accountId);
 }
 
 public class ReportLogic : IReportLogic
@@ -225,7 +225,26 @@ public class ReportLogic : IReportLogic
 		}
 	}
 
-	public async Task<ReportLogicResponse> ConfirmReport(string id, ReportConfirmDto confirmDto, string accountId)
+	public async Task<bool> UpdateReport(string id, bool isAccepted, string accountId, IClientSessionHandle? session = null!)
+	{
+		var filter = Builders<Report>.Filter.Eq(x => x.Id, id);
+		var update = Builders<Report>.Update.Set(x => x.Status, (isAccepted is true) ? ReportStatus.APPROVE : ReportStatus.REJECT)
+			.Set(x => x.ModifiedAt, DateTime.UtcNow)
+			.Set(x => x.ConfirmedId, accountId);
+
+		var rs = false;
+		if (session is null)
+		{
+			rs = await _reportRepo.UpdateOneAsync(filter, update);
+		}
+		else
+		{
+			rs = await _reportRepo.UpdateOneAsync(session, filter, update);
+		}
+		return rs;
+	}
+
+	public async Task<ReportLogicResponse> ConfirmReport(string id, bool isAccepted, string accountId)
 	{
 		var report = await GetById(id);
 		if (report is null)
@@ -234,7 +253,7 @@ public class ReportLogic : IReportLogic
 			{
 				StatusCode = 404,
 				Status = false,
-				Message = "Report not found"
+				Message = ResponseMessage.REPORT_NOT_FOUND
 			};
 		}
 
@@ -243,7 +262,7 @@ public class ReportLogic : IReportLogic
 		{
 			session.StartTransaction();
 
-			if (confirmDto.IsAccepted is true && report.Post is not null)
+			if (isAccepted is true && report.Post is not null)
 			{
 				var status = await _postLogic.DeletePost(report.Post.Id);
 				if (status is false)
@@ -252,12 +271,14 @@ public class ReportLogic : IReportLogic
 					{
 						StatusCode = 400,
 						Status = false,
-						Message = "Fail to delete post"
+						Message = ResponseMessage.POST_DELETE_FAIL
 					};
 				}
+
+				await AcceptRelatedReports(report.Post.Id, accountId, true, report.Id, session);
 			}
 
-			if (confirmDto.IsAccepted is true && report.Comment is not null)
+			if (isAccepted is true && report.Comment is not null)
 			{
 				var status = await _commentLogic.DeleteComment(report.Comment.Id);
 				if (status is false)
@@ -266,24 +287,21 @@ public class ReportLogic : IReportLogic
 					{
 						StatusCode = 400,
 						Status = false,
-						Message = "Fail to delete comment"
+						Message = ResponseMessage.COMMENT_DELETE_FAIL
 					};
 				}
+
+				await AcceptRelatedReports(report.Comment.Id, accountId, false, report.Id, session);
 			}
 
-			var filter = Builders<Report>.Filter.Eq(x => x.Id, id);
-			var update = Builders<Report>.Update.Set(x => x.Status, (confirmDto.IsAccepted is true) ? ReportStatus.APPROVE : ReportStatus.REJECT)
-				.Set(x => x.ModifiedAt, DateTime.UtcNow)
-				.Set(x => x.ConfirmedId, accountId);
-
-			var rs = await _reportRepo.UpdateOneAsync(session, filter, update);
+			var rs = await UpdateReport(id, isAccepted, accountId, session);
 			await session.CommitTransactionAsync();
 
 			return new ReportLogicResponse()
 			{
 				StatusCode = 200,
 				Status = true,
-				Message = "Report comfirm successfully"
+				Message = ResponseMessage.REPORT_CONFIRM_SUCCESS
 			};
 		}
 		catch (Exception e)
@@ -293,9 +311,86 @@ public class ReportLogic : IReportLogic
 			return new ReportLogicResponse()
 			{
 				StatusCode = 500,
-				Status = true,
-				Message = "Fail to update report"
+				Status = false,
+				Message = ResponseMessage.REPORT_CONFIRM_FAIL
 			};
 		}
+	}
+
+	public async Task<ReportLogicResponse> AcceptRelatedReports(string objectId, string accountId, bool isPost, string currentReportId, IClientSessionHandle? session)
+	{
+		var filter = isPost ? Builders<Report>.Filter.Eq(x => x.Post!.Id, objectId) : Builders<Report>.Filter.Eq(x => x.Comment!.Id, objectId)
+			& Builders<Report>.Filter.Ne(x => x.Id, currentReportId);
+		(var total, var reports) = await _reportRepo.FindManyAsync(filter: filter);
+
+		if (total == 0)
+		{
+			return new ReportLogicResponse()
+			{
+				StatusCode = 200,
+				Status = true,
+				Message = ResponseMessage.REPORT_CONFIRM_SUCCESS
+			};
+		}
+
+		var successCount = 0;
+		foreach (var report in reports)
+		{
+			var rs = await UpdateReport(report.Id, true, accountId, session);
+			successCount += 1;
+		}
+
+		return new ReportLogicResponse()
+		{
+			StatusCode = 200,
+			Status = true,
+			Message = ResponseMessage.REPORT_CONFIRM_SUCCESS
+		};
+	}
+
+	public async Task<ReportLogicResponse> ConfirmReports(ReportConfirmDto confirmDto, string accountId)
+	{
+		if (confirmDto.Ids.Count() == 0)
+		{
+			confirmDto.Ids = Enumerable.Empty<string>();
+		}
+
+		var successCount = 0;
+		foreach (var id in confirmDto.Ids)
+		{
+			var rs = await ConfirmReport(id, confirmDto.IsAccepted, accountId);
+
+			if (rs.Status is true)
+			{
+				successCount += 1;
+			}
+		}
+
+		if (successCount == 0)
+		{
+			return new ReportLogicResponse()
+			{
+				StatusCode = 400,
+				Status = false,
+				Message = ResponseMessage.REPORT_CONFIRM_FAIL
+			};
+		}
+
+		if (successCount < confirmDto.Ids.Count())
+		{
+			return new ReportLogicResponse()
+			{
+				StatusCode = 200,
+				Status = true,
+				Message = ResponseMessage.REPORT_CONFIRM_PARTIAL_SUCCESS
+			};
+		}
+
+		return new ReportLogicResponse()
+		{
+			StatusCode = 200,
+			Status = true,
+			Message = ResponseMessage.REPORT_CONFIRM_SUCCESS
+		};
 	}
 }

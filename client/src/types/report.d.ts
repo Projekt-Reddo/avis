@@ -42,3 +42,9 @@ interface ReportFilterState {
         type?: string;
     };
 }
+
+interface ReportConfirm {
+    ids: string[];
+    isAccepted: boolean;
+    filter: ReportFilterState;
+}

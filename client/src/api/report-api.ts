@@ -13,3 +13,9 @@ export const createReportApi = async (reportCreate: ReportCreate) => {
 
     return res.data;
 };
+
+export const confirmReportsApi = async (reportConfirm: ReportConfirm) => {
+    const res = await axios.put(apiRoute, reportConfirm);
+
+    return res.data;
+};
