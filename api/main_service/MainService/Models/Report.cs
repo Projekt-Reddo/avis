@@ -8,18 +8,28 @@ namespace MainService.Models;
 [BsonIgnoreExtraElements]
 public class Report : BaseModel
 {
-    public string UserId { get; set; } = null!;
+	public string UserId { get; set; } = null!;
 
-    [BsonIgnoreIfNull]
-    public Account? User { get; set; } = null!;
+	[BsonIgnoreIfNull]
+	public Account? User { get; set; } = null!;
 
-    public string Content { get; set; } = null!;
+	public string Content { get; set; } = null!;
 
-    public string Type { get; set; } = null!;
+	public string Type { get; set; } = null!;
 
-    [BsonIgnoreIfNull]
-    public Post? Post { get; set; }
+	[BsonIgnoreIfNull]
+	public Post? Post { get; set; }
 
-    [BsonIgnoreIfNull]
-    public Comment? Comment { get; set; }
+	[BsonIgnoreIfNull]
+	public Comment? Comment { get; set; }
+
+	[BsonIgnoreIfNull]
+	public string? Status { get; set; } = null!;
+
+	// Confirm admin id
+	[BsonIgnoreIfNull]
+	public string? ConfirmedId { get; set; } = null!;
+
+	[BsonIgnoreIfNull]
+	public Account? ConfirmedBy { get; set; } = null!;
 }

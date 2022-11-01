@@ -266,15 +266,43 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
         return <></>;
     }
 
+    const HASHTAG_FORMATTER = (string: string) => {
+        return string
+            .split(/((?:^|\s)(?:#[a-z\d-] || @[a-z\d-]+))/gi)
+            .filter(Boolean)
+            .map((v, i) => {
+                if (v.includes("#")) {
+                    return (
+                        <Link
+                            key={i}
+                            to={{
+                                pathname: "/search/discover",
+                                state: {
+                                    hashtags: [v.split("#")[1]],
+                                },
+                            }}
+                            onClick={(event: React.MouseEvent<HTMLElement>) =>
+                                event.stopPropagation()
+                            }
+                            style={{ color: "var(--teal-general-color)" }}
+                        >
+                            {v}
+                        </Link>
+                    );
+                } else {
+                    return v;
+                }
+            });
+    };
+
     return (
         <form
-            className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 mb-4"
+            className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
             onSubmit={handleCreatePost}
         >
             {/* Avatar */}
             <div className="col-span-1 flex justify-center ">
-                <Link
-                    to={`/profile/${authState?.id}`}
+                <div
                     className="avatar"
                     style={{
                         backgroundImage: `url(${authState?.avatar})`,
@@ -315,7 +343,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
 
                 {/* Content */}
                 <textarea
-                    className="focus:outline-none text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 bg-[color:var(--post-bg-color)] pt-2"
+                    className="focus:outline-none bg-[color:var(--post-bg-color)] text-[color:var(--text-primary-color)] text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 pt-2"
                     placeholder="How do you feel today?"
                     rows={3}
                     ref={inputRef}
@@ -325,6 +353,20 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                     value={content}
                     onFocus={() => setIsOpenSelect(true)}
                 />
+
+                {/* Might update in the future */}
+                {/* <div className="bg-[color:var(--post-bg-color)]  text-xl sm:text-2xl h-12 sm:h-20 w-full mb-[-5rem] pt-2 whitespace-pre-wrap">
+                    {HASHTAG_FORMATTER(content)}
+                </div>
+                <div
+                    className="focus:outline-none bg-transparent text-[color:rgba(0,0,0,0.5)] text-xl sm:text-2xl w-full border-b-2 mb-4 pt-2 whitespace-pre-wrap"
+                    onInput={(event: any) => {
+                        console.log(event.currentTarget.textContent);
+                        setContent(event.currentTarget.textContent);
+                    }}
+                    contentEditable
+                    suppressContentEditableWarning
+                ></div> */}
 
                 {/* Display Files */}
                 <div>
@@ -523,7 +565,6 @@ const customStyles = {
     menu: (base: any) => ({
         ...base,
         width: 278,
-        marginLeft: "-3rem",
     }),
     valueContainer: (base: any) => ({
         ...base,

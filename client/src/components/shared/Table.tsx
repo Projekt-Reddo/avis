@@ -156,6 +156,11 @@ const Table: React.FC<TableProps> = ({
                                             }}
                                             checked={obj.isSelected}
                                             value={obj.id}
+                                            disabled={
+                                                obj.isSelected === null
+                                                    ? true
+                                                    : false
+                                            }
                                         />
                                     </label>
                                 </td>
@@ -166,7 +171,7 @@ const Table: React.FC<TableProps> = ({
                                     key !== "isSelected" && (
                                         <td
                                             key={obj.id + attrIndex + "td"}
-                                            className="bg-white text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap"
+                                            className="bg-white text-sm text-gray-900 font-light px-6 py-3"
                                         >
                                             {/* Mobile table heading */}
                                             <span

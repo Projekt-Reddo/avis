@@ -113,24 +113,28 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                         </div>
                     }
                 >
-                    {commentState?.data?.payload.map((comment: Comment) => (
-                        <div
-                            onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                if (isPostChild) {
-                                    history.push({
-                                        pathname: `/discover/comment/${comment.id}`,
-                                    });
-                                }
-                            }}
-                            key={comment.id + Date.now()}
-                            className={isPostChild ? `cursor-pointer` : ``}
-                        >
-                            <CommentCard
-                                comment={comment}
+                    <div className="hum-card ">
+                        {commentState?.data?.payload.map((comment: Comment) => (
+                            <div
+                                onClick={(
+                                    event: React.MouseEvent<HTMLElement>
+                                ) => {
+                                    if (isPostChild) {
+                                        history.push({
+                                            pathname: `/discover/comment/${comment.id}`,
+                                        });
+                                    }
+                                }}
                                 key={comment.id + Date.now()}
-                            />
-                        </div>
-                    ))}
+                                className={isPostChild ? `cursor-pointer` : ``}
+                            >
+                                <CommentCard
+                                    comment={comment}
+                                    key={comment.id + Date.now()}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </InfiniteScroll>
             )}
         </>

@@ -58,6 +58,11 @@ public class PostsController : ControllerBase
 	[HttpPost]
 	public async Task<ActionResult<ResponseDto>> AddPost([FromForm] PostCreateDto newPost)
 	{
+		if (String.IsNullOrWhiteSpace(newPost.Content) && newPost.Medias == null)
+		{
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_EMPTY_CONTENT_MEDIA));
+		}
+
 		var userId = "";
 
 		// Get User Id
@@ -85,6 +90,7 @@ public class PostsController : ControllerBase
 		post.UserId = userId!;
 		post.CreatedAt = DateTime.Now;
 		post.PublishedAt = newPost.PublishedAt ?? DateTime.Now;
+		post.HashtagsNormalized = new List<string>();
 
 		// Normalizing Hashtags
 		if (newPost.HashTags != null)
@@ -93,7 +99,7 @@ public class PostsController : ControllerBase
 
 			foreach (var hashtag in newPost.HashTags!)
 			{
-				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag));
+				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
 			}
 
 			post.HashtagsNormalized = hashtagsNormal;
@@ -192,6 +198,9 @@ public class PostsController : ControllerBase
 		// Create Post Filter
 		var postFilter = Builders<Post>.Filter.Empty;
 
+		// Is Deleted Post Filter
+		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
+
 		// Public Post Filter
 		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
 
@@ -211,13 +220,20 @@ public class PostsController : ControllerBase
 		// Private Post Filter
 		if (userId != null)
 		{
-			postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE) & Builders<Post>.Filter.Eq(x => x.UserId, userId);
+			postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE) & Builders<Post>.Filter.Eq(x => x.UserId, userId) & postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, false); ;
 		}
 
 		// Hashtags Filter
 		if (pagination.Filter.Hashtags != null)
 		{
-			postFilter = postFilter & Builders<Post>.Filter.All(x => x.Hashtags, pagination.Filter.Hashtags);
+			List<string> hashtagsNormal = new List<string>();
+
+			foreach (var hashtag in pagination.Filter.Hashtags!)
+			{
+				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
+			}
+
+			postFilter = postFilter & Builders<Post>.Filter.All(x => x.HashtagsNormalized, hashtagsNormal);
 		}
 
 		// Trending Post Filter
@@ -397,35 +413,20 @@ public class PostsController : ControllerBase
 	//     return Ok();
 	// }
 
-	[HttpPut("vote/{id}")]
-	public async Task<ActionResult<ResponseDto>> UpDownVotePost(VoteDto voteDto)
+	[HttpPut("save/{id}")]
+	public async Task<ActionResult<ResponseDto>> SavePost(string id)
 	{
-		if (voteDto.isVotePost)
+		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+		var rs = await _postLogic.SavePost(id, userId);
+
+		if (rs == 0)
 		{
-			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-
-			var rs = await _postLogic.VotePost(userId, voteDto.VoteId, voteDto.isUpvote);
-
-			if (!rs)
-			{
-				return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
-			}
-
-			return Ok(new ResponseDto(200, ResponseMessage.POST_VOTE_SUCCESS));
-
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_SAVE_FAIL));
 		}
 		else
 		{
-			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-
-			var rs = await _commentLogic.VoteComment(userId, voteDto.VoteId, voteDto.isUpvote);
-
-			if (!rs)
-			{
-				return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
-			}
-
-			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
+			return Ok(new ResponseDto(200, ResponseMessage.POST_SAVE_SUCCESS));
 		}
 	}
 }

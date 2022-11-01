@@ -83,7 +83,7 @@ const Nav = () => {
                 </Link>
             </div>
 
-            <div className="flex flex-row justify-between items-center w-96 font-bold">
+            <div className="flex flex-row justify-between items-center w-full font-bold">
                 <Link className={getLinkStyle("/")} to="/">
                     Home
                 </Link>
