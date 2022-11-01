@@ -107,13 +107,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                             <Loading />
                         </div>
                     }
-                    endMessage={
-                        <div className="flex justify-center items-center font-bold my-4">
-                            Post to view more
-                        </div>
-                    }
                 >
-                    <div className="hum-card ">
+                    <div className="hum-card flex flex-col gap-4 py-4 mb-4">
                         {commentState?.data?.payload.map((comment: Comment) => (
                             <div
                                 onClick={(
