@@ -11,6 +11,7 @@ import { getAsync, setTableData } from "store/slices/reportSlice";
 import { DAY_FORMAT, REPORT_TYPE } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import Input from "components/shared/Input";
+import ReportConfirm from "components/Report/ReportConfirm";
 
 const ViewReport = () => {
     const dispatch = useAppDispatch();
@@ -170,8 +171,24 @@ const ViewReport = () => {
                 filterContent={filterContent}
             />
 
+            <div className="w-full mx-2 flex flex-row gap-2">
+                <ReportConfirm
+                    isSelected={haveAnyItemSelected}
+                    isAccepted={true}
+                    filter={pageRowFilter}
+                />
+
+                <ReportConfirm
+                    isSelected={haveAnyItemSelected}
+                    isAccepted={false}
+                    filter={pageRowFilter}
+                />
+            </div>
+
             {/* Data Table */}
-            {reportState.status === "loading" || !reportState.tableData ? (
+            {reportState.status === "loading" ||
+            !reportState.tableData ||
+            !reportState.data ? (
                 // Loading Components
                 <div className="flex justify-center items-center mt-8">
                     <Loading />
@@ -186,12 +203,14 @@ const ViewReport = () => {
                 <>
                     {/* Data Table */}
                     <Table
-                        className=""
+                        className="max-w-full"
                         columns={[
                             "Reporter",
                             "Reportee",
                             "Type",
                             "Object",
+                            "Status",
+                            "Confirmed by",
                             "Created",
                         ]}
                         displayData={getTableDisplayData(reportState.tableData)}
@@ -238,10 +257,13 @@ function getTableDisplayData(data: any) {
     return data.map((item: any) => ({
         id: item.id,
         reporter: item.user.name,
-        reportee: item.post ? item.post.user.name : item.post.user.name,
+        reportee: item.post ? item.post.user.name : item.comment!.user.name,
         type: item.type,
         object: item.post ? "Post" : "Comment",
+        status: item.status ? item.status : "waiting",
+        confirmBy: item.confirmedBy ? item.confirmedBy.name : "",
         createdAt: moment(item.createdAt).format(DAY_FORMAT),
-        isSelected: item.isSelected,
+        isSelected:
+            item.status && item.status === "approve" ? null : item.isSelected,
     }));
 }

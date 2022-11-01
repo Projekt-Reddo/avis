@@ -14,6 +14,8 @@ interface Report {
     type: string;
     post?: Post;
     comment?: Comment;
+    status?: string;
+    confirmedBy: User;
 }
 
 interface ReportFilter {
@@ -39,4 +41,10 @@ interface ReportFilterState {
         isPost?: string;
         type?: string;
     };
+}
+
+interface ReportConfirm {
+    ids: string[];
+    isAccepted: boolean;
+    filter: ReportFilterState;
 }

@@ -53,6 +53,16 @@ public class ReportReadDto
 	public PostReadDto? Post { get; set; } = null!;
 
 	public CommentReadDto? Comment { get; set; } = null!;
+
+	public string? Status { get; set; } = null!;
+
+	public AccountReadDto? ConfirmedBy { get; set; } = null!;
+}
+
+public class ReportConfirmDto
+{
+	public IEnumerable<string> Ids { get; set; } = null!;
+	public bool IsAccepted { get; set; } = false;
 }
 
 public class ReportLogicResponse

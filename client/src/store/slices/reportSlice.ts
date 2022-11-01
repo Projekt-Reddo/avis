@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createReportApi, getReportApi } from "api/report-api";
+import {
+    confirmReportsApi,
+    createReportApi,
+    getReportApi,
+} from "api/report-api";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
@@ -34,6 +38,14 @@ const reportSlice = createSlice({
                 state.status = "loading";
             })
             .addCase(getAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+                state.tableData = action.payload.payload;
+            })
+            .addCase(confirmAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(confirmAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
                 state.tableData = action.payload.payload;
@@ -74,6 +86,46 @@ export const getAsync = createAsyncThunk(
             return rejectWithValue(
                 e.response.data.message ?? "Fail to load reports"
             );
+        }
+    }
+);
+
+export const confirmAsync = createAsyncThunk(
+    "report/confirm",
+    async (reportConfirm: ReportConfirm, thunkApi) => {
+        try {
+            const res = await confirmReportsApi(reportConfirm);
+
+            thunkApi.dispatch(
+                addToast({
+                    variant: "primary",
+                    message: res.message,
+                })
+            );
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "danger",
+                    message: e.response.data.message,
+                })
+            );
+        } finally {
+            return await getReportApi({
+                page: reportConfirm.filter.currentPage,
+                size: reportConfirm.filter.rowShow.value,
+                filter: {
+                    from: reportConfirm.filter.filter?.from,
+                    to: reportConfirm.filter.filter?.to,
+                    type: reportConfirm.filter.filter?.type,
+                    // @ts-ignore
+                    isPost:
+                        reportConfirm.filter.filter?.isPost === "true"
+                            ? true
+                            : reportConfirm.filter.filter?.isPost === "false"
+                            ? false
+                            : null,
+                },
+            });
         }
     }
 );
