@@ -23,11 +23,18 @@ public static class ResponseMessage
 	public const string POST_UPDATE_STATUS_SUCCESS = "Updated status of the post";
 	public const string POST_SAVE_FAIL = "You already save this post";
 	public const string POST_SAVE_SUCCESS = "Save post successfully";
+	public const string POST_DELETE_FAIL = "Fail to delete post";
 	public const string POST_EMPTY_CONTENT_MEDIA = "Post was created without Content or Media";
 
 	// Report msg
 	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
 	public const string REPORT_NO_IDS = "A postId or commentId is required for reporting";
+	public const string REPORT_CONFIRM_SUCCESS = "Confirm reports successfully";
+	public const string REPORT_CONFIRM_PARTIAL_SUCCESS = "Confirm report successfully, but there are some reports can't be confirmed";
+	public const string REPORT_CONFIRM_FAIL = "Fail to update report";
+	public const string REPORT_NOT_FOUND = "Report not found";
+	public const string REPORT_REJECT_ACCEPTED = "Cannot reject accepted reports";
+
 
 	// File extension check msg
 	public const string NO_FILE_UPLOAD = "No upload file";
@@ -60,6 +67,7 @@ public static class ResponseMessage
 	public const string COMMENT_NOT_FOUND = "No comment found";
 	public const string COMMENT_VOTE_SUCCESS = "Comment Vote Successfully";
 	public const string COMMENT_VOTE_FAIL = "Post Vote Failed";
+	public const string COMMENT_DELETE_FAIL = "Fail to delete comment";
 
 
 	// Account msg
