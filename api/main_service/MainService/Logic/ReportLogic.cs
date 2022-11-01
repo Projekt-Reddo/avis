@@ -257,6 +257,16 @@ public class ReportLogic : IReportLogic
 			};
 		}
 
+		if (report.Status is not null && report.Status == ReportStatus.APPROVE && isAccepted == false)
+		{
+			return new ReportLogicResponse()
+			{
+				StatusCode = 400,
+				Status = false,
+				Message = ResponseMessage.REPORT_REJECT_ACCEPTED
+			};
+		}
+
 		using var session = await _reportRepo.StartSessionAsync();
 		try
 		{

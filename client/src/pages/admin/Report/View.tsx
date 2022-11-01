@@ -186,7 +186,9 @@ const ViewReport = () => {
             </div>
 
             {/* Data Table */}
-            {reportState.status === "loading" || !reportState.tableData ? (
+            {reportState.status === "loading" ||
+            !reportState.tableData ||
+            !reportState.data ? (
                 // Loading Components
                 <div className="flex justify-center items-center mt-8">
                     <Loading />
@@ -261,6 +263,7 @@ function getTableDisplayData(data: any) {
         status: item.status ? item.status : "waiting",
         confirmBy: item.confirmedBy ? item.confirmedBy.name : "",
         createdAt: moment(item.createdAt).format(DAY_FORMAT),
-        isSelected: item.isSelected,
+        isSelected:
+            item.status && item.status === "approve" ? null : item.isSelected,
     }));
 }

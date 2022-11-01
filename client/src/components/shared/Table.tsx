@@ -156,6 +156,11 @@ const Table: React.FC<TableProps> = ({
                                             }}
                                             checked={obj.isSelected}
                                             value={obj.id}
+                                            disabled={
+                                                obj.isSelected === null
+                                                    ? true
+                                                    : false
+                                            }
                                         />
                                     </label>
                                 </td>

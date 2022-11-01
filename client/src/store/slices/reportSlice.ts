@@ -102,7 +102,14 @@ export const confirmAsync = createAsyncThunk(
                     message: res.message,
                 })
             );
-
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "danger",
+                    message: e.response.data.message,
+                })
+            );
+        } finally {
             return await getReportApi({
                 page: reportConfirm.filter.currentPage,
                 size: reportConfirm.filter.rowShow.value,
@@ -119,13 +126,6 @@ export const confirmAsync = createAsyncThunk(
                             : null,
                 },
             });
-        } catch (e: any) {
-            thunkApi.dispatch(
-                addToast({
-                    variant: "danger",
-                    message: e.response.data.message,
-                })
-            );
         }
     }
 );
