@@ -151,13 +151,18 @@ public class CommentLogic : ICommentLogic
 		{
 			// loop into post comments to get comment ids
 			var postFromRepo = await _postRepo.FindOneAsync(filter: Builders<Post>.Filter.Eq(x => x.Id, queryId));
-
+			if (postFromRepo.CommentIds == null){
+				return (0, null);
+			}
 			filterComments = Builders<Comment>.Filter.In("_id", postFromRepo.CommentIds);
 		}
 		else
 		{
 			// loop into parent comments to get child comment ids
 			var commentFromRepo = await _commentRepo.FindOneAsync(filter: Builders<Comment>.Filter.Eq(x => x.Id, queryId));
+			if (commentFromRepo.Comments == null){
+				return (0, null);
+			}
 			filterComments = Builders<Comment>.Filter.In("_id", commentFromRepo.Comments);
 		}
 		(var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
