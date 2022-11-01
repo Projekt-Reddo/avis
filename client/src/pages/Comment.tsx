@@ -1,3 +1,4 @@
+import RightComponent from "components/Discover/RightComponent";
 import PageWrapper from "components/PageWrapper/PageWrapper";
 import CommentCard from "components/PostDetail/CommentCard";
 import CommentSection from "components/PostDetail/CommentSection";
@@ -41,7 +42,9 @@ const Comment = () => {
                     {commentDetailState?.status !== "idle" ? (
                         ""
                     ) : (
-                        <CommentCard comment={commentDetailState?.data} />
+                        <div className="hum-card mb-4 p-4">
+                            <CommentCard comment={commentDetailState?.data} />
+                        </div>
                     )}
                     <CommentSection
                         key={commentId}
@@ -50,7 +53,11 @@ const Comment = () => {
                     />
                 </div>
                 {/* Right */}
-                <div className="hidden col-span-1 lg:block"></div>
+                <div className="hidden col-span-1 lg:block">
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
+                </div>
             </div>
         </PageWrapper>
     );
