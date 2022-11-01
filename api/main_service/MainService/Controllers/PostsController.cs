@@ -58,6 +58,11 @@ public class PostsController : ControllerBase
 	[HttpPost]
 	public async Task<ActionResult<ResponseDto>> AddPost([FromForm] PostCreateDto newPost)
 	{
+		if (String.IsNullOrWhiteSpace(newPost.Content) && newPost.Medias == null)
+		{
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_EMPTY_CONTENT_MEDIA));
+		}
+
 		var userId = "";
 
 		// Get User Id
@@ -193,6 +198,9 @@ public class PostsController : ControllerBase
 		// Create Post Filter
 		var postFilter = Builders<Post>.Filter.Empty;
 
+		// Is Deleted Post Filter
+		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, !PostStatus.DELETED);
+
 		// Public Post Filter
 		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
 
@@ -212,7 +220,7 @@ public class PostsController : ControllerBase
 		// Private Post Filter
 		if (userId != null)
 		{
-			postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE) & Builders<Post>.Filter.Eq(x => x.UserId, userId);
+			postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE) & Builders<Post>.Filter.Eq(x => x.UserId, userId) & postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, !PostStatus.DELETED); ;
 		}
 
 		// Hashtags Filter

@@ -62,6 +62,7 @@ public static class Constants
 
 	public static class PostStatus
 	{
+		public const bool DELETED = true;
 		public const string PUBLIC = "public";
 		public const string PRIVATE = "private";
 	}

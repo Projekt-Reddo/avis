@@ -23,6 +23,7 @@ public static class ResponseMessage
 	public const string POST_UPDATE_STATUS_SUCCESS = "Updated status of the post";
 	public const string POST_SAVE_FAIL = "You already save this post";
 	public const string POST_SAVE_SUCCESS = "Save post successfully";
+	public const string POST_EMPTY_CONTENT_MEDIA = "Post was created without Content or Media";
 
 	// Report msg
 	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
