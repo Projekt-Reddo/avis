@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { FieldValues, useForm } from "react-hook-form";
 
 // Logic
 import { MOBILE_BREAKPOINT } from "utils/constants";
@@ -9,9 +8,8 @@ import { useWindowDimensions } from "utils/useWindowDimensions";
 // Components
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostCard from "components/Discover/PostCard";
-import SearchBox from "components/Discover/SearchBox";
-import TrendingCard from "components/Discover/TrendingCard";
 import Loading from "components/shared/Loading";
+import RightComponent from "components/Discover/RightComponent";
 
 // Types
 import { AsyncThunkAction } from "@reduxjs/toolkit";
@@ -45,29 +43,6 @@ export default function createPostInfiniteScrollLayout({
 
     const [fetchMorePage, setFetchMorePage] = React.useState(2);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        mode: "onChange",
-        defaultValues: {
-            content: "",
-            hashtags: [],
-        },
-    });
-
-    const handleSearch = (data: FieldValues) => {
-        setPageFilter({
-            currentPage: 1,
-            rowShow: pageFilter.rowShow,
-            filter: {
-                content: data.content,
-            },
-        });
-        setFetchMorePage(2);
-    };
-
     const fetchData = () => {
         dispatch(
             getMoreDataAction({
@@ -92,10 +67,14 @@ export default function createPostInfiniteScrollLayout({
     return (
         <>
             {Header && <Header />}
-            <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
+            <div className="lg:grid lg:grid-cols-3 lg:gap-6">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    <LeftComponent loading={dataState.status === "loading"} />
+                    <div className="lg:pt-4">
+                        <LeftComponent
+                            loading={dataState.status === "loading"}
+                        />
+                    </div>
                     {dataState.status === "loading" ||
                     !dataState.data.payload ? (
                         // Loading
@@ -144,23 +123,26 @@ export default function createPostInfiniteScrollLayout({
                                     No result
                                 </div>
                             ) : (
-                                dataState.data?.payload?.map((post: Post) => (
-                                    <PostCard key={post.id} post={post} />
-                                ))
+                                <div className="pt-4">
+                                    {dataState.data?.payload?.map(
+                                        (post: Post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                post={post}
+                                            />
+                                        )
+                                    )}
+                                </div>
                             )}
                         </InfiniteScroll>
                     )}
                 </div>
+
                 {/* Right */}
-                <div className="hidden col-span-1 lg:block">
-                    <SearchBox
-                        register={register("content")}
-                        handleSubmit={handleSubmit(handleSearch)}
-                    />
-                    <TrendingCard
-                        setFetchMorePage={setFetchMorePage}
-                        setState={setPageFilter}
-                    />
+                <div className="hidden col-span-1 lg:block lg:mt-4">
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
                 </div>
             </div>
         </>

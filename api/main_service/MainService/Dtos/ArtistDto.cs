@@ -19,7 +19,7 @@ public class ArtistCreateDto
 
     public string? Alias { get; set; } = null!;
 
-    public IFormFile? Thumbnail { get; set; } = null!;
+    public IFormFile? ThumbnailFile { get; set; } = null!;
 }
 
 public class ArtistManyCreateDto

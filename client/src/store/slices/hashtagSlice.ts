@@ -29,7 +29,7 @@ const hashtagSlice = createSlice({
 });
 
 export const recommendHashtagAsync = createAsyncThunk(
-    "genre/recommend",
+    "hashtag/recommend",
     async () => {
         const res = await recommednHashtagsApi();
         return res;

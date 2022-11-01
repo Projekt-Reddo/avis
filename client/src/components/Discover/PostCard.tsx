@@ -1,5 +1,5 @@
 // Libs
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import ReactPlayer from "react-player";
 import moment from "moment";
 
@@ -8,7 +8,7 @@ import Icon from "components/shared/Icon";
 import { addNewToast } from "components/Toast";
 
 // Constants
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
@@ -22,7 +22,6 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
-
     const history = useHistory();
 
     const handleViewDetail = () => {
@@ -30,6 +29,35 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
             return;
         }
         history.push(`/discover/${post.id}`);
+    };
+
+    const HASHTAG_FORMATTER = (string: string) => {
+        return string
+            .split(/((?:^|\s)(?:#[a-z\d-] || @[a-z\d-]+))/gi)
+            .filter(Boolean)
+            .map((v, i) => {
+                if (v.includes("#")) {
+                    return (
+                        <Link
+                            key={i}
+                            to={{
+                                pathname: "/search/discover",
+                                state: {
+                                    hashtags: [v.split("#")[1]],
+                                },
+                            }}
+                            onClick={(event: React.MouseEvent<HTMLElement>) =>
+                                event.stopPropagation()
+                            }
+                            style={{ color: "var(--teal-general-color)" }}
+                        >
+                            {v}
+                        </Link>
+                    );
+                } else {
+                    return v;
+                }
+            });
     };
 
     return (
@@ -56,7 +84,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                     </div>
 
                     {/* Vote */}
-                    <Vote post= {post}/>
+                    <Vote post={post} />
                 </div>
 
                 <div className="col-span-4 sm:col-span-9 relative">
@@ -75,7 +103,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                                 {post.user.name}
                             </div>
                             <div className="ml-4 text-ellipsis">
-                                {moment(post.publishedAt).format(DayFormat)}
+                                {moment(post.publishedAt).format(DAY_FORMAT)}
                             </div>
                         </div>
 
@@ -84,7 +112,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
 
                     {/* Content */}
                     <div className="pb-8">
-                        <div className="mb-4">{post.content}</div>
+                        <div className="whitespace-pre-wrap mb-4">
+                            {post.content
+                                ? HASHTAG_FORMATTER(post.content)
+                                : ""}
+                        </div>
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
@@ -205,7 +237,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
                             </div>
 
                             {/* Save */}
-                            <SavePost post={post}/>
+                            <SavePost post={post} />
                         </div>
                         <div className="text-xs self-center">
                             {post.upvotedBy.length + post.downvotedBy.length ===

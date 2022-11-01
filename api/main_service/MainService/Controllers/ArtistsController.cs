@@ -20,7 +20,29 @@ public class ArtistsController : ControllerBase
 
 	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 	[HttpPost]
-    public async Task<ActionResult<ResponseDto>> CreateMany(ArtistManyCreateDto manyCreateDto)
+	public async Task<ActionResult<ResponseDto>> Create([FromForm] ArtistCreateDto createDto)
+	{
+		var msg = await _artistLogic.Create(createDto);
+
+		if (msg is false)
+		{
+			return BadRequest(new ResponseDto
+			{
+				Status = 200,
+				Message = ResponseMessage.ARTIST_CREATE_FAIL
+			});
+		}
+
+		return Ok(new ResponseDto
+		{
+			Status = 200,
+			Message = ResponseMessage.ARTIST_CREATE_SUCCESS
+		});
+	}
+
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpPost("create-many")]
+    public async Task<ActionResult<ResponseDto>> CreateMany([FromForm] ArtistManyCreateDto manyCreateDto)
     {
         var msg = await _artistLogic.CreateMany(manyCreateDto.Artists);
         if (!String.IsNullOrEmpty(msg))
