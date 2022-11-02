@@ -17,6 +17,7 @@ import { routes } from "../utils/constants";
 import Feedback from "pages/Feedback";
 import AuthRoute from "./AuthRoute";
 import Search from "pages/Search";
+import Profile from "pages/user/Profile";
 
 const MainRoute = () => {
     return (
@@ -70,6 +71,10 @@ const MainRoute = () => {
 
                 <Route exact path="/">
                     <Home />
+                </Route>
+
+                <Route exact path="/profile/:uid">
+                    <Profile />
                 </Route>
 
                 <Route path="/user">
