@@ -468,6 +468,7 @@ const ReportOther: FunctionComponent<ReportOtherProps> = ({
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextArea
                     register={register("problem")}
+                    // @ts-ignore
                     error={errors.problem}
                     rows={6}
                     placeholder="What's your problem?"
