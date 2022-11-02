@@ -10,6 +10,7 @@ export const routes = [
     "/feedback",
     "/notification",
     "/user",
+    "/profile",
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];

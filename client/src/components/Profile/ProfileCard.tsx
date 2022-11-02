@@ -11,18 +11,25 @@ import { viewProfileAsync } from "store/slices/profileSlice";
 import TextLoading from "components/SkeletonLoading/TextLoading";
 import moment from "moment";
 import ProfileEditButton from "../ProfileEdit/ProfileEditButton";
+import { useParams } from "react-router";
 
 interface ProfileCardProps {
     loading: boolean;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
+    const params: any = useParams();
+
     const dispatch = useAppDispatch();
 
     const profileState = useAppSelector((state) => state.profile);
 
     useEffect(() => {
-        dispatch(viewProfileAsync());
+        if (params && params.uid) {
+            dispatch(viewProfileAsync(params.uid));
+        } else {
+            dispatch(viewProfileAsync());
+        }
     }, []);
 
     const profile = profileState.data;
@@ -91,12 +98,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
 
                     {/* Right button */}
                     <div className="flex flex-row justify-end w-1/2">
-                        <ProfileEditButton
-                            disabled={
-                                profileState.status === "init" ||
-                                profileState.status === "loading"
-                            }
-                        />
+                        {params && params.uid ? (
+                            <></>
+                        ) : (
+                            <ProfileEditButton
+                                disabled={
+                                    profileState.status === "init" ||
+                                    profileState.status === "loading"
+                                }
+                            />
+                        )}
                     </div>
                 </div>
             </div>
