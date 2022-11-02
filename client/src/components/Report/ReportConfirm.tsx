@@ -30,13 +30,6 @@ const ReportConfirm: FunctionComponent<ReportConfirmProps> = ({
                     .map((song: any) => song.id),
             })
         );
-        // console.log({
-        //     isAccepted: isAccepted,
-        //     filter: filter,
-        //     ids: reportState.tableData
-        //         .filter((s: any) => s.isSelected == true)
-        //         .map((song: any) => song.id),
-        // });
     };
 
     return (

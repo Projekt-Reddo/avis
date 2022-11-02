@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { commentDetailAsync } from "store/slices/commentDetailSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import RightComponent from "components/Discover/RightComponent";
 
 interface CommentParams {
     commentId: string;
@@ -41,16 +42,25 @@ const Comment = () => {
                     {commentDetailState?.status !== "idle" ? (
                         ""
                     ) : (
-                        <CommentCard comment={commentDetailState?.data} />
+                        <div className="hum-card min-w-[20rem] p-4 lg:mb-4 border-t-0">
+                            <CommentCard comment={commentDetailState?.data} />
+                        </div>
                     )}
+
+                    {/* It's child comments */}
                     <CommentSection
                         key={commentId}
                         postId={commentId}
                         isPostChild={false}
                     />
                 </div>
+
                 {/* Right */}
-                <div className="hidden col-span-1 lg:block"></div>
+                <div className="hidden col-span-1 lg:block">
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
+                </div>
             </div>
         </PageWrapper>
     );
