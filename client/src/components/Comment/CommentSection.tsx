@@ -4,8 +4,7 @@ import {
     viewCommentAsync,
     viewMoreCommentAsync,
 } from "store/slices/commentSlice";
-import Comment from "./CommentCard";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import CommentCard from "./CommentCard";
 import Loading from "components/shared/Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -80,6 +79,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 <div className="flex justify-center items-center mt-8 text-lg">
                     <div>{commentState.status}</div>
                 </div>
+            ) : commentState.status === "idle" &&
+              commentState.data.total === 0 ? (
+                <div className="w-full font-semibold grid place-items-center">
+                    {/* No comment found */}
+                </div>
             ) : (
                 <InfiniteScroll
                     dataLength={commentState.data.payload.length}
@@ -93,14 +97,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     style={{
                         margin: "0 -1rem",
                         padding: "0 1rem",
-                        minHeight: "100vh",
                     }}
-                    height={
-                        500
-                        // width! > MOBILE_BREAKPOINT
-                        //     ? height! - 80
-                        //     : height! - 128
-                    }
                     loader={
                         // Loading
                         <div className="flex justify-center items-center my-4">

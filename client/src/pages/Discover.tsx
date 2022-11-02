@@ -5,7 +5,7 @@ import PageWrapper from "components/PageWrapper/PageWrapper";
 // Constants
 import { viewMorePostAsync, viewPostAsync } from "store/slices/postSlice";
 import DiscoverHeader from "components/Discover/DiscoverHeader";
-import createPostInfiniteScrollLayout from "components/Posts/createPostInfiniteScrollLayout";
+import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
 
 const Discover = () => {
     return (

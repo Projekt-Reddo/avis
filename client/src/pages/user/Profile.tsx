@@ -1,7 +1,7 @@
 import React from "react";
 
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import createPostInfiniteScrollLayout from "components/Posts/createPostInfiniteScrollLayout";
+import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
 
 import { viewMorePostAsync, viewPostAsync } from "store/slices/postSlice";
 import ProfileCard from "components/Profile/ProfileCard";

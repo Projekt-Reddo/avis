@@ -1,6 +1,6 @@
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import CommentCard from "components/PostDetail/CommentCard";
-import CommentSection from "components/PostDetail/CommentSection";
+import CommentCard from "components/Comment/CommentCard";
+import CommentSection from "components/Comment/CommentSection";
 import Icon from "components/shared/Icon";
 import Loading from "components/shared/Loading";
 import React, { useEffect } from "react";
