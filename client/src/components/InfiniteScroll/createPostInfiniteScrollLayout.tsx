@@ -20,6 +20,7 @@ interface PostInfiniteScrollLayoutProps {
     getMoreDataAction: (arg: any) => AsyncThunkAction<any, any, {}>;
     Header?: React.FC<any>;
     LeftComponent: React.FC<any>;
+    PageFilter: PageFilterProps;
 }
 
 export default function createPostInfiniteScrollLayout({
@@ -28,6 +29,7 @@ export default function createPostInfiniteScrollLayout({
     getMoreDataAction,
     Header,
     LeftComponent,
+    PageFilter,
 }: PostInfiniteScrollLayoutProps) {
     const dispatch = useAppDispatch();
 
@@ -35,20 +37,14 @@ export default function createPostInfiniteScrollLayout({
 
     const { width, height } = useWindowDimensions();
 
-    const [pageFilter, setPageFilter] = React.useState<PageFilterProps>({
-        currentPage: 1,
-        rowShow: 10,
-        filter: {},
-    });
-
     const [fetchMorePage, setFetchMorePage] = React.useState(2);
 
     const fetchData = () => {
         dispatch(
             getMoreDataAction({
                 page: fetchMorePage,
-                size: pageFilter.rowShow,
-                filter: pageFilter.filter,
+                size: PageFilter.rowShow,
+                filter: PageFilter.filter,
             })
         );
         setFetchMorePage(fetchMorePage + 1);
@@ -57,12 +53,12 @@ export default function createPostInfiniteScrollLayout({
     useEffect(() => {
         dispatch(
             getInitDataAction({
-                page: pageFilter.currentPage,
-                size: pageFilter.rowShow,
-                filter: pageFilter.filter,
+                page: PageFilter.currentPage,
+                size: PageFilter.rowShow,
+                filter: PageFilter.filter,
             })
         );
-    }, [pageFilter]);
+    }, [PageFilter]);
 
     return (
         <>

@@ -8,6 +8,14 @@ interface PostFilter {
     };
 }
 
+interface UserPostFilter{
+    page: number;
+    size: number;
+    filter?: {
+        userId: string;
+    };
+}
+
 interface Post {
     id: string;
     user: {
