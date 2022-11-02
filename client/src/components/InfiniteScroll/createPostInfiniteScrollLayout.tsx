@@ -70,11 +70,7 @@ export default function createPostInfiniteScrollLayout({
             <div className="lg:grid lg:grid-cols-3 lg:gap-6">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    <div className="lg:pt-4">
-                        <LeftComponent
-                            loading={dataState.status === "loading"}
-                        />
-                    </div>
+                    <LeftComponent loading={dataState.status === "loading"} />
                     {dataState.status === "loading" ||
                     !dataState.data.payload ? (
                         // Loading
@@ -123,7 +119,7 @@ export default function createPostInfiniteScrollLayout({
                                     No result
                                 </div>
                             ) : (
-                                <div className="pt-4">
+                                <div className="lg:pt-4">
                                     {dataState.data?.payload?.map(
                                         (post: Post) => (
                                             <PostCard
