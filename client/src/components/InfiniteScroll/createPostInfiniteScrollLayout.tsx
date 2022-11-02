@@ -7,7 +7,7 @@ import { useWindowDimensions } from "utils/useWindowDimensions";
 
 // Components
 import InfiniteScroll from "react-infinite-scroll-component";
-import PostCard from "components/Discover/PostCard";
+import PostCard from "components/Post/PostCard";
 import Loading from "components/shared/Loading";
 import RightComponent from "components/Discover/RightComponent";
 
