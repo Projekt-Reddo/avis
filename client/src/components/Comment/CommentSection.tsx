@@ -7,6 +7,7 @@ import {
 import { useHistory } from "react-router-dom";
 import CommentCard from "./CommentCard";
 import Loading from "components/shared/Loading";
+import CommentCreate from "./CommentCreate";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface CommentSectionProps {
@@ -68,7 +69,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     };
 
     return (
-        <>
+        <div className="bg-[color:var(--post-bg-color)] rounded-lg drop-shadow-md p-4 mb-4 flex flex-col gap-4">
+            <CommentCreate parentId={postId} isPostChild={isPostChild} />
+
             {commentState.status === "loading" || !commentState.data ? (
                 // Loading
                 <div className="flex justify-center items-center mt-8">
@@ -94,18 +97,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                         0
                     }
                     className="page-wrapper"
-                    style={{
-                        margin: "0 -1rem",
-                        padding: "0 1rem",
-                    }}
                     loader={
-                        // Loading
                         <div className="flex justify-center items-center my-4">
                             <Loading />
                         </div>
                     }
                 >
-                    <div className="hum-card flex flex-col gap-4 py-4 mb-4">
+                    <div className="flex flex-col gap-4">
                         {commentState?.data?.payload.map((comment: Comment) => (
                             <div
                                 onClick={(
@@ -129,7 +127,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     </div>
                 </InfiniteScroll>
             )}
-        </>
+        </div>
     );
 };
 

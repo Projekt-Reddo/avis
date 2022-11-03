@@ -24,7 +24,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({
 
     return (
         <>
-            <div className="grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] px-4 border-t-0">
+            <div className="grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] border-t-0">
                 {/* Avatar */}
                 <div className="col-span-1 flex justify-center">
                     <Link
@@ -86,18 +86,13 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                                     />
                                 </div>
                             ) : comment.media.mediaType == "video" ? (
-                                <div className="relative pt-[56.25%] mb-4">
+                                <div className="">
                                     <div className={"mb-4"}>
                                         <ReactPlayer
                                             url={comment.media.url}
                                             controls={true}
                                             width="100%"
-                                            height="100%"
-                                            style={{
-                                                position: "absolute",
-                                                top: 0,
-                                                left: 0,
-                                            }}
+                                            height="auto"
                                         />
                                     </div>
                                 </div>
@@ -173,10 +168,10 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                         </div>
 
                         {/* Reply */}
-                        <Icon
+                        {/* <Icon
                             icon="reply"
                             className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                        />
+                        /> */}
 
                         {/* Report */}
                         <Icon

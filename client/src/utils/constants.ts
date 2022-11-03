@@ -75,3 +75,5 @@ export const REPORT_TYPE = {
     TERROISM: "Terroism",
     SOMETHING_ELSE: "Something Else",
 };
+
+export const COMMENT_LENGTH = 280;
