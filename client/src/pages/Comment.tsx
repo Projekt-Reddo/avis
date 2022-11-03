@@ -1,3 +1,4 @@
+import RightComponent from "components/Discover/RightComponent";
 import PageWrapper from "components/PageWrapper/PageWrapper";
 import CommentCard from "components/Comment/CommentCard";
 import CommentSection from "components/Comment/CommentSection";
@@ -7,7 +8,6 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { commentDetailAsync } from "store/slices/commentDetailSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import RightComponent from "components/Discover/RightComponent";
 
 interface CommentParams {
     commentId: string;

@@ -144,9 +144,19 @@ public class CommentLogic : ICommentLogic
 					{"UpvotedBy", 1},
 					{"DownvotedBy", 1},
 					{"Media", 1},
-					{"Comments", 1}
+					{"Comments", 1},
+					{"IsDeleted", 1}
 			};
+
+		BsonDocument viewCommentSort = new BsonDocument{
+			{ "UpvotedBy", -1 },
+			{ "_id", 1 }
+		};
 		var filterComments = Builders<Comment>.Filter.Empty;
+
+		// filter out comment that got deleted
+		filterComments = filterComments & Builders<Comment>.Filter.Eq(x=>x.IsDeleted, false);
+
 		if (IsPostChild)
 		{
 			// loop into post comments to get comment ids
@@ -155,7 +165,7 @@ public class CommentLogic : ICommentLogic
 			{
 				return (0, null);
 			}
-			filterComments = Builders<Comment>.Filter.In("_id", postFromRepo.CommentIds);
+			filterComments = filterComments & Builders<Comment>.Filter.In("_id", postFromRepo.CommentIds);
 		}
 		else
 		{
@@ -165,11 +175,12 @@ public class CommentLogic : ICommentLogic
 			{
 				return (0, null);
 			}
-			filterComments = Builders<Comment>.Filter.In("_id", commentFromRepo.Comments);
+			filterComments = filterComments & Builders<Comment>.Filter.In("_id", commentFromRepo.Comments);
 		}
 		(var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
 				limit: Size,
-				skip: skipPage
+				skip: skipPage,
+				sort:viewCommentSort
 				);
 
 		return (totals, comments);
