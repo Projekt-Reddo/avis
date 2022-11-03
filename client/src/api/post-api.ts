@@ -38,3 +38,8 @@ export const savePost = async (id: string) => {
     const res = await axios.put(`${apiRoute}/save/${id}`);
     return res.data;
 }
+
+export const viewUserPostApi = async (data: UserPostFilter) => {
+    const res = await axios.post(apiRoute + "/account", data);
+    return res.data;
+};
