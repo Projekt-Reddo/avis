@@ -54,6 +54,7 @@ export const leftNavUser: LeftNavItemData[] = [];
 export const MAIN_SERVICE_API =
     import.meta.env.VITE_MAIN_SERVICE_API || "localhost:7000";
 export const SUGAR = import.meta.env.VITE_SUGAR;
+export const MAIN_SERVICE_HUB = import.meta.env.VITE_MAIN_SERVICE_HUB;
 
 export const DefaultDay = "0001-01-01T00:00:00Z";
 export const DefaultDay_2 = "0001-01-01T00:00:00";

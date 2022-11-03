@@ -28,6 +28,7 @@ import { useFirebaseUserChangeTracking } from "utils/firebase/firebase-hooks";
 import { useUserChangeTracking } from "utils/user-tracking-hooks";
 
 import "./theme/index.css";
+import { useHubConnection } from "utils/use-hub-connection";
 
 setupIonicReact({
     swipeBackEnabled: false,
@@ -36,6 +37,8 @@ setupIonicReact({
 const App: React.FC = () => {
     useFirebaseUserChangeTracking();
     useUserChangeTracking();
+
+    useHubConnection();
 
     return (
         <>
