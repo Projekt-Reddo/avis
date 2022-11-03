@@ -1,4 +1,7 @@
 // import { useOutsideAlerter } from "components/Discover/HumCard";
+import { useModal } from "components/Modal";
+import ModalForm from "components/Modal/ModalForm";
+import ReportForm from "components/Report/ReportForm";
 import Icon from "components/shared/Icon";
 import moment from "moment";
 import React, { useRef, useState } from "react";
@@ -7,40 +10,21 @@ import { Link } from "react-router-dom";
 import { DAY_FORMAT } from "utils/constants";
 import { useAppSelector } from "utils/react-redux-hooks";
 
-interface commentData {
-    userId: string;
-    user: {
-        name: string;
-        email: string;
-        avatar: string;
-        uid: string;
-        role: string;
-    };
-    content: string;
-    upvotedBy: [string];
-    downvotedBy: [string];
-    // comments: [string];
-    media: {
-        mediaType: string;
-        mimeType: string;
-        url: string;
-        id: string;
-    };
-    id: string;
-    createdAt: string;
-    modifiedAt: string;
-}
-
 interface CommenteCardProps {
     comment: Comment;
+    isDetailPage?: boolean;
 }
 
-const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
+const CommentCard: React.FC<CommenteCardProps> = ({
+    comment,
+    isDetailPage = false,
+}) => {
     const authState = useAppSelector((state) => state.auth.data);
+    const { open: openReport, setOpen: setOpenReport } = useModal();
 
     return (
         <>
-            <div className="grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] px-4 border-t-0">
+            <div className="grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] border-t-0">
                 {/* Avatar */}
                 <div className="col-span-1 flex justify-center">
                     <Link
@@ -53,7 +37,9 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                 </div>
 
                 {/* Right conent */}
-                <div className="col-span-4 sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] p-4 rounded-md">
+                <div
+                    className={`col-span-4 sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] p-4 rounded-md`}
+                >
                     {/* comment Info */}
                     <div className="flex gap-4">
                         <Link
@@ -100,18 +86,13 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                                     />
                                 </div>
                             ) : comment.media.mediaType == "video" ? (
-                                <div className="relative pt-[56.25%] mb-4">
+                                <div className="">
                                     <div className={"mb-4"}>
                                         <ReactPlayer
                                             url={comment.media.url}
                                             controls={true}
                                             width="100%"
-                                            height="100%"
-                                            style={{
-                                                position: "absolute",
-                                                top: 0,
-                                                left: 0,
-                                            }}
+                                            height="auto"
                                         />
                                     </div>
                                 </div>
@@ -122,7 +103,12 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                     </div>
 
                     {/* Other */}
-                    <div className="flex items-center gap-4">
+                    <div
+                        className="flex items-center gap-4"
+                        onClick={(e: any) => {
+                            e.stopPropagation();
+                        }}
+                    >
                         {/* Vote*/}
                         <div className="flex items-center">
                             <Icon
@@ -182,19 +168,36 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                         </div>
 
                         {/* Reply */}
-                        <Icon
+                        {/* <Icon
                             icon="reply"
                             className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                        />
+                        /> */}
 
                         {/* Report */}
                         <Icon
                             icon="flag"
                             className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
+                            onClick={() => {
+                                setOpenReport(true);
+                            }}
                         />
                     </div>
                 </div>
             </div>
+
+            <ModalForm
+                open={openReport}
+                setOpen={setOpenReport}
+                title="Report"
+                modalBody={
+                    <ReportForm
+                        id={comment.id}
+                        isPost={false}
+                        setOpenReport={setOpenReport}
+                    />
+                }
+                hasFooter={false}
+            />
         </>
     );
 };

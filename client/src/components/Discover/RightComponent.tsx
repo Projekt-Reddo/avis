@@ -189,7 +189,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                         <div>Privacy Policy</div>
                     </div>
                 </div>
-                <div className="mt-4">@ Reddo Team 2022</div>
+                <div className="mt-2">@ Reddo Team 2022</div>
             </div>
         </>
     );

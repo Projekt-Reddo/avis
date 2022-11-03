@@ -1,5 +1,6 @@
 # STAGE requirements.txt generation
 FROM python:3.8-slim as requirements-state
+EXPOSE 10000
 
 WORKDIR /tmp
 
@@ -39,4 +40,4 @@ USER appuser
 # CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
 
 # For production with Heroku container:
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+CMD uvicorn app.main:app --host 0.0.0.0 --port 10000

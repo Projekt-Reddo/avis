@@ -5,7 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Link, useLocation } from "react-router-dom";
 
 // Components
-import PostCard from "components/Discover/PostCard";
+import PostCard from "components/Post/PostCard";
 import TrendingCard from "components/Discover/TrendingCard";
 import SearchBox from "components/Discover/SearchBox";
 import PageWrapper from "components/PageWrapper/PageWrapper";
