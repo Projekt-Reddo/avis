@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { viewCommentApi } from "api/comment-api";
+import { commentCreateApi, viewCommentApi } from "api/comment-api";
+import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
     status: "idle",
@@ -38,6 +39,13 @@ const commentSlice = createSlice({
                     total: action.payload.total,
                     payload: [...state.data.payload, ...action.payload.payload],
                 };
+            })
+            .addCase(createCommentAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(createCommentAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
             });
     },
 });
@@ -53,6 +61,32 @@ export const viewMoreCommentAsync = createAsyncThunk(
     "comment/viewMoreComment",
     async (commentFilter: CommentFilter) => {
         return await viewCommentApi(commentFilter);
+    }
+);
+
+export const createCommentAsync = createAsyncThunk(
+    "comment/create",
+    async (comment: CommentCreate, thunkApi) => {
+        try {
+            var rs = await commentCreateApi(comment);
+            return await viewCommentApi({
+                page: 1,
+                size: 10,
+                filter: {
+                    objectId: comment.postId
+                        ? comment.postId
+                        : comment.commentId,
+                    isPostChild: comment.postId ? true : false,
+                },
+            });
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "warning",
+                    message: e.response.data.message,
+                })
+            );
+        }
     }
 );
 
