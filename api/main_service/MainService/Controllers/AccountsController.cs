@@ -143,5 +143,49 @@ namespace MainService.Controllers
 
 			return Ok(new ResponseDto(200, message));
 		}
+
+		[Authorize(Roles = AccountRoles.ADMIN)]
+		[HttpPut("promote")]
+		public async Task<ActionResult<ResponseDto>> PromoteMany([FromBody] AccountUidList accountPromoteList)
+		{
+			(bool status, string message) = await _accountLogic.PromoteMany(accountPromoteList);
+
+			if (status is true)
+			{
+				return Ok(new ResponseDto
+				{
+					Status = 200,
+					Message = message
+				});
+			}
+
+			return BadRequest(new ResponseDto
+			{
+				Status = 400,
+				Message = message
+			});
+		}
+
+		
+		[HttpPut("ban")]
+		public async Task<ActionResult<ResponseDto>> BanMany([FromBody] AccountUidList accountPromoteList)
+		{
+			(bool status, string message) = await _accountLogic.BanMany(accountPromoteList);
+
+			if (status is true)
+			{
+				return Ok(new ResponseDto
+				{
+					Status = 200,
+					Message = message
+				});
+			}
+
+			return BadRequest(new ResponseDto
+			{
+				Status = 400,
+				Message = message
+			});
+		}
 	}
 }
