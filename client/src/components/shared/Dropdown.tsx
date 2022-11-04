@@ -77,9 +77,6 @@ const Dropdown: React.FC<DropdownProps> = ({
                                                                 option.autoClose ===
                                                                 false
                                                             ) {
-                                                                console.log(
-                                                                    "close"
-                                                                );
                                                             } else {
                                                                 setIsOpen(
                                                                     false

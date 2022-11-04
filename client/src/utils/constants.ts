@@ -77,3 +77,9 @@ export const REPORT_TYPE = {
 };
 
 export const COMMENT_LENGTH = 280;
+
+export const THEME = {
+    DARK: "dark",
+    LIGHT: "light",
+    SYSTEM: "system",
+};

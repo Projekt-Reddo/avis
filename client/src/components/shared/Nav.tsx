@@ -1,21 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import "theme/Nav.css";
-import { routesIgnoreNav } from "utils/constants";
+import { routesIgnoreNav, THEME } from "utils/constants";
 import Icon from "./Icon";
 import Dropdown from "components/shared/Dropdown";
-import { Fragment, useState } from "react";
-import { useAppSelector } from "utils/react-redux-hooks";
+import { Fragment, useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";
 import { firebaseLogout } from "api/firebase-api";
 
 import WHITE_IMG from "static/white.png";
+import { getTheme, setTheme } from "store/slices/themeSlice";
 
 const Nav = () => {
     const location = useLocation();
+    const dispatch = useAppDispatch();
 
     const user = useAppSelector((state) => state.auth.data);
     const authStatus = useAppSelector((state) => state.auth.status);
+    const theme = useAppSelector((state) => state.theme);
 
     function getLinkStyle(path: string) {
         if (path === "/")
@@ -28,6 +31,23 @@ const Nav = () => {
             : "hover:text-[color:var(--text-secondary-color)]";
     }
 
+    const displayThemeIcon = (): string => {
+        if (theme.status === "idle") {
+            switch (theme.data.display) {
+                case THEME.DARK:
+                    return "moon";
+
+                case THEME.SYSTEM:
+                    return "desktop";
+
+                default:
+                    return "sun";
+            }
+        }
+
+        return "sun";
+    };
+
     const options: DropdownOption[] = [
         {
             icon: "user-circle",
@@ -35,9 +55,11 @@ const Nav = () => {
             to: "/user/profile",
         },
         {
-            icon: "moon",
-            lable: "Display",
-            onClick: () => {},
+            icon: displayThemeIcon(),
+            lable: `Display: ${theme.data.display}`,
+            onClick: () => {
+                dispatch(setTheme(theme.data.display));
+            },
             autoClose: false,
         },
         {
@@ -57,6 +79,10 @@ const Nav = () => {
     function handleLogout() {
         firebaseLogout().then(() => window.location.reload());
     }
+
+    useEffect(() => {
+        dispatch(getTheme());
+    }, []);
 
     /**
      * Render

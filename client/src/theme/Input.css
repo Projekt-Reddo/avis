@@ -4,6 +4,7 @@
     border: 0.5px solid var(--border-color);
     border-radius: 8px;
     padding: 0.675rem;
+    color-scheme: light;
 }
 
 .input-app:focus {
@@ -22,3 +23,7 @@
     -webkit-box-shadow: 0 0 0 30px white inset !important;
     -webkit-text-fill-color: var(--teal-general-color) !important;
 }
+
+/* .input-app::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+} */
