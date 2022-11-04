@@ -75,7 +75,7 @@ const ModalForm: FunctionComponent<ModalFormProps> = ({
                         leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                         leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     >
-                        <div className="inline-block align-bottom bg-[color:var(--element-bg-color)] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div className="inline-block align-bottom bg-[color:var(--element-bg-color-elevate-1)] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full ring-1 ring-[color:var(--border-color)]">
                             {/* Modal Header */}
                             <div className="flex justify-between items-start p-4 rounded-t border-b">
                                 <h3 className="text-xl font-semibold">
@@ -83,7 +83,7 @@ const ModalForm: FunctionComponent<ModalFormProps> = ({
                                 </h3>
                                 <button
                                     type="button"
-                                    className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center "
+                                    className="text-[color:var(--text-secondary-color)] bg-transparent hover:bg-[color:var(--element-bg-color-elevate-2)] hover:text-[color:var(--text-primary-color)] rounded-lg text-sm p-1.5 ml-auto inline-flex items-center "
                                     onClick={handleClose}
                                 >
                                     <svg
@@ -100,7 +100,9 @@ const ModalForm: FunctionComponent<ModalFormProps> = ({
                             </div>
 
                             {/* Modal Body */}
-                            <div className="py-6 space-y-6">{modalBody}</div>
+                            <div className="py-6 space-y-6 bg-[color:var(--element-bg-color-elevate-1)]">
+                                {modalBody}
+                            </div>
 
                             {/* Modal Footer */}
                             {hasFooter && (

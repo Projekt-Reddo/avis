@@ -101,7 +101,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
             />
 
             {error?.message && (
-                <span className="text-red-600">{`${error.message}`}</span>
+                <span className="text-[color:var(--red-general-color)]">{`${error.message}`}</span>
             )}
         </>
     );

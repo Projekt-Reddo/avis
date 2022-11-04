@@ -1,17 +1,17 @@
 .input-app {
     box-sizing: border-box;
     background: var(--body-bg-color);
-    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border: 0.5px solid var(--border-color);
     border-radius: 8px;
     padding: 0.675rem;
 }
 
 .input-app:focus {
-    border: 0.5px solid rgba(0, 0, 0, 0.25);
+    border: 0.5px solid var(--border-color-elevate-1);
 }
 
 .input-app:focus-visible {
-    outline: 0.1px solid rgba(0, 0, 0, 0.35);
+    outline: 0.1px solid var(--border-color-elevate-2);
 }
 
 /* Change the white to any color */

@@ -35,7 +35,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                             content: content,
                         },
                     }}
-                    className="flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 focus:outline-none"
+                    className="flex justify-center items-center bg-[color:var(--element-bg-color)] py-2 px-4 focus:outline-none"
                     style={{
                         borderTopLeftRadius: 8,
                         borderBottomLeftRadius: 8,
@@ -49,7 +49,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
 
                 {/* Search Input */}
                 <input
-                    className="w-full focus:outline-none bg-[color:var(--body-bg-color)] p-2"
+                    className="w-full focus:outline-none bg-[color:var(--element-bg-color)] p-2"
                     style={{
                         borderTopRightRadius: 8,
                         borderBottomRightRadius: 8,
@@ -74,7 +74,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
 
             {/* Trending Card */}
             <div className="card lg:mt-4">
-                <div className="text-xl bold mb-2 px-2 pt-2">
+                <div className="text-xl bold mb-2 px-4 pt-2">
                     Trending for you
                 </div>
 

@@ -154,7 +154,7 @@ const View = () => {
     };
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             {/* Header */}
             <ViewHeader title="Song" addButtonUrl="/admin/song/create" />
 

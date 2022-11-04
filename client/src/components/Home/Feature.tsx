@@ -33,12 +33,14 @@ const features = [
 const FeatureSearch: React.FC<FeatureSearchProp> = () => {
     return (
         <div className="px-3 lg:px-32 2xl:px-52 my-5 mb-10">
-            <div className="text-2xl mb-2 text-black font-bold">Features</div>
+            <div className="text-2xl mb-2 text-[color:var(--text-primary-color)] font-bold">
+                Features
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
                 {features.map((item) => (
                     <div
                         key={item.title}
-                        className="rounded-md shadow-md w-full p-1 border-[0.25px] sm:mt-5"
+                        className="rounded-md shadow-md w-full p-1 border-[0.25px] border-[color:var(--border-color-elevate-1)] sm:mt-5"
                     >
                         <div
                             className={`w-12 h-12 rounded-full ${item.iconBgColor} mt-7 mb-7 ml-3 flex items-center justify-center`}

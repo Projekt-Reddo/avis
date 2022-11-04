@@ -99,7 +99,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
 
             {/* Right conent */}
             <form
-                className={`flex flex-col border-[0.5px] sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] rounded-md`}
+                className={`flex flex-col border-[0.5px] border-[color:var(--element-bg-color-elevate-1)] sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] rounded-md`}
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <TextareaAutosize

@@ -66,7 +66,7 @@ const ViewArtist = () => {
     }, [pageRowFilter]);
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             <ViewHeader title="Artist" addButtonUrl="/admin/artist/create" />
 
             {/* Search Bar */}

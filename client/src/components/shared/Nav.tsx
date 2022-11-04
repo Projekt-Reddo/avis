@@ -3,7 +3,7 @@ import "theme/Nav.css";
 import { routesIgnoreNav } from "utils/constants";
 import Icon from "./Icon";
 import Dropdown from "components/shared/Dropdown";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useAppSelector } from "utils/react-redux-hooks";
 import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";
@@ -37,6 +37,8 @@ const Nav = () => {
         {
             icon: "moon",
             lable: "Display",
+            onClick: () => {},
+            autoClose: false,
         },
         {
             icon: "bars-progress",

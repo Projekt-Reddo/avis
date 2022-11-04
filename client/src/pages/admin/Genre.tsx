@@ -126,7 +126,7 @@ const Genre = () => {
     //#endregion
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             <div className="px-3 lg:px-0">
                 <div className="flex justify-between pt-6">
                     <div className="text-lg font-bold">Genre</div>

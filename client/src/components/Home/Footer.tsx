@@ -13,8 +13,8 @@ const Footer: React.FC<FooterProp> = () => {
     }
 
     return (
-        <div className="h-[0rem] border-t-2 md:h-[7rem]">
-            <div className="grid grid-rows-1  grid-flow-col gap-4 mt-4  ml-[10rem] ">
+        <div className="h-[0rem] border-t-2 border-[color:var(--border-color-elevate-1)] md:h-[7rem]">
+            <div className="grid grid-rows-1  grid-flow-col gap-4 mt-4 ml-[10rem]">
                 <div>
                     <div className="font-bold">@2022 - Reddo Team</div>
                     <br />
