@@ -40,7 +40,7 @@ const FeatureSearch: React.FC<FeatureSearchProp> = () => {
                 {features.map((item) => (
                     <div
                         key={item.title}
-                        className="rounded-md shadow-md w-full p-1 border-[0.25px] border-[color:var(--border-color-elevate-1)] sm:mt-5"
+                        className="rounded-md shadow-md w-full p-1 border-[0.25px] border-[color:var(--border-color)] sm:mt-5"
                     >
                         <div
                             className={`w-12 h-12 rounded-full ${item.iconBgColor} mt-7 mb-7 ml-3 flex items-center justify-center`}

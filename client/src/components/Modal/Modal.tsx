@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <Dialog.Overlay className="fixed inset-0 bg-[#232222] bg-opacity-70 transition-opacity" />
+                        <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-70 transition-opacity" />
                     </Transition.Child>
 
                     {/* This element is to trick the browser into centering the modal contents. */}
@@ -79,12 +79,9 @@ const Modal: React.FC<ModalProps> = ({
                                         {title}
                                     </Dialog.Title>
                                     <div
-                                        className={`flex ${style.iconCover} p-2 my-4 rounded-md gap-2`}
+                                        className={`flex my-4 rounded-md gap-2`}
                                     >
-                                        <div>{style.icon}</div>
-                                        <div
-                                            className={`text-sm ${style.textColor}`}
-                                        >
+                                        <div className={`text-base`}>
                                             {message}
                                         </div>
                                     </div>

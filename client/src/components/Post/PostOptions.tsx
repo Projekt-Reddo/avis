@@ -35,22 +35,12 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ id }) => {
             {showOptions && showOptions !== "" && (
                 <div
                     ref={wrapperRef}
-                    className="search-card flex flex-col py-1 font-bold top-0 right-0 absolute z-50 bg-[color:var(--element-bg-color-elevate-1)] ring-1 ring-[color:var(--border-color)]"
+                    className="search-card flex flex-col py-1 font-bold top-0 right-0 absolute z-50 bg-[color:var(--element-bg-color-elevate-1)] border-[0.5px] border-[color:var(--border-color)]"
                 >
                     <button
                         onClick={(event: React.MouseEvent<HTMLElement>) => {
                             event.stopPropagation();
                             setOpenReport(true);
-                        }}
-                        className="px-8 py-3 hover:bg-[color:var(--element-bg-color-elevate-2)] "
-                    >
-                        <Icon icon="flag" className="mr-4" />
-                        Report Post
-                    </button>
-                    <button
-                        onClick={(event: React.MouseEvent<HTMLElement>) => {
-                            event.stopPropagation();
-                            // setOpenReport(true);
                         }}
                         className="px-8 py-3 hover:bg-[color:var(--element-bg-color-elevate-2)] "
                     >

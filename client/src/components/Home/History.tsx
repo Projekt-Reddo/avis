@@ -47,13 +47,13 @@ const History: FunctionComponent<HistoryProps> = ({
 
     return (
         <div
-            className="absolute top-12 w-full h-fit py-3 bg-[color:var(--body-bg-color)] rounded-xl border-[0.25px] shadow-lg"
+            className="absolute top-12 w-full h-fit py-3 bg-[color:var(--body-bg-color)] rounded-xl border-[0.25px] border-[color:var(--border-color)] shadow-lg"
             ref={historyRef}
         >
             {history.map((search) => (
                 <div
                     key={search}
-                    className="w-full py-2 px-3 cursor-pointer hover:bg-slate-200"
+                    className="w-full py-2 px-3 cursor-pointer hover:bg-[color:var(--element-bg-color-elevate-1)]"
                     onClick={() => {
                         onClickElement(search);
                     }}

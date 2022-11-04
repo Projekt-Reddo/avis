@@ -26,7 +26,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
     return (
         <>
             {/* Search Box */}
-            <div className="search-card flex w-full">
+            <div className="search-card drop-shadow-md flex w-full">
                 {/* Search Button */}
                 <Link
                     to={{
@@ -73,7 +73,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
             </div>
 
             {/* Trending Card */}
-            <div className="card lg:mt-4">
+            <div className="card drop-shadow-md lg:mt-4">
                 <div className="text-xl bold mb-2 px-4 pt-2">
                     Trending for you
                 </div>
@@ -179,7 +179,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                 </div>
             </div>
 
-            <div className="hidden lg:block card mt-4 p-4">
+            <div className="hidden lg:block card drop-shadow-md mt-4 p-4">
                 <div className="grid grid-cols-2">
                     <div>Help</div>
 

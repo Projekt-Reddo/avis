@@ -11,7 +11,10 @@ interface SearchBoxProps {
 
 const SearchBox: React.FC<SearchBoxProps> = ({ register, handleSubmit }) => {
     return (
-        <form className="search-card flex w-full" onSubmit={handleSubmit}>
+        <form
+            className="search-card drop-shadow-md flex w-full"
+            onSubmit={handleSubmit}
+        >
             {/* Search Button */}
             <button
                 type="submit"

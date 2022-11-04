@@ -31,6 +31,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { THEME } from "utils/constants";
 import { getTheme } from "store/slices/themeSlice";
+import { useHubConnection } from "utils/use-hub-connection";
 
 setupIonicReact({
     swipeBackEnabled: false,
@@ -39,6 +40,7 @@ setupIonicReact({
 const App: React.FC = () => {
     useFirebaseUserChangeTracking();
     useUserChangeTracking();
+    useHubConnection();
 
     const dispatch = useAppDispatch();
     const theme = useAppSelector((state) => state.theme);
@@ -51,9 +53,7 @@ const App: React.FC = () => {
             switch (theme.data.value) {
                 case THEME.DARK:
                     document.body.classList.add("dark");
-                    return () => {
-                        document.body.classList.remove("dark");
-                    };
+                    break;
 
                 default:
                     document.body.classList.remove("dark");

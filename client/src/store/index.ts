@@ -15,6 +15,7 @@ import commentSlice from "./slices/commentSlice";
 import artistSlice from "./slices/artistSlice";
 import commentDetailSlice from "./slices/commentDetailSlice";
 import themeSlice from "./slices/themeSlice";
+import signalRConnectionSlice from "./slices/signalRConnection";
 
 const store = configureStore({
     reducer: {
@@ -34,6 +35,7 @@ const store = configureStore({
         commentDetail: commentDetailSlice,
         artist: artistSlice,
         theme: themeSlice,
+        hubConnection: signalRConnectionSlice,
     },
 });
 

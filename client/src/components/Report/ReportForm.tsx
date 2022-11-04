@@ -107,7 +107,7 @@ const ReportForm: FunctionComponent<ReportFormProps> = ({
 
     return (
         <StepFrom
-            clasName="mx-5 lg:mx-0 bg-[color:var(--element-bg-color-elevate-1)]"
+            clasName="mx-5 lg:mx-0 bg-[color:var(--element-bg-color)]"
             currentStep={currentStep}
             stepContents={stepContents}
         />

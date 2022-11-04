@@ -22,7 +22,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({
 
     return (
         <>
-            <div className="card lg:mt-4">
+            <div className="card drop-shadow-md lg:mt-4">
                 <div className="text-xl bold mb-2 px-2 pt-2">
                     Trending for you
                 </div>

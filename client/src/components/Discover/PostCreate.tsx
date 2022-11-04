@@ -298,7 +298,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
     return (
         <div className="lg:pt-4">
             <form
-                className="card grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
+                className="card drop-shadow-md grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
                 onSubmit={handleCreatePost}
             >
                 {/* Avatar */}

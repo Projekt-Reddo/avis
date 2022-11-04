@@ -20,7 +20,7 @@ http://ionicframework.com/docs/theming/ */
     /* Element color */
     --element-shadow-color: rgba(0, 0, 0, 0.15);
     --element-bg-color: #fff;
-    --element-bg-color-elevate-1: #fff;
+    --element-bg-color-elevate-1: #ededed;
     --element-bg-color-elevate-2: #dbdbdb;
 
     --post-bg-color: #fff;
