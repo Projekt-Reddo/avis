@@ -26,7 +26,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
     return (
         <>
             {/* Search Box */}
-            <div className="search-card flex w-full">
+            <div className="search-card drop-shadow-md flex w-full">
                 {/* Search Button */}
                 <Link
                     to={{
@@ -35,7 +35,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                             content: content,
                         },
                     }}
-                    className="flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 focus:outline-none"
+                    className="flex justify-center items-center bg-[color:var(--element-bg-color)] py-2 px-4 focus:outline-none"
                     style={{
                         borderTopLeftRadius: 8,
                         borderBottomLeftRadius: 8,
@@ -49,7 +49,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
 
                 {/* Search Input */}
                 <input
-                    className="w-full focus:outline-none bg-[color:var(--body-bg-color)] p-2"
+                    className="w-full focus:outline-none bg-[color:var(--element-bg-color)] p-2"
                     style={{
                         borderTopRightRadius: 8,
                         borderBottomRightRadius: 8,
@@ -73,8 +73,8 @@ const RightComponent: React.FC<RightComponentProps> = () => {
             </div>
 
             {/* Trending Card */}
-            <div className="card lg:mt-4">
-                <div className="text-xl bold mb-2 px-2 pt-2">
+            <div className="card drop-shadow-md lg:mt-4">
+                <div className="text-xl bold mb-2 px-4 pt-2">
                     Trending for you
                 </div>
 
@@ -179,7 +179,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                 </div>
             </div>
 
-            <div className="hidden lg:block card mt-4 p-4">
+            <div className="hidden lg:block card drop-shadow-md mt-4 p-4">
                 <div className="grid grid-cols-2">
                     <div>Help</div>
 

@@ -34,10 +34,24 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
     const customStyles = {
         control: (provided: any, state: any) => ({
             ...provided,
-            border: "0.5px solid rgba(0, 0, 0, 0.25)",
+            border: "0.5px solid var(--border-color)",
             boxShadow: "none",
             "&:hover": {
-                border: "0.5px solid rgba(0, 0, 0, 0.35)",
+                border: "0.5px solid var(--border-color-elevate-1)",
+            },
+            backgroundColor: "var(--element-bg-color)",
+            textColor: "var(--text-secondary-color)",
+        }),
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            backgroundColor: "var(--element-bg-color)",
+            padding: "",
+        }),
+        option: (provided: any, state: any) => ({
+            ...provided,
+            backgroundColor: "var(--element-bg-color)",
+            "&:hover": {
+                backgroundColor: "var(--element-bg-color-elevate-1)",
             },
         }),
     };
@@ -82,7 +96,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
                         isMulti={isMulti}
                         theme={(theme) => ({
                             ...theme,
-                            borderRadius: 8,
+                            borderRadius: 6,
                         })}
                         cacheOptions
                         loadOptions={loadOptions}
@@ -101,7 +115,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
             />
 
             {error?.message && (
-                <span className="text-red-600">{`${error.message}`}</span>
+                <span className="text-[color:var(--red-general-color)]">{`${error.message}`}</span>
             )}
         </>
     );

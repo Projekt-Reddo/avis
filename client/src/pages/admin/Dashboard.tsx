@@ -2,7 +2,7 @@ import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNa
 
 const Dashboard = () => {
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             Dashboard in developing
         </PageWrapperWithLeftNav>
     );

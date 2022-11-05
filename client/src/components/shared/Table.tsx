@@ -126,7 +126,7 @@ const Table: React.FC<TableProps> = ({
                         {columns.map((col: string, index) => (
                             <th
                                 key={index + "th"}
-                                className="text-sm text-gray-900 px-6 py-4"
+                                className="text-sm text-[color:var(--text-primary-color)] px-6 py-4"
                             >
                                 {col}
                             </th>
@@ -137,13 +137,13 @@ const Table: React.FC<TableProps> = ({
                     {displayData.map((obj, index) => (
                         <tr
                             key={obj.id + index + "tr"}
-                            className="hover:shadow-lg border-[length:var(--border-width)] border-[color:var(--border-color)]"
+                            className="hover:shadow-lg hover:bg-[color:var(--element-bg-color-elevate-2)] border-[length:var(--border-width)] border-[color:var(--border-color)]"
                             onClick={() => {
                                 onRowClick(obj);
                             }}
                         >
                             {hasSelectOption && (
-                                <td className="bg-white px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                <td className="bg-[color:var(--element-bg-color)] px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     <label>
                                         <input
                                             type="checkbox"
@@ -171,7 +171,7 @@ const Table: React.FC<TableProps> = ({
                                     key !== "isSelected" && (
                                         <td
                                             key={obj.id + attrIndex + "td"}
-                                            className="bg-white text-sm text-gray-900 font-light px-6 py-3"
+                                            className="bg-[color:var(--element-bg-color)] text-sm text-[color:var(--text-primary-color)] font-light px-6 py-3"
                                         >
                                             {/* Mobile table heading */}
                                             <span

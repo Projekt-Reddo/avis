@@ -21,10 +21,40 @@ const SelectRow: FunctionComponent<SelectRowProps> = ({
     state,
     setState,
 }) => {
+    const customStyles = {
+        control: (provided: any, state: any) => ({
+            ...provided,
+            border: "0.5px solid rgba(0, 0, 0, 0.25)",
+            boxShadow: "none",
+            "&:hover": {
+                border: "0.5px solid rgba(0, 0, 0, 0.35)",
+            },
+            backgroundColor: "var(--element-bg-color)",
+            color: "var(--text-secondary-color)",
+        }),
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            backgroundColor: "var(--element-bg-color)",
+            padding: "",
+        }),
+        option: (provided: any, state: any) => ({
+            ...provided,
+            backgroundColor: "var(--element-bg-color)",
+            "&:hover": {
+                backgroundColor: "var(--element-bg-color-elevate-1)",
+            },
+        }),
+        singleValue: (styles: any) => ({
+            ...styles,
+            color: "var(--text-secondary-color)",
+        }),
+    };
+
     return (
         <Select
             className={`${className} w-32`}
             options={showRowOptions}
+            styles={customStyles}
             defaultValue={state}
             onChange={(val: any) => {
                 setState((state: any) => {

@@ -17,7 +17,9 @@ const LeftNavItem: React.FC<LeftNavItemProps> = ({
             className={`left-nav-item flex flex-row items-center rounded-lg my-1 font-bold ${
                 isShowing ? "show" : ""
             }`}
-            style={isActive ? { background: "rgba(55, 63, 65, 0.1)" } : {}}
+            style={
+                isActive ? { background: "var(--admin-nav-color-elevate)" } : {}
+            }
             to={itemData.path}
         >
             <Icon icon={itemData.icon} className="left-nav-item-icon" />
