@@ -67,6 +67,7 @@ public class ReportsController : ControllerBase
 		return Ok(_mapper.Map<ReportReadDto>(rs));
 	}
 
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 	[HttpPut]
 	public async Task<ActionResult<ResponseDto>> ConfirmReport(ReportConfirmDto confirmDto)
 	{

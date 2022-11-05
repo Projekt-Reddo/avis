@@ -4,26 +4,32 @@ import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 import Icon from "./Icon";
 
 interface FileDropzoneProps {
+    id?: string;
     accept?: Accept;
     maxFile?: number;
     maxSize?: number;
+    fileInputField?: string;
     getValues: any; // useForm object
     setValue: any; // useForm object
     error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+    hidden?: boolean;
 }
 
 const byteToMB = 1000000;
-const fileInputField = "file";
+const defaultInputField = "file";
 
 const FileDropzone: FunctionComponent<FileDropzoneProps> = ({
+    id,
     accept = {
         "audio/mpeg": [".mp3"],
     },
     maxFile = 1,
     maxSize = 75 * byteToMB, // 75MB
+    fileInputField = defaultInputField,
     getValues,
     setValue,
     error,
+    hidden = false,
 }) => {
     var savedFile: File = getValues(fileInputField);
 
@@ -35,7 +41,11 @@ const FileDropzone: FunctionComponent<FileDropzoneProps> = ({
 
     useEffect(() => {
         if (acceptedFiles.length > 0) {
-            setValue(fileInputField, acceptedFiles[0]);
+            if (maxFile === 1) {
+                setValue(fileInputField, acceptedFiles[0]);
+            } else {
+                setValue(fileInputField, acceptedFiles);
+            }
         }
     }, [acceptedFiles]);
 
@@ -50,14 +60,18 @@ const FileDropzone: FunctionComponent<FileDropzoneProps> = ({
     };
 
     return (
-        <section className="flex flex-col items-center w-full">
+        <section
+            className={`flex flex-col items-center w-full ${
+                hidden ? "hidden" : "block"
+            }`}
+        >
             <div
                 {...getRootProps({
                     className:
                         "dropzone flex justify-center w-full h-40 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none",
                 })}
             >
-                <input {...getInputProps()} />
+                <input id={id ? id : ""} {...getInputProps()} hidden={hidden} />
                 <span className="flex flex-col items-center justify-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

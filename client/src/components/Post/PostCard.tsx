@@ -12,7 +12,7 @@ import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
-import PostReport from "components/Report/PostReport";
+import PostReport from "components/Post/PostOptions";
 import Vote from "./Vote";
 import SavePost from "./SavePost";
 

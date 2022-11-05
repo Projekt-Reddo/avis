@@ -3,13 +3,13 @@ import { useModal } from "components/Modal/useModal";
 import Icon from "components/shared/Icon";
 import { FunctionComponent, useRef, useState } from "react";
 import { useOutsideClick } from "utils/useOutsideClick";
-import ReportForm from "./ReportForm";
+import ReportForm from "../Report/ReportForm";
 
-interface PostReportProps {
+interface PostOptionsProps {
     id: string;
 }
 
-const PostReport: FunctionComponent<PostReportProps> = ({ id }) => {
+const PostOptions: FunctionComponent<PostOptionsProps> = ({ id }) => {
     const [showOptions, setShowOptions] = useState<string>("");
     const { open: openReport, setOpen: setOpenReport } = useModal();
 
@@ -59,4 +59,4 @@ const PostReport: FunctionComponent<PostReportProps> = ({ id }) => {
     );
 };
 
-export default PostReport;
+export default PostOptions;

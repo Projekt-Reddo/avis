@@ -1,4 +1,4 @@
-﻿using FirebaseAdmin.Auth;
+using FirebaseAdmin.Auth;
 using MainService.Models;
 using System.Data;
 using System.Security.Claims;
@@ -38,6 +38,7 @@ namespace MainService.Services
                 { "displayName", account.Name },
                 { "avatar", account.Avatar },
                 { "initiated", true },
+				{ "status", account.Status },
             };
 
             await FirebaseAuth.DefaultInstance.SetCustomUserClaimsAsync(account.Uid, claims);

@@ -2,11 +2,11 @@ using Amazon.S3;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
-using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using HangfireBasicAuthenticationFilter;
 using MainService.Data;
 using MainService.Dtos;
+using MainService.Events;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
@@ -101,6 +101,14 @@ builder.Services.AddCors();
 // Hangfire
 builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(Environment.GetEnvironmentVariable("HANGFIRE_CONNECTION_STRING") ?? builder.Configuration.GetConnectionString("Hangfire")));
 builder.Services.AddHangfireServer();
+
+// SingalR
+builder.Services.AddSignalR();
+
+// RabbitMq Pub-Sub
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddHostedService<MessageQueueSubscriber>();
+builder.Services.AddSingleton<IMessageQueuePublisher, MessageQueuePublisher>();
 
 // Auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -201,6 +209,7 @@ app.UseHangfireDashboard(
 				}
 			}
 	});
+
 app.MapControllers();
 
 app.Run();

@@ -4,10 +4,10 @@ import {
     viewCommentAsync,
     viewMoreCommentAsync,
 } from "store/slices/commentSlice";
-import Comment from "./CommentCard";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import CommentCard from "./CommentCard";
 import Loading from "components/shared/Loading";
+import CommentCreate from "./CommentCreate";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface CommentSectionProps {
@@ -69,7 +69,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     };
 
     return (
-        <>
+        <div className="bg-[color:var(--post-bg-color)] rounded-lg drop-shadow-md p-4 mb-4 flex flex-col gap-4">
+            <CommentCreate parentId={postId} isPostChild={isPostChild} />
+
             {commentState.status === "loading" || !commentState.data ? (
                 // Loading
                 <div className="flex justify-center items-center mt-8">
@@ -79,6 +81,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 // Error
                 <div className="flex justify-center items-center mt-8 text-lg">
                     <div>{commentState.status}</div>
+                </div>
+            ) : commentState.status === "idle" &&
+              commentState.data.total === 0 ? (
+                <div className="w-full font-semibold grid place-items-center">
+                    {/* No comment found */}
                 </div>
             ) : (
                 <InfiniteScroll
@@ -90,30 +97,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                         0
                     }
                     className="page-wrapper"
-                    style={{
-                        margin: "0 -1rem",
-                        padding: "0 1rem",
-                        minHeight: "100vh",
-                    }}
-                    height={
-                        500
-                        // width! > MOBILE_BREAKPOINT
-                        //     ? height! - 80
-                        //     : height! - 128
-                    }
                     loader={
-                        // Loading
                         <div className="flex justify-center items-center my-4">
                             <Loading />
                         </div>
                     }
-                    endMessage={
-                        <div className="flex justify-center items-center font-bold my-4">
-                            Post to view more
-                        </div>
-                    }
                 >
-                    <div className="hum-card ">
+                    <div className="flex flex-col gap-4">
                         {commentState?.data?.payload.map((comment: Comment) => (
                             <div
                                 onClick={(
@@ -137,7 +127,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     </div>
                 </InfiniteScroll>
             )}
-        </>
+        </div>
     );
 };
 

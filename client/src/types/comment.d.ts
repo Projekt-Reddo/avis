@@ -25,3 +25,11 @@ interface Comment {
     upvotedBy: string[];
     downvotedBy: string[];
 }
+
+interface CommentCreate {
+    commentId?: string;
+    postId?: string;
+    userId: string;
+    content: string;
+    media?: File;
+}

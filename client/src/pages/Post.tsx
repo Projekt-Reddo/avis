@@ -1,7 +1,7 @@
-import PostCard from "components/Discover/PostCard";
+import PostCard from "components/Post/PostCard";
 import RightComponent from "components/Discover/RightComponent";
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import CommentSection from "components/PostDetail/CommentSection";
+import CommentSection from "components/Comment/CommentSection";
 import Icon from "components/shared/Icon";
 import Loading from "components/shared/Loading";
 import React, { useEffect } from "react";
