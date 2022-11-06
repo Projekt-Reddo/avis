@@ -166,7 +166,7 @@ namespace MainService.Controllers
 			});
 		}
 
-		
+		[Authorize(Roles = AccountRoles.ADMIN)]
 		[HttpPut("ban")]
 		public async Task<ActionResult<ResponseDto>> BanMany([FromBody] AccountUidList accountPromoteList)
 		{

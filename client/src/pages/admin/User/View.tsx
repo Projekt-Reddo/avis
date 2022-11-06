@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { setUser, viewUserAsync } from "store/slices/userSlice";
+import { setTableData, viewUserAsync } from "store/slices/userSlice";
 
 // Components
 import Table from "components/shared/Table";
@@ -14,23 +14,9 @@ import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNa
 import SearchFilter from "components/shared/SearchFilter";
 import Icon from "components/shared/Icon";
 import { sortListApi } from "api/account-api";
-
-interface pageRowFilterProps {
-    currentPage: number;
-    rowShow: {
-        value: number;
-        label: string;
-    };
-    filter?: {
-        name?: string;
-        sort?: string;
-        joinedStart?: string;
-        joinedEnd?: string;
-        isModerator?: boolean;
-        isBanned?: boolean;
-        isMuted?: boolean;
-    };
-}
+import UserPromoteButton from "components/Admin/User/UserPromoteButton";
+import UserBanButton from "components/Admin/User/UserBanButton";
+import Loading from "components/shared/Loading";
 
 const View = () => {
     const dispatch = useAppDispatch();
@@ -38,7 +24,7 @@ const View = () => {
     const userState = useAppSelector((state) => state.user);
 
     const [pageRowFilter, setPageRowFilter] =
-        React.useState<pageRowFilterProps>({
+        React.useState<PageRowFilterProps>({
             currentPage: 1,
             rowShow: {
                 value: 10,
@@ -150,7 +136,7 @@ const View = () => {
         <PageWrapperWithLeftNav className="">
             <>
                 {/* Header */}
-                <div className="flex justify-between pt-6">
+                <div className="flex justify-between items-center pt-6">
                     <div className="text-lg font-bold">User</div>
                 </div>
                 {/* Search Bar */}
@@ -161,43 +147,77 @@ const View = () => {
                     setValue={setValue}
                     filterContent={filterContent}
                 />
-                {/* Data Table */}
-                <Table
-                    className=""
-                    columns={[
-                        "Avatar",
-                        "Name",
-                        "Joined Date",
-                        "Role",
-                        "Is Banned",
-                        "Post Mute Until",
-                        "Comment Mute Until",
-                    ]}
-                    displayData={getUserData(userState.tableData)}
-                    hasSelectOption={true}
-                    setDataState={(data) => dispatch(setUser(data))}
-                    rawData={userState.tableData}
-                    setIsSelected={setIsSelected}
-                />
 
-                <div className="sm:flex sm:justify-between">
-                    {/* Show rows select */}
-                    <div>
-                        {/* Show rows select */}
-                        <SelectRow
-                            state={pageRowFilter.rowShow}
-                            setState={setPageRowFilter}
-                        />
+                {userState.status === "loading" || !userState.tableData ? ( // Loading Components
+                    <div className="flex justify-center items-center mt-8">
+                        <Loading />
                     </div>
+                ) : userState.status === "error" ? (
+                    // Error show
+                    <div className="flex justify-center items-center mt-8 text-lg">
+                        <div>{userState.status}</div>
+                    </div>
+                ) : (
+                    <>
+                        {/* Manage Bar */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-row items-center">
+                                <UserPromoteButton
+                                    selectedUser={userState.tableData.filter(
+                                        (user: UserDisplay) => user.isSelected
+                                    )}
+                                    setPageRowFilter={setPageRowFilter}
+                                />
+                                <UserBanButton
+                                    selectedUser={userState.tableData.filter(
+                                        (user: UserDisplay) => user.isSelected
+                                    )}
+                                    setPageRowFilter={setPageRowFilter}
+                                />
+                            </div>
+                        </div>
 
-                    {/* Pagination */}
-                    <Pagination
-                        totalRecords={userState.data.total}
-                        currentPage={pageRowFilter.currentPage}
-                        pageSize={pageRowFilter.rowShow.value}
-                        onPageChange={setPageRowFilter}
-                    />
-                </div>
+                        {/* Data Table */}
+                        <Table
+                            className=""
+                            columns={[
+                                "Avatar",
+                                "Name",
+                                "Joined Date",
+                                "Role",
+                                "Is Banned",
+                                "Post Mute Until",
+                                "Comment Mute Until",
+                            ]}
+                            displayData={getUserData(userState.tableData)}
+                            hasSelectOption={true}
+                            setDataState={(data) =>
+                                dispatch(setTableData(data))
+                            }
+                            rawData={userState.tableData}
+                            setIsSelected={setIsSelected}
+                        />
+
+                        <div className="sm:flex sm:justify-between">
+                            {/* Show rows select */}
+                            <div>
+                                {/* Show rows select */}
+                                <SelectRow
+                                    state={pageRowFilter.rowShow}
+                                    setState={setPageRowFilter}
+                                />
+                            </div>
+
+                            {/* Pagination */}
+                            <Pagination
+                                totalRecords={userState.data.total}
+                                currentPage={pageRowFilter.currentPage}
+                                pageSize={pageRowFilter.rowShow.value}
+                                onPageChange={setPageRowFilter}
+                            />
+                        </div>
+                    </>
+                )}
             </>
         </PageWrapperWithLeftNav>
     );
@@ -259,5 +279,6 @@ export const getUserData = (data: any) => {
             item.commentMutedUntil == DefaultDay_2
                 ? "          "
                 : item.commentMutedUntil.substring(0, 10),
+        isSelected: item.isSelected,
     }));
 };
