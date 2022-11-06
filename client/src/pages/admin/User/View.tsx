@@ -72,8 +72,9 @@ const View = () => {
             filter: {
                 name: data.name,
                 sort: data.sort,
-                joinedStart: data.joinedStart !== "" ? data.joinedStart : null,
-                joinedEnd: data.joinedEnd !== "" ? data.joinedEnd : null,
+                joinedStart:
+                    data.joinedStart !== "" ? data.joinedStart : "2000-10-11T10:29:56.693Z",
+                joinedEnd: data.joinedEnd !== "" ? data.joinedEnd : "2022-10-11T10:29:56.693Z",
                 isModerator: data.isModerator,
                 isBanned: data.isBanned,
                 isMuted: data.isMuted,

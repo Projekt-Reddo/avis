@@ -356,4 +356,45 @@ public class PostsController : ControllerBase
 			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
 		}
 	}
+	[HttpPost("save")]
+	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewSavedPost(PaginationReqDto<PostFilterDto> pagination)
+	{
+		var userId = "";
+
+		var skipPage = (pagination.Page - 1) * pagination.Size;
+
+		try
+		{
+			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+		}
+		catch (Exception)
+		{
+			userId = null;
+		}
+
+		// Create Account Filter
+		var accountFilter = Builders<Account>.Filter.Eq(ac => ac.Id, userId);
+
+		var account = await _accountRepo.FindOneAsync(accountFilter);
+
+		var postSavedId = account.SavedPosts;
+
+		if (postSavedId == null)
+		{
+			return BadRequest();
+		}
+
+		var postIds = new List<string>();
+
+		foreach (var item in postSavedId)
+		{
+			postIds.Add(item.ToString());
+		}
+
+		(var totalPost, var postsFromRepo) = await _postLogic.ViewSavedPost(postIds, pagination);
+
+		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
+
+		return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
+	}
 }
