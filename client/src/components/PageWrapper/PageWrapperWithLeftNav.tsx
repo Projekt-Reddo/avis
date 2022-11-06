@@ -26,7 +26,7 @@ const PageWrapperWithLeftNav: React.FC<PageWrapperWithLeftNavProps> = ({
         <PageWrapper
             {...props}
             {...leftNavProps}
-            className={`page-wrapper-left-nav bg-[#F0F0F5] ${
+            className={`page-wrapper-left-nav bg-[color:var(--admin-bg-color)] ${
                 isShowing ? "show" : ""
             } ${className}`}
         >

@@ -45,7 +45,7 @@ const SongDetail: FunctionComponent<SongDetailProps> = ({ songState }) => {
     };
 
     return (
-        <div className="lg:mt-48 mb-4 bg-[color:var(--body-bg-color)] lg:shadow-lg w-full h-fit grid grid-cols-3 rounded-lg border-[0.25px]">
+        <div className="lg:mt-48 mb-4 bg-[color:var(--body-bg-color)] lg:shadow-lg w-full h-fit grid grid-cols-3 rounded-lg border-[0.25px] border-[color:var(--border-color)]">
             <div className="col-span-full lg:col-span-1 flex flex-col lg:sticky top-[11rem] self-start">
                 <div className="w-full relative">
                     {loadingStatus ? (

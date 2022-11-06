@@ -4,4 +4,5 @@ interface DropdownOption {
     onClick?: () => void;
     to?: string;
     isShow?: boolean = true;
+    autoClose?: boolean = true;
 }

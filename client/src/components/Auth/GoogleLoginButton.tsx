@@ -13,7 +13,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = () => {
 
     return (
         <button
-            className="btn-shadow rounded-full p-2"
+            className="btn-shadow rounded-full p-2 bg-[color:var(--element-bg-color)]"
             style={{
                 height: "2.5rem",
                 width: "2.5rem",

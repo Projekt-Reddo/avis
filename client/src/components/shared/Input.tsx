@@ -1,5 +1,6 @@
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 import "theme/Input.css";
+import { useAppSelector } from "utils/react-redux-hooks";
 
 interface InputProps
     extends React.DetailedHTMLProps<
@@ -24,6 +25,8 @@ const Input: React.FC<InputProps> = ({
     error,
     ...props
 }) => {
+    const theme = useAppSelector((state) => state.theme);
+
     return (
         <div className={`${className}`} style={style}>
             {label && (
@@ -36,12 +39,16 @@ const Input: React.FC<InputProps> = ({
             )}
             <input
                 className="input-app w-full"
+                style={{
+                    colorScheme:
+                        theme.status === "idle" ? theme.data.value : "light",
+                }}
                 id={register.name}
                 {...register}
                 {...props}
             />
             {error?.message && (
-                <span className="text-red-600">{`${error.message}`}</span>
+                <span className="text-[color:var(--red-general-color)]">{`${error.message}`}</span>
             )}
         </div>
     );

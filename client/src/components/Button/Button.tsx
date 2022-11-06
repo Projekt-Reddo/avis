@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 import "theme/Button.css";
 
-interface ButtonProps
+export interface ButtonProps
     extends React.DetailedHTMLProps<
         ButtonHTMLAttributes<HTMLButtonElement>,
         HTMLButtonElement
@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <button
             className={`btn-app ${className} ${
-                `${border}` === "true" ? "border" : ""
+                `${border}` === "true" ? "border-2 border-slate-900" : ""
             }`}
             style={{ ...buttonVariants[variant], ...style }}
             {...props}
@@ -50,6 +50,10 @@ export const buttonVariants: ButtonVariantsType = {
         color: "var(--white-color)",
     },
     white: {
+        backgroundColor: "var(--white-color)",
+        color: "var(--black-color)",
+    },
+    "white-border": {
         backgroundColor: "var(--white-color)",
         color: "var(--black-color)",
     },

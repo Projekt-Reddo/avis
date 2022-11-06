@@ -7,7 +7,7 @@ import {
     setTableData,
     viewSongAsync,
 } from "store/slices/songSlice";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
 
@@ -154,7 +154,7 @@ const View = () => {
     };
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             {/* Header */}
             <ViewHeader title="Song" addButtonUrl="/admin/song/create" />
 

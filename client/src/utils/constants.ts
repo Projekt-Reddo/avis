@@ -78,3 +78,15 @@ export const REPORT_TYPE = {
 };
 
 export const COMMENT_LENGTH = 280;
+
+export const THEME = {
+    DARK: "dark",
+    LIGHT: "light",
+    SYSTEM: "system",
+};
+
+export const USER_ROLE = {
+    ADMIN: "admin",
+    MODERATOR: "moderator",
+    USER: "user",
+};

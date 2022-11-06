@@ -23,7 +23,11 @@ const userSlice = createSlice({
         }),
         setUser: (state, action) => ({
             ...state,
-            data: action.payload
+            data: action.payload,
+        }),
+        setTableData: (state, action) => ({
+            ...state,
+            tableData: action.payload,
         }),
     },
     extraReducers: (builder) => {
@@ -47,6 +51,6 @@ export const viewUserAsync = createAsyncThunk(
     }
 );
 
-export const { viewUser, setUser, create } = userSlice.actions;
+export const { viewUser, setUser, create, setTableData } = userSlice.actions;
 
 export default userSlice.reducer;
