@@ -39,3 +39,23 @@ interface UserFilter {
         isMuted?: bool;
     };
 }
+
+interface UserDisplay {
+    avatar: string;
+    commentMutedUntil: string;
+    id: string;
+    isBanned: boolean;
+    joinedDate: string;
+    name: string;
+    postMutedUntil: string;
+    role: string;
+    isSelected: string;
+}
+
+interface UserManageButtonLayoutDefaultProps {
+    selectedUser: UserDisplay[];
+}
+
+interface UserUidList {
+    uids: string[];
+}

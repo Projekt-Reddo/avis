@@ -84,3 +84,9 @@ export const THEME = {
     LIGHT: "light",
     SYSTEM: "system",
 };
+
+export const USER_ROLE = {
+    ADMIN: "admin",
+    MODERATOR: "moderator",
+    USER: "user",
+};
