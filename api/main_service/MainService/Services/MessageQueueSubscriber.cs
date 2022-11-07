@@ -21,7 +21,7 @@ public class MessageQueueSubscriber : BackgroundService
 		// Connection config object
 		var factory = new ConnectionFactory()
 		{
-			Uri = new Uri(configuration.GetValue<string>("RabbitMq:Uri"))
+			Uri = new Uri(Environment.GetEnvironmentVariable("RABBITMQ_URI") ?? configuration.GetValue<string>("RabbitMq:Uri"))
 		};
 		// Create connection
 		try
