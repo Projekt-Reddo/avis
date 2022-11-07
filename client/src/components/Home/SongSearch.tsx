@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useAppDispatch } from "utils/react-redux-hooks";
+import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import MicRecorder from "mic-recorder-to-mp3";
 import { textSearchAsync, humToSongAsync } from "store/slices/searchSlice";
 import Icon from "components/shared/Icon";
@@ -8,6 +8,8 @@ import { addNewToast } from "components/Toast";
 import { saveSearchHistory } from "./search-history-hook";
 import History from "./History";
 import { TIME_TO_HUM } from "utils/constants";
+import LIGHT_BG from "static/Home-bg.webp";
+import DARK_BG from "static/Home-bg-dark.jpg";
 
 interface SongSearchProp {
     scrollRef: React.RefObject<HTMLDivElement>;
@@ -23,6 +25,7 @@ const mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
     const dispatch = useAppDispatch();
+    const theme = useAppSelector((state) => state.theme);
 
     //#region Hum search
 
@@ -173,12 +176,22 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                     </div>
                 </div>
             )}
-            <div className="search-bg h-[91vh] flex justify-center items-center">
-                <div className=" grid justify-items-center ">
-                    <div className="text-4xl mb-10 text-black font-bold text-center ">
+            <div
+                className="h-[91vh] flex justify-center items-center"
+                style={{
+                    backgroundImage: `url(${
+                        theme.status === "idle" && theme.data.value === "dark"
+                            ? DARK_BG
+                            : LIGHT_BG
+                    })`,
+                    backgroundSize: "cover",
+                }}
+            >
+                <div className=" grid justify-items-center">
+                    <div className="text-4xl mb-10 font-bold text-center">
                         Discover and search song
                     </div>
-                    <div className="relative w-80 md:w-[35rem] flex h-15 bg-white items-center rounded-xl border-[0.25px] mb-6 shadow-md">
+                    <div className="relative w-80 md:w-[35rem] flex h-15 bg-[color:var(--element-bg-color)] items-center rounded-xl border-[0.25px] border-[color:var(--border-color)] mb-6 shadow-md">
                         {showHistory && (
                             <History
                                 onClickElement={handleHistorySearch}
@@ -191,7 +204,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             onSubmit={handleTextSearch}
                         >
                             <div>
-                                <span className="leading-normal bg-white text-2xl text-gray-600">
+                                <span className="leading-normal bg-[color:var(--element-bg-color)] text-2xl text-gray-600">
                                     <button type="submit">
                                         <Icon
                                             icon="search"
@@ -204,7 +217,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
 
                             <input
                                 type="search"
-                                className="md:w-[29rem] ml-3 text-base font-normal text-gray-700 bg-white transition ease-in-out focus:text-gray-700 focus:outline-none md: w-[14.5rem]"
+                                className="md:w-[29rem] ml-3 text-base font-normal text-gray-700 bg-[color:var(--element-bg-color)] transition ease-in-out focus:text-gray-700 focus:outline-none md: w-[14.5rem]"
                                 placeholder="Search for song"
                                 onChange={handleChange}
                                 value={searchValue}
@@ -218,7 +231,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             <button
                                 onClick={startRecord}
                                 disabled={record.isRecording}
-                                className="flex leading-normal bg-white  border-0 rounded rounded-r-none text-2xl text-gray-600"
+                                className="flex leading-normal bg-[color:var(--element-bg-color)] border-0 rounded rounded-r-none text-2xl text-gray-600"
                             >
                                 <Icon
                                     icon="microphone"
@@ -228,7 +241,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             </button>
                         </div>
                     </div>
-                    <div className="text-black">
+                    <div className="">
                         Search for songs using hum, name or lyrics
                     </div>
                 </div>

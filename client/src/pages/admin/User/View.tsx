@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { setUser, viewUserAsync } from "store/slices/userSlice";
-
+import { setTableData, viewUserAsync } from "store/slices/userSlice";
 
 // Components
 import Table from "components/shared/Table";
@@ -15,32 +14,17 @@ import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNa
 import SearchFilter from "components/shared/SearchFilter";
 import Icon from "components/shared/Icon";
 import { sortListApi } from "api/account-api";
+import UserPromoteButton from "components/Admin/User/UserPromoteButton";
+import UserBanButton from "components/Admin/User/UserBanButton";
+import Loading from "components/shared/Loading";
 
-
-interface pageRowFilterProps {
-    currentPage: number;
-    rowShow: {
-        value: number;
-        label: string;
-    };
-    filter?: {
-        name?: string;
-        sort?: string;
-        joinedStart?: string;
-        joinedEnd?: string;
-        isModerator?: boolean;
-        isBanned?: boolean;
-        isMuted?: boolean;
-    };
-}
-
-const View = () =>  {
+const View = () => {
     const dispatch = useAppDispatch();
 
     const userState = useAppSelector((state) => state.user);
 
     const [pageRowFilter, setPageRowFilter] =
-        React.useState<pageRowFilterProps>({
+        React.useState<PageRowFilterProps>({
             currentPage: 1,
             rowShow: {
                 value: 10,
@@ -53,7 +37,7 @@ const View = () =>  {
                 joinedEnd: "2022-10-11T10:29:56.693Z",
                 isModerator: false,
                 isBanned: false,
-                isMuted: false
+                isMuted: false,
             },
         });
 
@@ -74,7 +58,7 @@ const View = () =>  {
             joinedEnd: "",
             isModerator: false,
             isBanned: false,
-            isMuted: false
+            isMuted: false,
         },
     });
 
@@ -88,12 +72,11 @@ const View = () =>  {
             filter: {
                 name: data.name,
                 sort: data.sort,
-                joinedStart:
-                    data.joinedStart !== "" ? data.joinedStart : null,
+                joinedStart: data.joinedStart !== "" ? data.joinedStart : null,
                 joinedEnd: data.joinedEnd !== "" ? data.joinedEnd : null,
                 isModerator: data.isModerator,
                 isBanned: data.isBanned,
-                isMuted: data.isMuted
+                isMuted: data.isMuted,
             },
         });
     };
@@ -127,8 +110,8 @@ const View = () =>  {
             {
                 label: "Muted",
                 checkBox: register("isMuted"),
-            }
-        ]
+            },
+        ],
     };
 
     useEffect(() => {
@@ -143,72 +126,105 @@ const View = () =>  {
                     joinedEnd: pageRowFilter.filter?.joinedEnd,
                     isModerator: pageRowFilter.filter?.isModerator,
                     isBanned: pageRowFilter.filter?.isBanned,
-                    isMuted: pageRowFilter.filter?.isMuted
+                    isMuted: pageRowFilter.filter?.isMuted,
                 },
             })
         );
-    },[pageRowFilter]);
+    }, [pageRowFilter]);
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
-                <>
+        <PageWrapperWithLeftNav className="">
+            <>
                 {/* Header */}
-            <div className="flex justify-between pt-6">
-                <div className="text-lg font-bold">User</div>
-            </div>
+                <div className="flex justify-between items-center pt-6">
+                    <div className="text-lg font-bold">User</div>
+                </div>
                 {/* Search Bar */}
-                    <SearchFilter
-                        placeholder="Enter name of user"
-                        register={register("name")}
-                        handleSubmit={handleSubmit(handleSearch)}
-                        setValue={setValue}
-                        filterContent={filterContent}
-                    />
-                    {/* Data Table */}
-                    <Table
-                        className=""
-                        columns={[
-                            "Avatar",
-                            "Name",
-                            "Joined Date",
-                            "Role",
-                            "Is Banned",
-                            "Post Mute Until",
-                            "Comment Mute Until"
-                        ]}
-                        displayData={getUserData(userState.tableData)}
-                        hasSelectOption={true}
-                        setDataState={(data) => dispatch(setUser(data))}
-                        rawData={userState.tableData}
-                        setIsSelected={setIsSelected}
-                    />
+                <SearchFilter
+                    placeholder="Enter name of user"
+                    register={register("name")}
+                    handleSubmit={handleSubmit(handleSearch)}
+                    setValue={setValue}
+                    filterContent={filterContent}
+                />
 
-                    <div className="sm:flex sm:justify-between">
-                        {/* Show rows select */}
-                        <div>
-                            {/* Show rows select */}
-                            <SelectRow
-                                state={pageRowFilter.rowShow}
-                                setState={setPageRowFilter}
-                            />
+                {userState.status === "loading" || !userState.tableData ? ( // Loading Components
+                    <div className="flex justify-center items-center mt-8">
+                        <Loading />
+                    </div>
+                ) : userState.status === "error" ? (
+                    // Error show
+                    <div className="flex justify-center items-center mt-8 text-lg">
+                        <div>{userState.status}</div>
+                    </div>
+                ) : (
+                    <>
+                        {/* Manage Bar */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-row items-center">
+                                <UserPromoteButton
+                                    selectedUser={userState.tableData.filter(
+                                        (user: UserDisplay) => user.isSelected
+                                    )}
+                                    setPageRowFilter={setPageRowFilter}
+                                />
+                                <UserBanButton
+                                    selectedUser={userState.tableData.filter(
+                                        (user: UserDisplay) => user.isSelected
+                                    )}
+                                    setPageRowFilter={setPageRowFilter}
+                                />
+                            </div>
                         </div>
 
-                        {/* Pagination */}
-                        <Pagination
-                            totalRecords={userState.data.total}
-                            currentPage={pageRowFilter.currentPage}
-                            pageSize={pageRowFilter.rowShow.value}
-                            onPageChange={setPageRowFilter}
+                        {/* Data Table */}
+                        <Table
+                            className=""
+                            columns={[
+                                "Avatar",
+                                "Name",
+                                "Joined Date",
+                                "Role",
+                                "Is Banned",
+                                "Post Mute Until",
+                                "Comment Mute Until",
+                            ]}
+                            displayData={getUserData(userState.tableData)}
+                            hasSelectOption={true}
+                            setDataState={(data) =>
+                                dispatch(setTableData(data))
+                            }
+                            rawData={userState.tableData}
+                            setIsSelected={setIsSelected}
                         />
-                    </div>
-                </>
+
+                        <div className="sm:flex sm:justify-between">
+                            {/* Show rows select */}
+                            <div>
+                                {/* Show rows select */}
+                                <SelectRow
+                                    state={pageRowFilter.rowShow}
+                                    setState={setPageRowFilter}
+                                />
+                            </div>
+
+                            {/* Pagination */}
+                            <Pagination
+                                totalRecords={userState.data.total}
+                                currentPage={pageRowFilter.currentPage}
+                                pageSize={pageRowFilter.rowShow.value}
+                                onPageChange={setPageRowFilter}
+                            />
+                        </div>
+                    </>
+                )}
+            </>
         </PageWrapperWithLeftNav>
     );
-}
+};
 
 export default View;
 export const getUserData = (data: any) => {
-
     if (!data) return [];
 
     return data.map((item: any) => ({
@@ -230,28 +246,39 @@ export const getUserData = (data: any) => {
             </div>
         ),
         name: item.name,
-        joinedDate: item.joinedDate.substring(0,10),
+        joinedDate: item.joinedDate.substring(0, 10),
         role: item.role,
-        isBanned: (
-            !item.isBanned ? <>
-            <div className="w-10 h-10 rounded-full bg-[color:var(--teal-lighter-color)] flex items-center justify-center ml-5">
-                <Icon
-                icon="lock-open"
-                className="w-10 text-[color:var(--white-color)]"
-                size="xl"
-                />
-            </div>
-            </> : <>
-            <div className="w-10 h-10 rounded-full bg-[color:var(--red-darker-color)] flex items-center justify-center ml-5">
-                <Icon
-                icon="lock"
-                className="w-10 text-[color:var(--white-color)]"
-                size="xl"
-                />
-            </div>
+        isBanned: !item.isBanned ? (
+            <>
+                <div className="w-10 h-10 rounded-full bg-[color:var(--teal-lighter-color)] flex items-center justify-center ml-5">
+                    <Icon
+                        icon="lock-open"
+                        className="w-10 text-[color:var(--white-color)]"
+                        size="xl"
+                    />
+                </div>
+            </>
+        ) : (
+            <>
+                <div className="w-10 h-10 rounded-full bg-[color:var(--red-darker-color)] flex items-center justify-center ml-5">
+                    <Icon
+                        icon="lock"
+                        className="w-10 text-[color:var(--white-color)]"
+                        size="xl"
+                    />
+                </div>
             </>
         ),
-        postMutedUntil: (item.postMutedUntil == DefaultDay || item.postMutedUntil == DefaultDay_2) ? "          " : item.postMutedUntil.substring(0,10),
-        commentMutedUntil: (item.commentMutedUntil == DefaultDay || item.commentMutedUntil == DefaultDay_2) ? "          " : item.commentMutedUntil.substring(0,10)
+        postMutedUntil:
+            item.postMutedUntil == DefaultDay ||
+            item.postMutedUntil == DefaultDay_2
+                ? "          "
+                : item.postMutedUntil.substring(0, 10),
+        commentMutedUntil:
+            item.commentMutedUntil == DefaultDay ||
+            item.commentMutedUntil == DefaultDay_2
+                ? "          "
+                : item.commentMutedUntil.substring(0, 10),
+        isSelected: item.isSelected,
     }));
 };

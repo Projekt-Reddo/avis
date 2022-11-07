@@ -96,7 +96,7 @@ const LyricsInput: FunctionComponent<LyricsInputProps> = ({
                 />
 
                 {errors.lyrics?.message && (
-                    <span className="text-red-600 mt-3">{`${errors.lyrics?.message}`}</span>
+                    <span className="text-[color:var(--red-general-color)] mt-3">{`${errors.lyrics?.message}`}</span>
                 )}
             </div>
 

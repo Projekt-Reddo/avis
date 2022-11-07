@@ -90,7 +90,7 @@ const Create = () => {
     ];
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             <StepFrom
                 clasName="mx-5 lg:mx-0 p-5 mt-10"
                 currentStep={currentStep}

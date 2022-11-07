@@ -4,7 +4,7 @@ import Icon from "components/shared/Icon";
 
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
-import WALLPAPER_BG from "static/AyaFubiMi.png";
+import WALLPAPER_BG from "static/Profile_wall.jpg";
 
 import "./Profile.css";
 import { viewProfileAsync } from "store/slices/profileSlice";
@@ -36,7 +36,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
 
     return (
         <div className="lg:pt-4">
-            <div className="card relative profile-wrapper">
+            <div className="card drop-shadow-md relative profile-wrapper">
                 {/* Avatar */}
                 {profileState.status === "init" ||
                 profileState.status === "loading" ? (

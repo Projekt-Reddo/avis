@@ -26,7 +26,7 @@ const Home = () => {
             <SongSearch scrollRef={scrollRef} />
             <div
                 ref={scrollRef}
-                className={`bg-white text-black h-auto ${
+                className={`bg-[color:var(--bg-color)] text-[color:var(--text-primary-color)] h-auto ${
                     width! <= MOBILE_BREAKPOINT // Margin the fixed navbar when scrollIntoView
                         ? "scroll-mt-0"
                         : "scroll-mt-16"

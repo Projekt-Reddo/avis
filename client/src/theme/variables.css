@@ -3,16 +3,12 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
-    /* #region Border */
-    --border-width: 0.25rem;
-    --border-color: rgba(0, 0, 0, 0.15);
-    --inline-color: rgba(0, 0, 0, 0.6);
-
-    /* #region Project Custom color*/
-
+    /* App color */
     --body-bg-color: #fff;
 
-    --white-color: #fff;
+    --admin-bg-color: #f0f0f5;
+    --admin-nav-color: lavender;
+    --admin-nav-color-elevate: rgba(55, 63, 65, 0.1);
 
     --nav-bg-color: #fff;
     --nav-border-color: rgb(0 0 0 / 8%);
@@ -21,22 +17,31 @@ http://ionicframework.com/docs/theming/ */
     --text-secondary-color: rgba(55, 63, 65, 0.75);
     --text-tertiary-color: rgba(55, 63, 65, 0.5);
 
+    /* Element color */
     --element-shadow-color: rgba(0, 0, 0, 0.15);
     --element-bg-color: #fff;
+    --element-bg-color-elevate-1: #ededed;
+    --element-bg-color-elevate-2: #dbdbdb;
 
     --post-bg-color: #fff;
     --post-border-color: rgb(0 0 0 / 8%);
     --post-bg-hover-color: #f8f9fa;
 
     --comment-bg-body-color: #f0f2f5;
-    /* Theme color */
 
+    /* Border */
+    --border-width: 0.25rem;
+    --border-color: rgba(0, 0, 0, 0.15);
+    --border-color-elevate-1: #4b5156;
+    --border-color-elevate-2: #666e75;
+    --inline-color: rgba(0, 0, 0, 0.6);
+
+    /* Theme color */
     --teal-darker-color: #0d9488;
     --teal-general-color: #14b8a6;
     --teal-lighter-color: #2dd4bf;
 
     /* Support color */
-
     --amber-darker-color: #d97706;
     --amber-general-color: #f59e0b;
     --amber-lighter-color: #fbbf24;
@@ -52,20 +57,40 @@ http://ionicframework.com/docs/theming/ */
     --white-color: #fff;
     --black-color: #000;
 
-    /* #endregion */
-
-    /* Var */
+    /* Config vars */
     --z-index-nav: 69;
     --mobile-break-point: 1024px;
 }
 
-/* @media (prefers-color-scheme: dark) { */
-/*
-   * Dark Colors
-   * -------------------------------------------
-   */
+body.dark {
+    /* App color */
+    --body-bg-color: #171717;
 
-/* body {
-    
-  }
-} */
+    --admin-bg-color: #171717;
+    --admin-nav-color: #242526;
+    --admin-nav-color-elevate: #343637;
+
+    --nav-bg-color: #242526;
+    --nav-border-color: rgb(0 0 0 / 8%);
+
+    --text-primary-color: #ededed;
+    --text-secondary-color: rgba(237, 237, 237, 0.75);
+    --text-tertiary-color: rgba(237, 237, 237, 0.5);
+
+    /* Element color */
+    --element-shadow-color: rgba(0, 0, 0, 0.15);
+    --element-bg-color: #242526;
+    --element-bg-color-elevate-1: #343637;
+    --element-bg-color-elevate-2: #434547;
+
+    --post-bg-color: #242526;
+    --post-border-color: rgb(0 0 0 / 8%);
+    --post-bg-hover-color: #343637;
+
+    --comment-bg-body-color: #343637;
+
+    /* Border */
+    --border-color: rgb(47, 51, 54);
+    --border-color-elevate-1: #4b5156;
+    --border-color-elevate-2: #666e75;
+}
