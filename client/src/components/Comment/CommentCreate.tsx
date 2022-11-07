@@ -80,6 +80,10 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
         );
     };
 
+    if (!auth.data) {
+        return <></>;
+    }
+
     return (
         <div
             className="grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem]"

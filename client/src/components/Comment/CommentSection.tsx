@@ -84,8 +84,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 </div>
             ) : commentState.status === "idle" &&
               commentState.data.total === 0 ? (
-                <div className="w-full font-semibold grid place-items-center">
-                    {/* No comment found */}
+                <div className="w-full grid place-items-center">
+                    No comment found
                 </div>
             ) : (
                 <InfiniteScroll
