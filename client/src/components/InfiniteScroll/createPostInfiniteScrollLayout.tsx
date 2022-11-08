@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./InfiniteScroll.css";
 
 // Logic
 import { MOBILE_BREAKPOINT } from "utils/constants";
@@ -65,7 +66,10 @@ export default function createPostInfiniteScrollLayout({
             {Header && <Header />}
             <div className="lg:grid lg:grid-cols-3 lg:gap-6">
                 {/* Left */}
-                <div className="w-full lg:col-span-2">
+                <div
+                    className="w-full lg:col-span-2 page-wrapper scrollable-div"
+                    id="scrollableDiv"
+                >
                     <LeftComponent loading={dataState.status === "loading"} />
                     {dataState.status === "loading" ||
                     !dataState.data.payload ? (
@@ -87,17 +91,19 @@ export default function createPostInfiniteScrollLayout({
                                     dataState.data.payload.length >
                                 0
                             }
-                            className="page-wrapper"
-                            style={{
-                                margin: "0 -1rem",
-                                padding: "0 1rem",
-                                minHeight: "100vh",
-                            }}
-                            height={
-                                width! > MOBILE_BREAKPOINT
-                                    ? height! - 80
-                                    : height! - 128
-                            }
+                            scrollableTarget="scrollableDiv"
+                            // className="page-wrapper"
+                            // style={{
+                            //     margin: "0 -1rem",
+                            //     padding: "0 1rem",
+                            //     minHeight: "100vh",
+                            //     position: "absolute",
+                            // }}
+                            // height={
+                            //     width! > MOBILE_BREAKPOINT
+                            //         ? height! - 80
+                            //         : height! - 128
+                            // }
                             loader={
                                 // Loading
                                 <div className="flex justify-center items-center my-4">
