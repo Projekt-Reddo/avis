@@ -298,16 +298,19 @@ namespace MainService.Logic
 			}
 
 			var update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.MODERATOR);
+			accountFromRepo.Role = AccountRoles.MODERATOR;
 			var responseMessage = ResponseMessage.ACCOUNT_PROMOTED;
 
 			// Switch roles
 			if (accountFromRepo.Role == AccountRoles.MODERATOR)
 			{
 				update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.USER);
+				accountFromRepo.Role = AccountRoles.USER;
 				responseMessage = ResponseMessage.ACCOUNT_DEMOTED;
 			}
 
 			var rs = await _accountRepo.UpdateOneAsync(filterUid, update);
+
 			await SetClaimWhenUpdateProfile(accountFromRepo);
 
 			return (rs, responseMessage, accountFromRepo);
@@ -362,6 +365,8 @@ namespace MainService.Logic
 			// Update db
 			var update = Builders<Account>.Update.Set(x => x.Status, accountStatus);
 			var rs = await _accountRepo.UpdateOneAsync(filterUid, update);
+
+			accountFromRepo.Status = accountStatus;
 
 			// Set Firebase claim
 			await SetClaimWhenUpdateProfile(accountFromRepo);
