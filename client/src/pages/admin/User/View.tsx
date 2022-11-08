@@ -33,8 +33,8 @@ const View = () => {
             filter: {
                 name: "",
                 sort: "",
-                joinedStart: "2000-10-11T10:29:56.693Z",
-                joinedEnd: "2022-10-11T10:29:56.693Z",
+                joinedStart: "1000-01-01T10:29:56.693Z",
+                joinedEnd: "3000-01-01T10:29:56.693Z",
                 isModerator: false,
                 isBanned: false,
                 isMuted: false,
@@ -73,8 +73,9 @@ const View = () => {
                 name: data.name,
                 sort: data.sort,
                 joinedStart:
-                    data.joinedStart !== "" ? data.joinedStart : "2000-10-11T10:29:56.693Z",
-                joinedEnd: data.joinedEnd !== "" ? data.joinedEnd : "2022-10-11T10:29:56.693Z",
+                    data.joinedStart !== "" ? data.joinedStart : "1000-10-11T10:29:56.693Z",
+                joinedEnd:
+                    data.joinedEnd !== "" ? data.joinedEnd : "3000-10-11T10:29:56.693Z",
                 isModerator: data.isModerator,
                 isBanned: data.isBanned,
                 isMuted: data.isMuted,
