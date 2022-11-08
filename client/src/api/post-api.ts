@@ -43,3 +43,8 @@ export const viewUserPostApi = async (data: UserPostFilter) => {
     const res = await axios.post(apiRoute + "/account", data);
     return res.data;
 };
+
+export const viewSavedPostApi = async (data: PostFilter) => {
+    const res = await axios.post(apiRoute + "/save", data);
+    return res.data;
+};

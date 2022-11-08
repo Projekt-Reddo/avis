@@ -5,13 +5,14 @@ import { useAppSelector } from "utils/react-redux-hooks";
 
 // Components
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
 import ProfileCard from "components/Profile/ProfileCard";
-
 import {
     viewMoreUserPostAsync,
     viewUserPostAsync,
+    viewMoreSavedPostAsync,
+    viewSavedPostAsync
 } from "store/slices/postSlice";
+import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
 
 const Profile = () => {
     const params: any = useParams();
@@ -35,13 +36,24 @@ const Profile = () => {
         <PageWrapper>
             {createPostInfiniteScrollLayout({
                 storeSelector: (state: RootState) => state.post,
-                getInitDataAction: viewUserPostAsync,
-                getMoreDataAction: viewMoreUserPostAsync,
+                getInitDataAction: viewSavedPostAsync,
+                getMoreDataAction: viewMoreSavedPostAsync,
                 LeftComponent: ProfileCard,
                 PageFilter: pageFilter,
             })}
         </PageWrapper>
     );
 };
+
+    // View User Saved Post
+    //     <PageWrapper>
+    //     {createPostInfiniteScrollLayout({
+    //         storeSelector: (state: RootState) => state.post,
+    //         getInitDataAction: viewSavedPostAsync,
+    //         getMoreDataAction: viewMoreSavedPostAsync,
+    //         LeftComponent: ProfileCard,
+    //         PageFilter: pageFilter,
+    //     })}
+    // </PageWrapper>
 
 export default Profile;

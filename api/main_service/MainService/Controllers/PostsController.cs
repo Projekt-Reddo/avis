@@ -325,20 +325,76 @@ public class PostsController : ControllerBase
 	//     return Ok();
 	// }
 
-	[HttpPut("save/{id}")]
-	public async Task<ActionResult<ResponseDto>> SavePost(string id)
+	[HttpPut("vote/{id}")]
+	public async Task<ActionResult<ResponseDto>> UpDownVotePost(VoteDto voteDto)
 	{
-		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-
-		var rs = await _postLogic.SavePost(id, userId);
-
-		if (rs == 0)
+		if (voteDto.isVotePost)
 		{
-			return BadRequest(new ResponseDto(400, ResponseMessage.POST_SAVE_FAIL));
+			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+			var rs = await _postLogic.VotePost(userId, voteDto.VoteId, voteDto.isUpvote);
+
+			if (!rs)
+			{
+				return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
+			}
+
+			return Ok(new ResponseDto(200, ResponseMessage.POST_VOTE_SUCCESS));
+
 		}
 		else
 		{
-			return Ok(new ResponseDto(200, ResponseMessage.POST_SAVE_SUCCESS));
+			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+			var rs = await _commentLogic.VoteComment(userId, voteDto.VoteId, voteDto.isUpvote);
+
+			if (!rs)
+			{
+				return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
+			}
+
+			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
 		}
+	}
+	[HttpPost("save")]
+	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewSavedPost(PaginationReqDto<PostFilterDto> pagination)
+	{
+		var userId = "";
+
+		var skipPage = (pagination.Page - 1) * pagination.Size;
+
+		try
+		{
+			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+		}
+		catch (Exception)
+		{
+			userId = null;
+		}
+
+		// Create Account Filter
+		var accountFilter = Builders<Account>.Filter.Eq(ac => ac.Id, userId);
+
+		var account = await _accountRepo.FindOneAsync(accountFilter);
+
+		var postSavedId = account.SavedPosts;
+
+		if (postSavedId == null)
+		{
+			return BadRequest();
+		}
+
+		var postIds = new List<string>();
+
+		foreach (var item in postSavedId)
+		{
+			postIds.Add(item.ToString());
+		}
+
+		(var totalPost, var postsFromRepo) = await _postLogic.ViewSavedPost(postIds, pagination);
+
+		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
+
+		return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
 	}
 }

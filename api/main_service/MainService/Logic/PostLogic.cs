@@ -17,6 +17,7 @@ public interface IPostLogic
 	Task<bool> DeletePost(string id);
 	Task<(long total, IEnumerable<Post> entities)> ViewPost(string userId, PaginationReqDto<PostFilterDto> pagination);
 	Task<(long total, IEnumerable<Post> entities)> ViewUserPost(string userId, PaginationReqDto<UserPostFilterDto> pagination);
+	Task<(long total, IEnumerable<Post> entities)> ViewSavedPost(List<string> postIds, PaginationReqDto<PostFilterDto> pagination);
 }
 
 public class PostLogic : IPostLogic
@@ -333,6 +334,24 @@ public class PostLogic : IPostLogic
 									& Builders<Post>.Filter.Eq(x => x.UserId, userId)
 									& Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 		}
+
+		(var totalPost, var postsFromRepo) = await _postRepo.FindManyAsync(
+			filter: postFilter,
+			lookup: viewPostLookup,
+			project: viewPostProject,
+			sort: viewPostSort,
+			limit: pagination.Size,
+			skip: (pagination.Page - 1) * pagination.Size); // Pagination formula
+
+		return (totalPost, postsFromRepo);
+	}
+	public async Task<(long total, IEnumerable<Post> entities)> ViewSavedPost(List<string> postIds, PaginationReqDto<PostFilterDto> pagination)
+	{
+		// Create Post Filter
+		var postFilter = Builders<Post>.Filter.Empty;
+
+		postFilter = postFilter & Builders<Post>.Filter.In(p => p.Id, postIds)
+								& Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 
 		(var totalPost, var postsFromRepo) = await _postRepo.FindManyAsync(
 			filter: postFilter,
