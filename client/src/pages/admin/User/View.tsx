@@ -24,7 +24,7 @@ const View = () => {
     const userState = useAppSelector((state) => state.user);
 
     const [pageRowFilter, setPageRowFilter] =
-        React.useState<PageFilterProps>({
+        React.useState<PageRowFilterProps>({
             currentPage: 1,
             rowShow: {
                 value: 10,
