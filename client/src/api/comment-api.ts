@@ -11,3 +11,20 @@ export const commentDetailApi = async (id: string) => {
     const res = await axios.get(`${apiRoute}/${id}`);
     return res.data;
 };
+
+export const commentCreateApi = async (comment: CommentCreate) => {
+    var formData = new FormData();
+    formData.append("UserId", comment.userId);
+    formData.append("Content", comment.content);
+    if (comment.postId) {
+        formData.append("PostId", comment.postId);
+    } else {
+        formData.append("CommentId", comment.commentId!);
+    }
+    if (comment.media) {
+        formData.append("Media", comment.media);
+    }
+
+    const res = await axios.post(apiRoute, formData);
+    return res.data;
+};

@@ -24,6 +24,11 @@ namespace MainService.Dtos
 		public bool IsTrending { get; set; } = false!;
 	}
 
+	public class UserPostFilterDto
+	{
+		public string? UserId { get; set; } = null!;
+	}
+
 	public class CommentFilterDto
 	{
 		public string? ObjectId { get; set; } = null!;

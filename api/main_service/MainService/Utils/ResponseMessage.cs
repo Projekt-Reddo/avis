@@ -80,4 +80,8 @@ public static class ResponseMessage
 	public const string ACCOUNT_PROFILE_UPDATE_FAIL = "Profile failed to update";
 	public const string ACCOUNT_PROMOTED = "Account promoted!";
 	public const string ACCOUNT_DEMOTED = "Account demoted!";
+	public const string ACCOUNT_ROLE_UPDATE_SUCCESS = "Accounts role updated!";
+	public const string ACCOUNT_BANNED = "Accounts banned!";
+	public const string ACCOUNT_UNBANNED = "Accounts unbanned!";
+	public const string ACCOUNT_STATUS_UPDATE_SUCCESS = "Accounts status updated!";
 }

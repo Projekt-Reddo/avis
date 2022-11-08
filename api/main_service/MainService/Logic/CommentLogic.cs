@@ -16,7 +16,7 @@ public interface ICommentLogic
 	Task<bool> UpdateComment(string commentId, Comment comment);
 	Task<bool> UpdatePostComment(string postId, Comment comment);
 	Task<Comment> GetCommentById(string commentId);
-	Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
+	Task<(long total, IEnumerable<Comment>?)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
 	Task<bool> VoteComment(string userId, string commentId, bool isUpVote);
 	Task<VoteResponeDto> CommentVoteCount(string commentId);
 	Task<bool> DeleteComment(string id);
@@ -120,7 +120,7 @@ public class CommentLogic : ICommentLogic
 		return commentFromRepo;
 	}
 
-	public async Task<(long total, IEnumerable<Comment>)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage)
+	public async Task<(long total, IEnumerable<Comment>?)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage)
 	{
 		BsonDocument lookup = new BsonDocument{
 						{ "from", "account" },
@@ -144,25 +144,43 @@ public class CommentLogic : ICommentLogic
 					{"UpvotedBy", 1},
 					{"DownvotedBy", 1},
 					{"Media", 1},
-					{"Comments", 1}
+					{"Comments", 1},
+					{"IsDeleted", 1}
 			};
+
+		BsonDocument viewCommentSort = new BsonDocument{
+			{ "UpvotedBy", -1 },
+			{ "_id", 1 }
+		};
 		var filterComments = Builders<Comment>.Filter.Empty;
+
+		// filter out comment that got deleted
+		filterComments = filterComments & Builders<Comment>.Filter.Eq(x=>x.IsDeleted, false);
+
 		if (IsPostChild)
 		{
 			// loop into post comments to get comment ids
 			var postFromRepo = await _postRepo.FindOneAsync(filter: Builders<Post>.Filter.Eq(x => x.Id, queryId));
-
-			filterComments = Builders<Comment>.Filter.In("_id", postFromRepo.CommentIds);
+			if (postFromRepo.CommentIds == null)
+			{
+				return (0, null);
+			}
+			filterComments = filterComments & Builders<Comment>.Filter.In("_id", postFromRepo.CommentIds);
 		}
 		else
 		{
 			// loop into parent comments to get child comment ids
 			var commentFromRepo = await _commentRepo.FindOneAsync(filter: Builders<Comment>.Filter.Eq(x => x.Id, queryId));
-			filterComments = Builders<Comment>.Filter.In("_id", commentFromRepo.Comments);
+			if (commentFromRepo.Comments == null)
+			{
+				return (0, null);
+			}
+			filterComments = filterComments & Builders<Comment>.Filter.In("_id", commentFromRepo.Comments);
 		}
 		(var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
 				limit: Size,
-				skip: skipPage
+				skip: skipPage,
+				sort:viewCommentSort
 				);
 
 		return (totals, comments);

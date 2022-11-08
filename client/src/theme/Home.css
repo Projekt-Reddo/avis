@@ -1,5 +1,4 @@
-.search-bg{
-    background: url(../static/Home-bg.webp);
+.search-bg {
     background-position: center;
     background-size: cover;
 }
@@ -12,8 +11,12 @@
 }
 
 @keyframes animate-fade {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .animate-d {
@@ -24,21 +27,25 @@
 }
 
 @keyframes animate-fade-dis {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
-.listen{
+.listen {
     top: 30rem;
 }
 
 @media screen and (min-width: 1537px) {
-    .listen{
+    .listen {
         top: 30rem;
     }
 }
 
-.wave{
+.wave {
     animation: wave-fade 2s infinite;
     animation-delay: 0.5s;
     animation-fill-mode: forwards;
@@ -47,12 +54,10 @@
 @keyframes wave-fade {
     0% {
         width: 20%;
-        height: 20%
+        height: 20%;
     }
     100% {
         width: 90%;
-        height: 90%
+        height: 90%;
     }
 }
-
-

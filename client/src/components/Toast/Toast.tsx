@@ -35,7 +35,7 @@ const Toast: React.FC<ToastProps> = ({ item }) => {
             style={{
                 pointerEvents: "all",
             }}
-            className="shadow-app bg-white rounded-lg w-[20rem] lg:w-[24rem] min-h-[5rem] flex flex-row flex-wrap items-center relative my-3 mx-auto"
+            className="shadow-app bg-[color:var(--post-bg-color)] rounded-lg w-[20rem] lg:w-[24rem] min-h-[5rem] flex flex-row flex-wrap items-center relative my-3 mx-auto"
             onClick={handleRemoveToast}
         >
             <div

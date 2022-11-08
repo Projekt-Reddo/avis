@@ -155,7 +155,7 @@ const ViewReport = () => {
     );
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             <div className="flex justify-between pt-6">
                 <div className="text-lg font-bold">Report</div>
             </div>

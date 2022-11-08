@@ -79,7 +79,7 @@ const Edit = () => {
     ];
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             {songState.status !== "idle" || !songEdit ? (
                 <div className="w-full h-full flex justify-center items-center">
                     <Loading />

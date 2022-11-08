@@ -1,6 +1,7 @@
+import RightComponent from "components/Discover/RightComponent";
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import CommentCard from "components/PostDetail/CommentCard";
-import CommentSection from "components/PostDetail/CommentSection";
+import CommentCard from "components/Comment/CommentCard";
+import CommentSection from "components/Comment/CommentSection";
 import Icon from "components/shared/Icon";
 import Loading from "components/shared/Loading";
 import React, { useEffect } from "react";
@@ -41,16 +42,25 @@ const Comment = () => {
                     {commentDetailState?.status !== "idle" ? (
                         ""
                     ) : (
-                        <CommentCard comment={commentDetailState?.data} />
+                        <div className="hum-card min-w-[20rem] p-4 lg:mb-4 border-t-0">
+                            <CommentCard comment={commentDetailState?.data} />
+                        </div>
                     )}
+
+                    {/* It's child comments */}
                     <CommentSection
                         key={commentId}
                         postId={commentId}
                         isPostChild={false}
                     />
                 </div>
+
                 {/* Right */}
-                <div className="hidden col-span-1 lg:block"></div>
+                <div className="hidden col-span-1 lg:block">
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
+                </div>
             </div>
         </PageWrapper>
     );

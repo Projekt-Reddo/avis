@@ -107,7 +107,7 @@ const ReportForm: FunctionComponent<ReportFormProps> = ({
 
     return (
         <StepFrom
-            clasName="mx-5 lg:mx-0"
+            clasName="mx-5 lg:mx-0 bg-[color:var(--element-bg-color)]"
             currentStep={currentStep}
             stepContents={stepContents}
         />
@@ -171,7 +171,7 @@ const ProblemList: FunctionComponent<ProblemListProps> = ({
             </p>
             {reportTypes.map((reportType) => (
                 <div
-                    className="flex justify-between items-center p-2 rounded hover:bg-gray-300 cursor-pointer"
+                    className="flex justify-between items-center p-2 rounded hover:bg-[color:var(--element-bg-color-elevate-2)] cursor-pointer"
                     onClick={reportType.onClick}
                     key={reportType.name}
                 >
@@ -468,6 +468,7 @@ const ReportOther: FunctionComponent<ReportOtherProps> = ({
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextArea
                     register={register("problem")}
+                    // @ts-ignore
                     error={errors.problem}
                     rows={6}
                     placeholder="What's your problem?"

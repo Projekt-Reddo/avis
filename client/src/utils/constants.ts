@@ -10,6 +10,7 @@ export const routes = [
     "/feedback",
     "/notification",
     "/user",
+    "/profile",
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
@@ -53,6 +54,7 @@ export const leftNavUser: LeftNavItemData[] = [];
 export const MAIN_SERVICE_API =
     import.meta.env.VITE_MAIN_SERVICE_API || "localhost:7000";
 export const SUGAR = import.meta.env.VITE_SUGAR;
+export const MAIN_SERVICE_HUB = import.meta.env.VITE_MAIN_SERVICE_HUB;
 
 export const DefaultDay = "0001-01-01T00:00:00Z";
 export const DefaultDay_2 = "0001-01-01T00:00:00";
@@ -73,4 +75,18 @@ export const REPORT_TYPE = {
     HATE_SPEECH: "Hate Speech",
     TERROISM: "Terroism",
     SOMETHING_ELSE: "Something Else",
+};
+
+export const COMMENT_LENGTH = 280;
+
+export const THEME = {
+    DARK: "dark",
+    LIGHT: "light",
+    SYSTEM: "system",
+};
+
+export const USER_ROLE = {
+    ADMIN: "admin",
+    MODERATOR: "moderator",
+    USER: "user",
 };
