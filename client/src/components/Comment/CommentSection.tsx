@@ -69,7 +69,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     };
 
     return (
-        <div className="bg-[color:var(--post-bg-color)] rounded-lg drop-shadow-md p-4 mb-4 flex flex-col gap-4">
+        <div className="bg-[color:var(--bg-color)] sm:bg-[color:var(--post-bg-color)] rounded-lg drop-shadow-md p-4 mb-0 sm:mb-3 flex flex-col gap-4">
             <CommentCreate parentId={postId} isPostChild={isPostChild} />
 
             {commentState.status === "loading" || !commentState.data ? (
@@ -84,8 +84,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 </div>
             ) : commentState.status === "idle" &&
               commentState.data.total === 0 ? (
-                <div className="w-full font-semibold grid place-items-center">
-                    {/* No comment found */}
+                <div className="w-full grid place-items-center">
+                    No comment found
                 </div>
             ) : (
                 <InfiniteScroll
@@ -96,7 +96,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                             commentState.data.payload.length >
                         0
                     }
-                    className="page-wrapper"
+                    className=""
                     loader={
                         <div className="flex justify-center items-center my-4">
                             <Loading />
