@@ -103,7 +103,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
 
             {/* Right conent */}
             <form
-                className={`flex flex-col border-[0.5px] border-[color:var(--element-bg-color-elevate-1)] sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] rounded-md`}
+                className={`flex flex-col border-[0.5px] border-[color:var(--element-bg-color-elevate-1)] col-span-4 sm:col-span-9 relative bg-[color:var(--comment-bg-body-color)] rounded-md`}
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <TextareaAutosize
@@ -194,11 +194,11 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                             {/* Remain letter count */}
                             {remainLetter !== COMMENT_LENGTH && (
                                 <p
-                                    className={`${
+                                    className={`text-sm ${
                                         remainLetter < 0 && "text-red-500"
                                     }`}
                                 >
-                                    Remain: {remainLetter}
+                                    {remainLetter} left
                                 </p>
                             )}
 

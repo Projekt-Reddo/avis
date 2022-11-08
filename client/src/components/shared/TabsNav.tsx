@@ -83,16 +83,16 @@ const TabsNav = () => {
             </Link>
 
             <Link
-                to={!user ? "/login" : "/profile"}
+                to={!user ? "/login" : "/user/profile"}
                 className={
-                    location.pathname === "/profile"
+                    location.pathname === "/user/profile"
                         ? "tab-button-select"
                         : "tab-button"
                 }
             >
                 <Icon
                     icon={
-                        location.pathname === "/profile"
+                        location.pathname === "/user/profile"
                             ? "user-circle"
                             : ["far", "user-circle"]
                     }
