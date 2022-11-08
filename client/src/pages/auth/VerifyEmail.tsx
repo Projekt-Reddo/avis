@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 
-import backgroundImage from "static/Flat_art_verify_email.webp";
+import backgroundImage from "static/Flat_art_verify_email.png";
 import PageWrapperAuth from "components/PageWrapper/PageWrapperAuth";
 import Button from "components/Button/Button";
 
