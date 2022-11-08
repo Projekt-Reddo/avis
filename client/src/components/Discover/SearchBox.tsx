@@ -18,7 +18,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ register, handleSubmit }) => {
             {/* Search Button */}
             <button
                 type="submit"
-                className="flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 focus:outline-none"
+                className="flex justify-center items-center bg-[color:var(--element-bg-color)] py-2 px-4 focus:outline-none"
                 style={{ borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
             >
                 <Icon
@@ -29,7 +29,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ register, handleSubmit }) => {
 
             {/* Search Input */}
             <input
-                className="w-full focus:outline-none bg-[color:var(--body-bg-color)] p-2"
+                className="w-full focus:outline-none bg-[color:var(--element-bg-color)] p-2"
                 style={{ borderTopRightRadius: 8, borderBottomRightRadius: 8 }}
                 placeholder="Search"
                 {...register}
