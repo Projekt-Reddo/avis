@@ -32,7 +32,7 @@ const SavePost: React.FC<SaveProps> = ({post}) => {
 
         savePost(post.id).then(
             data => addNewToast({
-                variant: "warning",
+                variant: "primary",
                 message: data.message,
             })
         ).catch(
