@@ -7,6 +7,7 @@ using HangfireBasicAuthenticationFilter;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Events;
+using MainService.Hubs;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
@@ -42,6 +43,7 @@ builder.Services.AddScoped<ISongRepo, SongRepo>();
 builder.Services.AddScoped<IReportRepo, ReportRepo>();
 builder.Services.AddScoped<IGenreRepo, GenreRepo>();
 builder.Services.AddScoped<IArtistRepo, ArtistRepo>();
+builder.Services.AddScoped<INotifyRepo, NotifyRepo>();
 
 // Logics
 builder.Services.AddScoped<ISongLogic, SongLogic>();
@@ -89,6 +91,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			ValidateIssuer = false,
 			ValidateAudience = false,
 			ValidateIssuerSigningKey = true,
+		};
+
+		opt.Events = new JwtBearerEvents
+		{
+			OnMessageReceived = context =>
+			{
+				var accessToken = context.Request.Query["access_token"];
+
+				// If the request is for our hub...
+				var path = context.HttpContext.Request.Path;
+				if (!string.IsNullOrEmpty(accessToken) &&
+					(path.StartsWithSegments("/notify")))
+				{
+					// Read the token out of the query string
+					context.Token = accessToken;
+				}
+				return Task.CompletedTask;
+			}
 		};
 	});
 
@@ -211,5 +231,8 @@ app.UseHangfireDashboard(
 	});
 
 app.MapControllers();
+
+// SignalR endpoints
+app.MapHub<NotifyHub>("/notify");
 
 app.Run();

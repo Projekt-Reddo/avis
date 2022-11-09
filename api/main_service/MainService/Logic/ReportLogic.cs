@@ -3,6 +3,7 @@ using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
+using MainService.Services;
 using MainService.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -26,6 +27,7 @@ public class ReportLogic : IReportLogic
 	private readonly ICommentLogic _commentLogic;
 	private readonly IMapper _mapper;
 	private readonly ILogger<ReportLogic> _logger;
+	private readonly IMessageQueuePublisher _messagePublisher;
 	private readonly List<BsonDocument> userLookUpStages = new List<BsonDocument>(){
 		new BsonDocument
 		{
@@ -48,7 +50,8 @@ public class ReportLogic : IReportLogic
 		IPostLogic postLogic,
 		ICommentLogic commentLogic,
 		IMapper mapper,
-		ILogger<ReportLogic> logger
+		ILogger<ReportLogic> logger,
+		IMessageQueuePublisher messagePublisher
 	)
 	{
 		_reportRepo = reportRepo;
@@ -56,6 +59,7 @@ public class ReportLogic : IReportLogic
 		_commentLogic = commentLogic;
 		_mapper = mapper;
 		_logger = logger;
+		_messagePublisher = messagePublisher;
 	}
 
 	public async Task<ReportLogicResponse> PostReport(ReportCreateDto reportDto)
@@ -307,6 +311,8 @@ public class ReportLogic : IReportLogic
 			var rs = await UpdateReport(id, isAccepted, accountId, session);
 			await session.CommitTransactionAsync();
 
+			SendNotifications(isAccepted, report);
+
 			return new ReportLogicResponse()
 			{
 				StatusCode = 200,
@@ -402,5 +408,57 @@ public class ReportLogic : IReportLogic
 			Status = true,
 			Message = ResponseMessage.REPORT_CONFIRM_SUCCESS
 		};
+	}
+
+	public void SendNotifications(bool isAccepted, Report report)
+	{
+		// Add Notification to database and send it to the reporter in real time
+		try
+		{
+			var notifyMsgForReporter = new EventDto();
+
+			// Send Accepted Notification
+			if (isAccepted is true)
+			{
+				// Notify message for Reporter
+				notifyMsgForReporter = new EventDto()
+				{
+					ReceiverId = report.UserId,
+					Message = ResponseMessage.NOTIFY_REPORT_ACCEPTED_MSG,
+					IsRead = false,
+					Event = EventType.REPORT_ACCEPTED
+				};
+
+				// Notify message for PostOwner
+				var notifyMsgForPostOwner = new EventDto()
+				{
+					ReceiverId = report.Post is null ? report.Comment!.UserId : report.Post.UserId,
+					Message = ResponseMessage.NOTIFY_POST_DELETED,
+					IsRead = false,
+					Event = EventType.POST_DELETED
+				};
+
+				_messagePublisher.PublishSendNotifi(notifyMsgForReporter);
+				_messagePublisher.PublishSendNotifi(notifyMsgForPostOwner);
+			}
+			// Send Denied Notification
+			else
+			{
+				// Notify message for Reporter
+				notifyMsgForReporter = new EventDto()
+				{
+					ReceiverId = report.UserId,
+					Message = ResponseMessage.NOTIFY_REPORT_DENIED_MSG,
+					IsRead = false,
+					Event = EventType.REPORT_DENIED
+				};
+
+				_messagePublisher.PublishSendNotifi(notifyMsgForReporter);
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error publishing message");
+		}
 	}
 }

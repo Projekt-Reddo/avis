@@ -1,8 +1,14 @@
+using System.Text;
+using System.Text.Json;
+using MainService.Dtos;
 using RabbitMQ.Client;
 
 namespace MainService.Services;
 
-public interface IMessageQueuePublisher { }
+public interface IMessageQueuePublisher
+{
+	void PublishSendNotifi(EventDto eventPublishDto);
+}
 
 public class MessageQueuePublisher : IMessageQueuePublisher
 {
@@ -40,5 +46,17 @@ public class MessageQueuePublisher : IMessageQueuePublisher
 			_channel.Close();
 			_connection.Close();
 		}
+	}
+
+	public void PublishSendNotifi(EventDto eventPublishDto)
+	{
+		var message = JsonSerializer.Serialize(eventPublishDto);
+
+		_channel.BasicPublish(exchange: "trigger",
+			routingKey: "",
+			body: Encoding.UTF8.GetBytes(message));
+
+		_logger.LogInformation("Published message to RabbitMQ");
+
 	}
 }
