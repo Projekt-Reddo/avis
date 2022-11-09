@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { DayFormat } from "utils/constants";
 import { useAppSelector } from "utils/react-redux-hooks";
+import CommentVote from "./CommentVote";
 
 interface commentData {
     userId: string;
@@ -154,64 +155,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({ comment }) => {
                         <div className="flex">
                             {/* Vote*/}
 
-                            <div className="flex items-center">
-                                <Icon
-                                    className={
-                                        authState &&
-                                        comment.upvotedBy.includes(
-                                            authState?.uid
-                                        )
-                                            ? "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)]"
-                                            : "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)]"
-                                    }
-                                    icon="caret-up"
-                                    onClick={(
-                                        event: React.MouseEvent<HTMLElement>
-                                    ) => {
-                                        event.preventDefault();
-                                        if (
-                                            authState &&
-                                            comment.upvotedBy.includes(
-                                                authState?.uid
-                                            )
-                                        ) {
-                                            console.log("Voted");
-                                            return;
-                                        }
-                                        console.log("Like");
-                                    }}
-                                />
-                                <div className="text-center text-3xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[4rem] mx-2">
-                                    {comment.upvotedBy.length -
-                                        comment.downvotedBy.length}
-                                </div>
-                                <Icon
-                                    className={
-                                        authState &&
-                                        comment.downvotedBy.includes(
-                                            authState?.uid
-                                        )
-                                            ? "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)]"
-                                            : "flex cursor-pointer text-3xl hover:text-[color:var(--teal-general-color)]"
-                                    }
-                                    icon="caret-down"
-                                    onClick={(
-                                        event: React.MouseEvent<HTMLElement>
-                                    ) => {
-                                        event.preventDefault();
-                                        if (
-                                            authState &&
-                                            comment.downvotedBy.includes(
-                                                authState?.uid
-                                            )
-                                        ) {
-                                            console.log("Voted");
-                                            return;
-                                        }
-                                        console.log("Dislike");
-                                    }}
-                                />
-                            </div>
+                            <CommentVote comment = {comment}/>
 
                             {/* Comment */}
                             {/* {!comment.comments ? (
