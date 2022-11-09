@@ -5,6 +5,7 @@ import EditSong from "pages/admin/Song/Edit";
 import Dashboard from "pages/admin/Dashboard";
 import Genre from "pages/admin/Genre";
 import Report from "pages/admin/Report/View";
+import ReportDetail from "pages/admin/Report/Detail";
 
 import { useRouteMatch } from "react-router";
 import AdminRoute from "./AdminRoute";
@@ -50,6 +51,10 @@ const AdminRoutes = () => {
 
             <AdminRoute exact path={`${path}/report`}>
                 <Report />
+            </AdminRoute>
+
+            <AdminRoute exact path={`${path}/report/:id`}>
+                <ReportDetail />
             </AdminRoute>
         </>
     );
