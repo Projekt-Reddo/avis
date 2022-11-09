@@ -13,3 +13,18 @@
     -ms-overflow-style: none !important; /* IE and Edge */
     scrollbar-width: none !important; /* Firefox */
 }
+
+.react-datepicker__header {
+    color: var(--text-primary-color) !important;
+    background-color: var(--element-bg-color) !important;
+}
+
+.react-datepicker {
+    color: var(--text-primary-color) !important;
+    background-color: var(--element-bg-color) !important;
+}
+
+.react-datepicker__time{
+    color: var(--text-primary-color) !important;
+    background-color: var(--element-bg-color) !important;
+}

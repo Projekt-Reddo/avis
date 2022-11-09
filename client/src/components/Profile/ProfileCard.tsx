@@ -11,13 +11,18 @@ import { viewProfileAsync } from "store/slices/profileSlice";
 import TextLoading from "components/SkeletonLoading/TextLoading";
 import moment from "moment";
 import ProfileEditButton from "../ProfileEdit/ProfileEditButton";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 interface ProfileCardProps {
     loading: boolean;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
+    const user = useAppSelector((state) => state.auth.data);
+
+    const location = useLocation();
+
     const params: any = useParams();
 
     const dispatch = useAppDispatch();
@@ -112,6 +117,45 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
                         </div>
                     </div>
                 </div>
+
+                {(user?.uid && user?.uid === params.uid) ||
+                (user?.uid && location.pathname.endsWith("profile")) ||
+                (user?.uid && location.pathname.endsWith("save")) ? (
+                    <div className="flex justify-around w-full pb-4">
+                        <div
+                            className={`${
+                                location.pathname.endsWith("profile") ||
+                                params.uid === user.uid
+                                    ? ""
+                                    : "text-[color:var(--text-tertiary-color)]"
+                            } text-center font-bold text-lg`}
+                        >
+                            <Link to="/user/profile">Posts</Link>
+                            {location.pathname.endsWith("profile") ||
+                            params.uid === user.uid ? (
+                                <div className="h-1 w-16 bg-[color:var(--teal-general-color)] rounded" />
+                            ) : (
+                                ""
+                            )}
+                        </div>
+                        <div
+                            className={`${
+                                location.pathname.endsWith("save")
+                                    ? ""
+                                    : "text-[color:var(--text-tertiary-color)]"
+                            } text-center font-bold text-lg`}
+                        >
+                            <Link to="/user/profile/save">Saves</Link>
+                            {location.pathname.endsWith("save") ? (
+                                <div className="h-1 w-16 bg-[color:var(--teal-general-color)] rounded" />
+                            ) : (
+                                ""
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    ""
+                )}
             </div>
         </div>
     );
