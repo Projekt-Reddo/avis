@@ -381,7 +381,7 @@ public class PostsController : ControllerBase
 
 		if (postSavedId == null)
 		{
-			return BadRequest();
+			return Ok(new PaginationResDto<ListPostDto>((Int32)0, new List<ListPostDto>()));
 		}
 
 		var postIds = new List<string>();
