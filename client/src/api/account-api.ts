@@ -20,25 +20,34 @@ export const viewUserApi = async (data: UserFilter) => {
 };
 
 export const sortListApi = async (keyword: string) => {
-
     const sortOptions = [
         {
-            "id": "631",
-            "name": "Name Ascending"
-          },
-          {
-            "id": "631",
-            "name": "Name Descending"
-          },
-          {
-            "id": "631",
-            "name": "Joined Date Ascending"
-          },
-          {
-            "id": "631",
-            "name": "Joined Date Descending"
-          },
-    ]
+            id: "631",
+            name: "Name Ascending",
+        },
+        {
+            id: "631",
+            name: "Name Descending",
+        },
+        {
+            id: "631",
+            name: "Joined Date Ascending",
+        },
+        {
+            id: "631",
+            name: "Joined Date Descending",
+        },
+    ];
 
     return sortOptions;
+};
+
+export const promoteManyApi = async (data: UserUidList) => {
+    const res = await axios.put(apiRoute + "/promote", data);
+    return res.data;
+};
+
+export const banManyApi = async (data: UserUidList) => {
+    const res = await axios.put(apiRoute + "/ban", data);
+    return res.data;
 };

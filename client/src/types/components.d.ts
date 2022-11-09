@@ -11,6 +11,7 @@ interface PageFilterProps {
     currentPage: number;
     rowShow: number;
     filter?: {
+        userId?: string;
         content?: string;
         hashtags?: string[];
         isTrending?: boolean;

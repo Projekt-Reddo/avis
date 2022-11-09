@@ -21,10 +21,20 @@ public static class ResponseMessage
 	public const string POST_VOTE_SUCCESS = "Post Vote Successfully";
 	public const string POST_VOTE_FAIL = "Post Vote Failed";
 	public const string POST_UPDATE_STATUS_SUCCESS = "Updated status of the post";
+	public const string POST_SAVE_FAIL = "You already save this post";
+	public const string POST_SAVE_SUCCESS = "Save post successfully";
+	public const string POST_DELETE_FAIL = "Fail to delete post";
+	public const string POST_EMPTY_CONTENT_MEDIA = "Post was created without Content or Media";
 
 	// Report msg
 	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
 	public const string REPORT_NO_IDS = "A postId or commentId is required for reporting";
+	public const string REPORT_CONFIRM_SUCCESS = "Confirm reports successfully";
+	public const string REPORT_CONFIRM_PARTIAL_SUCCESS = "Confirm report successfully, but there are some reports can't be confirmed";
+	public const string REPORT_CONFIRM_FAIL = "Fail to update report";
+	public const string REPORT_NOT_FOUND = "Report not found";
+	public const string REPORT_REJECT_ACCEPTED = "Cannot reject accepted reports";
+
 
 	// File extension check msg
 	public const string NO_FILE_UPLOAD = "No upload file";
@@ -57,6 +67,7 @@ public static class ResponseMessage
 	public const string COMMENT_NOT_FOUND = "No comment found";
 	public const string COMMENT_VOTE_SUCCESS = "Comment Vote Successfully";
 	public const string COMMENT_VOTE_FAIL = "Post Vote Failed";
+	public const string COMMENT_DELETE_FAIL = "Fail to delete comment";
 
 
 	// Account msg
@@ -69,4 +80,21 @@ public static class ResponseMessage
 	public const string ACCOUNT_PROFILE_UPDATE_FAIL = "Profile failed to update";
 	public const string ACCOUNT_PROMOTED = "Account promoted!";
 	public const string ACCOUNT_DEMOTED = "Account demoted!";
+	public const string ACCOUNT_ROLE_UPDATE_SUCCESS = "Accounts role updated!";
+	public const string ACCOUNT_BANNED = "Accounts banned!";
+	public const string ACCOUNT_UNBANNED = "Accounts unbanned!";
+	public const string ACCOUNT_STATUS_UPDATE_SUCCESS = "Accounts status updated!";
+	public const string ACCOUNT_UNAUTHENTICATED = "Account unauthenticated!";
+
+	// Notification status msg
+	public const string NOTIFY_RECEIVER_NOT_FOUND = "Cannot find the receiver";
+	public const string NOTIFY_CREATE_SUCCESS = "Create a notification successfully";
+	public const string NOTIFY_CREATE_FAIL = "Fail to create the notification";
+	public const string NOTIFY_IS_READ_SUCCESS = "Set User Notification to Is Read";
+	public const string NOTIFY_IS_READ_Fail = "Fail to Set User Notification to Is Read";
+
+	// Notification msg
+	public const string NOTIFY_REPORT_ACCEPTED_MSG = "Your report was accepted. We are in the process of deleting Post / Comment";
+	public const string NOTIFY_REPORT_DENIED_MSG = "Your report was rejected. We have reviewed and found no unauthorized content in this Post / Comment";
+	public const string NOTIFY_POST_DELETED = "Your Post / Comment was deleted because we have found unauthorized content in your Post / Comment";
 }

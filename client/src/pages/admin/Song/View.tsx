@@ -7,7 +7,7 @@ import {
     setTableData,
     viewSongAsync,
 } from "store/slices/songSlice";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import moment from "moment";
 
@@ -22,7 +22,7 @@ import PageWrapperWithLeftNav from "components/PageWrapper/PageWrapperWithLeftNa
 import Button from "components/Button/Button";
 
 // Constants
-import { DayFormat } from "utils/constants";
+import { DAY_FORMAT } from "utils/constants";
 
 // Api
 import { recommendGenreApi } from "api/genre-api";
@@ -154,7 +154,7 @@ const View = () => {
     };
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             {/* Header */}
             <ViewHeader title="Song" addButtonUrl="/admin/song/create" />
 
@@ -293,7 +293,7 @@ export const getSongData = (data: any) => {
             <></>
         ),
         isSelected: item.isSelected,
-        created: moment(item.createdAt).format(DayFormat),
-        modified: moment(item.modifiedAt).format(DayFormat),
+        created: moment(item.createdAt).format(DAY_FORMAT),
+        modified: moment(item.modifiedAt).format(DAY_FORMAT),
     }));
 };

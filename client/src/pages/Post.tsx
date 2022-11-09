@@ -1,8 +1,7 @@
-import PostCard from "components/Discover/PostCard";
-import SearchBox from "components/Discover/SearchBox";
-import TrendingCard from "components/Discover/TrendingCard";
+import PostCard from "components/Post/PostCard";
+import RightComponent from "components/Discover/RightComponent";
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import CommentSection from "components/PostDetail/CommentSection";
+import CommentSection from "components/Comment/CommentSection";
 import Icon from "components/shared/Icon";
 import Loading from "components/shared/Loading";
 import React, { useEffect } from "react";
@@ -58,14 +57,9 @@ const Post = () => {
                 </div>
                 {/* Right */}
                 <div className="hidden col-span-1 lg:block">
-                    {/* <SearchBox
-                        register={register("content")}
-                        handleSubmit={handleSubmit(handleSearch)}
-                    />
-                    <TrendingCard
-                        setFetchMorePage={setFetchMorePage}
-                        setState={setPageFilter}
-                    /> */}
+                    <div className="sticky top-4">
+                        <RightComponent />
+                    </div>
                 </div>
             </div>
         </PageWrapper>

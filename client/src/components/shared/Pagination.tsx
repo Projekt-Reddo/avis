@@ -34,7 +34,7 @@ const Pagination = ({
     return (
         <>
             <div className="flex justify-center items-center">
-                <nav className={`b-radius-6 pagination_Container mb-8`}>
+                <nav className={`b-radius-6 pagination_Container`}>
                     {/* Go to first page and go to previous page buttons */}
                     {currentPage !== 1 && (
                         <>

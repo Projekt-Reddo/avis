@@ -18,7 +18,7 @@
     padding: 0 var(--left-nav-padding);
 
     transition: var(--left-nav-transition-duration);
-    background-color: lavender;
+    background-color: var(--admin-nav-color);
 }
 
 .left-nav.show {
@@ -51,7 +51,7 @@
 
 .page-wrapper-left-nav {
     transition: var(--left-nav-transition-duration);
-    padding-bottom: 3rem;
+    padding-bottom: 6rem;
 }
 
 @media screen and (min-width: 1024px) {

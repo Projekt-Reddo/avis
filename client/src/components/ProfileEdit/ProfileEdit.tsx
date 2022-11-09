@@ -4,7 +4,7 @@ import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import yup from "utils/yup-config";
 
-import WALLPAPER_BG from "static/AyaFubiMi.png";
+import WALLPAPER_BG from "static/Profile_wall.jpg";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import Button from "components/Button/Button";
 import AvatarDropzone from "./AvatarDropzone";

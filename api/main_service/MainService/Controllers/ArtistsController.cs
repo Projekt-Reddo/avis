@@ -3,6 +3,7 @@ using MainService.Logic;
 using MainService.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Constants;
 
 namespace MainService.Controllers;
 
@@ -17,9 +18,31 @@ public class ArtistsController : ControllerBase
         _artistLogic = artistLogic;
     }
 
-    [Authorize]
-    [HttpPost]
-    public async Task<ActionResult<ResponseDto>> CreateMany(ArtistManyCreateDto manyCreateDto)
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpPost]
+	public async Task<ActionResult<ResponseDto>> Create([FromForm] ArtistCreateDto createDto)
+	{
+		var msg = await _artistLogic.Create(createDto);
+
+		if (msg is false)
+		{
+			return BadRequest(new ResponseDto
+			{
+				Status = 200,
+				Message = ResponseMessage.ARTIST_CREATE_FAIL
+			});
+		}
+
+		return Ok(new ResponseDto
+		{
+			Status = 200,
+			Message = ResponseMessage.ARTIST_CREATE_SUCCESS
+		});
+	}
+
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpPost("create-many")]
+    public async Task<ActionResult<ResponseDto>> CreateMany([FromForm] ArtistManyCreateDto manyCreateDto)
     {
         var msg = await _artistLogic.CreateMany(manyCreateDto.Artists);
         if (!String.IsNullOrEmpty(msg))
@@ -46,7 +69,7 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
-	[Authorize]
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 	[HttpPost("filter")]
 	public async Task<ActionResult<ICollection<ArtistReadDto>>> GetAll(PaginationReqDto<ArtistFilterDto> pagination)
 	{
@@ -62,8 +85,8 @@ public class ArtistsController : ControllerBase
         return Ok(rs);
     }
 
-    [Authorize]
-    [HttpDelete]
+	[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
+	[HttpDelete]
     public async Task<ActionResult<ResponseDto>> DeleteMany(ArtistManyDeleteDto manyDeleteDto)
     {
         var rs = await _artistLogic.DeleteMany(manyDeleteDto);

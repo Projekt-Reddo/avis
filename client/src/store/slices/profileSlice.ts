@@ -30,13 +30,21 @@ const profileSlice = createSlice({
     },
 });
 
-export const viewProfileAsync = createAsyncThunk("profile/view", async () => {
-    const currentUserData = currentFirebaseUser();
-
-    const data = await getUserProfile(currentUserData?.uid!);
-
-    return data;
-});
+export const viewProfileAsync = createAsyncThunk(
+    "profile/view",
+    async (uid: string | undefined | null) => {
+        if (uid) {
+            // View others profile
+            const data = await getUserProfile(uid!);
+            return data;
+        } else {
+            // View own profile
+            const currentUserData = currentFirebaseUser();
+            const data = await getUserProfile(currentUserData?.uid!);
+            return data;
+        }
+    }
+);
 
 export const updateProfileAsync = createAsyncThunk(
     "profile/update",

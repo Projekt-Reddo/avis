@@ -2,14 +2,20 @@ import axios from "api/api-instance";
 
 const apiRoute = "/reports";
 
-// export const viewReportApi = async () => {
-//     const res = await axios.get(apiRoute);
+export const getReportApi = async (filter: ReportFilter) => {
+    const res = await axios.post(`${apiRoute}/filter`, filter);
 
-//     return res.data;
-// };
+    return res.data;
+};
 
 export const createReportApi = async (reportCreate: ReportCreate) => {
     const res = await axios.post(apiRoute, reportCreate);
+
+    return res.data;
+};
+
+export const confirmReportsApi = async (reportConfirm: ReportConfirm) => {
+    const res = await axios.put(apiRoute, reportConfirm);
 
     return res.data;
 };

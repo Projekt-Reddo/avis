@@ -92,4 +92,9 @@ namespace MainService.Dtos
 
         public IFormFile? AvatarFile { get; set; }
     }
+
+	public class AccountUidList
+	{
+		public string[] Uids { get; set; } = null!;
+	}
 }

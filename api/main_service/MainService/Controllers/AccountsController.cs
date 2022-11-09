@@ -13,6 +13,7 @@ using System.Reflection.Metadata;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using MainService.Utils;
+using static Constants;
 
 namespace MainService.Controllers
 {
@@ -75,7 +76,7 @@ namespace MainService.Controllers
 			return new ResponseDto(500, ResponseMessage.ACCOUNT_CREATE_FAILED);
 		}
 
-		[Authorize]
+		[Authorize(Roles = $"{AccountRoles.ADMIN},{AccountRoles.MODERATOR}")]
 		[HttpPost("filter")]
 		public async Task<ActionResult<PaginationResDto<IEnumerable<AccountResponseDto>>>> ViewUser([FromBody] PaginationReqDto<AccountFilterDto> pagination)
 		{
@@ -129,6 +130,7 @@ namespace MainService.Controllers
 			return returnedAccount;
 		}
 
+		[Authorize(Roles = AccountRoles.ADMIN)]
 		[HttpPut("promote/{uid}")]
 		public async Task<ActionResult<ResponseDto>> Promote([FromRoute] string uid)
 		{
@@ -140,6 +142,50 @@ namespace MainService.Controllers
 			}
 
 			return Ok(new ResponseDto(200, message));
+		}
+
+		[Authorize(Roles = AccountRoles.ADMIN)]
+		[HttpPut("promote")]
+		public async Task<ActionResult<ResponseDto>> PromoteMany([FromBody] AccountUidList accountPromoteList)
+		{
+			(bool status, string message) = await _accountLogic.PromoteMany(accountPromoteList);
+
+			if (status is true)
+			{
+				return Ok(new ResponseDto
+				{
+					Status = 200,
+					Message = message
+				});
+			}
+
+			return BadRequest(new ResponseDto
+			{
+				Status = 400,
+				Message = message
+			});
+		}
+
+		[Authorize(Roles = AccountRoles.ADMIN)]
+		[HttpPut("ban")]
+		public async Task<ActionResult<ResponseDto>> BanMany([FromBody] AccountUidList accountPromoteList)
+		{
+			(bool status, string message) = await _accountLogic.BanMany(accountPromoteList);
+
+			if (status is true)
+			{
+				return Ok(new ResponseDto
+				{
+					Status = 200,
+					Message = message
+				});
+			}
+
+			return BadRequest(new ResponseDto
+			{
+				Status = 400,
+				Message = message
+			});
 		}
 	}
 }

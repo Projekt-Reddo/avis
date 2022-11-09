@@ -2,11 +2,12 @@ using Amazon.S3;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
-using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using HangfireBasicAuthenticationFilter;
 using MainService.Data;
 using MainService.Dtos;
+using MainService.Events;
+using MainService.Hubs;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
@@ -42,6 +43,7 @@ builder.Services.AddScoped<ISongRepo, SongRepo>();
 builder.Services.AddScoped<IReportRepo, ReportRepo>();
 builder.Services.AddScoped<IGenreRepo, GenreRepo>();
 builder.Services.AddScoped<IArtistRepo, ArtistRepo>();
+builder.Services.AddScoped<INotifyRepo, NotifyRepo>();
 
 // Logics
 builder.Services.AddScoped<ISongLogic, SongLogic>();
@@ -90,6 +92,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			ValidateAudience = false,
 			ValidateIssuerSigningKey = true,
 		};
+
+		opt.Events = new JwtBearerEvents
+		{
+			OnMessageReceived = context =>
+			{
+				var accessToken = context.Request.Query["access_token"];
+
+				// If the request is for our hub...
+				var path = context.HttpContext.Request.Path;
+				if (!string.IsNullOrEmpty(accessToken) &&
+					(path.StartsWithSegments("/notify")))
+				{
+					// Read the token out of the query string
+					context.Token = accessToken;
+				}
+				return Task.CompletedTask;
+			}
+		};
 	});
 
 // Authorization
@@ -101,6 +121,14 @@ builder.Services.AddCors();
 // Hangfire
 builder.Services.AddHangfire(config => config.UsePostgreSqlStorage(Environment.GetEnvironmentVariable("HANGFIRE_CONNECTION_STRING") ?? builder.Configuration.GetConnectionString("Hangfire")));
 builder.Services.AddHangfireServer();
+
+// SingalR
+builder.Services.AddSignalR();
+
+// RabbitMq Pub-Sub
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddHostedService<MessageQueueSubscriber>();
+builder.Services.AddSingleton<IMessageQueuePublisher, MessageQueuePublisher>();
 
 // Auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -201,6 +229,10 @@ app.UseHangfireDashboard(
 				}
 			}
 	});
+
 app.MapControllers();
+
+// SignalR endpoints
+app.MapHub<NotifyHub>("/notify");
 
 app.Run();

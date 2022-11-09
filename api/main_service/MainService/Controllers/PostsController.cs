@@ -58,6 +58,11 @@ public class PostsController : ControllerBase
 	[HttpPost]
 	public async Task<ActionResult<ResponseDto>> AddPost([FromForm] PostCreateDto newPost)
 	{
+		if (String.IsNullOrWhiteSpace(newPost.Content) && newPost.Medias == null)
+		{
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_EMPTY_CONTENT_MEDIA));
+		}
+
 		var userId = "";
 
 		// Get User Id
@@ -85,6 +90,7 @@ public class PostsController : ControllerBase
 		post.UserId = userId!;
 		post.CreatedAt = DateTime.Now;
 		post.PublishedAt = newPost.PublishedAt ?? DateTime.Now;
+		post.HashtagsNormalized = new List<string>();
 
 		// Normalizing Hashtags
 		if (newPost.HashTags != null)
@@ -93,7 +99,7 @@ public class PostsController : ControllerBase
 
 			foreach (var hashtag in newPost.HashTags!)
 			{
-				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag));
+				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
 			}
 
 			post.HashtagsNormalized = hashtagsNormal;
@@ -189,15 +195,6 @@ public class PostsController : ControllerBase
 	{
 		var userId = "";
 
-		// Create Post Filter
-		var postFilter = Builders<Post>.Filter.Empty;
-
-		// Public Post Filter
-		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
-
-		// Published At Filter
-		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
-
 		// Get User Id
 		try
 		{
@@ -208,105 +205,7 @@ public class PostsController : ControllerBase
 			userId = null;
 		}
 
-		// Private Post Filter
-		if (userId != null)
-		{
-			postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE) & Builders<Post>.Filter.Eq(x => x.UserId, userId);
-		}
-
-		// Hashtags Filter
-		if (pagination.Filter.Hashtags != null)
-		{
-			postFilter = postFilter & Builders<Post>.Filter.All(x => x.Hashtags, pagination.Filter.Hashtags);
-		}
-
-		// Trending Post Filter
-		if (pagination.Filter.IsTrending)
-		{
-			postFilter = postFilter & Builders<Post>.Filter.Where(x => x.UpvotedBy.Count() >= 1);
-		}
-
-		// Pagination formula
-		var skipPage = (pagination.Page - 1) * pagination.Size;
-
-		// Config to get User own the Post
-		BsonDocument lookup = new BsonDocument{
-				{ "from", "account" },
-				{ "localField", "UserId" },
-				{ "foreignField", "_id" },
-				{ "as", "Users" }
-			};
-
-		// Config to specify needed fields
-		BsonDocument project = new BsonDocument{
-				{ "_id", 1 },
-				{ "User", new BsonDocument{
-					{"$arrayElemAt",
-						new BsonArray{ "$Users", 0 }
-					},
-				}},
-				{ "Content", 1},
-				{ "Medias",  new BsonDocument{
-					{"_id" , 1},
-					{"MediaType" , 1},
-					{"Url" , 1}
-				}},
-				{ "CreatedAt", 1 },
-				{ "ModifiedAt", 1 },
-				{ "PublishedAt", 1 },
-				{ "UpvotedBy", 1 },
-				{ "DownvotedBy", 1 },
-				{ "Hashtags", 1},
-				{ "CommentIds", 1},
-			};
-
-		// Config to sort created date decrease
-		BsonDocument sort = new BsonDocument{
-				{ "PublishedAt", -1 },
-				{ "_id", 1 }
-			};
-
-		// Handle full text search if content field is null or empty
-		if (!String.IsNullOrWhiteSpace(pagination.Filter.Content))
-		{
-			// Create full text search filter
-			var searchfilter = new BsonDocument {
-						{ "index", _configuration["DbIndexs:Post"] },
-						{ "text", new BsonDocument {
-							{ "query", pagination.Filter.Content },
-							{ "path", new BsonDocument {
-								{ "wildcard", "*" }
-						}},
-					}}
-				};
-
-			(var _, var postsFromRepoFTS) = await _postRepo.FindManyAsync(
-				indexFilter: searchfilter,
-				filter: postFilter,
-				lookup: lookup,
-				project: project,
-				sort: sort,
-				limit: pagination.Size,
-				skip: skipPage);
-
-			IEnumerable<BsonDocument> stages = new List<BsonDocument>();
-
-			var totalPostFTS = await _postRepo.CountDocumentAsync(
-				filter: searchfilter,
-				stages: stages);
-
-			var postsFTS = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepoFTS);
-
-			return Ok(new PaginationResDto<ListPostDto>((Int32)totalPostFTS, postsFTS));
-		}
-
-		(var totalPost, var postsFromRepo) = await _postRepo.FindManyAsync(
-			filter: postFilter,
-			lookup: lookup,
-			project: project,
-			sort: sort,
-			limit: pagination.Size,
-			skip: skipPage);
+		(var totalPost, var postsFromRepo) = await _postLogic.ViewPost(userId!, pagination);
 
 		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
 
@@ -318,6 +217,12 @@ public class PostsController : ControllerBase
 	{
 		// Create Post Filter
 		var postFilter = Builders<Post>.Filter.Empty;
+
+		// Is Deleted Post Filter
+		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
+
+		// Public Post Filter
+		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
 
 		// Published At Filter
 		postFilter = postFilter & Builders<Post>.Filter.Gte(x => x.PublishedAt, DateTime.Now.AddDays(-7));
@@ -351,6 +256,29 @@ public class PostsController : ControllerBase
 
 
 		return Ok(new HashtagsRecommend(commonHashtag, randomHashtags));
+	}
+
+	[HttpPost("account")]
+	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewUserPost(PaginationReqDto<UserPostFilterDto> pagination)
+	{
+
+		var userId = "";
+
+		// Get User Id
+		try
+		{
+			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+		}
+		catch (Exception)
+		{
+			userId = null;
+		}
+
+		(var totalPost, var postsFromRepo) = await _postLogic.ViewUserPost(userId!, pagination);
+
+		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
+
+		return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
 	}
 
 	[HttpGet("{id}")]
@@ -427,5 +355,46 @@ public class PostsController : ControllerBase
 
 			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
 		}
+	}
+	[HttpPost("save")]
+	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewSavedPost(PaginationReqDto<PostFilterDto> pagination)
+	{
+		var userId = "";
+
+		var skipPage = (pagination.Page - 1) * pagination.Size;
+
+		try
+		{
+			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+		}
+		catch (Exception)
+		{
+			userId = null;
+		}
+
+		// Create Account Filter
+		var accountFilter = Builders<Account>.Filter.Eq(ac => ac.Id, userId);
+
+		var account = await _accountRepo.FindOneAsync(accountFilter);
+
+		var postSavedId = account.SavedPosts;
+
+		if (postSavedId == null)
+		{
+			return BadRequest();
+		}
+
+		var postIds = new List<string>();
+
+		foreach (var item in postSavedId)
+		{
+			postIds.Add(item.ToString());
+		}
+
+		(var totalPost, var postsFromRepo) = await _postLogic.ViewSavedPost(postIds, pagination);
+
+		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
+
+		return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
 	}
 }

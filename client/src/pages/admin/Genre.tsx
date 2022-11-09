@@ -47,7 +47,7 @@ const Genre = () => {
             <TextArea
                 register={register("genres")}
                 error={errors.title}
-                className={"w-[20rem] lg:w-[25rem]"}
+                className={"w-full"}
             />
         ),
         confirmTitle: "Create",
@@ -126,7 +126,7 @@ const Genre = () => {
     //#endregion
 
     return (
-        <PageWrapperWithLeftNav className="bg-[#F0F0F5]">
+        <PageWrapperWithLeftNav className="">
             <div className="px-3 lg:px-0">
                 <div className="flex justify-between pt-6">
                     <div className="text-lg font-bold">Genre</div>
@@ -157,7 +157,11 @@ const Genre = () => {
                     </div>
                 </div>
 
-                {genreState && genreState.status === "idle" ? (
+                {genreState && genreState.status !== "idle" ? (
+                    <div className="flex justify-center items-center w-full h-full">
+                        <Loading />
+                    </div>
+                ) : (
                     <div className="flex flex-row flex-wrap w-full gap-3 mt-5">
                         {genreState.data.map((genre: Genre) => (
                             <span
@@ -197,10 +201,6 @@ const Genre = () => {
                                 </button>
                             </span>
                         ))}
-                    </div>
-                ) : (
-                    <div className="flex justify-center items-center w-full h-full">
-                        <Loading />
                     </div>
                 )}
             </div>

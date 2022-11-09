@@ -1,35 +1,37 @@
-.card{
+.card {
     color: var(--text-primary-color);
     background-color: var(--post-bg-color);
-    border-radius: 8px; 
+    border-radius: 8px;
     border: 0.5px solid var(--post-border-color);
-    box-shadow: 4px 4px 8px var(--element-shadow-color);
+    /* box-shadow: 4px 4px 8px var(--element-shadow-color); */
 }
 
-.hum-card{
+.hum-card {
     color: var(--text-primary-color);
     background-color: var(--post-bg-color);
-    border-radius: 8px; 
+    border-radius: 8px;
     border: 0.5px solid var(--post-border-color);
-    box-shadow: 4px 4px 8px var(--element-shadow-color);
+    /* box-shadow: 4px 4px 8px var(--element-shadow-color); */
 }
 
-.search-card{
+.search-card {
     color: var(--text-primary-color);
     background-color: var(--post-bg-color);
-    border-radius: 8px; 
+    border-radius: 8px;
     border: 0.5px solid var(--post-border-color);
-    box-shadow: 4px 4px 8px var(--element-shadow-color);
+    /* box-shadow: 4px 4px 8px var(--element-shadow-color); */
 }
 
-.circle{
+.circle {
     border-radius: 50%;
     padding: 0.5rem;
     background-color: var(--text-tertiary-color);
     color: var(--body-bg-color);
+    height: 2rem;
+    width: 2rem;
 }
 
-.avatar{
+.avatar {
     background-size: cover;
     background-position: top;
     border-radius: 50%;
@@ -39,7 +41,7 @@
     min-width: 3rem;
 }
 
-.hum-image-post{
+.hum-image-post {
     border-radius: 8px;
     width: 100%;
     height: auto;
@@ -47,13 +49,13 @@
     margin-bottom: 1rem;
 }
 
-.post-icon{
+.post-icon {
     font-size: 20px;
-    color:  var(--teal-lighter-color);
+    color: var(--teal-lighter-color);
     cursor: pointer;
 }
 
-.cancel-circle{
+.cancel-circle {
     border-radius: 50%;
     height: 1.5rem;
     width: 1.5rem;
@@ -62,18 +64,18 @@
 }
 
 @media only screen and (max-width: 1024px) {
-    .card{
-        border-radius: 0px; 
+    .card {
+        border-radius: 0px;
         box-shadow: none;
     }
 
-    .hum-card{
-        border-radius: 0px; 
+    .hum-card {
+        border-radius: 0px;
         border-top: 0;
         box-shadow: none;
     }
 
-    .search-card{
+    .search-card {
         box-shadow: none;
     }
 }

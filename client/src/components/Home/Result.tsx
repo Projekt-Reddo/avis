@@ -42,7 +42,7 @@ const Result: React.FC<ResultProp> = ({ result, title }) => {
     if (result.status === "loading")
         return (
             <div className={`px-3 lg:px-32 2xl:px-52 py-5 lg:pb-0`}>
-                <div className="text-2xl mb-3 text-black font-bold">
+                <div className="text-2xl mb-3 text-[color:var(--text-primary-color)] font-bold">
                     {title ? title : "Top Result"}
                 </div>
                 <div className="px-3 lg:px-32 2xl:px-52 mt-10 h-48 flex justify-center items-center">
@@ -55,17 +55,17 @@ const Result: React.FC<ResultProp> = ({ result, title }) => {
 
     return (
         <div className={`px-3 lg:px-32 2xl:px-52 py-5 lg:pb-0`}>
-            <div className="text-2xl mb-3 text-black font-bold">
+            <div className="text-2xl mb-3 text-[color:var(--text-primary-color)] font-bold">
                 {title ? title : "Top Result"}
             </div>
             {result.data.payload.length <= 0 ? (
-                <div className="h-24">No song founded!</div>
+                <div className="h-24">No song found!</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
                     {result.data.payload.map((song) => (
                         <div
                             key={song.id}
-                            className="flex flex-row rounded-md mb-6 shadow-md col-span-1 cursor-pointer"
+                            className="flex flex-row rounded-md mb-6 bg-[color:var(--element-bg-color)] shadow-md col-span-1 cursor-pointer"
                             onClick={() => {
                                 history.push(`/song/${song.id}`);
                             }}
@@ -79,7 +79,7 @@ const Result: React.FC<ResultProp> = ({ result, title }) => {
                                             : ""
                                     );
                                 }}
-                                className="Container rounded-md min-h-[11rem]  flex justify-center items-center"
+                                className="Container rounded-md min-h-[11rem] flex justify-center items-center"
                                 style={{
                                     backgroundImage: `url(${song.thumbnail})`,
                                     backgroundRepeat: "no-repeat",

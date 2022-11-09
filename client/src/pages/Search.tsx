@@ -2,10 +2,10 @@
 import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // Components
-import PostCard from "components/Discover/PostCard";
+import PostCard from "components/Post/PostCard";
 import TrendingCard from "components/Discover/TrendingCard";
 import SearchBox from "components/Discover/SearchBox";
 import PageWrapper from "components/PageWrapper/PageWrapper";
@@ -28,7 +28,15 @@ interface pageFilterProps {
     };
 }
 
+interface paramProps {
+    content?: string;
+    hashtags?: string[];
+    isTrending?: boolean;
+}
+
 const Search = () => {
+    const location = useLocation<paramProps>();
+
     const dispatch = useAppDispatch();
 
     const postState = useAppSelector((state) => state.post);
@@ -38,7 +46,7 @@ const Search = () => {
     const [pageFilter, setPageFilter] = React.useState<pageFilterProps>({
         currentPage: 1,
         rowShow: 10,
-        filter: {},
+        filter: location.state,
     });
 
     const [fetchMorePage, setFetchMorePage] = React.useState(2);
@@ -50,7 +58,7 @@ const Search = () => {
     } = useForm({
         mode: "onChange",
         defaultValues: {
-            content: "",
+            content: location.state.content,
             hashtags: [],
         },
     });
@@ -89,75 +97,98 @@ const Search = () => {
 
     return (
         <PageWrapper>
-            <div className="flex items-center p-4">
-                <Link
-                    to="/discover"
-                    className="circle flex justify-center items-center mr-4"
-                >
-                    <Icon className="text-lg" icon="arrow-left" />
-                </Link>
-                <SearchBox
-                    register={register("content")}
-                    handleSubmit={handleSubmit(handleSearch)}
-                />
-            </div>
-            {postState.status === "loading" || !postState.data.payload ? (
-                // Loading
-                <div className="flex justify-center items-center mt-8">
-                    <Loading />
-                </div>
-            ) : postState.status === "error" ? (
-                // Error
-                <div className="flex justify-center items-center mt-8 text-lg">
-                    <div>{postState.status}</div>
-                </div>
-            ) : (
-                <InfiniteScroll
-                    dataLength={postState.data.payload.length}
-                    next={fetchData}
-                    hasMore={
-                        postState.data.total - postState.data.payload.length > 0
-                    }
-                    className="page-wrapper"
-                    style={{
-                        margin: "0 -1rem",
-                        padding: "0 1rem",
-                    }}
-                    height={
-                        width! > MOBILE_BREAKPOINT
-                            ? height! - 137
-                            : height! - 138
-                    }
-                    loader={
-                        // Loading
-                        <div className="flex justify-center items-center my-4">
-                            <Loading />
-                        </div>
-                    }
-                    endMessage={
-                        <div className="flex justify-center items-center font-bold my-4">
-                            Post to view more
-                        </div>
-                    }
-                >
-                    <div>
+            <div className="lg:grid lg:grid-cols-3 lg:gap-6">
+                {/* Right */}
+                <div className="flex items-center p-4 lg:block lg:col-span-1 lg:items-start lg:p-0 order-2 lg:mt-4">
+                    <Link
+                        to="/discover"
+                        className="circle flex justify-center items-center mr-4 lg:hidden"
+                    >
+                        <Icon className="text-lg" icon="arrow-left" />
+                    </Link>
+                    <SearchBox
+                        register={register("content")}
+                        handleSubmit={handleSubmit(handleSearch)}
+                    />
+                    <div className="hidden lg:block">
                         <TrendingCard
                             setFetchMorePage={setFetchMorePage}
                             setState={setPageFilter}
                         />
                     </div>
+                </div>
 
-                    {postState.data.payload.length === 0 ? (
-                        <div className="flex justify-center items-center font-bold my-4">
-                            No result
+                {/* Left */}
+                <div className="col-span-2 w-full order-1">
+                    {postState.status === "loading" ||
+                    !postState.data.payload ? (
+                        // Loading
+                        <div className="flex justify-center items-center mt-8">
+                            <Loading />
+                        </div>
+                    ) : postState.status === "error" ? (
+                        // Error
+                        <div className="flex justify-center items-center mt-8 text-lg">
+                            <div>{postState.status}</div>
                         </div>
                     ) : (
-                        postState.data?.payload?.map((post: Post) => (
-                            <PostCard key={post.id} post={post} />
-                        ))
+                        <InfiniteScroll
+                            dataLength={postState.data.payload.length}
+                            next={fetchData}
+                            hasMore={
+                                postState.data.total -
+                                    postState.data.payload.length >
+                                0
+                            }
+                            className="page-wrapper"
+                            style={{
+                                margin: "0 -1rem",
+                                padding: "0 1rem",
+                            }}
+                            height={
+                                width! > MOBILE_BREAKPOINT
+                                    ? height! - 64
+                                    : height! - 138
+                            }
+                            loader={
+                                // Loading
+                                <div className="flex justify-center items-center my-4">
+                                    <Loading />
+                                </div>
+                            }
+                            endMessage={
+                                <div className="flex justify-center items-center font-bold my-4">
+                                    No more results
+                                </div>
+                            }
+                        >
+                            <div className="lg:hidden">
+                                <TrendingCard
+                                    setFetchMorePage={setFetchMorePage}
+                                    setState={setPageFilter}
+                                />
+                            </div>
+
+                            {postState.data.payload.length === 0 ? (
+                                <div className="flex justify-center items-center font-bold my-4">
+                                    No result
+                                </div>
+                            ) : (
+                                <div className="lg:pt-4">
+                                    {postState.data?.payload?.map(
+                                        (post: Post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                post={post}
+                                            />
+                                        )
+                                    )}
+                                </div>
+                            )}
+                        </InfiniteScroll>
                     )}
-                </InfiniteScroll>
-            )}
+                </div>
+            </div>
         </PageWrapper>
     );
 };

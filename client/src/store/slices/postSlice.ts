@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createPostApi, postDetailApi, viewPostApi } from "api/post-api";
+import { createPostApi, postDetailApi, viewPostApi, viewSavedPostApi, viewUserPostApi } from "api/post-api";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
@@ -23,10 +23,26 @@ const postSlice = createSlice({
             ...state,
             data: action.payload,
         }),
+        viewUserPost: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
+        viewMoreUserPost: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
         createPost: (state, action) => ({
             ...state,
             data: action.payload,
         }),
+        viewSavedPost: (state,action) =>({
+            ...state,
+            data: action.payload
+        }),
+        viewMoreSavedPost: (state,action) =>({
+            ...state,
+            data: action.payload
+        })
     },
     extraReducers: (builder) => {
         builder
@@ -45,6 +61,37 @@ const postSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(viewMorePostAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = {
+                    total: action.payload.total,
+                    payload: [...state.data.payload, ...action.payload.payload],
+                };
+            })
+            .addCase(viewUserPostAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(viewUserPostAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+            })
+            .addCase(viewMoreUserPostAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = {
+                    total: action.payload.total,
+                    payload: [...state.data.payload, ...action.payload.payload],
+                };
+            })
+            .addCase(viewSavedPostAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(viewSavedPostAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = {
+                    total: action.payload.total,
+                    payload: [...state.data.payload, ...action.payload.payload],
+                };
+            })
+            .addCase(viewMoreSavedPostAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = {
                     total: action.payload.total,
@@ -108,5 +155,35 @@ export const postDetailAsync = createAsyncThunk(
     }
 );
 
-export const { viewPost, viewMorePost } = postSlice.actions;
+export const viewUserPostAsync = createAsyncThunk(
+    "post/viewUserPost",
+    async (postFilter: UserPostFilter) => {
+        return await viewUserPostApi(postFilter);
+    }
+);
+
+export const viewMoreUserPostAsync = createAsyncThunk(
+    "post/viewMoreUserPost",
+    async (postFilter: UserPostFilter) => {
+        return await viewUserPostApi(postFilter);
+    }
+);
+
+export const viewSavedPostAsync = createAsyncThunk(
+    "post/save",
+    async (postFilter: PostFilter) => {
+        return await viewSavedPostApi(postFilter);
+    }
+);
+
+export const viewMoreSavedPostAsync = createAsyncThunk(
+    "post/saveMore",
+    async (postFilter: PostFilter) => {
+        return await viewSavedPostApi(postFilter);
+    }
+);
+
 export default postSlice.reducer;
+
+export const { viewPost, viewMorePost, viewUserPost, viewMoreUserPost } = postSlice.actions;
+
