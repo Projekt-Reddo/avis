@@ -75,4 +75,9 @@ namespace MainService.Dtos
 
 		public bool? IsPost { get; set; }
 	}
+
+	public class UserNotifyFilterDto
+	{
+
+	}
 }
