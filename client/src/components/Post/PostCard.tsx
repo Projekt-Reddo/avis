@@ -19,9 +19,14 @@ import SavePost from "./SavePost";
 interface PostCardProps {
     post: Post;
     isDetailPage?: boolean;
+    style?: string;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
+const PostCard: React.FC<PostCardProps> = ({
+    post,
+    isDetailPage = false,
+    style = "",
+}) => {
     const history = useHistory();
 
     const handleViewDetail = () => {
@@ -65,7 +70,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isDetailPage = false }) => {
             <div
                 className={`hum-card drop-shadow-md grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4 lg:mb-4 border-t-0 ${
                     isDetailPage ? "" : "cursor-pointer"
-                }`}
+                } ${style}`}
                 onClick={handleViewDetail}
             >
                 <div className="col-span-1">
