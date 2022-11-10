@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createPostApi, postDetailApi, viewPostApi, viewSavedPostApi, viewUserPostApi } from "api/post-api";
+import {
+    createPostApi,
+    postDetailApi,
+    viewPostApi,
+    viewSavedPostApi,
+    viewUserPostApi,
+} from "api/post-api";
 import { addToast } from "./toastSlice";
 
 const initialState: AsyncReducerInitialState = {
@@ -35,14 +41,18 @@ const postSlice = createSlice({
             ...state,
             data: action.payload,
         }),
-        viewSavedPost: (state,action) =>({
+        viewSavedPost: (state, action) => ({
             ...state,
-            data: action.payload
+            data: action.payload,
         }),
-        viewMoreSavedPost: (state,action) =>({
+        viewMoreSavedPost: (state, action) => ({
             ...state,
-            data: action.payload
-        })
+            data: action.payload,
+        }),
+        deletePost: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -104,6 +114,10 @@ const postSlice = createSlice({
             .addCase(postDetailAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(postDetailAsync.rejected, (state, action) => {
+                state.status = "error";
+                state.error = action.payload;
             });
     },
 });
@@ -150,7 +164,7 @@ export const postDetailAsync = createAsyncThunk(
             const res = await postDetailApi(id);
             return res;
         } catch (e: any) {
-            return rejectWithValue(e.response.data.message);
+            return rejectWithValue(e.response.data);
         }
     }
 );
@@ -185,5 +199,10 @@ export const viewMoreSavedPostAsync = createAsyncThunk(
 
 export default postSlice.reducer;
 
-export const { viewPost, viewMorePost, viewUserPost, viewMoreUserPost } = postSlice.actions;
-
+export const {
+    viewPost,
+    viewMorePost,
+    viewUserPost,
+    viewMoreUserPost,
+    deletePost,
+} = postSlice.actions;

@@ -18,10 +18,6 @@ const Detail = () => {
     const { id } = useParams<RouteParams>();
     const dispatch = useAppDispatch();
     const reportState = useAppSelector((state) => state.report);
-    console.log(
-        "🚀 ~ file: Detail.tsx ~ line 20 ~ Detail ~ reportState",
-        reportState
-    );
 
     useEffect(() => {
         if (id) {
