@@ -17,7 +17,6 @@ const Post = () => {
     const { postId } = useParams<CommentParams>();
     const dispatch = useAppDispatch();
     const postState = useAppSelector((state) => state.post);
-    console.log("🚀 ~ file: Post.tsx ~ line 20 ~ Post ~ postState", postState);
 
     useEffect(() => {
         if (postId) {
