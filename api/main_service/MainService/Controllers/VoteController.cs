@@ -60,7 +60,7 @@ public class VoteController : ControllerBase
                 return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
             }
 
-            var count = await _postLogic.PostVoteCount(voteDto.VoteId);
+            var count = await _commentLogic.CommentVoteCount(voteDto.VoteId);
 
             return Ok(count);
         }
