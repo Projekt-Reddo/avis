@@ -58,19 +58,9 @@ export const leftNavModerator: LeftNavItemData[] = [
         title: "Dashboard",
     },
     {
-        icon: "music",
-        path: "/moderator/song",
-        title: "Song",
-    },
-    {
-        icon: "microphone",
-        path: "/moderator/artist",
-        title: "Artist",
-    },
-    {
-        icon: "guitar",
-        path: "/moderator/genre",
-        title: "Genre",
+        icon: "user",
+        path: "/moderator/user",
+        title: "User",
     },
     {
         icon: "flag",
