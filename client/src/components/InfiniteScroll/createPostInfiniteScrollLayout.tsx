@@ -71,8 +71,7 @@ export default function createPostInfiniteScrollLayout({
                     id="scrollableDiv"
                 >
                     <LeftComponent loading={dataState.status === "loading"} />
-                    {dataState.status === "loading" ||
-                    !dataState.data.payload ? (
+                    {dataState.status === "loading" || !dataState.data ? (
                         // Loading
                         <div className="flex justify-center items-center mt-8">
                             <Loading />

@@ -12,7 +12,7 @@ import { DAY_FORMAT } from "utils/constants";
 
 // Styles
 import "theme/Discover.css";
-import PostReport from "components/Post/PostOptions";
+import PostOptions from "components/Post/PostOptions";
 import Vote from "./Vote";
 import SavePost from "./SavePost";
 
@@ -112,7 +112,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             </div>
                         </div>
 
-                        <PostReport id={post.id} />
+                        <PostOptions post={post} />
                     </div>
 
                     {/* Content */}

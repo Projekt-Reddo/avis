@@ -15,7 +15,7 @@ export const recommednHashtagsApi = async () => {
 export const createPostApi = async (data: PostCreate) => {
     const formData = new FormData();
     formData.append("Content", data.content ?? "");
-    for(let item of data.medias!){
+    for (let item of data.medias!) {
         formData.append("Medias", item);
     }
     for (let item of data.hashtags) {
@@ -37,7 +37,7 @@ export const postDetailApi = async (id: string) => {
 export const savePost = async (id: string) => {
     const res = await axios.put(`${apiRoute}/save/${id}`);
     return res.data;
-}
+};
 
 export const viewUserPostApi = async (data: UserPostFilter) => {
     const res = await axios.post(apiRoute + "/account", data);
@@ -46,5 +46,10 @@ export const viewUserPostApi = async (data: UserPostFilter) => {
 
 export const viewSavedPostApi = async (data: PostFilter) => {
     const res = await axios.post(apiRoute + "/save", data);
+    return res.data;
+};
+
+export const deletePost = async (id: string) => {
+    const res = await axios.delete(`${apiRoute}/${id}`);
     return res.data;
 };

@@ -89,4 +89,10 @@ public static class Constants
 		public const string REPORT_DENIED = "Report Denied";
 		public const string POST_DELETED = "Post Accepted Delete";
 	}
+
+	public enum ResourceType
+	{
+		Post,
+		Comment,
+	}
 }
