@@ -18,6 +18,7 @@ import Feedback from "pages/Feedback";
 import AuthRoute from "./AuthRoute";
 import Search from "pages/Search";
 import Profile from "pages/user/Profile";
+import ModeratorRoutes from "./moderator-routes";
 
 const MainRoute = () => {
     return (
@@ -65,10 +66,6 @@ const MainRoute = () => {
                     <Feedback />
                 </Route>
 
-                <Route path="/admin">
-                    <AdminRoutes />
-                </Route>
-
                 <Route exact path="/">
                     <Home />
                 </Route>
@@ -79,6 +76,14 @@ const MainRoute = () => {
 
                 <Route path="/user">
                     <UserRoutes />
+                </Route>
+
+                <Route path="/moderator">
+                    <ModeratorRoutes />
+                </Route>
+
+                <Route path="/admin">
+                    <AdminRoutes />
                 </Route>
 
                 <Route
