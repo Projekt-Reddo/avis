@@ -18,6 +18,7 @@ import { addNewToast } from "components/Toast";
 // Style
 import "theme/Discover.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { Theme } from "emoji-picker-react";
 
 interface PostCreateProps {
     loading: boolean;
@@ -51,6 +52,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
     const dispatch = useAppDispatch();
 
     const authState = useAppSelector((state) => state.auth.data);
+    const theme = useAppSelector((state) => state.theme);
 
     const inputRef = React.useRef<any>(null);
     const [content, setContent] = React.useState<string>("");
@@ -487,6 +489,12 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                                 skinTonesDisabled
                                                 width={320}
                                                 height={400}
+                                                theme={
+                                                    theme.status === "idle" &&
+                                                    theme.data.value === "dark"
+                                                        ? Theme.DARK
+                                                        : Theme.LIGHT
+                                                }
                                             />
                                         </div>
                                     </div>
@@ -570,10 +578,14 @@ const customStyles = {
         width: 105,
         height: 30,
         minHeight: 30,
+        color: "var(--text-primary-color) !important",
+        backgroundColor: "var(--element-bg-color)",
     }),
     menu: (base: any) => ({
         ...base,
         width: 278,
+        color: "var(--text-primary-color)",
+        backgroundColor: "var(--element-bg-color)",
     }),
     valueContainer: (base: any) => ({
         ...base,

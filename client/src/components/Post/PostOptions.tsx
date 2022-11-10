@@ -1,21 +1,26 @@
+import Modal from "components/Modal/Modal";
 import ModalForm from "components/Modal/ModalForm";
 import { useModal } from "components/Modal/useModal";
 import Icon from "components/shared/Icon";
 import { FunctionComponent, useRef, useState } from "react";
+import { useAppSelector } from "utils/react-redux-hooks";
 import { useOutsideClick } from "utils/useOutsideClick";
 import ReportForm from "../Report/ReportForm";
+import PostDeleteButton from "./PostDeleteButton";
 
 interface PostOptionsProps {
-    id: string;
+    post: Post;
 }
 
-const PostOptions: FunctionComponent<PostOptionsProps> = ({ id }) => {
+const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
     const [showOptions, setShowOptions] = useState<string>("");
     const { open: openReport, setOpen: setOpenReport } = useModal();
 
+    const authState = useAppSelector((state) => state.auth);
+
     const wrapperRef = useRef(null);
     useOutsideClick(wrapperRef, () => {
-        setShowOptions("");
+        // setShowOptions("");
     });
 
     return (
@@ -23,7 +28,9 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ id }) => {
             <div
                 onClick={(event: React.MouseEvent<HTMLElement>) => {
                     event.stopPropagation();
-                    setShowOptions(id);
+                    if (showOptions === "") {
+                        setShowOptions(post.id);
+                    } else setShowOptions("");
                 }}
             >
                 <Icon
@@ -32,21 +39,26 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ id }) => {
                 />
             </div>
 
-            {showOptions && showOptions !== "" && (
+            {showOptions && showOptions !== "" && authState.status === "idle" && (
                 <div
                     ref={wrapperRef}
-                    className="search-card flex flex-col py-1 font-bold drop-shadow-md top-0 right-0 absolute z-50 bg-[color:var(--element-bg-color)] border-[0.5px] border-[color:var(--border-color)]"
+                    className="search-card flex flex-col py-1 font-bold drop-shadow-md top-8 right-0 absolute z-50 bg-[color:var(--element-bg-color)] border-[0.5px] border-[color:var(--border-color)]"
+                    onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        event.stopPropagation();
+                    }}
                 >
                     <button
-                        onClick={(event: React.MouseEvent<HTMLElement>) => {
-                            event.stopPropagation();
+                        onClick={() => {
                             setOpenReport(true);
                         }}
-                        className="px-8 py-3 hover:bg-[color:var(--element-bg-color-elevate-1)] "
+                        className="px-8 py-2 hover:bg-[color:var(--element-bg-color-elevate-1)] flex justify-between items-center"
                     >
                         <Icon icon="flag" className="mr-4" />
-                        Report Post
+                        Report
                     </button>
+                    {authState.data.uid === post.user.id && (
+                        <PostDeleteButton post={post} />
+                    )}
                 </div>
             )}
 
@@ -55,7 +67,11 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ id }) => {
                 setOpen={setOpenReport}
                 title="Report"
                 modalBody={
-                    <ReportForm id={id} isPost setOpenReport={setOpenReport} />
+                    <ReportForm
+                        id={post.id}
+                        isPost
+                        setOpenReport={setOpenReport}
+                    />
                 }
                 hasFooter={false}
             />

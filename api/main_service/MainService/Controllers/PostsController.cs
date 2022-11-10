@@ -2,6 +2,7 @@ using AutoMapper;
 using Hangfire;
 using MainService.Data;
 using MainService.Dtos;
+using MainService.Filters;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Services;
@@ -313,11 +314,20 @@ public class PostsController : ControllerBase
 		return Ok(new ResponseDto(200, ResponseMessage.POST_UPDATE_STATUS_SUCCESS));
 	}
 
-	// [HttpDelete("{id}")]
-	// public async Task<ActionResult<ResponseDto>> DeletePost()
-	// {
-	//     return Ok();
-	// }
+	[Authorize]
+	[HttpDelete("{id}")]
+	[AuthorizeResource(ResourceType = ResourceType.Post, IdField = "id")]
+	public async Task<ActionResult<ResponseDto>> DeletePost(string id)
+	{
+		var rs = await _postLogic.DeletePost(id);
+
+		if (rs is false)
+		{
+			return BadRequest(new ResponseDto(400));
+		}
+
+		return Ok(new ResponseDto(200));
+	}
 
 	// [HttpPut("")]
 	// public async Task<ActionResult<ResponseDto>> UpdatePost()
@@ -325,6 +335,7 @@ public class PostsController : ControllerBase
 	//     return Ok();
 	// }
 
+	[Authorize]
 	[HttpPut("vote/{id}")]
 	public async Task<ActionResult<ResponseDto>> UpDownVotePost(VoteDto voteDto)
 	{
@@ -356,6 +367,7 @@ public class PostsController : ControllerBase
 			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
 		}
 	}
+
 	[HttpPost("save")]
 	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewSavedPost(PaginationReqDto<PostFilterDto> pagination)
 	{
@@ -381,7 +393,7 @@ public class PostsController : ControllerBase
 
 		if (postSavedId == null)
 		{
-			return BadRequest();
+			return Ok(new PaginationResDto<ListPostDto>((Int32)0, new List<ListPostDto>()));
 		}
 
 		var postIds = new List<string>();
@@ -396,5 +408,20 @@ public class PostsController : ControllerBase
 		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
 
 		return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
+	}
+
+	[HttpPut("save/{id}")]
+	public async Task<ActionResult<ResponseDto>> SavePost(string id)
+	{
+		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+		var rs = await _postLogic.SavePost(id, userId);
+
+		if (rs == 0)
+		{
+			return BadRequest(new ResponseDto(200, ResponseMessage.POST_SAVE_FAIL));
+		}
+
+		return Ok(new ResponseDto(200, ResponseMessage.POST_SAVE_SUCCESS));
 	}
 }

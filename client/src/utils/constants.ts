@@ -6,11 +6,13 @@ export const routes = [
     "/discover",
     "/song",
     "/verify",
-    "/admin",
     "/feedback",
     "/notification",
-    "/user",
     "/profile",
+    // Role routes
+    "/user",
+    "/moderator",
+    "/admin",
 ];
 
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
@@ -28,6 +30,11 @@ export const leftNavAdmin: LeftNavItemData[] = [
         title: "User",
     },
     {
+        icon: "flag",
+        path: "/admin/report",
+        title: "Report",
+    },
+    {
         icon: "music",
         path: "/admin/song",
         title: "Song",
@@ -42,9 +49,22 @@ export const leftNavAdmin: LeftNavItemData[] = [
         path: "/admin/genre",
         title: "Genre",
     },
+];
+
+export const leftNavModerator: LeftNavItemData[] = [
+    {
+        icon: "home",
+        path: "/moderator/dashboard",
+        title: "Dashboard",
+    },
+    {
+        icon: "user",
+        path: "/moderator/user",
+        title: "User",
+    },
     {
         icon: "flag",
-        path: "/admin/report",
+        path: "/moderator/report",
         title: "Report",
     },
 ];
