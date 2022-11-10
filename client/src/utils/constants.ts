@@ -30,6 +30,11 @@ export const leftNavAdmin: LeftNavItemData[] = [
         title: "User",
     },
     {
+        icon: "flag",
+        path: "/admin/report",
+        title: "Report",
+    },
+    {
         icon: "music",
         path: "/admin/song",
         title: "Song",
@@ -43,11 +48,6 @@ export const leftNavAdmin: LeftNavItemData[] = [
         icon: "guitar",
         path: "/admin/genre",
         title: "Genre",
-    },
-    {
-        icon: "flag",
-        path: "/admin/report",
-        title: "Report",
     },
 ];
 
