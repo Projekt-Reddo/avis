@@ -381,7 +381,7 @@ public class PostsController : ControllerBase
 
 		if (postSavedId == null)
 		{
-			return BadRequest();
+			return Ok(new PaginationResDto<ListPostDto>((Int32)0, new List<ListPostDto>()));
 		}
 
 		var postIds = new List<string>();
@@ -396,5 +396,19 @@ public class PostsController : ControllerBase
 		var posts = _mapper.Map<IEnumerable<ListPostDto>>(postsFromRepo);
 
 		return Ok(new PaginationResDto<ListPostDto>((Int32)totalPost, posts));
+	}
+	[HttpPut("save/{id}")]
+	public async Task<ActionResult<ResponseDto>> SavePost(string id)
+	{
+		var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+		var rs = await _postLogic.SavePost(id,userId);
+
+		if (rs == 0)
+		{
+			return BadRequest(new ResponseDto(200, ResponseMessage.POST_SAVE_FAIL));
+		}
+
+		return Ok(new ResponseDto(200, ResponseMessage.POST_SAVE_SUCCESS));
 	}
 }
