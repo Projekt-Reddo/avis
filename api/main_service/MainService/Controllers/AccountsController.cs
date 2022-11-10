@@ -187,5 +187,26 @@ namespace MainService.Controllers
 				Message = message
 			});
 		}
+		[Authorize(Roles = AccountRoles.ADMIN)]
+		[HttpPut("mute")]
+		public async Task<ActionResult<ResponseDto>> Mute([FromBody] AccountsMuteDto accountsMuteDto)
+		{
+			(bool status, string message) = await _accountLogic.MuteMany(accountsMuteDto);
+
+			if (status is true)
+			{
+				return Ok(new ResponseDto
+				{
+					Status = 200,
+					Message = message
+				});
+			}
+
+			return BadRequest(new ResponseDto
+			{
+				Status = 400,
+				Message = message
+			});
+		}
 	}
 }

@@ -85,6 +85,8 @@ public static class ResponseMessage
 	public const string ACCOUNT_UNBANNED = "Accounts unbanned!";
 	public const string ACCOUNT_STATUS_UPDATE_SUCCESS = "Accounts status updated!";
 	public const string ACCOUNT_UNAUTHENTICATED = "Account unauthenticated!";
+	public const string ACCOUNT_STATUS_MUTE_SUCCESS = "Accounts Muted successfully!";
+	public const string ACCOUNT_STATUS_MUTE_INVALID = "Invalid Input!";
 
 	// Notification status msg
 	public const string NOTIFY_RECEIVER_NOT_FOUND = "Cannot find the receiver";
