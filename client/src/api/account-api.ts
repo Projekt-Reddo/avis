@@ -51,3 +51,8 @@ export const banManyApi = async (data: UserUidList) => {
     const res = await axios.put(apiRoute + "/ban", data);
     return res.data;
 };
+
+export const muteManyApi = async (data: MuteUids) => {
+    const res = await axios.put(apiRoute + "/mute", data);
+    return res.data;
+};

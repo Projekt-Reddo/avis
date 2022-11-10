@@ -1,4 +1,5 @@
 using AutoMapper;
+using Hangfire;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
@@ -35,6 +36,8 @@ namespace MainService.Logic
 		Task<(bool status, string message)> PromoteMany(AccountUidList accountPromoteList);
 		Task<(bool status, string message, Account? data)> Ban(string uid);
 		Task<(bool status, string message)> BanMany(AccountUidList accountPromoteList);
+		Task<(bool status, string message)> MuteMany(AccountsMuteDto accountsMuteDto);
+		Task<bool> UnMute(string uid, string type);
 	}
 	public class AccountLogic : IAccountLogic
 	{
@@ -46,6 +49,7 @@ namespace MainService.Logic
 		private readonly IMapper _mapper;
 		private readonly IFileStorageService _fileStorage;
 		private readonly ILogger<SongLogic> _logger;
+		private readonly IBackgroundJobClient _backgroundJobClient;
 
 		public AccountLogic(
 			IS3Service s3Service,
@@ -55,7 +59,8 @@ namespace MainService.Logic
 			IReportRepo reportRepo,
 			IMapper mapper,
 			IFileStorageService fileStorage,
-			ILogger<SongLogic> logger
+			ILogger<SongLogic> logger,
+			IBackgroundJobClient backgroundJobClient
 		)
 		{
 			_s3Service = s3Service;
@@ -66,6 +71,7 @@ namespace MainService.Logic
 			_mapper = mapper;
 			_fileStorage = fileStorage;
 			_logger = logger;
+			_backgroundJobClient = backgroundJobClient;
 		}
 
 		public FilterDefinition<Account> AccountFilter(PaginationReqDto<AccountFilterDto> pagination, string role)
@@ -408,6 +414,128 @@ namespace MainService.Logic
 				return (true, $"Error occured with those Uids: {String.Join(", ", failedAccountUids)}");
 
 			return (true, ResponseMessage.ACCOUNT_STATUS_UPDATE_SUCCESS);
+		}
+
+		public async Task<bool> Mute(string uid, int MutePostDays, int MuteCommentDays)
+		{
+			var filterUid = Builders<Account>.Filter.Eq(x => x.Uid, uid);
+
+			// To check whether account exist or not.
+			var accountFromRepo = await _accountRepo.FindOneAsync(
+				filterUid &
+				Builders<Account>.Filter.Not(Builders<Account>.Filter.Eq(x => x.Role, AccountRoles.ADMIN))
+			);
+
+			if (accountFromRepo is null)
+			{
+				return (false);
+			}
+
+			var accountStatus = GetAccountStatus(accountFromRepo);
+
+			// Mute
+			if (MutePostDays != 0)
+			{
+				accountStatus.PostMutedUntil = DateTime.Now.AddDays(MutePostDays);
+			} else {
+				accountStatus.PostMutedUntil = (DateTime?)null;
+			}
+			if (MuteCommentDays != 0)
+			{
+				accountStatus.CommentMutedUntil = DateTime.Now.AddDays(MuteCommentDays);
+			}else {
+				accountStatus.CommentMutedUntil = (DateTime?)null;
+			}
+
+
+			// Update db
+			var update = Builders<Account>.Update.Set(x => x.Status, accountStatus);
+
+			var rs = await _accountRepo.UpdateOneAsync(filterUid, update);
+
+			accountFromRepo.Status = accountStatus;
+
+			// Set Firebase claim
+			await SetClaimWhenUpdateProfile(accountFromRepo);
+
+			if (MutePostDays != 0)
+			{
+				_backgroundJobClient.Schedule(() =>
+							UnMute(uid, "post"),
+							DateTimeOffset.Now.AddDays(MutePostDays));
+			}
+
+			if (MuteCommentDays != 0)
+			{
+				_backgroundJobClient.Schedule(() =>
+							UnMute(uid, "comment"),
+							DateTimeOffset.Now.AddDays(MuteCommentDays));
+			}
+
+			return (true);
+		}
+		public async Task<(bool status, string message)> MuteMany(AccountsMuteDto accountsMuteDto)
+		{
+			if (accountsMuteDto.MuteCommentDays < 0 || accountsMuteDto.MutePostDays < 0)
+			{
+				return (false, ResponseMessage.ACCOUNT_STATUS_MUTE_INVALID);
+			}
+
+			ICollection<string> failedAccountUids = new List<string>();
+			foreach (string uid in accountsMuteDto.Uids)
+			{
+				bool status = await Mute(uid, accountsMuteDto.MutePostDays, accountsMuteDto.MuteCommentDays);
+
+				if (status is false)
+				{
+					failedAccountUids.Add(uid);
+				}
+			}
+
+			if (failedAccountUids.Count == accountsMuteDto.Uids.Count())
+			{
+				return (false, "Could not update any account!");
+			}
+
+			if (failedAccountUids.Any())
+				return (true, $"Error occured with those Uids: {String.Join(", ", failedAccountUids)}");
+
+
+			return (true, ResponseMessage.ACCOUNT_STATUS_MUTE_SUCCESS);
+		}
+		public async Task<bool> UnMute(string uid, string type)
+		{
+			var filterUid = Builders<Account>.Filter.Eq(x => x.Uid, uid);
+
+			// To check whether account exist or not.
+			var accountFromRepo = await _accountRepo.FindOneAsync(
+				filterUid &
+				Builders<Account>.Filter.Not(Builders<Account>.Filter.Eq(x => x.Role, AccountRoles.ADMIN))
+			);
+
+			var accountStatus = GetAccountStatus(accountFromRepo);
+
+			if (type == "post" && accountStatus.PostMutedUntil != null)
+			{
+				accountStatus.PostMutedUntil = (DateTime?)null;
+			}
+
+			if (type == "comment" && accountStatus.CommentMutedUntil != null)
+			{
+				accountStatus.CommentMutedUntil = (DateTime?)null;
+			}
+
+			// Update db
+			var update = Builders<Account>.Update.Set(x => x.Status, accountStatus);
+
+			var rs = await _accountRepo.UpdateOneAsync(filterUid, update);
+
+			accountFromRepo.Status = accountStatus;
+
+			// Set Firebase claim
+			await SetClaimWhenUpdateProfile(accountFromRepo);
+
+			return true;
 		}
 
 		private AccountStatus GetAccountStatus(Account accountFromRepo)
