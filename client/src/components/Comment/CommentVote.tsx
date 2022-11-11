@@ -61,8 +61,8 @@ const CommentVote: React.FC<CommentVoteProps> = ({ comment }) => {
                 <Icon
                     className={
                         upvotedBy.includes(authState?.uid)
-                            ? "cursor-pointer hover:text-[color:var(--teal-general-color)] mt-1"
-                            : "cursor-pointer hover:text-[color:var(--teal-general-color)] mt-1"
+                        ? "text-5xl cursor-pointer text-[color:var(--teal-lighter-color)]"
+                        : "text-5xl cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
                             }
                         size="xl"
                         icon="caret-up"
@@ -74,8 +74,8 @@ const CommentVote: React.FC<CommentVoteProps> = ({ comment }) => {
                             <Icon
                                 className={
                                     downvotedBy.includes(authState?.uid)
-                                        ? "cursor-pointer hover:text-[color:var(--teal-general-color)] mb-1"
-                                        : "cursor-pointer hover:text-[color:var(--teal-general-color)] mb-1"
+                                    ? "text-5xl cursor-pointer text-[color:var(--teal-lighter-color)]"
+                                    : "text-5xl cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
                                 }
                                 size="xl"
                                 icon="caret-down"
