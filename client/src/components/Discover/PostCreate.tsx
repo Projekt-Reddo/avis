@@ -19,6 +19,8 @@ import { addNewToast } from "components/Toast";
 import "theme/Discover.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { Theme } from "emoji-picker-react";
+import moment from "moment";
+import { DAY_FORMAT } from "utils/constants";
 
 interface PostCreateProps {
     loading: boolean;
@@ -266,6 +268,21 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
 
     if (!authState) {
         return <></>;
+    }
+
+    if (authState && authState.status && authState.status.PostMutedUntil) {
+        return (
+            <div
+                className="flex gap-3 m-4 lg:mx-0 p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800 items-center"
+                role="alert"
+            >
+                <Icon icon="triangle-exclamation" size="lg" />
+                <div>
+                    Your account is muted until{" "}
+                    {moment(authState.status.PostMutedUntil).format(DAY_FORMAT)}
+                </div>
+            </div>
+        );
     }
 
     const HASHTAG_FORMATTER = (string: string) => {
