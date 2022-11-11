@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import {
     confirmReportsApi,
     createReportApi,
     getReportApi,
+    getReportDetailApi,
 } from "api/report-api";
 import { addToast } from "./toastSlice";
 
@@ -49,6 +50,17 @@ const reportSlice = createSlice({
                 state.status = "idle";
                 state.data = action.payload;
                 state.tableData = action.payload.payload;
+            })
+            .addCase(getDetailAsync.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(getDetailAsync.fulfilled, (state, action) => {
+                state.status = "idle";
+                state.data = action.payload;
+            })
+            .addCase(getDetailAsync.rejected, (state, action) => {
+                state.status = "idle";
+                state.error = action.payload;
             });
     },
 });
@@ -126,6 +138,18 @@ export const confirmAsync = createAsyncThunk(
                             : null,
                 },
             });
+        }
+    }
+);
+
+export const getDetailAsync = createAsyncThunk(
+    "report/detail",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const res = await getReportDetailApi(id);
+            return res;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data);
         }
     }
 );

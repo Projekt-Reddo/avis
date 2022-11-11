@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { postDetailAsync } from "store/slices/postSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import NotFound from "components/shared/NotFound";
 
 interface CommentParams {
     postId: string;
@@ -37,9 +38,16 @@ const Post = () => {
             <div className="lg:grid lg:grid-cols-3 lg:gap-6 lg:mt-4">
                 {/* Left */}
                 <div className="w-full lg:col-span-2">
-                    {postState.status !== "idle" || !postState.data.id ? (
+                    {postState.status === "loading" ||
+                    postState.status === "init" ? (
                         <div className="w-full grid place-items-center">
                             <Loading />
+                        </div>
+                    ) : postState.status === "error" ||
+                      (postState.status === "idle" && !postState.data) ||
+                      Object.hasOwn(postState.data, "payload") ? (
+                        <div className="w-full grid place-items-center">
+                            <NotFound />
                         </div>
                     ) : (
                         <>

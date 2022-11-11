@@ -17,53 +17,55 @@ namespace MainService.Controllers;
 [Route("api/[controller]")]
 public class VoteController : ControllerBase
 {
-    private readonly IMapper _mapper;
-    private readonly IPostLogic _postLogic;
-    private readonly ICommentLogic _commentLogic;
+	private readonly IMapper _mapper;
+	private readonly IPostLogic _postLogic;
+	private readonly ICommentLogic _commentLogic;
 	public VoteController
 	(
-        IMapper mapper,
-        IPostLogic postLogic,
-        ICommentLogic commentLogic )
-    {
+		IMapper mapper,
+		IPostLogic postLogic,
+		ICommentLogic commentLogic)
+	{
 		_mapper = mapper;
 		_postLogic = postLogic;
 		_commentLogic = commentLogic;
 	}
 
-    [HttpPut]
-    public async Task<ActionResult<VoteResponeDto>> Vote(VoteDto voteDto)
-    {
-        if (voteDto.isVotePost)
-        {
-            var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+	[Authorize]
+	[HttpPut]
+	public async Task<ActionResult<VoteResponeDto>> Vote(VoteDto voteDto)
+	{
+		if (voteDto.isVotePost)
+		{
+			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
 
-            var rs = await _postLogic.VotePost(userId, voteDto.VoteId, voteDto.isUpvote);
+			var rs = await _postLogic.VotePost(userId, voteDto.VoteId, voteDto.isUpvote);
 
-            if (!rs)
-            {
-                return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
-            }
+			if (!rs)
+			{
+				return BadRequest(new ResponseDto(404, ResponseMessage.POST_VOTE_FAIL));
+			}
 
 			var count = await _postLogic.PostVoteCount(voteDto.VoteId);
 
 			return Ok(count);
 
-        } else
-        {
-            var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+		}
+		else
+		{
+			var userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
 
-            var rs = await _commentLogic.VoteComment(userId, voteDto.VoteId, voteDto.isUpvote);
+			var rs = await _commentLogic.VoteComment(userId, voteDto.VoteId, voteDto.isUpvote);
 
-            if (!rs)
-            {
-                return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
-            }
+			if (!rs)
+			{
+				return BadRequest(new ResponseDto(404, ResponseMessage.COMMENT_VOTE_FAIL));
+			}
 
             var count = await _commentLogic.CommentVoteCount(voteDto.VoteId);
 
-            return Ok(count);
-        }
-    }
+			return Ok(count);
+		}
+	}
 
 }

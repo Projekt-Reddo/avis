@@ -13,6 +13,7 @@ import { useOutsideClick } from "utils/useOutsideClick";
 import FileDropzone from "components/shared/FileDropzone";
 import MediaDisplay from "./MediaDisplay";
 import { createCommentAsync } from "store/slices/commentSlice";
+import { Theme } from "emoji-picker-react";
 
 interface CommentCreateProps {
     parentId: string;
@@ -24,6 +25,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
     isPostChild,
 }) => {
     const auth = useAppSelector((state) => state.auth);
+    const theme = useAppSelector((state) => state.theme);
 
     const [remainLetter, setRemainLetter] = useState(COMMENT_LENGTH);
 
@@ -155,6 +157,12 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                                                 skinTonesDisabled
                                                 width={320}
                                                 height={400}
+                                                theme={
+                                                    theme.status === "idle" &&
+                                                    theme.data.value === "dark"
+                                                        ? Theme.DARK
+                                                        : Theme.LIGHT
+                                                }
                                             />
                                         </div>
                                     </div>

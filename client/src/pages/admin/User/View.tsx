@@ -17,6 +17,7 @@ import { sortListApi } from "api/account-api";
 import UserPromoteButton from "components/Admin/User/UserPromoteButton";
 import UserBanButton from "components/Admin/User/UserBanButton";
 import Loading from "components/shared/Loading";
+import UserMuteButton from "components/Admin/User/UserMuteButton";
 
 const View = () => {
     const dispatch = useAppDispatch();
@@ -171,6 +172,12 @@ const View = () => {
                                     setPageRowFilter={setPageRowFilter}
                                 />
                                 <UserBanButton
+                                    selectedUser={userState.tableData.filter(
+                                        (user: UserDisplay) => user.isSelected
+                                    )}
+                                    setPageRowFilter={setPageRowFilter}
+                                />
+                                <UserMuteButton
                                     selectedUser={userState.tableData.filter(
                                         (user: UserDisplay) => user.isSelected
                                     )}
