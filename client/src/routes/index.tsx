@@ -6,7 +6,6 @@ import Post from "pages/Post";
 import Comment from "pages/Comment";
 import Signup from "pages/auth/Signup";
 import Song from "pages/Song";
-import Notification from "pages/Notification";
 import Discover from "pages/Discover";
 import VerifyEmail from "pages/auth/VerifyEmail";
 
@@ -56,10 +55,6 @@ const MainRoute = () => {
 
                 <Route exact path="/discover">
                     <Discover />
-                </Route>
-
-                <Route exact path="/notification">
-                    <Notification />
                 </Route>
 
                 <Route path="/feedback">

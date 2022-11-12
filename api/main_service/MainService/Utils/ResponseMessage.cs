@@ -96,7 +96,7 @@ public static class ResponseMessage
 	public const string NOTIFY_IS_READ_Fail = "Fail to Set User Notification to Is Read";
 
 	// Notification msg
-	public const string NOTIFY_REPORT_ACCEPTED_MSG = "Your report was accepted. We are in the process of deleting Post / Comment";
-	public const string NOTIFY_REPORT_DENIED_MSG = "Your report was rejected. We have reviewed and found no unauthorized content in this Post / Comment";
-	public const string NOTIFY_POST_DELETED = "Your Post / Comment was deleted because we have found unauthorized content in your Post / Comment";
+	public const string NOTIFY_REPORT_ACCEPTED_MSG = "Your report was accepted. We are in the process of deleting the Post / Comment";
+	public const string NOTIFY_REPORT_DENIED_MSG = "Your report was rejected. We have reviewed and found no inappropriately content in the Post / Comment";
+	public const string NOTIFY_POST_DELETED = "One of your Posts / Comments was deleted because we have found inappropriately content in your Post / Comment";
 }

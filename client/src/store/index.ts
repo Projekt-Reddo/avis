@@ -16,6 +16,7 @@ import artistSlice from "./slices/artistSlice";
 import commentDetailSlice from "./slices/commentDetailSlice";
 import themeSlice from "./slices/themeSlice";
 import signalRConnectionSlice from "./slices/signalRConnection";
+import notifySlice from "./slices/notifySlice";
 
 const store = configureStore({
     reducer: {
@@ -36,7 +37,11 @@ const store = configureStore({
         artist: artistSlice,
         theme: themeSlice,
         hubConnection: signalRConnectionSlice,
+        notify: notifySlice
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false
+    })
 });
 
 export default store;
