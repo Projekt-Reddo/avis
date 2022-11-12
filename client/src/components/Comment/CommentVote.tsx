@@ -59,29 +59,29 @@ const CommentVote: React.FC<CommentVoteProps> = ({ comment }) => {
             {/* Vote*/}
             <div className="flex items-center">
                 <Icon
-                    className={
+                    className={`mt-1 ${
                         upvotedBy.includes(authState?.uid)
-                            ? "cursor-pointer hover:text-[color:var(--teal-general-color)] mt-1"
-                            : "cursor-pointer hover:text-[color:var(--teal-general-color)] mt-1"
-                            }
-                        size="xl"
-                        icon="caret-up"
-                        onClick={authState ? handleUpvote : handleUnauthorize}/>
-                            <div className="font-bold whitespace-nowrap max-w-[4rem] mx-1 text-xl">
-                                {upvotedBy.length -
-                                    downvotedBy.length}
-                            </div>
-                            <Icon
-                                className={
-                                    downvotedBy.includes(authState?.uid)
-                                        ? "cursor-pointer hover:text-[color:var(--teal-general-color)] mb-1"
-                                        : "cursor-pointer hover:text-[color:var(--teal-general-color)] mb-1"
-                                }
-                                size="xl"
-                                icon="caret-down"
-                                onClick={authState ? handleDownvote : handleUnauthorize}
-                            />
-                        </div>
+                            ? "cursor-pointer text-[color:var(--teal-lighter-color)]"
+                            : "cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
+                    }`}
+                    size="2xl"
+                    icon="caret-up"
+                    onClick={authState ? handleUpvote : handleUnauthorize}
+                />
+                <div className="font-bold whitespace-nowrap max-w-[4rem] mx-1 text-xl">
+                    {upvotedBy.length - downvotedBy.length}
+                </div>
+                <Icon
+                    className={`mb-1 ${
+                        downvotedBy.includes(authState?.uid)
+                            ? "cursor-pointer text-[color:var(--teal-lighter-color)]"
+                            : "cursor-pointer text-[color:var(--text-secondary-color)] hover:text-[color:var(--teal-general-color)]"
+                    }`}
+                    size="2xl"
+                    icon="caret-down"
+                    onClick={authState ? handleDownvote : handleUnauthorize}
+                />
+            </div>
         </>
     );
 };

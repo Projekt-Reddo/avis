@@ -156,6 +156,7 @@ async function getUserDataState(userFirebaseData: User) {
             userFirebaseData.displayName ||
             "Kuhaku",
         avatar: tokenResult.claims["avatar"],
+        status: tokenResult.claims["status"],
     };
 }
 
