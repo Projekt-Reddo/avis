@@ -7,13 +7,14 @@ import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import yup from "utils/yup-config";
 import TextareaAutosize from "react-textarea-autosize";
 import Button from "components/Button/Button";
-import { COMMENT_LENGTH } from "utils/constants";
+import { COMMENT_LENGTH, DAY_FORMAT } from "utils/constants";
 import EmojiPicker from "emoji-picker-react";
 import { useOutsideClick } from "utils/useOutsideClick";
 import FileDropzone from "components/shared/FileDropzone";
 import MediaDisplay from "./MediaDisplay";
 import { createCommentAsync } from "store/slices/commentSlice";
 import { Theme } from "emoji-picker-react";
+import moment from "moment";
 
 interface CommentCreateProps {
     parentId: string;
@@ -84,6 +85,23 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
 
     if (!auth.data) {
         return <></>;
+    }
+
+    if (auth.data && auth.data.status && auth.data.status.CommentMutedUntil) {
+        return (
+            <div
+                className="flex gap-3 m-4 lg:mx-0 p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800 items-center"
+                role="alert"
+            >
+                <Icon icon="triangle-exclamation" size="lg" />
+                <div>
+                    Your account is muted until{" "}
+                    {moment(auth.data.status.CommentMutedUntil).format(
+                        DAY_FORMAT
+                    )}
+                </div>
+            </div>
+        );
     }
 
     return (

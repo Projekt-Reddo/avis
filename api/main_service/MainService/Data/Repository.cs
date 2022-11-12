@@ -3,368 +3,368 @@ using MongoDB.Driver;
 
 namespace MainService.Data
 {
-    public interface IRepository<TEntity> : IDisposable where TEntity : class
-    {
-        /// <summary>
-        /// Get all documents match filter
-        /// </summary>
-        /// <param name="indexFilter">
-        ///  <para>Bson document for fulltext search</para>
-        ///  <para>Example:
-        ///  new BsonDocument {
-        ///    { "index", "SongIndex" },
-        ///    { "text", new BsonDocument {
-        ///        { "query", keyword },
-        ///        { "path", new BsonDocument {
-        ///            { "wildcard", "*" }
-        ///        }},
-        ///    }}
-        ///  }
-        ///  </para>
-        /// </param>
-        /// <param name="filter">Filter builder for filter element</param>
-        /// <param name="sort">
-        ///     <para>Bson document for sort (1: increase, -1: decrease)</para>
-        ///     <para> Example: new BsonDocument { { "fieldName", 1 } }</para>
-        /// </param>
-        /// <param name="lookup">
-        ///  <para>Bson document for lookup</para>
-        ///  <para> Example:
-        ///  new BsonDocument{
-        ///     { "from", "target_document_name" },
-        ///     { "localField", "field_for_comparision(Note: using _id not Id)" },
-        ///     { "foreignField", "foreign_key" },
-        ///     { "as", "joined_document_field" }
-        ///  }
-        /// </para>
-        /// </param>
-        /// <param name="project">
-        ///  <para>Bson document for lookup</para>
-        ///  <para> Example:
-        ///   new BsonDocument{
-        ///       { "_id", 1 },
-        ///       { "CreatedAt", 1 },
-        ///       { "ModifiedAt", 1 },
-        ///       { "Title", 1 },
-        ///       { "Thumbnail", 1 },
-        ///       { "Artists",  new BsonDocument{
-        ///           {"_id" , 1},
-        ///           {"Name" , 1}
-        ///       } },
-        ///   };
-        /// </para>
-        /// </param>
-        /// <param name="limit">Number of documents to get</param>
-        /// <param name="skip">Number of documents to skip</param>
-        /// <returns>Total match filter count and List of documents</returns>
-        Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
+	public interface IRepository<TEntity> : IDisposable where TEntity : class
+	{
+		/// <summary>
+		/// Get all documents match filter
+		/// </summary>
+		/// <param name="indexFilter">
+		///  <para>Bson document for fulltext search</para>
+		///  <para>Example:
+		///  new BsonDocument {
+		///    { "index", "SongIndex" },
+		///    { "text", new BsonDocument {
+		///        { "query", keyword },
+		///        { "path", new BsonDocument {
+		///            { "wildcard", "*" }
+		///        }},
+		///    }}
+		///  }
+		///  </para>
+		/// </param>
+		/// <param name="filter">Filter builder for filter element</param>
+		/// <param name="sort">
+		///     <para>Bson document for sort (1: increase, -1: decrease)</para>
+		///     <para> Example: new BsonDocument { { "fieldName", 1 } }</para>
+		/// </param>
+		/// <param name="lookup">
+		///  <para>Bson document for lookup</para>
+		///  <para> Example:
+		///  new BsonDocument{
+		///     { "from", "target_document_name" },
+		///     { "localField", "field_for_comparision(Note: using _id not Id)" },
+		///     { "foreignField", "foreign_key" },
+		///     { "as", "joined_document_field" }
+		///  }
+		/// </para>
+		/// </param>
+		/// <param name="project">
+		///  <para>Bson document for lookup</para>
+		///  <para> Example:
+		///   new BsonDocument{
+		///       { "_id", 1 },
+		///       { "CreatedAt", 1 },
+		///       { "ModifiedAt", 1 },
+		///       { "Title", 1 },
+		///       { "Thumbnail", 1 },
+		///       { "Artists",  new BsonDocument{
+		///           {"_id" , 1},
+		///           {"Name" , 1}
+		///       } },
+		///   };
+		/// </para>
+		/// </param>
+		/// <param name="limit">Number of documents to get</param>
+		/// <param name="skip">Number of documents to skip</param>
+		/// <returns>Total match filter count and List of documents</returns>
+		Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!);
 
-        /// <summary>
-        /// Find documents by using combine of aggregate stages and filter
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="stages"></param>
-        /// <returns></returns>
-        Task<IEnumerable<TEntity>> FindManyAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
+		/// <summary>
+		/// Find documents by using combine of aggregate stages and filter
+		/// </summary>
+		/// <param name="filter"></param>
+		/// <param name="stages"></param>
+		/// <returns></returns>
+		Task<IEnumerable<TEntity>> FindManyAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
 
-        /// <summary>
-        /// Count document by using combine of aggregate stages and filter
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="stages"></param>
-        /// <returns></returns>
-        Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
+		/// <summary>
+		/// Count document by using combine of aggregate stages and filter
+		/// </summary>
+		/// <param name="filter"></param>
+		/// <param name="stages"></param>
+		/// <returns></returns>
+		Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
 
-        /// <summary>
-        /// Get a document by fitler
-        /// </summary>
-        /// <param name="filter">Bson filter</param>
-        /// <returns>Fit condition document</returns>
-        Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? project = null!, BsonDocument? lookup = null!);
+		/// <summary>
+		/// Get a document by fitler
+		/// </summary>
+		/// <param name="filter">Bson filter</param>
+		/// <returns>Fit condition document</returns>
+		Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? project = null!, BsonDocument? lookup = null!);
 
-        /// <summary>
-        /// Get a document by filter then aggregate with stages
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="stages"></param>
-        /// <returns></returns>
-        Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
+		/// <summary>
+		/// Get a document by filter then aggregate with stages
+		/// </summary>
+		/// <param name="filter"></param>
+		/// <param name="stages"></param>
+		/// <returns></returns>
+		Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
 
-        /// <summary>
-        /// Add new document to selected collection
-        /// </summary>
-        /// <param name="entity">Entity to add</param>
-        /// <returns>New entity if created</returns>
-        Task<TEntity> AddOneAsync(TEntity entity);
+		/// <summary>
+		/// Add new document to selected collection
+		/// </summary>
+		/// <param name="entity">Entity to add</param>
+		/// <returns>New entity if created</returns>
+		Task<TEntity> AddOneAsync(TEntity entity);
 
-        /// <summary>
-        /// Update a document in selected collection with new value
-        /// </summary>
-        /// <param name="id">Document id</param>
-        /// <param name="entity">New document</param>
-        /// <returns>true(updated) / false(not update)</returns>
-        Task<bool> ReplaceOneAsync(string id, TEntity entity);
+		/// <summary>
+		/// Update a document in selected collection with new value
+		/// </summary>
+		/// <param name="id">Document id</param>
+		/// <param name="entity">New document</param>
+		/// <returns>true(updated) / false(not update)</returns>
+		Task<bool> ReplaceOneAsync(string id, TEntity entity);
 
-        /// <summary>
-        /// Delete a document in selected collection by id
-        /// </summary>
-        /// <param name="id">Id to delete</param>
-        /// <returns>true(deleted) / false(not delete)</returns>
-        Task<bool> DeleteOneAsync(string id);
+		/// <summary>
+		/// Delete a document in selected collection by id
+		/// </summary>
+		/// <param name="id">Id to delete</param>
+		/// <returns>true(deleted) / false(not delete)</returns>
+		Task<bool> DeleteOneAsync(string id);
 
-        /// <summary>
-        /// Start a session for transaction
-        /// </summary>
-        /// <returns></returns>
-        Task<IClientSessionHandle> StartSessionAsync();
+		/// <summary>
+		/// Start a session for transaction
+		/// </summary>
+		/// <returns></returns>
+		Task<IClientSessionHandle> StartSessionAsync();
 
-        /// <summary>
-        /// Soft delete documents in selected collection by list id
-        /// </summary>
-        /// <param name="listId">List Id to soft delete</param>
-        /// <returns>true(deleted) / false(not delete)</returns>
-        Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
+		/// <summary>
+		/// Soft delete documents in selected collection by list id
+		/// </summary>
+		/// <param name="listId">List Id to soft delete</param>
+		/// <returns>true(deleted) / false(not delete)</returns>
+		Task<bool> SoftDelete(string[] id, UpdateDefinition<TEntity> update);
 
-        /// <summary>
-        /// Update an document
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="update">
-        /// <para>
-        /// Builders<TEntity>.Update.Set(x => x.Property, value)
-        /// </para>
-        /// </param>
-        /// <returns></returns>
-        Task<bool> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!);
+		/// <summary>
+		/// Update an document
+		/// </summary>
+		/// <param name="filter"></param>
+		/// <param name="update">
+		/// <para>
+		/// Builders<TEntity>.Update.Set(x => x.Property, value)
+		/// </para>
+		/// </param>
+		/// <returns></returns>
+		Task<bool> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!);
 
-        /// <summary>
-        /// Update an document with session transaction
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="filter"></param>
-        /// <param name="update"></param>
-        /// <returns></returns>
-        Task<bool> UpdateOneAsync(IClientSessionHandle session, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!);
-    }
+		/// <summary>
+		/// Update an document with session transaction
+		/// </summary>
+		/// <param name="session"></param>
+		/// <param name="filter"></param>
+		/// <param name="update"></param>
+		/// <returns></returns>
+		Task<bool> UpdateOneAsync(IClientSessionHandle session, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!);
+	}
 
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
-    {
-        protected readonly IMongoCollection<TEntity> _collection;
-        private readonly MongoClient _client;
-        protected readonly IMongoDatabase _database;
+	public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+	{
+		protected readonly IMongoCollection<TEntity> _collection;
+		private readonly MongoClient _client;
+		protected readonly IMongoDatabase _database;
 
-        public Repository(IMongoContext context)
-        {
-            _database = context.Database;
-            _collection = _database.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
-            _client = context.client;
-        }
+		public Repository(IMongoContext context)
+		{
+			_database = context.Database;
+			_collection = _database.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
+			_client = context.client;
+		}
 
-        public virtual async Task<TEntity> AddOneAsync(TEntity entity)
-        {
-            await _collection.InsertOneAsync(entity);
-            return entity;
-        }
+		public virtual async Task<TEntity> AddOneAsync(TEntity entity)
+		{
+			await _collection.InsertOneAsync(entity);
+			return entity;
+		}
 
-        public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!)
-        {
+		public virtual async Task<(long total, IEnumerable<TEntity> entities)> FindManyAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? indexFilter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, BsonDocument? project = null!, int? limit = null!, int? skip = null!)
+		{
 
-            var query = _collection.Aggregate();
+			var query = _collection.Aggregate();
 
-            // $search need to be the first stage in pipeline
-            if (indexFilter is not null)
-            {
-                query = query.AppendStage<TEntity>(new BsonDocument {
-                    {
-                        "$search", indexFilter
-                    }
-                });
-            }
+			// $search need to be the first stage in pipeline
+			if (indexFilter is not null)
+			{
+				query = query.AppendStage<TEntity>(new BsonDocument {
+					{
+						"$search", indexFilter
+					}
+				});
+			}
 
-            if (sort is not null)
-            {
-                query = query.Sort(sort);
-            }
+			if (sort is not null)
+			{
+				query = query.Sort(sort);
+			}
 
-            if (filter is not null)
-            {
-                query = query.Match(filter);
-            }
+			if (filter is not null)
+			{
+				query = query.Match(filter);
+			}
 
-            if (skip is not null)
-            {
-                query = query.Skip(skip.Value);
-            }
+			if (skip is not null)
+			{
+				query = query.Skip(skip.Value);
+			}
 
-            if (limit is not null)
-            {
-                query = query.Limit(limit.Value);
-            }
+			if (limit is not null)
+			{
+				query = query.Limit(limit.Value);
+			}
 
-            if (lookup is not null)
-            {
-                query = query.AppendStage<TEntity>(new BsonDocument
-                {
-                    {
-                        "$lookup", lookup
-                    }
-                });
-            }
+			if (lookup is not null)
+			{
+				query = query.AppendStage<TEntity>(new BsonDocument
+				{
+					{
+						"$lookup", lookup
+					}
+				});
+			}
 
-            if (project is not null)
-            {
-                query = query.AppendStage<TEntity>(new BsonDocument
-                {
-                    {
-                        "$project", project
-                    }
-                });
-            }
+			if (project is not null)
+			{
+				query = query.AppendStage<TEntity>(new BsonDocument
+				{
+					{
+						"$project", project
+					}
+				});
+			}
 
-            long total = await _collection.CountDocumentsAsync(filter is null ? Builders<TEntity>.Filter.Empty : filter);
-            var entities = await query.ToListAsync();
-            return (total, entities);
-        }
+			long total = await _collection.CountDocumentsAsync(filter is null ? Builders<TEntity>.Filter.Empty : filter);
+			var entities = await query.ToListAsync();
+			return (total, entities);
+		}
 
-        public async Task<IEnumerable<TEntity>> FindManyAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
-        {
-            var query = _collection.Aggregate();
-            stages = stages ?? Enumerable.Empty<BsonDocument>();
+		public async Task<IEnumerable<TEntity>> FindManyAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+		{
+			var query = _collection.Aggregate();
+			stages = stages ?? Enumerable.Empty<BsonDocument>();
 
-            foreach (var stage in stages)
-            {
-                query = query.AppendStage<TEntity>(stage);
-            }
+			foreach (var stage in stages)
+			{
+				query = query.AppendStage<TEntity>(stage);
+			}
 
-            query = query.Match(filter);
+			query = query.Match(filter);
 
-            var entities = await query.ToListAsync();
-            return entities;
-        }
+			var entities = await query.ToListAsync();
+			return entities;
+		}
 
-        public async Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
-        {
-            var query = _collection.Aggregate();
-            stages = stages ?? Enumerable.Empty<BsonDocument>();
+		public async Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+		{
+			var query = _collection.Aggregate();
+			stages = stages ?? Enumerable.Empty<BsonDocument>();
 
-            foreach (var stage in stages)
-            {
-                query = query.AppendStage<TEntity>(stage);
-            }
+			foreach (var stage in stages)
+			{
+				query = query.AppendStage<TEntity>(stage);
+			}
 
-            query = query.Match(filter);
+			query = query.Match(filter);
 
-            var entities = await query.ToListAsync();
-            return entities.Count();
-        }
+			var entities = await query.ToListAsync();
+			return entities.Count();
+		}
 
-        public virtual async Task<bool> ReplaceOneAsync(string id, TEntity entity)
-        {
-            var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
-            return rs.ModifiedCount > 0 ? true : false;
-        }
+		public virtual async Task<bool> ReplaceOneAsync(string id, TEntity entity)
+		{
+			var rs = await _collection.ReplaceOneAsync(Builders<TEntity>.Filter.Eq("Id", id), entity);
+			return rs.ModifiedCount > 0 ? true : false;
+		}
 
-        public virtual async Task<bool> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!)
-        {
-            var rs = await _collection.UpdateOneAsync(filter, update);
-            return rs.ModifiedCount > 0 ? true : false;
-        }
+		public virtual async Task<bool> UpdateOneAsync(FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!)
+		{
+			var rs = await _collection.UpdateOneAsync(filter, update);
+			return rs.ModifiedCount > 0 ? true : false;
+		}
 
-        public virtual async Task<bool> UpdateOneAsync(IClientSessionHandle session, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!)
-        {
-            var rs = await _collection.UpdateOneAsync(session: session, filter: filter, update: update);
-            return rs.ModifiedCount > 0 ? true : false;
-        }
+		public virtual async Task<bool> UpdateOneAsync(IClientSessionHandle session, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update = null!)
+		{
+			var rs = await _collection.UpdateOneAsync(session: session, filter: filter, update: update);
+			return rs.ModifiedCount > 0 ? true : false;
+		}
 
-        public virtual async Task<bool> DeleteOneAsync(string id)
-        {
-            var rs = await _collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("Id", id));
-            return rs.DeletedCount > 0 ? true : false;
-        }
+		public virtual async Task<bool> DeleteOneAsync(string id)
+		{
+			var rs = await _collection.DeleteOneAsync(Builders<TEntity>.Filter.Eq("Id", id));
+			return rs.DeletedCount > 0 ? true : false;
+		}
 
-        public virtual async Task<bool> SoftDelete(string[] listId, UpdateDefinition<TEntity> update = null!)
-        {
+		public virtual async Task<bool> SoftDelete(string[] listId, UpdateDefinition<TEntity> update = null!)
+		{
 
-            using var session = await _client.StartSessionAsync();
-            try
-            {
-                session.StartTransaction();
+			using var session = await _client.StartSessionAsync();
+			try
+			{
+				session.StartTransaction();
 
-                foreach (string id in listId)
-                {
-                    var rs = await _collection.FindOneAndUpdateAsync(session: session, Builders<TEntity>.Filter.Eq("Id", id), update);
-                }
+				foreach (string id in listId)
+				{
+					var rs = await _collection.FindOneAndUpdateAsync(session: session, Builders<TEntity>.Filter.Eq("Id", id), update);
+				}
 
-                await session.CommitTransactionAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                await session.AbortTransactionAsync();
-                return false;
-            }
+				await session.CommitTransactionAsync();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				await session.AbortTransactionAsync();
+				return false;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? project = null!, BsonDocument? lookup = null!)
-        {
-            var query = _collection.Aggregate();
+		public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter = null!, BsonDocument? project = null!, BsonDocument? lookup = null!)
+		{
+			var query = _collection.Aggregate();
 
-            if (filter is not null)
-            {
-                query = query.Match(filter);
-            }
+			if (filter is not null)
+			{
+				query = query.Match(filter);
+			}
 
-            if (lookup is not null)
-            {
-                query = query.AppendStage<TEntity>(new BsonDocument
-                {
-                    {
-                        "$lookup", lookup
-                    }
-                });
-            }
+			if (lookup is not null)
+			{
+				query = query.AppendStage<TEntity>(new BsonDocument
+				{
+					{
+						"$lookup", lookup
+					}
+				});
+			}
 
-            if (project is not null)
-            {
-                query = query.AppendStage<TEntity>(new BsonDocument
-                {
-                    {
-                        "$project", project
-                    }
-                });
-            }
-            var entity = await query.FirstOrDefaultAsync();
-            return entity;
-        }
+			if (project is not null)
+			{
+				query = query.AppendStage<TEntity>(new BsonDocument
+				{
+					{
+						"$project", project
+					}
+				});
+			}
+			var entity = await query.FirstOrDefaultAsync();
+			return entity;
+		}
 
-        public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
-        {
-            var query = _collection.Aggregate().Match(filter);
-            stages = stages ?? Enumerable.Empty<BsonDocument>();
+		public virtual async Task<TEntity> FindOneAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+		{
+			var query = _collection.Aggregate().Match(filter);
+			stages = stages ?? Enumerable.Empty<BsonDocument>();
 
-            foreach (var stage in stages)
-            {
-                query = query.AppendStage<TEntity>(stage);
-            }
+			foreach (var stage in stages)
+			{
+				query = query.AppendStage<TEntity>(stage);
+			}
 
-            var entity = await query.FirstOrDefaultAsync();
-            return entity;
-        }
+			var entity = await query.FirstOrDefaultAsync();
+			return entity;
+		}
 
-        public virtual async Task<IClientSessionHandle> StartSessionAsync()
-        {
-            var session = await _client.StartSessionAsync();
-            return session;
-        }
+		public virtual async Task<IClientSessionHandle> StartSessionAsync()
+		{
+			var session = await _client.StartSessionAsync();
+			return session;
+		}
 
-        /// <summary>
-        /// Release unmanage resources
-        /// </summary>
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-        }
-    }
+		/// <summary>
+		/// Release unmanage resources
+		/// </summary>
+		public void Dispose()
+		{
+			GC.SuppressFinalize(this);
+		}
+	}
 }

@@ -40,6 +40,7 @@ public class NotifysController : ControllerBase
 	/// </summary>
 	/// <param name="pagination">Pagination metrics and Search filters</param>
 	/// <returns>200 / 400 / 404</returns>
+	[Authorize]
 	[HttpPost("filter")]
 	public async Task<ActionResult<PaginationResDto<IEnumerable<Notify>>>> ViewUserNotify(PaginationReqDto<UserNotifyFilterDto> pagination)
 	{
@@ -61,6 +62,11 @@ public class NotifysController : ControllerBase
 			return BadRequest(new ResponseDto(400, ResponseMessage.ACCOUNT_UNAUTHENTICATED));
 		}
 
+		BsonDocument notifySort = new BsonDocument{
+				{ "CreatedAt", -1 },
+				{ "_id", 1 }
+			};
+
 		// Create Notify Filter
 		var notifyFilter = Builders<Notify>.Filter.Empty;
 
@@ -68,6 +74,7 @@ public class NotifysController : ControllerBase
 
 		(var totalNotify, var notifysFromRepo) = await _notifyRepo.FindManyAsync(
 			filter: notifyFilter,
+			sort: notifySort,
 			limit: pagination.Size,
 			skip: (pagination.Page - 1) * pagination.Size); // Pagination formula
 
@@ -76,6 +83,7 @@ public class NotifysController : ControllerBase
 		return Ok(new PaginationResDto<Notify>((Int32)totalNotify, notifys));
 	}
 
+	[Authorize]
 	[HttpPut("isRead")]
 	public async Task<ActionResult<ResponseDto>> SetIsRead()
 	{
@@ -112,7 +120,7 @@ public class NotifysController : ControllerBase
 		foreach (var report in notifysFromRepo)
 		{
 			var filter = Builders<Notify>.Filter.Eq(x => x.Id, report.Id) & Builders<Notify>.Filter.Eq(x => x.IsRead, false);
-			var update = Builders<Notify>.Update.Set(x => x.IsRead, true);
+			var update = Builders<Notify>.Update.Set(x => x.IsRead, true).Set(x => x.IsReadAt, DateTime.Now);
 
 			var rs = await _notifyRepo.UpdateOneAsync(filter, update);
 			successCount += 1;

@@ -12,4 +12,6 @@ public class Notify : IdAttrModel
 	public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 	public bool IsRead { get; set; }
+
+	public DateTime IsReadAt { get; set; } = DateTime.Now;
 }
