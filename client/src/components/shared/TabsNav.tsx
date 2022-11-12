@@ -1,18 +1,38 @@
-import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useWindowDimensions } from "utils/useWindowDimensions";
 import { MOBILE_BREAKPOINT, routesIgnoreNav } from "utils/constants";
-import { useAppSelector } from "utils/react-redux-hooks";
+import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 import "theme/TabsNav.css";
 import Icon from "./Icon";
+import {
+    setIsReadNotifyAsync,
+    viewNotifyAsync,
+} from "store/slices/notifySlice";
 
 const TabsNav = () => {
     const location = useLocation();
+    const history = useHistory();
+    const dispatch = useAppDispatch();
 
     const user = useAppSelector((state) => state.user.data);
+    const notifys = useAppSelector((state) => state.notify);
 
     // For hiding bottom nav bar in desktop view
     const { width } = useWindowDimensions();
+
+    useEffect(() => {
+        if (user) {
+            dispatch(
+                viewNotifyAsync({
+                    page: 1,
+                    size: 10,
+                    filter: {},
+                })
+            );
+        }
+    }, [user]);
 
     if (routesIgnoreNav.some((route) => location.pathname.startsWith(route))) {
         return null;
@@ -59,28 +79,43 @@ const TabsNav = () => {
                 />
             </Link>
 
-            <Link
-                to="/notification"
+            <div
+                onClick={() => {
+                    dispatch(setIsReadNotifyAsync());
+                    history.push(`/user/notification`);
+                }}
                 className={
-                    location.pathname === "/notification"
-                        ? "tab-button-select"
-                        : "tab-button"
+                    location.pathname === "/user/notification"
+                        ? "tab-button-select cursor-pointer"
+                        : "tab-button cursor-pointer"
                 }
             >
                 <div className="flex justify-center items-center p-4">
-                    <div className="absolute flex justify-center items-center h-3 w-3 bg-[color:var(--red-darker-color)] font-bold rounded-full text-white text-[10px] ml-4 mb-6">
-                        2
-                    </div>
+                    {notifys?.data?.payload?.filter(
+                        (item: Notify) => item.isRead === false
+                    ).length > 0 ? (
+                        <div className="absolute flex justify-center items-center h-3 w-3 bg-[color:var(--red-darker-color)] font-bold rounded-full text-white text-[10px] ml-4 mb-6">
+                            {notifys?.data?.payload?.filter(
+                                (item: Notify) => item.isRead === false
+                            ).length > 9
+                                ? "9+"
+                                : notifys?.data?.payload?.filter(
+                                      (item: Notify) => item.isRead === false
+                                  ).length}
+                        </div>
+                    ) : (
+                        ""
+                    )}
                     <Icon
                         icon={
-                            location.pathname === "/notification"
+                            location.pathname === "/user/notification"
                                 ? "bell"
                                 : ["far", "bell"]
                         }
                         className="text-2xl"
                     />
                 </div>
-            </Link>
+            </div>
 
             <Link
                 to={!user ? "/login" : "/user/profile"}

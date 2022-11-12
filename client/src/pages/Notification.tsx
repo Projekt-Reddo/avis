@@ -2,12 +2,12 @@ import React from "react";
 
 // Components
 import PageWrapper from "components/PageWrapper/PageWrapper";
-import InDevelopment from "components/shared/InDevelopment";
+import NotificationCard from "components/Notification/NotificationCard";
 
 const Notification = () => {
     return (
         <PageWrapper>
-            <InDevelopment />
+            <NotificationCard />
         </PageWrapper>
     );
 };
