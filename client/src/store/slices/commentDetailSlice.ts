@@ -18,6 +18,10 @@ const commentDetailSlice = createSlice({
             ...state,
             data: action.payload,
         }),
+        deleteCommentDetail: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -43,5 +47,6 @@ export const commentDetailAsync = createAsyncThunk(
     }
 );
 
-export const { viewCommentDetail } = commentDetailSlice.actions;
+export const { viewCommentDetail, deleteCommentDetail } =
+    commentDetailSlice.actions;
 export default commentDetailSlice.reducer;

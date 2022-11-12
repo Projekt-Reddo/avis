@@ -9,6 +9,7 @@ import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { DAY_FORMAT } from "utils/constants";
 import { useAppSelector } from "utils/react-redux-hooks";
+import CommentDeleteButton from "./CommentDeleteButton";
 import CommentVote from "./CommentVote";
 
 interface CommenteCardProps {
@@ -111,7 +112,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                         }}
                     >
                         {/* Vote*/}
-                        <CommentVote comment={comment}/>
+                        <CommentVote comment={comment} />
 
                         {/* Reply */}
                         {/* <Icon
@@ -127,6 +128,8 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                                 setOpenReport(true);
                             }}
                         />
+
+                        <CommentDeleteButton comment={comment} />
                     </div>
                 </div>
             </div>
