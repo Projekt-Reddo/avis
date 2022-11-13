@@ -71,4 +71,28 @@ public static class Constants
 		public const string APPROVE = "approve";
 		public const string REJECT = "reject";
 	}
+
+	/// <summary>
+	/// Hub Return Method
+	/// </summary>
+	public static class HubReturnMethod
+	{
+		public const string RECEIVENOTIFICATION = "Receive Notification";
+	}
+
+	/// <summary>
+	/// RabbitMQ Event Type
+	/// </summary>
+	public static class EventType
+	{
+		public const string REPORT_ACCEPTED = "Report Accepted";
+		public const string REPORT_DENIED = "Report Denied";
+		public const string POST_DELETED = "Post Accepted Delete";
+	}
+
+	public enum ResourceType
+	{
+		Post,
+		Comment,
+	}
 }

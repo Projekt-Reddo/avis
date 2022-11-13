@@ -19,3 +19,9 @@ export const confirmReportsApi = async (reportConfirm: ReportConfirm) => {
 
     return res.data;
 };
+
+export const getReportDetailApi = async (id: string) => {
+    const res = await axios.post(`${apiRoute}/${id}`);
+
+    return res.data;
+};

@@ -9,6 +9,8 @@ import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
 import { DAY_FORMAT } from "utils/constants";
 import { useAppSelector } from "utils/react-redux-hooks";
+import CommentDeleteButton from "./CommentDeleteButton";
+import CommentVote from "./CommentVote";
 
 interface CommenteCardProps {
     comment: Comment;
@@ -110,62 +112,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                         }}
                     >
                         {/* Vote*/}
-                        <div className="flex items-center">
-                            <Icon
-                                className={
-                                    authState &&
-                                    comment.upvotedBy.includes(authState?.uid)
-                                        ? "cursor-pointer hover:text-[color:var(--teal-general-color)] mt-1"
-                                        : "cursor-pointer hover:text-[color:var(--teal-general-color)] mt-1"
-                                }
-                                size="xl"
-                                icon="caret-up"
-                                onClick={(
-                                    event: React.MouseEvent<HTMLElement>
-                                ) => {
-                                    event.preventDefault();
-                                    if (
-                                        authState &&
-                                        comment.upvotedBy.includes(
-                                            authState?.uid
-                                        )
-                                    ) {
-                                        console.log("Voted");
-                                        return;
-                                    }
-                                    console.log("Like");
-                                }}
-                            />
-                            <div className="font-bold whitespace-nowrap max-w-[4rem] mx-1 text-xl">
-                                {comment.upvotedBy.length -
-                                    comment.downvotedBy.length}
-                            </div>
-                            <Icon
-                                className={
-                                    authState &&
-                                    comment.downvotedBy.includes(authState?.uid)
-                                        ? "cursor-pointer hover:text-[color:var(--teal-general-color)] mb-1"
-                                        : "cursor-pointer hover:text-[color:var(--teal-general-color)] mb-1"
-                                }
-                                size="xl"
-                                icon="caret-down"
-                                onClick={(
-                                    event: React.MouseEvent<HTMLElement>
-                                ) => {
-                                    event.preventDefault();
-                                    if (
-                                        authState &&
-                                        comment.downvotedBy.includes(
-                                            authState?.uid
-                                        )
-                                    ) {
-                                        console.log("Voted");
-                                        return;
-                                    }
-                                    console.log("Dislike");
-                                }}
-                            />
-                        </div>
+                        <CommentVote comment={comment} />
 
                         {/* Reply */}
                         {/* <Icon
@@ -181,6 +128,8 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                                 setOpenReport(true);
                             }}
                         />
+
+                        <CommentDeleteButton comment={comment} />
                     </div>
                 </div>
             </div>

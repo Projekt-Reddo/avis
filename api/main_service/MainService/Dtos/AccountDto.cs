@@ -97,4 +97,10 @@ namespace MainService.Dtos
 	{
 		public string[] Uids { get; set; } = null!;
 	}
+    public class AccountsMuteDto
+    {
+        public string[] Uids { get; set; } = null!;
+		public int MutePostDays { get; set; }
+        public int MuteCommentDays { get; set; }
+	}
 }

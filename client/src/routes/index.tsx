@@ -6,7 +6,6 @@ import Post from "pages/Post";
 import Comment from "pages/Comment";
 import Signup from "pages/auth/Signup";
 import Song from "pages/Song";
-import Notification from "pages/Notification";
 import Discover from "pages/Discover";
 import VerifyEmail from "pages/auth/VerifyEmail";
 
@@ -18,6 +17,7 @@ import Feedback from "pages/Feedback";
 import AuthRoute from "./AuthRoute";
 import Search from "pages/Search";
 import Profile from "pages/user/Profile";
+import ModeratorRoutes from "./moderator-routes";
 
 const MainRoute = () => {
     return (
@@ -57,16 +57,8 @@ const MainRoute = () => {
                     <Discover />
                 </Route>
 
-                <Route exact path="/notification">
-                    <Notification />
-                </Route>
-
                 <Route path="/feedback">
                     <Feedback />
-                </Route>
-
-                <Route path="/admin">
-                    <AdminRoutes />
                 </Route>
 
                 <Route exact path="/">
@@ -79,6 +71,14 @@ const MainRoute = () => {
 
                 <Route path="/user">
                     <UserRoutes />
+                </Route>
+
+                <Route path="/moderator">
+                    <ModeratorRoutes />
+                </Route>
+
+                <Route path="/admin">
+                    <AdminRoutes />
                 </Route>
 
                 <Route

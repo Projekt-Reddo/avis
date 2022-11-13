@@ -12,9 +12,11 @@ import { DAY_FORMAT, REPORT_TYPE } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import Input from "components/shared/Input";
 import ReportConfirm from "components/Report/ReportConfirm";
+import { useHistory } from "react-router";
 
 const ViewReport = () => {
     const dispatch = useAppDispatch();
+    const history = useHistory();
 
     const reportState = useAppSelector((state) => state.report);
 
@@ -217,8 +219,8 @@ const ViewReport = () => {
                         hasSelectOption={true}
                         setDataState={(data) => dispatch(setTableData(data))}
                         rawData={reportState.tableData}
-                        onRowClick={() => {
-                            // history.push(`/admin/song/edit/${obj.id}`);
+                        onRowClick={(obj) => {
+                            history.push(`/admin/report/${obj.id}`);
                         }}
                         setIsSelected={setHaveAnyItemSelected}
                     />

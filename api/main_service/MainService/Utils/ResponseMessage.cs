@@ -84,4 +84,19 @@ public static class ResponseMessage
 	public const string ACCOUNT_BANNED = "Accounts banned!";
 	public const string ACCOUNT_UNBANNED = "Accounts unbanned!";
 	public const string ACCOUNT_STATUS_UPDATE_SUCCESS = "Accounts status updated!";
+	public const string ACCOUNT_UNAUTHENTICATED = "Account unauthenticated!";
+	public const string ACCOUNT_STATUS_MUTE_SUCCESS = "Accounts Muted successfully!";
+	public const string ACCOUNT_STATUS_MUTE_INVALID = "Invalid Input!";
+
+	// Notification status msg
+	public const string NOTIFY_RECEIVER_NOT_FOUND = "Cannot find the receiver";
+	public const string NOTIFY_CREATE_SUCCESS = "Create a notification successfully";
+	public const string NOTIFY_CREATE_FAIL = "Fail to create the notification";
+	public const string NOTIFY_IS_READ_SUCCESS = "Set User Notification to Is Read";
+	public const string NOTIFY_IS_READ_Fail = "Fail to Set User Notification to Is Read";
+
+	// Notification msg
+	public const string NOTIFY_REPORT_ACCEPTED_MSG = "Your report was accepted. We are in the process of deleting the Post / Comment";
+	public const string NOTIFY_REPORT_DENIED_MSG = "Your report was rejected. We have reviewed and found no inappropriately content in the Post / Comment";
+	public const string NOTIFY_POST_DELETED = "One of your Posts / Comments was deleted because we have found inappropriately content in your Post / Comment";
 }

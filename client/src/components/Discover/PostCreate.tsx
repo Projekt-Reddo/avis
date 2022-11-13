@@ -18,6 +18,9 @@ import { addNewToast } from "components/Toast";
 // Style
 import "theme/Discover.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { Theme } from "emoji-picker-react";
+import moment from "moment";
+import { DAY_FORMAT } from "utils/constants";
 
 interface PostCreateProps {
     loading: boolean;
@@ -51,6 +54,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
     const dispatch = useAppDispatch();
 
     const authState = useAppSelector((state) => state.auth.data);
+    const theme = useAppSelector((state) => state.theme);
 
     const inputRef = React.useRef<any>(null);
     const [content, setContent] = React.useState<string>("");
@@ -264,6 +268,21 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
 
     if (!authState) {
         return <></>;
+    }
+
+    if (authState && authState.status && authState.status.PostMutedUntil) {
+        return (
+            <div
+                className="flex gap-3 m-4 lg:mx-0 p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800 items-center"
+                role="alert"
+            >
+                <Icon icon="triangle-exclamation" size="lg" />
+                <div>
+                    Your account is muted until{" "}
+                    {moment(authState.status.PostMutedUntil).format(DAY_FORMAT)}
+                </div>
+            </div>
+        );
     }
 
     const HASHTAG_FORMATTER = (string: string) => {
@@ -487,6 +506,12 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                                 skinTonesDisabled
                                                 width={320}
                                                 height={400}
+                                                theme={
+                                                    theme.status === "idle" &&
+                                                    theme.data.value === "dark"
+                                                        ? Theme.DARK
+                                                        : Theme.LIGHT
+                                                }
                                             />
                                         </div>
                                     </div>
@@ -570,10 +595,14 @@ const customStyles = {
         width: 105,
         height: 30,
         minHeight: 30,
+        color: "var(--text-primary-color) !important",
+        backgroundColor: "var(--element-bg-color)",
     }),
     menu: (base: any) => ({
         ...base,
         width: 278,
+        color: "var(--text-primary-color)",
+        backgroundColor: "var(--element-bg-color)",
     }),
     valueContainer: (base: any) => ({
         ...base,

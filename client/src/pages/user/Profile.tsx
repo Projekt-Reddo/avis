@@ -9,8 +9,6 @@ import ProfileCard from "components/Profile/ProfileCard";
 import {
     viewMoreUserPostAsync,
     viewUserPostAsync,
-    viewMoreSavedPostAsync,
-    viewSavedPostAsync
 } from "store/slices/postSlice";
 import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
 
@@ -36,24 +34,13 @@ const Profile = () => {
         <PageWrapper>
             {createPostInfiniteScrollLayout({
                 storeSelector: (state: RootState) => state.post,
-                getInitDataAction: viewSavedPostAsync,
-                getMoreDataAction: viewMoreSavedPostAsync,
+                getInitDataAction: viewUserPostAsync,
+                getMoreDataAction: viewMoreUserPostAsync,
                 LeftComponent: ProfileCard,
                 PageFilter: pageFilter,
             })}
         </PageWrapper>
     );
 };
-
-    // View User Saved Post
-    //     <PageWrapper>
-    //     {createPostInfiniteScrollLayout({
-    //         storeSelector: (state: RootState) => state.post,
-    //         getInitDataAction: viewSavedPostAsync,
-    //         getMoreDataAction: viewMoreSavedPostAsync,
-    //         LeftComponent: ProfileCard,
-    //         PageFilter: pageFilter,
-    //     })}
-    // </PageWrapper>
 
 export default Profile;

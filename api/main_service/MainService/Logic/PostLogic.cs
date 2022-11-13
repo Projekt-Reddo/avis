@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
@@ -211,7 +212,7 @@ public class PostLogic : IPostLogic
 
 	public async Task<bool> DeletePost(string id)
 	{
-		var filter = Builders<Post>.Filter.Eq(x => x.Id, id);
+		var filter = Builders<Post>.Filter.Eq(x => x.Id, id) & Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 		var post = await _postRepo.FindOneAsync(filter: filter);
 		if (post is null)
 		{
