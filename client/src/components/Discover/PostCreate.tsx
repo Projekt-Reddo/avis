@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
 import { useOutsideClick } from "utils/useOutsideClick";
+import TextareaAutosize from "react-textarea-autosize";
 
 // Components
 import Icon from "components/shared/Icon";
@@ -317,7 +318,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
     return (
         <div className="lg:pt-4">
             <form
-                className="card drop-shadow-md grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
+                className="card create-post-shadow grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
                 onSubmit={handleCreatePost}
             >
                 {/* Avatar */}
@@ -362,10 +363,10 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                     )}
 
                     {/* Content */}
-                    <textarea
-                        className="focus:outline-none bg-[color:var(--post-bg-color)] text-[color:var(--text-primary-color)] text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 pt-2"
+                    <TextareaAutosize
+                        className="focus:outline-none bg-[color:var(--post-bg-color)] text-[color:var(--text-primary-color)] text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 pt-2 pb-4"
                         placeholder="How do you feel today?"
-                        rows={3}
+                        rows={1}
                         ref={inputRef}
                         onChange={(
                             event: React.ChangeEvent<HTMLTextAreaElement>
@@ -500,7 +501,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                 </button>
                                 {showPicker && (
                                     <div className="relative">
-                                        <div className="absolute z-50 mt-4 ml-[-6rem] sm:ml-[-7rem]">
+                                        <div className="absolute z-50 mt-4 ml-[-6rem] sm:ml-[-5rem]">
                                             <EmojiPicker
                                                 onEmojiClick={onEmojiClick}
                                                 skinTonesDisabled
@@ -577,14 +578,14 @@ const customStyles = {
     option: (provided: any, state: any) => ({
         ...provided,
         color: state.isSelected
-            ? "var(--body-bg-color)"
-            : "var(--teal-general-color)",
+            ? "var(--body-bg-color) !important"
+            : "var(--teal-general-color) !important",
         backgroundColor: state.isSelected ? "var(--teal-general-color)" : "",
     }),
     control: (base: any) => ({
         ...base,
         border: "2px solid var(--teal-general-color)",
-        boxShadow: "none",
+        boxShadow: "4px 4px 8px var(--element-shadow-color)",
         "&:hover": {
             border: "2px solid var(--teal-general-color)",
         },
@@ -601,8 +602,9 @@ const customStyles = {
     menu: (base: any) => ({
         ...base,
         width: 278,
-        color: "var(--text-primary-color)",
+        color: "var(--text-primary-color) !important",
         backgroundColor: "var(--element-bg-color)",
+        boxShadow: "4px 4px 8px var(--element-shadow-color)",
     }),
     valueContainer: (base: any) => ({
         ...base,
