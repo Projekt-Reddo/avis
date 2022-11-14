@@ -311,7 +311,15 @@ public class ReportLogic : IReportLogic
 			var rs = await UpdateReport(id, isAccepted, accountId, session);
 			await session.CommitTransactionAsync();
 
-			SendNotifications(isAccepted, report);
+			if (isAccepted is false)
+			{
+				SendNotifications(false, report, false);
+			}
+
+			if (isAccepted is true)
+			{
+				SendNotifications(true, report, true);
+			}
 
 			return new ReportLogicResponse()
 			{
@@ -354,6 +362,8 @@ public class ReportLogic : IReportLogic
 		{
 			var rs = await UpdateReport(report.Id, true, accountId, session);
 			successCount += 1;
+
+			SendNotifications(true, report, false);
 		}
 
 		return new ReportLogicResponse()
@@ -410,15 +420,31 @@ public class ReportLogic : IReportLogic
 		};
 	}
 
-	public void SendNotifications(bool isAccepted, Report report)
+	public void SendNotifications(bool isAccepted, Report report, bool isSendPostOwner)
 	{
 		// Add Notification to database and send it to the reporter in real time
 		try
 		{
 			var notifyMsgForReporter = new EventDto();
 
+			// Send Delete Post Notification
+			if (isSendPostOwner is true && isAccepted is true)
+			{
+				// Notify message for Post Owner
+				var notifyMsgForPostOwner = new EventDto()
+				{
+					ReceiverId = report.Post is null ? report.Comment!.UserId : report.Post.UserId,
+					Message = ResponseMessage.NOTIFY_POST_DELETED,
+					IsRead = false,
+					Event = EventType.POST_DELETED
+				};
+
+				_messagePublisher.PublishSendNotifi(notifyMsgForPostOwner);
+
+			}
+
 			// Send Accepted Notification
-			if (isAccepted is true)
+			if (isSendPostOwner is false && isAccepted is true)
 			{
 				// Notify message for Reporter
 				notifyMsgForReporter = new EventDto()
@@ -429,20 +455,11 @@ public class ReportLogic : IReportLogic
 					Event = EventType.REPORT_ACCEPTED
 				};
 
-				// Notify message for PostOwner
-				var notifyMsgForPostOwner = new EventDto()
-				{
-					ReceiverId = report.Post is null ? report.Comment!.UserId : report.Post.UserId,
-					Message = ResponseMessage.NOTIFY_POST_DELETED,
-					IsRead = false,
-					Event = EventType.POST_DELETED
-				};
-
 				_messagePublisher.PublishSendNotifi(notifyMsgForReporter);
-				_messagePublisher.PublishSendNotifi(notifyMsgForPostOwner);
 			}
+
 			// Send Denied Notification
-			else
+			if (isSendPostOwner is false && isAccepted is false)
 			{
 				// Notify message for Reporter
 				notifyMsgForReporter = new EventDto()

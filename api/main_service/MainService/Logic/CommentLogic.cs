@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using MainService.Data;
 using MainService.Dtos;
 using MainService.Models;
@@ -60,6 +61,7 @@ public class CommentLogic : ICommentLogic
 		var rs = await UpdateComment(Comment.Id, Comment);
 		return rs;
 	}
+
 	public async Task<bool> UpdateComment(string commentId, Comment comment)
 	{
 		var rs = await _commentRepo.ReplaceOneAsync(commentId, comment);
@@ -155,7 +157,7 @@ public class CommentLogic : ICommentLogic
 		var filterComments = Builders<Comment>.Filter.Empty;
 
 		// filter out comment that got deleted
-		filterComments = filterComments & Builders<Comment>.Filter.Eq(x=>x.IsDeleted, false);
+		filterComments = filterComments & Builders<Comment>.Filter.Eq(x => x.IsDeleted, false);
 
 		if (IsPostChild)
 		{
@@ -180,7 +182,7 @@ public class CommentLogic : ICommentLogic
 		(var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
 				limit: Size,
 				skip: skipPage,
-				sort:viewCommentSort
+				sort: viewCommentSort
 				);
 
 		return (totals, comments);
@@ -256,7 +258,7 @@ public class CommentLogic : ICommentLogic
 
 	public async Task<bool> DeleteComment(string id)
 	{
-		var filter = Builders<Comment>.Filter.Eq(x => x.Id, id);
+		var filter = Builders<Comment>.Filter.Eq(x => x.Id, id) & Builders<Comment>.Filter.Eq(x => x.IsDeleted, false);
 		var comment = await _commentRepo.FindOneAsync(filter: filter);
 		if (comment is null)
 		{
