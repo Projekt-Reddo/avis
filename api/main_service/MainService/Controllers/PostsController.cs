@@ -64,6 +64,11 @@ public class PostsController : ControllerBase
 			return BadRequest(new ResponseDto(400, ResponseMessage.POST_EMPTY_CONTENT_MEDIA));
 		}
 
+		if (newPost.PublishedAt < DateTime.Now)
+		{
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_PAST_PUBLISHED_AT));
+		}
+
 		var userId = "";
 
 		// Get User Id

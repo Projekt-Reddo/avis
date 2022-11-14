@@ -14,17 +14,66 @@
     scrollbar-width: none !important; /* Firefox */
 }
 
+/* Style Date Picker */
+
+/* Header */
 .react-datepicker__header {
     color: var(--text-primary-color) !important;
     background-color: var(--element-bg-color) !important;
 }
 
+.react-datepicker-time__header{
+    color: var(--text-primary-color) !important;
+}
+
+/* Month and day name */
+.react-datepicker__day-name{
+    color: var(--text-primary-color) !important;
+}
+
+.react-datepicker__current-month{
+    color: var(--text-primary-color) !important;
+}
+
+/* Date select Style */
+.react-datepicker__day--selected{
+    background-color: var(--teal-general-color);
+}
+
+.react-datepicker__day--selected:hover{
+    background-color: var(--teal-general-color);
+}
+
+.react-datepicker__day--keyboard-selected{
+    background-color: var(--teal-general-color);
+}
+
+/* Time select Style */
+.react-datepicker__time-list-item{
+    color: var(--black-color);
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected{
+    background-color: var(--teal-general-color);
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected:hover{
+    background-color: var(--teal-general-color);
+}
+
+/* Date section */
 .react-datepicker {
     color: var(--text-primary-color) !important;
     background-color: var(--element-bg-color) !important;
 }
 
+/* Time section */
 .react-datepicker__time{
     color: var(--text-primary-color) !important;
     background-color: var(--element-bg-color) !important;
+}
+
+/* Style Control of React Select  */
+.css-qc6sy-singleValue{
+    color: var(--text-primary-color) !important;
 }
