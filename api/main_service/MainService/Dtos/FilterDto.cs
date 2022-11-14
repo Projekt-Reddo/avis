@@ -33,6 +33,7 @@ namespace MainService.Dtos
 	{
 		public string? ObjectId { get; set; } = null!;
 		public bool IsPostChild { get; set; } = false;
+		public string Sort {get; set;} = null!;
 	}
 
 	public class RelatedSongFilter

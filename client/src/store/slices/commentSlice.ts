@@ -81,6 +81,7 @@ export const createCommentAsync = createAsyncThunk(
                         ? comment.postId
                         : comment.commentId,
                     isPostChild: comment.postId ? true : false,
+                    sort: "CreateAt Descending",
                 },
             });
         } catch (e: any) {

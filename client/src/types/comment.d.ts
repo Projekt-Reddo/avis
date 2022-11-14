@@ -4,6 +4,7 @@ interface CommentFilter {
     filter?: {
         objectId?: string;
         isPostChild?: boolean;
+        sort?: string;
     };
 }
 
