@@ -14,10 +14,11 @@ public interface ICommentLogic
 {
 	Task<bool> UploadNewComment(Comment comment, Stream stream, string contentType, string fileExtension,
 	string folderUpload, string mediaType);
+	BsonDocument SortFilter(string Sort);
 	Task<bool> UpdateComment(string commentId, Comment comment);
 	Task<bool> UpdatePostComment(string postId, Comment comment);
 	Task<Comment> GetCommentById(string commentId);
-	Task<(long total, IEnumerable<Comment>?)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage);
+	Task<(long total, IEnumerable<Comment>?)> GetComments(string queryId, bool IsPostChild, BsonDocument sort, int Size, int skipPage);
 	Task<bool> VoteComment(string userId, string commentId, bool isUpVote);
 	Task<VoteResponeDto> CommentVoteCount(string commentId);
 	Task<bool> DeleteComment(string id);
@@ -122,7 +123,7 @@ public class CommentLogic : ICommentLogic
 		return commentFromRepo;
 	}
 
-	public async Task<(long total, IEnumerable<Comment>?)> GetComments(string queryId, bool IsPostChild, int Size, int skipPage)
+	public async Task<(long total, IEnumerable<Comment>?)> GetComments(string queryId, bool IsPostChild, BsonDocument sort, int Size, int skipPage)
 	{
 		BsonDocument lookup = new BsonDocument{
 						{ "from", "account" },
@@ -150,10 +151,10 @@ public class CommentLogic : ICommentLogic
 					{"IsDeleted", 1}
 			};
 
-		BsonDocument viewCommentSort = new BsonDocument{
-			{ "UpvotedBy", -1 },
-			{ "_id", 1 }
-		};
+		// BsonDocument viewCommentSort = new BsonDocument{
+		// 	{ "UpvotedBy", -1 },
+		// 	{ "_id", 1 }
+		// };
 		var filterComments = Builders<Comment>.Filter.Empty;
 
 		// filter out comment that got deleted
@@ -163,7 +164,7 @@ public class CommentLogic : ICommentLogic
 		{
 			// loop into post comments to get comment ids
 			var postFromRepo = await _postRepo.FindOneAsync(filter: Builders<Post>.Filter.Eq(x => x.Id, queryId));
-			if (postFromRepo.CommentIds == null)
+			if (postFromRepo == null || postFromRepo?.CommentIds == null)
 			{
 				return (0, null);
 			}
@@ -173,7 +174,7 @@ public class CommentLogic : ICommentLogic
 		{
 			// loop into parent comments to get child comment ids
 			var commentFromRepo = await _commentRepo.FindOneAsync(filter: Builders<Comment>.Filter.Eq(x => x.Id, queryId));
-			if (commentFromRepo.Comments == null)
+			if (commentFromRepo == null || commentFromRepo?.Comments == null)
 			{
 				return (0, null);
 			}
@@ -182,7 +183,7 @@ public class CommentLogic : ICommentLogic
 		(var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
 				limit: Size,
 				skip: skipPage,
-				sort: viewCommentSort
+				sort:sort
 				);
 
 		return (totals, comments);
@@ -240,6 +241,36 @@ public class CommentLogic : ICommentLogic
 			return true;
 		}
 	}
+
+	public BsonDocument SortFilter(string sortFilter)
+		{
+			string sortType = "";
+
+			int adesc = 1;
+
+			switch (sortFilter)
+			{
+				case Constants.CommentSortFilterOption.Upvote_DESC:
+					sortType = "UpvotedBy";
+					adesc = -1;
+					break;
+				case Constants.CommentSortFilterOption.CreateAt_DESC:
+					sortType = "CreatedAt";
+					adesc = -1;
+					break;
+				default:
+					sortType = "CreatedAt";
+					adesc = 1;
+					break;
+			}
+
+			BsonDocument sort = new BsonDocument
+			{
+				{ sortType, adesc }
+			};
+
+			return sort;
+		}
 
 	public async Task<VoteResponeDto> CommentVoteCount(string commentId)
 	{

@@ -33,6 +33,12 @@ public static class Constants
 		public const string JOIN_DESC = "Joined Date Descending";
 	}
 
+	public static class CommentSortFilterOption
+	{
+		public const string Upvote_DESC = "Upvote Descending";
+		public const string CreateAt_DESC = "CreateAt Descending";	
+	}
+
 	/// <summary>
 	/// Account roles
 	/// </summary>
