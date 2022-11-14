@@ -6,6 +6,10 @@
     /* box-shadow: 4px 4px 8px var(--element-shadow-color); */
 }
 
+.create-post-shadow{
+    box-shadow: 4px 4px 8px var(--element-shadow-color);
+}
+
 .hum-card {
     color: var(--text-primary-color);
     background-color: var(--post-bg-color);

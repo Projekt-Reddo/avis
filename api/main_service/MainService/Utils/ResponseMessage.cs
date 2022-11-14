@@ -25,6 +25,8 @@ public static class ResponseMessage
 	public const string POST_SAVE_SUCCESS = "Save post successfully";
 	public const string POST_DELETE_FAIL = "Fail to delete post";
 	public const string POST_EMPTY_CONTENT_MEDIA = "Post was created without Content or Media";
+	public const string POST_PAST_PUBLISHED_AT = "Published at past";
+
 
 	// Report msg
 	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
