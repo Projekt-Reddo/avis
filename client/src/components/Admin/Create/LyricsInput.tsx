@@ -137,5 +137,5 @@ const LyricsInput: FunctionComponent<LyricsInputProps> = ({
 export default LyricsInput;
 
 const schema = yup.object().shape({
-    lyrics: yup.string().required("Lyrics is required!"),
+    lyrics: yup.string().nullable(),
 });
