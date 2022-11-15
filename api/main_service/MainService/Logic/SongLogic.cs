@@ -28,6 +28,7 @@ public class SongLogic : ISongLogic
 	private readonly ILogger<SongLogic> _logger;
 	private readonly IMapper _mapper;
 	private readonly IFileStorageService _fileStorage;
+	private readonly IArtistLogic _artistLogic;
 	private BsonDocument artistLookup = new BsonDocument {
 			{ "from", "artist" },
 			{ "localField", "ArtistIds" },
@@ -42,7 +43,8 @@ public class SongLogic : ISongLogic
 		ISongRepo songRepo,
 		ILogger<SongLogic> logger,
 		IMapper mapper,
-		IFileStorageService fileStorage
+		IFileStorageService fileStorage,
+		IArtistLogic artistLogic
 	)
 	{
 		_s3Service = s3Service;
@@ -51,6 +53,7 @@ public class SongLogic : ISongLogic
 		_logger = logger;
 		_mapper = mapper;
 		_fileStorage = fileStorage;
+		_artistLogic = artistLogic;
 	}
 
 	public async Task<bool> UploadNewSong(Song song, Stream stream, string contentType, string fileExtension)
@@ -193,11 +196,23 @@ public class SongLogic : ISongLogic
 				return (false, ResponseMessage.SONG_NOT_FOUND);
 			}
 
+			var notFoundArtists = new List<string>();
+			foreach (var artistId in songUpdate.ArtistIds)
+			{
+				var artist = await _artistLogic.GetById(artistId);
+				if (artist is null)
+				{
+					notFoundArtists.Add(artistId);
+				}
+			}
+			if (notFoundArtists.Count > 0)
+			{
+				return (false, $"Not found artists with ids: {String.Join(", ", notFoundArtists)}");
+			}
+
 			var song = _mapper.Map<Song>(songUpdate);
 
 			// Keep some old critical values
-			song.Artists = null!;
-			song.Id = id;
 			if (song.Url is null)
 			{
 				song.Url = new Url();
