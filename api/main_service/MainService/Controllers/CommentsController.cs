@@ -111,18 +111,27 @@ namespace MainService.Controllers
 			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_CREATE_SUCCESS));
 		}
 
-		// [Authorize]
-		[HttpPost("filter")]
-		public async Task<ActionResult<PaginationResDto<CommentReadDto>>> GetComments(PaginationReqDto<CommentFilterDto> pagination)
-		{
-			// Pagination formula
-			var skipPage = (pagination.Page - 1) * pagination.Size;
+        // [Authorize]
+        [HttpPost("filter")]
+        public async Task<ActionResult<PaginationResDto<CommentReadDto>>> GetComments(PaginationReqDto<CommentFilterDto> pagination)
+        {
+            // Pagination formula
+            var skipPage = (pagination.Page - 1) * pagination.Size;
+            var sort = _commentLogic.SortFilter(pagination.Filter.Sort);
 
-			(var total, var comments) = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild, pagination.Size, skipPage);
+            try{
+				(var total, var comments) = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild, sort, pagination.Size, skipPage);
 
-			var commentDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
+				var commentDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
 
-			return Ok(new PaginationResDto<CommentReadDto>((int)total, commentDtos));
+				return Ok(new PaginationResDto<CommentReadDto>((int)total, commentDtos));
+			}catch{
+				return BadRequest(new ResponseDto
+				{
+					Status = 400,
+					Message = $"{pagination.Filter.ObjectId} is not exists"
+				});
+			}
 		}
 
 		[HttpGet("{id}")]

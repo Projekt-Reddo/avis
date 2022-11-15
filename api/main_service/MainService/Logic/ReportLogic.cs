@@ -144,25 +144,28 @@ public class ReportLogic : IReportLogic
 	{
 		var filter = Builders<Report>.Filter.Empty;
 
-		if (pagination.Filter.From is not null)
+		if (pagination.Filter is not null)
 		{
-			filter = filter & Builders<Report>.Filter.Gte(x => x.CreatedAt, pagination.Filter.From);
-		}
+			if (pagination.Filter.From is not null)
+			{
+				filter = filter & Builders<Report>.Filter.Gte(x => x.CreatedAt, pagination.Filter.From);
+			}
 
-		if (pagination.Filter.To is not null)
-		{
-			filter = filter & Builders<Report>.Filter.Lte(x => x.CreatedAt, pagination.Filter.To);
-		}
+			if (pagination.Filter.To is not null)
+			{
+				filter = filter & Builders<Report>.Filter.Lte(x => x.CreatedAt, pagination.Filter.To);
+			}
 
-		if (pagination.Filter.Type is not null)
-		{
-			filter = filter & Builders<Report>.Filter.Eq(x => x.Type, pagination.Filter.Type);
-		}
+			if (pagination.Filter.Type is not null)
+			{
+				filter = filter & Builders<Report>.Filter.Eq(x => x.Type, pagination.Filter.Type);
+			}
 
-		if (pagination.Filter.IsPost is not null)
-		{
-			var isPostFilter = (pagination.Filter.IsPost is true) ? Builders<Report>.Filter.Not(Builders<Report>.Filter.Eq(x => x.Post, null)) : Builders<Report>.Filter.Not(Builders<Report>.Filter.Eq(x => x.Comment, null));
-			filter = filter & isPostFilter;
+			if (pagination.Filter.IsPost is not null)
+			{
+				var isPostFilter = (pagination.Filter.IsPost is true) ? Builders<Report>.Filter.Not(Builders<Report>.Filter.Eq(x => x.Post, null)) : Builders<Report>.Filter.Not(Builders<Report>.Filter.Eq(x => x.Comment, null));
+				filter = filter & isPostFilter;
+			}
 		}
 
 		var skipPage = (pagination.Page - 1) * pagination.Size;
