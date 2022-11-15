@@ -167,6 +167,21 @@ public class SongsController : ControllerBase
 	[HttpDelete]
 	public async Task<ActionResult<ResponseDto>> DeleteSong(SongDeleteDto songDeleteDto)
 	{
+
+		var notFoundSongs = new List<string>();
+		foreach (var songId in songDeleteDto.listId)
+		{
+			var song = await _songLogic.GetSongById(songId);
+			if (song is null)
+			{
+				notFoundSongs.Add(songId);
+			}
+		}
+		if (notFoundSongs.Count > 0)
+		{
+			return BadRequest(new ResponseDto(400, $"Not found songs with ids: {String.Join(", ", notFoundSongs)}"));
+		}
+
 		var songUpdate = Builders<Song>.Update.Set(s => s.IsDeleted, true);
 
 		var rs = await _songRepo.SoftDelete(songDeleteDto.listId, songUpdate);
