@@ -6,7 +6,6 @@ import { useAppSelector } from "utils/react-redux-hooks";
 // Components
 import PageWrapper from "components/PageWrapper/PageWrapper";
 
-import { viewMoreSavedPostAsync, viewSavedPostAsync } from "store/slices/postSlice";
 import ProfileCard from "components/Profile/ProfileCard";
 import {
     viewMoreUserPostAsync,
