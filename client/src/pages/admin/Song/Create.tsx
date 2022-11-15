@@ -72,6 +72,7 @@ const Create = () => {
             currentStep={currentStep}
             nextFormStep={nextFormStep}
             previousFormStep={previousFormStep}
+            isRequired={false}
         />,
         <UrlInput
             song={songCreate}
@@ -92,7 +93,7 @@ const Create = () => {
     return (
         <PageWrapperWithLeftNav className="">
             <StepFrom
-                clasName="mx-5 lg:mx-0 p-5 mt-10"
+                clasName="mx-5 lg:mx-0 p-5 my-10"
                 currentStep={currentStep}
                 stepTitles={stepTitles}
                 stepContents={stepContents}

@@ -36,7 +36,7 @@ public static class Constants
 	public static class CommentSortFilterOption
 	{
 		public const string Upvote_DESC = "Upvote Descending";
-		public const string CreateAt_DESC = "CreateAt Descending";	
+		public const string CreateAt_DESC = "CreateAt Descending";
 	}
 
 	/// <summary>
@@ -50,6 +50,7 @@ public static class Constants
 	}
 
 	public const string DEFAULT_AVATAR = "https://static.wikia.nocookie.net/virtualyoutuber/images/8/8b/Hoshimachi_Suisei_2019_Portrait.png";
+	public const string DEFAULT_SONG_THUMBNAIL = "https://songdewnetwork.com/sgmedia/assets/images/default-album-art.png";
 
 	public static class ReportType
 	{
