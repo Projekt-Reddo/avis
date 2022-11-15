@@ -1,3 +1,5 @@
+using MainService.Filters;
+
 namespace MainService.Dtos
 {
 	public class SongFilterDto
@@ -33,7 +35,7 @@ namespace MainService.Dtos
 	{
 		public string? ObjectId { get; set; } = null!;
 		public bool IsPostChild { get; set; } = false;
-		public string Sort {get; set;} = null!;
+		public string Sort { get; set; } = null!;
 	}
 
 	public class RelatedSongFilter
@@ -53,26 +55,8 @@ namespace MainService.Dtos
 
 		public DateTime? To { get; set; }
 
-		private string? type = string.Empty;
-		public string? Type
-		{
-			get { return type; }
-			set
-			{
-				type = null!;
-				foreach (var property in typeof(Constants.ReportType).GetFields())
-				{
-					if (!String.IsNullOrWhiteSpace(value))
-					{
-						var x = (property.GetValue(null) ?? "").ToString();
-						if (value.ToLower() == (property.GetValue(null) ?? "").ToString()!.ToLower())
-						{
-							type = value;
-						}
-					}
-				}
-			}
-		}
+		[ValidValues(typeof(Constants.ReportType))]
+		public string? Type { get; set; }
 
 		public bool? IsPost { get; set; }
 	}
