@@ -372,7 +372,6 @@ public class PostsController : ControllerBase
 			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
 		}
 	}
-
 	[HttpPost("save")]
 	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewSavedPost(PaginationReqDto<PostFilterDto> pagination)
 	{
