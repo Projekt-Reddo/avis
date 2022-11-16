@@ -78,6 +78,11 @@ namespace MainService.Logic
 		{
 			var accountFilter = Builders<Account>.Filter.Empty;
 
+			if (pagination.Filter == null)
+			{
+				return accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role != AccountRoles.ADMIN);
+			}
+
 			if (pagination.Filter.Name != null)
 			{
 				accountFilter = accountFilter & Builders<Account>.Filter.Regex("Name", new BsonRegularExpression(pagination.Filter.Name, "i"));
@@ -303,16 +308,21 @@ namespace MainService.Logic
 				return (false, ResponseMessage.ACCOUNT_NOT_FOUND, null);
 			}
 
-			var update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.MODERATOR);
-			accountFromRepo.Role = AccountRoles.MODERATOR;
-			var responseMessage = ResponseMessage.ACCOUNT_PROMOTED;
+			var update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.USER);
+			var responseMessage = "";
 
 			// Switch roles
-			if (accountFromRepo.Role == AccountRoles.MODERATOR)
+			if (accountFromRepo.Role == AccountRoles.MODERATOR) // Demote from Moderator to User
 			{
 				update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.USER);
 				accountFromRepo.Role = AccountRoles.USER;
 				responseMessage = ResponseMessage.ACCOUNT_DEMOTED;
+			}
+			else // Promote from User to Moderator
+			{
+				update = Builders<Account>.Update.Set(x => x.Role, AccountRoles.MODERATOR);
+				accountFromRepo.Role = AccountRoles.MODERATOR;
+				responseMessage = ResponseMessage.ACCOUNT_PROMOTED;
 			}
 
 			var rs = await _accountRepo.UpdateOneAsync(filterUid, update);
