@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MainService.Dtos
 {
     public class AccountCreateDto
@@ -88,7 +90,8 @@ namespace MainService.Dtos
 
     public class AccountProfileUpdateDto
     {
-        public string Name { get; set; } = null!;
+		[StringLength(100, MinimumLength = 6, ErrorMessage = "The field Name must be a string with a minimum length of 6 and a maximum length of 100")]
+		public string Name { get; set; } = null!;
 
         public IFormFile? AvatarFile { get; set; }
     }
