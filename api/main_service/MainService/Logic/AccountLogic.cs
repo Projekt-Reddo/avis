@@ -78,6 +78,11 @@ namespace MainService.Logic
 		{
 			var accountFilter = Builders<Account>.Filter.Empty;
 
+			if (pagination.Filter == null)
+			{
+				return accountFilter = accountFilter & Builders<Account>.Filter.Where(x => x.Role != AccountRoles.ADMIN);
+			}
+
 			if (pagination.Filter.Name != null)
 			{
 				accountFilter = accountFilter & Builders<Account>.Filter.Regex("Name", new BsonRegularExpression(pagination.Filter.Name, "i"));

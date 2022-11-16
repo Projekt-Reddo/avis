@@ -50,13 +50,13 @@ namespace MainService.Dtos
 
     public class AccountFilterDto
     {
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
 
-        public string Sort { get; set; } = null!;
+        public string? Sort { get; set; }
 
-        public DateTime? JoinedStart { get; set; } = null!;
+        public DateTime? JoinedStart { get; set; }
 
-        public DateTime? JoinedEnd { get; set; } = null!;
+        public DateTime? JoinedEnd { get; set; }
 
         public bool isModerator { get; set; }
 
