@@ -115,9 +115,18 @@ namespace MainService.Controllers
         [HttpPost("filter")]
         public async Task<ActionResult<PaginationResDto<CommentReadDto>>> GetComments(PaginationReqDto<CommentFilterDto> pagination)
         {
-            // Pagination formula
-            var skipPage = (pagination.Page - 1) * pagination.Size;
-            var sort = _commentLogic.SortFilter(pagination.Filter.Sort);
+			if (pagination.Filter is null)
+			{
+				return BadRequest(new ResponseDto
+				{
+					Status = 400,
+					Message = $"filter.objectId is required!"
+				});
+			}
+
+			// Pagination formula
+			var skipPage = (pagination.Page - 1) * pagination.Size;
+			var sort = _commentLogic.SortFilter(pagination.Filter.Sort);
 
             try{
 				(var total, var comments) = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild, sort, pagination.Size, skipPage);
