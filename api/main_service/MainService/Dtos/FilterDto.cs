@@ -33,9 +33,9 @@ namespace MainService.Dtos
 
 	public class CommentFilterDto
 	{
-		public string? ObjectId { get; set; } = null!;
+		public string ObjectId { get; set; } = null!;
 		public bool IsPostChild { get; set; } = false;
-		public string Sort { get; set; } = null!;
+		public string? Sort { get; set; } = null!;
 	}
 
 	public class RelatedSongFilter
