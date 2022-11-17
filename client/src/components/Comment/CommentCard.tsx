@@ -125,7 +125,9 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                             icon="flag"
                             className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
                             onClick={() => {
-                                setOpenReport(true);
+                                if (authState) {
+                                    setOpenReport(true);
+                                }
                             }}
                         />
 
