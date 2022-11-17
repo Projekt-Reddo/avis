@@ -6,6 +6,6 @@ export default defineConfig({
             // implement node event listeners here
         },
         experimentalStudio: true, // enable Cypress Studio
-        baseUrl: "https://staging-avis.netlify.app",
+        baseUrl: "http://127.0.0.1:5173",
     },
 });

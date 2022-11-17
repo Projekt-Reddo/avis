@@ -21,7 +21,10 @@ const VerifyEmail = () => {
             rightContent={
                 <div className="h-full p-10 flex flex-col justify-center items-center">
                     <div>
-                        <h3 className="font-bold text-2xl">
+                        <h3
+                            className="font-bold text-2xl"
+                            data-cy="email-verify"
+                        >
                             Verify your Email
                         </h3>
                         <div className="text-lg">
