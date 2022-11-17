@@ -29,11 +29,11 @@ public static class ResponseMessage
 
 
 	// Report msg
-	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
+	public const string REPORT_CREATE_SUCCESS = "Report successfully";
 	public const string REPORT_NO_IDS = "A postId or commentId is required for reporting";
 	public const string REPORT_CONFIRM_SUCCESS = "Confirm reports successfully";
-	public const string REPORT_CONFIRM_PARTIAL_SUCCESS = "Confirm report successfully, but there are some reports can't be confirmed";
-	public const string REPORT_CONFIRM_FAIL = "Fail to update report";
+	public const string REPORT_CONFIRM_PARTIAL_SUCCESS = "Confirm reports successfully, but there are some reports can't be confirmed";
+	public const string REPORT_CONFIRM_FAIL = "Fail to confirm report";
 	public const string REPORT_NOT_FOUND = "Report not found";
 	public const string REPORT_REJECT_ACCEPTED = "Cannot reject accepted reports";
 

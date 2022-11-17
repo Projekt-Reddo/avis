@@ -314,7 +314,7 @@ const ReportSpam: FunctionComponent<ReportSpamProps> = ({
             example: "",
         },
         {
-            title: "Directing people away from Facebook through the misleading use of links",
+            title: "Directing people through the misleading use of links",
             example: "",
         },
     ];

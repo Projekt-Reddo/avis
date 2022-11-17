@@ -23,6 +23,10 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
         // setShowOptions("");
     });
 
+    if (!authState.data) {
+        return <></>;
+    }
+
     return (
         <>
             <div
