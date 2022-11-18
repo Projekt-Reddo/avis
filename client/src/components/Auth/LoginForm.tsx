@@ -7,7 +7,6 @@ import yup from "utils/yup-config";
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { loginAsync } from "store/slices/authSlice";
-import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 import { Link } from "react-router-dom";
 
@@ -33,7 +32,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
         dispatch(
             loginAsync({
                 email: data.email,
-                password: hash(data.password),
+                password: data.password,
             } as UserLoginDto)
         );
     };
