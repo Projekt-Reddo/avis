@@ -41,6 +41,27 @@ namespace MainService.Controllers
 		{
 			var comment = _mapper.Map<Comment>(newComment);
 
+			// Get User Id
+			var userId = "";
+			try
+			{
+				userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+				// To check whether account exist or not.
+				var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", userId));
+
+				// Account not found
+				if (accountFromRepo is null)
+				{
+					return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+				}
+			}catch (Exception)
+			{
+				userId = null;
+			}
+
+			comment.UserId = userId;
+
 			// Add comment into the repo first
 			var rs = await _commentRepo.AddOneAsync(comment);
 
