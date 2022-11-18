@@ -64,6 +64,7 @@ const Toast: React.FC<ToastProps> = ({ item }) => {
                 style={{
                     marginLeft: "5rem",
                 }}
+                data-cy="toast-message"
             >
                 {item.message}
             </div>

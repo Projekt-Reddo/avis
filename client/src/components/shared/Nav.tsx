@@ -163,6 +163,7 @@ const Nav = () => {
                         <Link
                             className="hover:text-[color:var(--text-secondary-color)]"
                             to="/signup"
+                            data-cy="register-btn"
                         >
                             Register
                         </Link>

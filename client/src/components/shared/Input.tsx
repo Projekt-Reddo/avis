@@ -48,7 +48,10 @@ const Input: React.FC<InputProps> = ({
                 {...props}
             />
             {error?.message && (
-                <span className="text-[color:var(--red-general-color)]">{`${error.message}`}</span>
+                <span
+                    className="text-[color:var(--red-general-color)]"
+                    data-cy="error-message"
+                >{`${error.message}`}</span>
             )}
         </div>
     );
