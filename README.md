@@ -1,78 +1,92 @@
 # Avis
 
-Hum to song project
+Hum to song & song sharing platform
 
-## 1. Installation
+## Table of Contents
 
-> Every installation part will start from root folder.
+- [Prerequisite](#prerequisite)
+- [Installation](#installation)
+- [Development](#development)
+- [Testing](#testing)
+- [FAQ](#faq)
 
-### 1.1 Client app - Ionic React TS
+## Prerequisite
+
+Following are required to run this application in development:
+
+- NodeJS (version 16.x.x)
+- Dotnet (version 6)
+- Python (version 3.8)
+- Poetry (newest version)
+
+## Installation
+
+### 1. Client app - Ionic React TS
 
 ```
 cd client
-npm install
+npm install --force
 ```
 
-_If there is an error about not found **NPM** you can read NPM install guide at the Q&A part_
-
-### 1.2 Main Api - ASP.NET Core
+### 2. Main Service Api - ASP.NET Core
 
 ```
 cd api/main_service
 dotnet restore
 ```
 
-- After restored, ask your team lead to get dev setting file and add it to `api\main_service\MainService\`
+> After restored, ask your team lead to get appsettings.development.json file and add it to `api\main_service\MainService\`
 
-_If there is an error about not found **Dotnet** you can read Dotnet install guide at the Q&A part_
-
-### 1.3 Hum Api - FastAPI
+### 3. Hum Service Api - FastAPI
 
 ```
 cd api/hum_service
-poetry shell
 poetry install
 ```
 
-_If there is an error about not found **Poetry** you can read Poetry install guide at the Q&A part_
+## Development
 
-## 2. Run app in development
-
-> Every run part will start from root folder.
-
-### 2.1 Client app - Ionic React TS
+### 1. Client app - Ionic React TS
 
 ```
 cd client
 npm start
 ```
 
-### 2.2 Main Api - ASP.NET Core
+### 2. Main Service Api - ASP.NET Core
 
 ```
 cd api/main_service/MainService
 dotnet watch run
 ```
 
-### 2.3 Hum Api - FastAPI
+### 3. Hum Service Api - FastAPI
 
-Select created Python environment and run app:
+Select created Python environment `(Ctrl + Shift + P then Python:Select Interpreter)` and run app:
 
 ```
 cd api/hum_service
 uvicorn app.main:app --reload
 ```
 
-## Q & A
+## Testing
 
--   Install NodeJS (ver 16.\*) - NPM included: [this link](https://nodejs.org/en/download/).
+### 1. Front-end
 
--   Install Ionic CLI: [this link](https://ionicframework.com/docs/cli)
+For front-end testing purpose please open `client` folder then run following command:
 
--   Install Python (ver 3.8): [this link](https://www.python.org/downloads/)
+```bash
+npm run cypress:open
+```
 
--   Install Poetry: [this link](https://python-poetry.org/docs/)
+Read more about how to use Cypress in [FAQ](#faq)
 
--   Install Dotnet (ver 6.0): [this link](https://dotnet.microsoft.com/en-us/download)
+### 2. Back-end
 
--   Install Docker: [this link](https://docs.docker.com/get-docker/)
+For back-end testing, install [Postman](https://www.postman.com/) then access to project workspaces using [this link](https://projectreddo.postman.co/workspace/450982ea-05d9-4ae3-9488-39309debaedb).
+
+## FAQ
+
+- Read more about installed components [HeadlessUI](https://headlessui.com/).
+
+- Read more about [Cypress](https://docs.cypress.io/guides/end-to-end-testing/writing-your-first-end-to-end-test#Add-a-test-file)

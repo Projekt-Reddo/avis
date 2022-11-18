@@ -103,38 +103,42 @@ public class SongLogic : ISongLogic
 
 		var songFilter = Builders<Song>.Filter.Not(Builders<Song>.Filter.Eq(x => x.IsDeleted, true));
 
-		// Name Filter
-		if (!String.IsNullOrWhiteSpace(pagination.Filter.Title))
+		if (pagination.Filter is not null)
 		{
-			songFilter = songFilter & Builders<Song>.Filter.Regex("Title", new BsonRegularExpression(pagination.Filter.Title, "i"));
-		}
 
-		// Genres Filter
-		if (pagination.Filter.Genres != null)
-		{
-			songFilter = songFilter & Builders<Song>.Filter.All(x => x.Genres, pagination.Filter.Genres);
-		}
+			// Name Filter
+			if (!String.IsNullOrWhiteSpace(pagination.Filter.Title))
+			{
+				songFilter = songFilter & Builders<Song>.Filter.Regex("Title", new BsonRegularExpression(pagination.Filter.Title, "i"));
+			}
 
-		// Created At Filter
-		if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedStart.ToString()))
-		{
-			songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.CreatedAt, pagination.Filter.CreatedStart);
-		}
+			// Genres Filter
+			if (pagination.Filter.Genres != null)
+			{
+				songFilter = songFilter & Builders<Song>.Filter.All(x => x.Genres, pagination.Filter.Genres);
+			}
 
-		if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedEnd.ToString()))
-		{
-			songFilter = songFilter & Builders<Song>.Filter.Lte(x => x.CreatedAt, pagination.Filter.CreatedEnd);
-		}
+			// Created At Filter
+			if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedStart.ToString()))
+			{
+				songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.CreatedAt, pagination.Filter.CreatedStart);
+			}
 
-		// Modified At Filter
-		if (!String.IsNullOrWhiteSpace(pagination.Filter.ModifiedStart.ToString()))
-		{
-			songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.ModifiedAt, pagination.Filter.ModifiedStart);
-		}
+			if (!String.IsNullOrWhiteSpace(pagination.Filter.CreatedEnd.ToString()))
+			{
+				songFilter = songFilter & Builders<Song>.Filter.Lte(x => x.CreatedAt, pagination.Filter.CreatedEnd);
+			}
 
-		if (pagination.Filter.ModifiedEnd != null)
-		{
-			songFilter = songFilter & Builders<Song>.Filter.Lte(x => x.ModifiedAt, pagination.Filter.ModifiedEnd);
+			// Modified At Filter
+			if (!String.IsNullOrWhiteSpace(pagination.Filter.ModifiedStart.ToString()))
+			{
+				songFilter = songFilter & Builders<Song>.Filter.Gte(x => x.ModifiedAt, pagination.Filter.ModifiedStart);
+			}
+
+			if (pagination.Filter.ModifiedEnd != null)
+			{
+				songFilter = songFilter & Builders<Song>.Filter.Lte(x => x.ModifiedAt, pagination.Filter.ModifiedEnd);
+			}
 		}
 
 		return songFilter;
