@@ -78,7 +78,10 @@ const Nav = () => {
         {
             icon: "bars-progress",
             lable: "Manage",
-            to: "/admin",
+            to:
+                user && user.role === "admin"
+                    ? "/admin/user"
+                    : "/moderator/user",
             isShow:
                 user && (user.role === "admin" || user.role === "moderator"),
         },
@@ -211,7 +214,7 @@ const Nav = () => {
 
                         <Dropdown
                             menu={
-                                <Fragment>
+                                <div data-cy="nav-dropdown">
                                     <img
                                         className="inline-block h-9 w-9 rounded-full ring-2 ring-white mr-2"
                                         src={user.avatar || WHITE_IMG}
@@ -221,7 +224,7 @@ const Nav = () => {
                                         }}
                                     />
                                     <Icon icon="angle-down" />
-                                </Fragment>
+                                </div>
                             }
                             options={options}
                         />
