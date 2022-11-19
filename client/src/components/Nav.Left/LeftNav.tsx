@@ -1,11 +1,6 @@
 import { useLocation } from "react-router";
 import { toggleLeftNav } from "store/slices/leftNavSlice";
-import {
-    leftNavAdmin,
-    leftNavModerator,
-    leftNavOptions,
-    USER_ROLE,
-} from "utils/constants";
+import { leftNavOptions } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 import "./left-nav.styles.css";
