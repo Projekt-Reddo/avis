@@ -12,7 +12,12 @@ public class ValidValues : ValidationAttribute
 
 	protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
 	{
-		var inputValue = (string)value!;
+		if (value is null)
+		{
+			return ValidationResult.Success;
+		}
+
+		var inputValue = (string)value;
 		var isValid = false;
 		var validValues = new List<String>();
 		foreach (var property in _validateType.GetFields())

@@ -164,7 +164,7 @@ const ViewReport = () => {
 
             <SearchFilter
                 textInput={{
-                    placeholder: "Enter the name of the artist",
+                    placeholder: "",
                     register: register("name"),
                 }}
                 reset={reset}
