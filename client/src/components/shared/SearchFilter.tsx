@@ -68,6 +68,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 <button
                     type="submit"
                     className="radius-border-left-side flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0 focus:outline-none"
+                    data-cy="search-filter-submit-btn"
                 >
                     <Icon
                         icon="search"
@@ -83,6 +84,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                             : "input-search-app-only w-full focus:outline-none"
                     }`}
                     placeholder={placeholder}
+                    data-cy="search-filter-input"
                     {...register}
                 />
 
@@ -92,6 +94,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         type="button"
                         className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-l-0 focus:outline-none"
                         onClick={() => setShowSearchFilter(!showSearchFilter)}
+                        data-cy="show-filter-btn"
                     >
                         <div className="text-base font-bold pr-4">Filter</div>
                         <Icon
@@ -152,6 +155,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                                             type="date"
                                             className="w-[45%]"
                                             register={item.registerStart}
+                                            data-cy="filter-start-date"
                                         />
 
                                         <div className="self-center">-</div>
@@ -160,6 +164,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                                             type="date"
                                             className="w-[45%]"
                                             register={item.registerEnd}
+                                            data-cy="filter-end-date"
                                         />
                                     </div>
                                 </div>
@@ -188,6 +193,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                                                             type="checkbox"
                                                             {...item.checkBox}
                                                             className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer"
+                                                            data-cy={`toggle-${item.label}`}
                                                         />
                                                         <label className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
                                                     </div>
@@ -231,6 +237,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                             <Button
                                 type="submit"
                                 className="none-shadow-button"
+                                data-cy="apply-filter-btn"
                             >
                                 Apply
                             </Button>
