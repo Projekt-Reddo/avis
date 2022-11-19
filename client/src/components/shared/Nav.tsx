@@ -78,7 +78,7 @@ const Nav = () => {
         {
             icon: "bars-progress",
             lable: "Manage",
-            to: "/admin",
+            to: user && user.role === "admin" ? "/admin" : "/moderator",
             isShow:
                 user && (user.role === "admin" || user.role === "moderator"),
         },

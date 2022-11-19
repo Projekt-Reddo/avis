@@ -69,6 +69,19 @@ export const leftNavModerator: LeftNavItemData[] = [
     },
 ];
 
+export const USER_ROLE = {
+    ADMIN: "admin",
+    MODERATOR: "moderator",
+    USER: "user",
+};
+
+export const leftNavOptions: {
+    [key: string]: LeftNavItemData[];
+} = {
+    admin: leftNavAdmin,
+    moderator: leftNavModerator,
+};
+
 export const leftNavUser: LeftNavItemData[] = [];
 
 export const MAIN_SERVICE_API =
@@ -103,10 +116,4 @@ export const THEME = {
     DARK: "dark",
     LIGHT: "light",
     SYSTEM: "system",
-};
-
-export const USER_ROLE = {
-    ADMIN: "admin",
-    MODERATOR: "moderator",
-    USER: "user",
 };
