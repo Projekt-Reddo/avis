@@ -49,6 +49,7 @@ const History: FunctionComponent<HistoryProps> = ({
         <div
             className="absolute top-12 w-full h-fit py-3 bg-[color:var(--body-bg-color)] rounded-xl border-[0.25px] border-[color:var(--border-color)] shadow-lg"
             ref={historyRef}
+            data-cy="text-search-search-history"
         >
             {history.map((search) => (
                 <div
@@ -57,6 +58,7 @@ const History: FunctionComponent<HistoryProps> = ({
                     onClick={() => {
                         onClickElement(search);
                     }}
+                    data-cy="text-search-search-history-item"
                 >
                     <Icon
                         icon="clock-rotate-left"
