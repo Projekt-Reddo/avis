@@ -20,11 +20,6 @@ export const authRoutes = ["/login", "/signup"];
 
 export const leftNavAdmin: LeftNavItemData[] = [
     {
-        icon: "home",
-        path: "/admin/dashboard",
-        title: "Dashboard",
-    },
-    {
         icon: "user",
         path: "/admin/user",
         title: "User",
@@ -53,11 +48,6 @@ export const leftNavAdmin: LeftNavItemData[] = [
 
 export const leftNavModerator: LeftNavItemData[] = [
     {
-        icon: "home",
-        path: "/moderator/dashboard",
-        title: "Dashboard",
-    },
-    {
         icon: "user",
         path: "/moderator/user",
         title: "User",
@@ -68,6 +58,19 @@ export const leftNavModerator: LeftNavItemData[] = [
         title: "Report",
     },
 ];
+
+export const USER_ROLE = {
+    ADMIN: "admin",
+    MODERATOR: "moderator",
+    USER: "user",
+};
+
+export const leftNavOptions: {
+    [key: string]: LeftNavItemData[];
+} = {
+    admin: leftNavAdmin,
+    moderator: leftNavModerator,
+};
 
 export const leftNavUser: LeftNavItemData[] = [];
 
@@ -103,10 +106,4 @@ export const THEME = {
     DARK: "dark",
     LIGHT: "light",
     SYSTEM: "system",
-};
-
-export const USER_ROLE = {
-    ADMIN: "admin",
-    MODERATOR: "moderator",
-    USER: "user",
 };

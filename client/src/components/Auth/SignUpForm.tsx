@@ -7,7 +7,6 @@ import yup from "utils/yup-config";
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { signupAsync } from "store/slices/authSlice";
-import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 
 interface SignUpFormProps {}
@@ -31,7 +30,7 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
             signupAsync({
                 name: data.name.replace(/\s+/g, " ").trim(),
                 email: data.email,
-                password: hash(data.password),
+                password: data.password,
             } as UserSignup)
         );
     };

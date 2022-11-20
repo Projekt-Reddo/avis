@@ -7,7 +7,6 @@ import yup from "utils/yup-config";
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { loginAsync } from "store/slices/authSlice";
-import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 import { Link } from "react-router-dom";
 
@@ -33,7 +32,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
         dispatch(
             loginAsync({
                 email: data.email,
-                password: hash(data.password),
+                password: data.password,
             } as UserLoginDto)
         );
     };
@@ -49,6 +48,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
                 placeholder="Please enter your Email"
                 register={register("email")}
                 error={errors.email}
+                data-cy="email"
             />
             <Input
                 className="py-3 w-full"
@@ -57,6 +57,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
                 register={register("password")}
                 type="password"
                 error={errors.password}
+                data-cy="password"
             />
             <Link className="mt-2 block text-sm text-gray-500" to="/">
                 Forgot password?
@@ -68,6 +69,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
                     userState.status === "loading" ||
                     userState.status === "init"
                 }
+                data-cy="submit-btn"
             >
                 Login
             </Button>
