@@ -85,6 +85,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             style={{
                                 backgroundImage: `url(${post.user.avatar})`,
                             }}
+                            data-cy="avatar-post"
                         />
                     </div>
 
