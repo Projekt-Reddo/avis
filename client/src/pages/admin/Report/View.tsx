@@ -100,6 +100,7 @@ const ViewReport = () => {
                                 type={"radio"}
                                 value={"true"}
                                 {...register("isPost")}
+                                data-cy="filter-post-report"
                             />
                         </label>
                         <label className="flex flex-row gap-3 items-center">
@@ -109,6 +110,7 @@ const ViewReport = () => {
                                 type={"radio"}
                                 value={"false"}
                                 {...register("isPost")}
+                                data-cy="filter-comment-report"
                             />
                         </label>
                     </div>
@@ -120,6 +122,7 @@ const ViewReport = () => {
                             type="date"
                             className="w-[45%]"
                             register={register("from")}
+                            data-cy="filter-start-date"
                         />
 
                         <div className="self-center">-</div>
@@ -128,6 +131,7 @@ const ViewReport = () => {
                             type="date"
                             className="w-[45%]"
                             register={register("to")}
+                            data-cy="filter-end-date"
                         />
                     </div>
                 </div>
@@ -147,6 +151,7 @@ const ViewReport = () => {
                                     type={"radio"}
                                     value={value}
                                     {...register("type")}
+                                    data-cy={value}
                                 />
                             </label>
                         );
