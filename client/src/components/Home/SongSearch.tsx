@@ -188,7 +188,10 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                 }}
             >
                 <div className=" grid justify-items-center">
-                    <div className="text-4xl mb-10 font-bold text-center">
+                    <div
+                        className="text-4xl mb-10 font-bold text-center"
+                        data-cy="text-search-header"
+                    >
                         Discover and search song
                     </div>
                     <div className="relative w-80 md:w-[35rem] flex h-15 bg-[color:var(--element-bg-color)] items-center rounded-xl border-[0.25px] border-[color:var(--border-color)] mb-6 shadow-md">
@@ -225,6 +228,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                                     setShowHistory(true);
                                 }}
                                 ref={inputRef}
+                                data-cy="input-text-search"
                             />
                         </form>
                         <div className="h-full flex items-center justify-center pr-3">

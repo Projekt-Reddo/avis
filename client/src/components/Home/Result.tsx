@@ -59,7 +59,9 @@ const Result: React.FC<ResultProp> = ({ result, title }) => {
                 {title ? title : "Top Result"}
             </div>
             {result.data.payload.length <= 0 ? (
-                <div className="h-24">No song found!</div>
+                <div className="h-24" data-cy="error-text-search">
+                    No song found!
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
                     {result.data.payload.map((song) => (
@@ -118,7 +120,10 @@ const Result: React.FC<ResultProp> = ({ result, title }) => {
                                 </div>
                             </div>
                             <div className="p-3">
-                                <div className="text-xl font-bold">
+                                <div
+                                    className="text-xl font-bold"
+                                    data-cy="text-search-result-item-title"
+                                >
                                     {song.title}
                                 </div>
                                 <div>

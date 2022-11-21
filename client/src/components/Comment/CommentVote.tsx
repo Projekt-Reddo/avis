@@ -67,6 +67,7 @@ const CommentVote: React.FC<CommentVoteProps> = ({ comment }) => {
                     size="2xl"
                     icon="caret-up"
                     onClick={authState ? handleUpvote : handleUnauthorize}
+                    data-cy="comment-upvote-btn"
                 />
                 <div className="font-bold whitespace-nowrap max-w-[4rem] mx-1 text-xl">
                     {upvotedBy.length - downvotedBy.length}
@@ -80,6 +81,7 @@ const CommentVote: React.FC<CommentVoteProps> = ({ comment }) => {
                     size="2xl"
                     icon="caret-down"
                     onClick={authState ? handleDownvote : handleUnauthorize}
+                    data-cy="comment-downvote-btn"
                 />
             </div>
         </>

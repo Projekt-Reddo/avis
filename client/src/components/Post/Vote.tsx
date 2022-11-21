@@ -66,6 +66,7 @@ const Vote: React.FC<VoteProps> = ({ post }) => {
                         }
                         icon="caret-up"
                         onClick={authState ? handleUpvote : handleUnauthorize}
+                        data-cy="post-upvote-btn"
                     />
                     <div className="text-center text-xl font-bold text-ellipsis overflow-hidden whitespace-nowrap max-w-[4rem]">
                         {upvotedBy.length - downvotedBy.length}
@@ -78,6 +79,7 @@ const Vote: React.FC<VoteProps> = ({ post }) => {
                         }
                         icon="caret-down"
                         onClick={authState ? handleDownvote : handleUnauthorize}
+                        data-cy="post-downvote-btn"
                     />
                 </div>
             </div>
