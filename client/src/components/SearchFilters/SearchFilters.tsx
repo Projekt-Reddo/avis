@@ -36,6 +36,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                 <button
                     type="submit"
                     className="radius-border-left-side flex justify-center items-center bg-[color:var(--body-bg-color)] py-2 px-4 border-r-0 focus:outline-none"
+                    data-cy="search-filter-submit-btn"
                 >
                     <Icon
                         icon="search"
@@ -60,6 +61,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
                         type="button"
                         className="radius-border-right-side flex justify-center items-center cursor-pointer bg-[color:var(--body-bg-color)] py-2 px-4 border-l-0 focus:outline-none"
                         onClick={() => setShowSearchFilter(!showSearchFilter)}
+                        data-cy="show-filter-btn"
                     >
                         <div className="text-base font-bold pr-4">Filter</div>
                         <Icon

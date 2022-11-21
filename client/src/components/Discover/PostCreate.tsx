@@ -357,6 +357,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                             components={{
                                 IndicatorSeparator: () => null,
                             }}
+                            data-cy="create-post-select"
                         />
                     ) : (
                         ""
@@ -373,6 +374,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                         ) => setContent(event.currentTarget.value)}
                         value={content}
                         onFocus={() => setIsOpenSelect(true)}
+                        data-cy="create-post-input"
                     />
 
                     {/* Might update in the future */}
@@ -486,6 +488,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                 onChange={handleUploadFiles}
                                 multiple
                                 hidden
+                                data-cy="create-post-file-input"
                             />
 
                             {/* Select Icons */}
@@ -564,6 +567,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                     uploadedAudio === null &&
                                     uploadedVideo === null)
                             }
+                            data-cy="create-post-submit-btn"
                         >
                             Post
                         </Button>
