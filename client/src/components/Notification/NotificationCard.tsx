@@ -82,7 +82,7 @@ const NotificationCard: React.FC<NotificationCardProps> = () => {
                         </div>
                     }
                     className="scrollable-notifi"
-                    height={width! > MOBILE_BREAKPOINT ? 540 : height! - 128}
+                    height={width! > MOBILE_BREAKPOINT ? 480 : height! - 128}
                 >
                     <div className="pt-4">
                         {notifys.data.payload.map((notify: any) => (
