@@ -141,7 +141,11 @@ const Nav = () => {
                 <Link className={getLinkStyle("/")} to="/">
                     Home
                 </Link>
-                <Link className={getLinkStyle("/discover")} to="/discover">
+                <Link
+                    className={getLinkStyle("/discover")}
+                    to="/discover"
+                    data-cy="discover-btn"
+                >
                     Discover
                 </Link>
                 <Link className={getLinkStyle("/feedback")} to="/feedback">
