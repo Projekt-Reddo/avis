@@ -72,6 +72,7 @@ const PostCard: React.FC<PostCardProps> = ({
                     isDetailPage ? "" : "cursor-pointer"
                 } ${style}`}
                 onClick={handleViewDetail}
+                data-cy="post-card"
             >
                 <div className="col-span-1">
                     {/* Avatar */}
