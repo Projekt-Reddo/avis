@@ -88,6 +88,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ setOpen }) => {
                             placeholder="Please enter your name"
                             register={register("name")}
                             error={errors.name}
+                            data-cy="display-name"
                         />
                         <div className="w-full flex flex-row items-center justify-end mt-4">
                             <Button
@@ -103,6 +104,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ setOpen }) => {
                                 className="block ml-4"
                                 type="submit"
                                 disabled={profileState.status == "loading"}
+                                data-cy="profile-save-btn"
                             >
                                 Edit
                             </Button>
@@ -117,7 +119,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ setOpen }) => {
 const schema = yup.object().shape({
     name: yup
         .string()
-        .required("Name is equired!")
+        .required("Name is required!")
         .name("Please enter valid name without invalid special characters")
         .min(6, "Name must be minimum of 6 characters"),
     avatarFile: yup.mixed().nullable(true),
