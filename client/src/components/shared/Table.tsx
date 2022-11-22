@@ -117,6 +117,7 @@ const Table: React.FC<TableProps> = ({
                                         onChange={handleAllChecked}
                                         checked={isCheckedAll}
                                         value={"random"}
+                                        data-cy="table-select-all-input"
                                     />
                                 </label>
                             </th>
@@ -162,6 +163,7 @@ const Table: React.FC<TableProps> = ({
                                                     ? true
                                                     : false
                                             }
+                                            data-cy="table-select-row-input"
                                         />
                                     </label>
                                 </td>

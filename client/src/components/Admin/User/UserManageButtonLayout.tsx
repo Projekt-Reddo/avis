@@ -46,6 +46,7 @@ const UserManageButtonLayout: React.FC<UserManageButtonLayoutProps> = ({
                 className={`flex items-center justify-center mt-3 px-4 ${
                     button.props?.className || ""
                 }`}
+                data-cy="user-manage-btn"
             >
                 {button.title}
             </Button>
@@ -82,6 +83,7 @@ const UserManageButtonLayout: React.FC<UserManageButtonLayoutProps> = ({
                                 }`}
                                 disabled={loading}
                                 onClick={() => onConfirmed(setLoading)}
+                                data-cy="modal-confirm-btn"
                             >
                                 {modal.confirmButton.title}
                             </Button>
