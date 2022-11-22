@@ -26,7 +26,10 @@ const Post = () => {
 
     return (
         <PageWrapper>
-            <div className="lg:hidden flex justify-between items-center p-4">
+            <div
+                className="lg:hidden flex justify-between items-center p-4"
+                data-cy="post-detail-wrapper"
+            >
                 <div className="text-2xl">Discover</div>
                 <Link to="/discover/search">
                     <Icon

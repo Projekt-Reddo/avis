@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import "./InfiniteScroll.css";
 
 // Logic
-import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import { useWindowDimensions } from "utils/useWindowDimensions";
 
 // Components
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -35,8 +33,6 @@ export default function createPostInfiniteScrollLayout({
     const dispatch = useAppDispatch();
 
     const dataState = useAppSelector(storeSelector);
-
-    const { width, height } = useWindowDimensions();
 
     const [fetchMorePage, setFetchMorePage] = React.useState(2);
 
@@ -124,7 +120,10 @@ export default function createPostInfiniteScrollLayout({
                                     No result
                                 </div>
                             ) : (
-                                <div className="lg:pt-4">
+                                <div
+                                    className="lg:pt-4"
+                                    data-cy="post-list-wrapper"
+                                >
                                     {dataState.data?.payload?.map(
                                         (post: Post) => (
                                             <PostCard

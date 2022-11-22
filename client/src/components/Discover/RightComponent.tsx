@@ -69,6 +69,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                             });
                         }
                     }}
+                    data-cy="discover-search-bar"
                 />
             </div>
 
@@ -78,7 +79,7 @@ const RightComponent: React.FC<RightComponentProps> = () => {
                     Trending for you
                 </div>
 
-                <div>
+                <div data-cy="hashtag-list-wrapper">
                     {hashtagState?.popular ? (
                         <div
                             className="cursor-pointer hover:bg-[color:var(--post-bg-hover-color)] px-4 py-2"
