@@ -199,14 +199,13 @@ public class PostsController : ControllerBase
 	[HttpPost("filter")]
 	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewPost(PaginationReqDto<PostFilterDto> pagination)
 	{
-		var userId = "";
+		string? userId;
 
 		// Get User Id
-		try
+		if (User.FindFirst(JwtTokenPayload.USER_ID) is not null)
 		{
 			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-		}
-		catch (Exception)
+		} else
 		{
 			userId = null;
 		}
