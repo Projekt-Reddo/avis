@@ -293,8 +293,9 @@ public class PostLogic : IPostLogic
 				IEnumerable<BsonDocument> stages = new List<BsonDocument>();
 
 				var totalPostFTS = await _postRepo.CountDocumentAsync(
-					filter: searchfilter,
-					stages: stages);
+					filter: postFilter,
+					stages: stages,
+					indexFilter: searchfilter);
 
 				return (totalPostFTS, postsFromRepoFTS);
 			}
