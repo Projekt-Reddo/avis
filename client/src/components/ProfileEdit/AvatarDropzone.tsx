@@ -69,7 +69,7 @@ const AvatarDropzone: FunctionComponent<ImageDropzoneProps> = ({
                     className: "dropzone",
                 })}
             >
-                <input {...getInputProps()} />
+                <input {...getInputProps()} data-cy="avatar-input" />
 
                 <div
                     className="profile-avatar-edit absolute rounded-full border-4 border-white profile-bg-img-position"
