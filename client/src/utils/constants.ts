@@ -1,5 +1,6 @@
 export const routes = [
     "/login",
+    "/forgot",
     "/contact",
     "/signup",
     "/search",
