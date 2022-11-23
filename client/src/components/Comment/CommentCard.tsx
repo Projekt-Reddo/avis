@@ -129,6 +129,7 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                                     setOpenReport(true);
                                 }
                             }}
+                            data-cy="comment-report-icon"
                         />
 
                         <CommentDeleteButton comment={comment} />

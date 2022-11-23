@@ -140,6 +140,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                     onFocus={() => {
                         setIsFocusInput(true);
                     }}
+                    data-cy="comment-textarea"
                 />
 
                 <MediaDisplay
@@ -237,6 +238,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                                         !watchFiles)
                                 }
                                 type={"submit"}
+                                data-cy="comment-create-button"
                             >
                                 <Icon
                                     icon="paper-plane"
