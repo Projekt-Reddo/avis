@@ -73,7 +73,7 @@ namespace MainService.Data
 		/// <param name="filter"></param>
 		/// <param name="stages"></param>
 		/// <returns></returns>
-		Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages);
+		Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages, BsonDocument? indexFilter = null!);
 
 		/// <summary>
 		/// Get a document by fitler
@@ -242,9 +242,20 @@ namespace MainService.Data
 			return entities;
 		}
 
-		public async Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages)
+		public async Task<long> CountDocumentAsync(FilterDefinition<TEntity> filter, IEnumerable<BsonDocument> stages, BsonDocument? indexFilter = null!)
 		{
 			var query = _collection.Aggregate();
+
+			// $search need to be the first stage in pipeline
+			if (indexFilter is not null)
+			{
+				query = query.AppendStage<TEntity>(new BsonDocument {
+					{
+						"$search", indexFilter
+					}
+				});
+			}
+
 			stages = stages ?? Enumerable.Empty<BsonDocument>();
 
 			foreach (var stage in stages)
