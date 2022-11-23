@@ -71,7 +71,12 @@ const FileDropzone: FunctionComponent<FileDropzoneProps> = ({
                         "dropzone flex justify-center w-full h-40 px-4 transition bg-[color:var(--element-bg-color-elevate-1)] border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none",
                 })}
             >
-                <input id={id ? id : ""} {...getInputProps()} hidden={hidden} />
+                <input
+                    id={id ? id : ""}
+                    {...getInputProps()}
+                    hidden={hidden}
+                    data-cy="create-song-track-input"
+                />
                 <span className="flex flex-col items-center justify-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

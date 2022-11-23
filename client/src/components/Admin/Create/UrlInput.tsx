@@ -58,6 +58,7 @@ const UrlInput: FunctionComponent<UrlInputProps> = ({
                             type="text"
                             register={register("url.youtube")}
                             error={errors.url?.youtube}
+                            data-cy="create-song-youtube"
                         />
                     </div>
 
@@ -73,6 +74,7 @@ const UrlInput: FunctionComponent<UrlInputProps> = ({
                             type="text"
                             register={register("url.spotify")}
                             error={errors.url?.spotify}
+                            data-cy="create-song-spotify"
                         />
                     </div>
 
@@ -88,6 +90,7 @@ const UrlInput: FunctionComponent<UrlInputProps> = ({
                             type="text"
                             register={register("url.soundcloud")}
                             error={errors.url?.soundcloud}
+                            data-cy="create-song-soundcloud"
                         />
                     </div>
                 </div>
@@ -117,7 +120,12 @@ const UrlInput: FunctionComponent<UrlInputProps> = ({
                         }}
                     >
                         <Icon icon="arrow-right" className="text-white" />
-                        <span className="ml-2 text-white">Next</span>
+                        <span
+                            className="ml-2 text-white"
+                            data-cy="next-step-btn"
+                        >
+                            Next
+                        </span>
                     </Button>
                 </div>
             </div>

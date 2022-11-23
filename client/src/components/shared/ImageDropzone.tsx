@@ -83,7 +83,7 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
                         "dropzone flex justify-center w-full h-full transition bg-[color:var(--element-bg-color-elevate-1)] border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none",
                 })}
             >
-                <input {...getInputProps()} />
+                <input {...getInputProps()} data-cy="create-song-thumbnail" />
                 {getValues(fieldName) || preview ? (
                     <div
                         className="w-full h-full"
