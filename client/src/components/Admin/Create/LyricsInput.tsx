@@ -67,6 +67,7 @@ const LyricsInput: FunctionComponent<LyricsInputProps> = ({
                 style={{
                     minHeight: "22rem",
                 }}
+                data-cy="create-song-lyric"
             >
                 <div className="w-full flex justify-between mb-3">
                     <div className="font-semibold">Input</div>
@@ -126,7 +127,9 @@ const LyricsInput: FunctionComponent<LyricsInputProps> = ({
                         disabled={songState.status === "loading"}
                     >
                         <Icon icon="plus" className="text-white" />
-                        <span className="ml-2 text-white">Submit</span>
+                        <span className="ml-2 text-white" data-cy="submit-btn">
+                            Submit
+                        </span>
                     </Button>
                 </div>
             </div>

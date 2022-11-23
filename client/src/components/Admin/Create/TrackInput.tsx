@@ -61,6 +61,7 @@ const TrackInput: FunctionComponent<TrackInputProps> = ({
                         style={{
                             boxShadow: "none !important",
                         }}
+                        data-cy="next-step-btn"
                     >
                         <Icon icon="arrow-right" className="text-white" />
                         <span className="ml-2 text-white">Next</span>

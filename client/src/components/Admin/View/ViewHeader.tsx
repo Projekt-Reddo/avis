@@ -10,7 +10,7 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({ title, addButtonUrl }) => {
     return (
         <div className="flex justify-between pt-6">
             <div className="text-lg font-bold">{title}</div>
-            <Link to={addButtonUrl}>
+            <Link to={addButtonUrl} data-cy="create-song-btn">
                 <div
                     className="h-9 w-9 flex justify-center items-center text-[color:var(--teal-lighter-color)] bg-[color:var(--body-bg-color)]"
                     style={{
