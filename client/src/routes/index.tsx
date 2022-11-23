@@ -18,6 +18,7 @@ import AuthRoute from "./AuthRoute";
 import Search from "pages/Search";
 import Profile from "pages/user/Profile";
 import ModeratorRoutes from "./moderator-routes";
+import ForgotPassword from "pages/auth/Forgot";
 
 const MainRoute = () => {
     return (
@@ -33,6 +34,10 @@ const MainRoute = () => {
 
                 <AuthRoute path="/verify">
                     <VerifyEmail />
+                </AuthRoute>
+
+                <AuthRoute path="/forgot">
+                    <ForgotPassword />
                 </AuthRoute>
             </>
 

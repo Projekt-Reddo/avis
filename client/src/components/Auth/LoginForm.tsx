@@ -59,7 +59,7 @@ const LoginForm: React.FunctionComponent<LoginFormProps> = () => {
                 error={errors.password}
                 data-cy="password"
             />
-            <Link className="mt-2 block text-sm text-gray-500" to="/">
+            <Link className="mt-2 block text-sm text-gray-500" to="/forgot">
                 Forgot password?
             </Link>
             <Button
