@@ -13,8 +13,8 @@ const UserMuteButton: React.FC<UserManageButtonProps> = ({
 }) => {
 
         const mute : MuteOption = {
-            mutePostDays: 0,
-            muteCommentDays: 0
+            mutePostDays: null,
+            muteCommentDays: null
         }
 
         if (selectedUser.length == 0) return <></>;
@@ -23,12 +23,13 @@ const UserMuteButton: React.FC<UserManageButtonProps> = ({
 
         const hideCondition = () => {
             // Hide when users do not have the same role
-            let selectedRoleList = selectedUser.filter(
-                (user) => user.role === selectedRole
-            );
+            // let selectedRoleList = selectedUser.filter(
+            //     (user) => user.role === selectedRole
+            // );
 
-            return selectedRoleList.length !== selectedUser.length;
+            return false;
         };
+
         const handleConfirm = (
             setLoading: React.Dispatch<React.SetStateAction<boolean>>
         ) => {
