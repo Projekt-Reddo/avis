@@ -57,7 +57,9 @@ const CommentCard: React.FC<CommenteCardProps> = ({
 
                     {/* Content */}
                     <div className="flex flex-col gap-4">
-                        <div className="mt-3">{comment.content}</div>
+                        <div className="mt-3" data-cy="comment-card-content">
+                            {comment.content}
+                        </div>
                         <div
                             className="cursor-auto"
                             onClick={(event: React.MouseEvent<HTMLElement>) => {

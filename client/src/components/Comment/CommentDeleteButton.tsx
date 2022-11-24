@@ -74,6 +74,7 @@ const CommentDeleteButton: FunctionComponent<CommentDeleteButtonProps> = ({
                 onClick={() => {
                     setOpen(true);
                 }}
+                data-cy="comment-delete-btn"
             />
 
             <Modal
