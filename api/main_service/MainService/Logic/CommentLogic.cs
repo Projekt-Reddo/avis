@@ -183,7 +183,7 @@ public class CommentLogic : ICommentLogic
 		(var totals, var comments) = await _commentRepo.FindManyAsync(filter: filterComments, lookup: lookup, project: project,
 				limit: Size,
 				skip: skipPage,
-				sort:sort
+				sort: sort
 				);
 
 		return (totals, comments);
@@ -243,34 +243,34 @@ public class CommentLogic : ICommentLogic
 	}
 
 	public BsonDocument SortFilter(string sortFilter)
+	{
+		string sortType = "";
+
+		int adesc = 1;
+
+		switch (sortFilter)
 		{
-			string sortType = "";
+			case Constants.CommentSortFilterOption.Upvote_DESC:
+				sortType = "UpvotedBy";
+				adesc = -1;
+				break;
+			case Constants.CommentSortFilterOption.CreateAt_DESC:
+				sortType = "CreatedAt";
+				adesc = -1;
+				break;
+			default:
+				sortType = "CreatedAt";
+				adesc = 1;
+				break;
+		}
 
-			int adesc = 1;
-
-			switch (sortFilter)
-			{
-				case Constants.CommentSortFilterOption.Upvote_DESC:
-					sortType = "UpvotedBy";
-					adesc = -1;
-					break;
-				case Constants.CommentSortFilterOption.CreateAt_DESC:
-					sortType = "CreatedAt";
-					adesc = -1;
-					break;
-				default:
-					sortType = "CreatedAt";
-					adesc = 1;
-					break;
-			}
-
-			BsonDocument sort = new BsonDocument
+		BsonDocument sort = new BsonDocument
 			{
 				{ sortType, adesc }
 			};
 
-			return sort;
-		}
+		return sort;
+	}
 
 	public async Task<VoteResponeDto> CommentVoteCount(string commentId)
 	{

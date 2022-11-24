@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Icon from "components/shared/Icon";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FunctionComponent } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import yup from "utils/yup-config";
 import TextareaAutosize from "react-textarea-autosize";
@@ -48,16 +48,37 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
         content: yup.string().nullable(true),
         media: yup.mixed().nullable(true),
     });
-    const { register, handleSubmit, getValues, setValue, watch, reset } =
-        useForm({
-            mode: "onChange",
-            resolver: yupResolver(schema),
-            defaultValues: {
-                content: "",
-                media: null,
-            },
-        });
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        setValue,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm({
+        mode: "onChange",
+        resolver: yupResolver(schema),
+        defaultValues: {
+            content: "",
+            media: null,
+        },
+    });
     const watchFiles = watch(mediaField);
+    const watchContent = watch(contentField);
+    const [isDisableSubmit, setIsDisableSubmit] = useState(true);
+
+    useEffect(() => {
+        if (
+            remainLetter < 0 ||
+            (remainLetter === COMMENT_LENGTH && !watchFiles) ||
+            (!watchContent.replace(/\s/g, "").length && !watchFiles)
+        ) {
+            setIsDisableSubmit(true);
+        } else {
+            setIsDisableSubmit(false);
+        }
+    }, [watchContent, watchFiles]);
 
     const handleRemoveFile = () => {
         setValue(mediaField, null);
@@ -133,15 +154,20 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                         resize: "none",
                     }}
                     className="bg-transparent p-3 focus:border-none focus:outline-none h-auto"
-                    {...register(contentField)}
-                    onChange={(e) => {
-                        setRemainLetter(COMMENT_LENGTH - e.target.value.length);
-                    }}
+                    {...register(contentField, {
+                        onChange: (e) => {
+                            setRemainLetter(
+                                COMMENT_LENGTH - e.target.value.length
+                            );
+                        },
+                    })}
                     onFocus={() => {
                         setIsFocusInput(true);
                     }}
                     data-cy="comment-textarea"
                 />
+
+                {errors.content && errors.content.message}
 
                 <MediaDisplay
                     file={watchFiles}
@@ -171,6 +197,11 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                                                         getValues(
                                                             contentField
                                                         ) + e.emoji
+                                                    );
+                                                    setRemainLetter(
+                                                        (prev) =>
+                                                            prev -
+                                                            e.emoji.length
                                                     );
                                                 }}
                                                 skinTonesDisabled
@@ -232,11 +263,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                             <Button
                                 variant="primary"
                                 className="shadow-none"
-                                disabled={
-                                    remainLetter < 0 ||
-                                    (remainLetter === COMMENT_LENGTH &&
-                                        !watchFiles)
-                                }
+                                disabled={isDisableSubmit}
                                 type={"submit"}
                                 data-cy="comment-create-button"
                             >

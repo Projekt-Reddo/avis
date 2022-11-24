@@ -73,6 +73,14 @@ export const createCommentAsync = createAsyncThunk(
     async (comment: CommentCreate, thunkApi) => {
         try {
             var rs = await commentCreateApi(comment);
+        } catch (e: any) {
+            thunkApi.dispatch(
+                addToast({
+                    variant: "warning",
+                    message: e.response.data.message,
+                })
+            );
+        } finally {
             return await viewCommentApi({
                 page: 1,
                 size: 10,
@@ -84,13 +92,6 @@ export const createCommentAsync = createAsyncThunk(
                     sort: "CreateAt Descending",
                 },
             });
-        } catch (e: any) {
-            thunkApi.dispatch(
-                addToast({
-                    variant: "warning",
-                    message: e.response.data.message,
-                })
-            );
         }
     }
 );

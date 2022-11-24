@@ -69,6 +69,7 @@ public static class ResponseMessage
 	public const string COMMENT_NOT_FOUND = "No comment found";
 	public const string COMMENT_VOTE_SUCCESS = "Comment Vote Successfully";
 	public const string COMMENT_VOTE_FAIL = "Post Vote Failed";
+	public const string COMMENT_DELETE_SUCCESS = "Delete comment successfully";
 	public const string COMMENT_DELETE_FAIL = "Fail to delete comment";
 
 
