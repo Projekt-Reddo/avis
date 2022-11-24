@@ -103,7 +103,7 @@ namespace MainService.Dtos
     public class AccountsMuteDto
     {
         public string[] Uids { get; set; } = null!;
-		public int MutePostDays { get; set; }
-        public int MuteCommentDays { get; set; }
+		public int? MutePostDays { get; set; }
+        public int? MuteCommentDays { get; set; }
 	}
 }

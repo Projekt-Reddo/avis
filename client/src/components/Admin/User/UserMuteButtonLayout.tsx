@@ -3,6 +3,7 @@ import { useModal } from "components/Modal";
 import ModalForm from "components/Modal/ModalForm";
 import moment from "moment";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { DAY_FORMAT } from "utils/constants";
 
 interface UserMuteButtonLayoutProps extends UserManageButtonLayoutDefaultProps {
@@ -33,9 +34,16 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
     onConfirmed,
     mute,
 }) => {
-    const [post, setPost] = React.useState(0);
 
-    const [comment, setComment] = React.useState(0);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isDirty, isSubmitting, isSubmitted, submitCount, isValid, isValidating },
+      } = useForm();
+
+    const [post,setPost] = React.useState();
+
+    const [comment,setComment] = React.useState();
 
     const handlePostChange = (e: any) => {
         setPost(e.target.value);
@@ -50,6 +58,8 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
     const { open, setOpen } = useModal();
 
     const [loading, setLoading] = useState<boolean>(false);
+
+    const onSubmit = () => console.log(post);
 
     if (hideCondition) return <></>;
 
@@ -84,37 +94,25 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                         <div className="font-bold">
                             What is your Mute Options
                         </div>
-                        <div className="w-full flex flex-row items-center justify-center mt-4">
-                            <div className="rounded-lg border-2 w-[14rem] h-[5rem] ">
-                                <div className="ml-2 mt-2">Limit Posting</div>
-                                <div className="flex flex-row items-center justify-center mt-3">
-                                    End in{" "}
-                                    <input
-                                        type="numer"
-                                        value={post}
-                                        onChange={handlePostChange}
-                                        min={0}
-                                        className=" border-2 w-[2rem] rounded-md text-black font-bold text-center bg-white ml-1 mr-1"
-                                        data-cy="mute-pote-input"
-                                    />{" "}
-                                    Day
+                        <div >
+                            <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-row items-center justify-center mt-4">
+                                <div className="rounded-lg border-2 w-[14rem] h-[5rem] ">
+                                    <div className="ml-2 mt-2">
+                                        Limit Posting
+                                    </div>
+                                    <div className="flex flex-row items-center justify-center mt-3">
+                                        End in <input type="numer" value={post} onChange={handlePostChange} min={0} className=" border-2 w-[2rem] rounded-md text-black font-bold text-center bg-white ml-1 mr-1"/> Day
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="ml-3 rounded-lg border-2 w-[14rem] h-[5rem]">
-                                <div className="ml-2 mt-2">Limit Comment</div>
-                                <div className="flex flex-row items-center justify-center mt-3">
-                                    End in{" "}
-                                    <input
-                                        type="numer"
-                                        value={comment}
-                                        onChange={handleCommentChange}
-                                        min={0}
-                                        className="border-2 w-[2rem] rounded-md text-black font-bold text-center bg-white ml-1 mr-1"
-                                        data-cy="mute-comment-input"
-                                    />{" "}
-                                    Day
+                                <div className="ml-3 rounded-lg border-2 w-[14rem] h-[5rem]">
+                                    <div className="ml-2 mt-2">
+                                        Limit Comment
+                                    </div>
+                                    <div className="flex flex-row items-center justify-center mt-3">
+                                        End in <input type="numer" value={comment}  onChange={handleCommentChange} min={0} className="border-2 w-[2rem] rounded-md text-black font-bold text-center bg-white ml-1 mr-1"/> Day
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                         <div className="w-full flex flex-row items-center justify-end mt-5">
                             <Button

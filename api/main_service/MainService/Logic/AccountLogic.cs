@@ -426,7 +426,7 @@ namespace MainService.Logic
 			return (true, ResponseMessage.ACCOUNT_STATUS_UPDATE_SUCCESS);
 		}
 
-		public async Task<bool> Mute(string uid, int MutePostDays, int MuteCommentDays)
+		public async Task<bool> Mute(string uid, int? MutePostDays, int? MuteCommentDays)
 		{
 			var filterUid = Builders<Account>.Filter.Eq(x => x.Uid, uid);
 
@@ -446,14 +446,22 @@ namespace MainService.Logic
 			// Mute
 			if (MutePostDays != 0)
 			{
-				accountStatus.PostMutedUntil = DateTime.Now.AddDays(MutePostDays);
-			} else {
+				if (MutePostDays is not null)
+				{
+					double addDays = Convert.ToDouble(MutePostDays);
+					accountStatus.PostMutedUntil = DateTime.Now.AddDays(addDays);
+				}
+			} else if (MutePostDays == 0) {
 				accountStatus.PostMutedUntil = (DateTime?)null;
 			}
 			if (MuteCommentDays != 0)
 			{
-				accountStatus.CommentMutedUntil = DateTime.Now.AddDays(MuteCommentDays);
-			}else {
+				if (MuteCommentDays is not null)
+				{
+					double addDays = Convert.ToDouble(MuteCommentDays);
+					accountStatus.CommentMutedUntil = DateTime.Now.AddDays(addDays);
+				}
+			}else if (MuteCommentDays == 0) {
 				accountStatus.CommentMutedUntil = (DateTime?)null;
 			}
 
@@ -468,18 +476,20 @@ namespace MainService.Logic
 			// Set Firebase claim
 			await SetClaimWhenUpdateProfile(accountFromRepo);
 
-			if (MutePostDays != 0)
+			if (MutePostDays != 0 && MutePostDays != null)
 			{
+				double addDays = Convert.ToDouble(MutePostDays);
 				_backgroundJobClient.Schedule(() =>
 							UnMute(uid, "post"),
-							DateTimeOffset.Now.AddDays(MutePostDays));
+							DateTimeOffset.Now.AddDays(addDays));
 			}
 
-			if (MuteCommentDays != 0)
+			if (MuteCommentDays != 0 && MuteCommentDays != null)
 			{
+				double addDays = Convert.ToDouble(MuteCommentDays);
 				_backgroundJobClient.Schedule(() =>
 							UnMute(uid, "comment"),
-							DateTimeOffset.Now.AddDays(MuteCommentDays));
+							DateTimeOffset.Now.AddDays(addDays));
 			}
 
 			return (true);
@@ -494,7 +504,7 @@ namespace MainService.Logic
 			ICollection<string> failedAccountUids = new List<string>();
 			foreach (string uid in accountsMuteDto.Uids)
 			{
-				bool status = await Mute(uid, accountsMuteDto.MutePostDays, accountsMuteDto.MuteCommentDays);
+				bool status = await Mute(uid, accountsMuteDto.MutePostDays , accountsMuteDto.MuteCommentDays);
 
 				if (status is false)
 				{
