@@ -100,6 +100,7 @@ const Modal: React.FC<ModalProps> = ({
                                         onConfirm();
                                         setOpen(false);
                                     }}
+                                    data-cy="modal-confirm-btn"
                                 >
                                     {confirmTitle}
                                 </button>

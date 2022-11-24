@@ -173,6 +173,7 @@ const View = () => {
                 variant="danger"
                 onClick={() => setOpenDelete(true)}
                 disabled={isSelected ? false : true}
+                data-cy="user-delete-btn"
             >
                 <Icon icon="trash" className="mr-2" />
                 Delete

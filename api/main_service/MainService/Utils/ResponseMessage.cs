@@ -7,7 +7,7 @@ public static class ResponseMessage
 	public const string UPLOAD_SONG_FILE_FAIL = "Song information saved successfully but failed to save the mp3 file!";
 	public const string UPLOAD_SONG_SUCCESS = "Song upload successfully";
 	public const string SONG_CREATE_FAIL = "Fail to create song please check your details";
-	public const string SONG_DELETE_SUCCESS = "Song delete successfull";
+	public const string SONG_DELETE_SUCCESS = "Song deleted successfully!";
 	public const string SONG_DELETE_FAIL = "Fail to delete song";
 	public const string SONG_UPDATE_FAIL = "Fail to update song";
 	public const string SONG_UPDATE_SUCCESS = "Song update successfull";

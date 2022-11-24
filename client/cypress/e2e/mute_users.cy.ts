@@ -30,7 +30,7 @@ describe("mute users", () => {
 
         cy.wait(5 * 1000);
 
-        cy.get('[data-cy="table-select-row-input"]').click();
+        cy.get('[data-cy="table-select-row-input"]').first().click();
         cy.get('[data-cy="user-mute-button"]').click();
 
         cy.get('[data-cy="mute-pote-input"]').type("2");
@@ -52,7 +52,7 @@ describe("mute users", () => {
 
         cy.wait(5 * 1000);
 
-        cy.get('[data-cy="table-select-row-input"]').click();
+        cy.get('[data-cy="table-select-row-input"]').first().click();
         cy.get('[data-cy="user-mute-button"]').click();
 
         cy.get('[data-cy="mute-pote-input"]').clear().type("-1");
@@ -76,7 +76,7 @@ describe("mute users", () => {
 
         cy.wait(5 * 1000);
 
-        cy.get('[data-cy="table-select-row-input"]').click();
+        cy.get('[data-cy="table-select-row-input"]').first().click();
         cy.get('[data-cy="user-mute-button"]').click();
 
         cy.get('[data-cy="mute-pote-input"]').clear().type("0");
