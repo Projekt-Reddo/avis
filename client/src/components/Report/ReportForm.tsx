@@ -169,16 +169,18 @@ const ProblemList: FunctionComponent<ProblemListProps> = ({
                 If someone is in immediate danger, get help before reporting to
                 us. Don't wait.
             </p>
-            {reportTypes.map((reportType) => (
-                <div
-                    className="flex justify-between items-center p-2 rounded hover:bg-[color:var(--element-bg-color-elevate-2)] cursor-pointer"
-                    onClick={reportType.onClick}
-                    key={reportType.name}
-                >
-                    <span>{reportType.name}</span>
-                    <Icon icon="arrow-right" />
-                </div>
-            ))}
+            <div data-cy="report-types-list">
+                {reportTypes.map((reportType) => (
+                    <div
+                        className="flex justify-between items-center p-2 rounded hover:bg-[color:var(--element-bg-color-elevate-2)] cursor-pointer"
+                        onClick={reportType.onClick}
+                        key={reportType.name}
+                    >
+                        <span>{reportType.name}</span>
+                        <Icon icon="arrow-right" />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
@@ -234,7 +236,7 @@ const ReportNudity: FunctionComponent<ReportNudityProps> = ({
                 <Button onClick={backToSelections} variant="secondary">
                     Back
                 </Button>
-                <Button onClick={onSubmit}>Submit</Button>
+                <ReportSubmitButton onSubmit={onSubmit} />
             </div>
         </div>
     );
@@ -289,7 +291,7 @@ const ReportViolence: FunctionComponent<ReportViolenceProps> = ({
                 <Button onClick={backToSelections} variant="secondary">
                     Back
                 </Button>
-                <Button onClick={onSubmit}>Submit</Button>
+                <ReportSubmitButton onSubmit={onSubmit} />
             </div>
         </div>
     );
@@ -314,7 +316,7 @@ const ReportSpam: FunctionComponent<ReportSpamProps> = ({
             example: "",
         },
         {
-            title: "Directing people away from Facebook through the misleading use of links",
+            title: "Directing people through the misleading use of links",
             example: "",
         },
     ];
@@ -338,7 +340,7 @@ const ReportSpam: FunctionComponent<ReportSpamProps> = ({
                 <Button onClick={backToSelections} variant="secondary">
                     Back
                 </Button>
-                <Button onClick={onSubmit}>Submit</Button>
+                <ReportSubmitButton onSubmit={onSubmit} />
             </div>
         </div>
     );
@@ -395,7 +397,7 @@ const ReportHateSpeech: FunctionComponent<ReportHateSpeechProps> = ({
                 <Button onClick={backToSelections} variant="secondary">
                     Back
                 </Button>
-                <Button onClick={onSubmit}>Submit</Button>
+                <ReportSubmitButton onSubmit={onSubmit} />
             </div>
         </div>
     );
@@ -436,9 +438,23 @@ const ReportTerrorism: FunctionComponent<ReportTerrorismProps> = ({
                 <Button onClick={backToSelections} variant="secondary">
                     Back
                 </Button>
-                <Button onClick={onSubmit}>Submit</Button>
+                <ReportSubmitButton onSubmit={onSubmit} />
             </div>
         </div>
+    );
+};
+
+interface ReportSubmitButtonProps {
+    onSubmit: () => void;
+}
+
+const ReportSubmitButton: React.FC<ReportSubmitButtonProps> = ({
+    onSubmit,
+}) => {
+    return (
+        <Button onClick={onSubmit} data-cy="report-submit-button">
+            Submit
+        </Button>
     );
 };
 
@@ -472,12 +488,15 @@ const ReportOther: FunctionComponent<ReportOtherProps> = ({
                     error={errors.problem}
                     rows={6}
                     placeholder="What's your problem?"
+                    data-cy="report-textarea"
                 />
                 <div className="flex justify-between">
                     <Button onClick={backToSelections} variant="secondary">
                         Back
                     </Button>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" data-cy="report-submit-button">
+                        Submit
+                    </Button>
                 </div>
             </form>
         </div>

@@ -6,8 +6,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DAY_FORMAT } from "utils/constants";
 
-interface UserMuteButtonLayoutProps
-    extends UserManageButtonLayoutDefaultProps {
+interface UserMuteButtonLayoutProps extends UserManageButtonLayoutDefaultProps {
     hideCondition?: boolean;
     button: {
         title: React.ReactNode;
@@ -33,7 +32,7 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
     button,
     modal,
     onConfirmed,
-    mute
+    mute,
 }) => {
 
     const {
@@ -49,12 +48,12 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
     const handlePostChange = (e: any) => {
         setPost(e.target.value);
         mute.mutePostDays = e.target.value;
-    }
+    };
 
     const handleCommentChange = (e: any) => {
         setComment(e.target.value);
         mute.muteCommentDays = e.target.value;
-    }
+    };
 
     const { open, setOpen } = useModal();
 
@@ -72,6 +71,7 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                 className={`flex items-center justify-center mt-3 px-4 ${
                     button.props?.className || ""
                 }`}
+                data-cy="user-mute-button"
             >
                 {button.title}
             </Button>
@@ -91,7 +91,7 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                                 />
                             ))}
                         </div>
-                        <div className= "font-bold">
+                        <div className="font-bold">
                             What is your Mute Options
                         </div>
                         <div >
@@ -120,6 +120,7 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                                 border={true}
                                 onClick={() => setOpen(false)}
                                 disabled={loading}
+                                data-cy="mute-modal-cancel-btn"
                             >
                                 Cancel
                             </Button>
@@ -131,6 +132,7 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                                 }`}
                                 disabled={loading}
                                 onClick={() => onConfirmed(setLoading)}
+                                data-cy="mute-modal-confirm-btn"
                             >
                                 {modal.confirmButton.title}
                             </Button>

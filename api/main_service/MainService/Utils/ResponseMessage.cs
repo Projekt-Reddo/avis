@@ -7,7 +7,7 @@ public static class ResponseMessage
 	public const string UPLOAD_SONG_FILE_FAIL = "Song information saved successfully but failed to save the mp3 file!";
 	public const string UPLOAD_SONG_SUCCESS = "Song upload successfully";
 	public const string SONG_CREATE_FAIL = "Fail to create song please check your details";
-	public const string SONG_DELETE_SUCCESS = "Song delete successfull";
+	public const string SONG_DELETE_SUCCESS = "Song deleted successfully!";
 	public const string SONG_DELETE_FAIL = "Fail to delete song";
 	public const string SONG_UPDATE_FAIL = "Fail to update song";
 	public const string SONG_UPDATE_SUCCESS = "Song update successfull";
@@ -25,13 +25,15 @@ public static class ResponseMessage
 	public const string POST_SAVE_SUCCESS = "Save post successfully";
 	public const string POST_DELETE_FAIL = "Fail to delete post";
 	public const string POST_EMPTY_CONTENT_MEDIA = "Post was created without Content or Media";
+	public const string POST_PAST_PUBLISHED_AT = "Published at past";
+
 
 	// Report msg
-	public const string REPORT_CREATE_SUCCESS = "Create a report successfully";
+	public const string REPORT_CREATE_SUCCESS = "Report successfully";
 	public const string REPORT_NO_IDS = "A postId or commentId is required for reporting";
 	public const string REPORT_CONFIRM_SUCCESS = "Confirm reports successfully";
-	public const string REPORT_CONFIRM_PARTIAL_SUCCESS = "Confirm report successfully, but there are some reports can't be confirmed";
-	public const string REPORT_CONFIRM_FAIL = "Fail to update report";
+	public const string REPORT_CONFIRM_PARTIAL_SUCCESS = "Confirm reports successfully, but there are some reports can't be confirmed";
+	public const string REPORT_CONFIRM_FAIL = "Fail to confirm report";
 	public const string REPORT_NOT_FOUND = "Report not found";
 	public const string REPORT_REJECT_ACCEPTED = "Cannot reject accepted reports";
 
@@ -96,7 +98,7 @@ public static class ResponseMessage
 	public const string NOTIFY_IS_READ_Fail = "Fail to Set User Notification to Is Read";
 
 	// Notification msg
-	public const string NOTIFY_REPORT_ACCEPTED_MSG = "Your report was accepted. We are in the process of deleting Post / Comment";
-	public const string NOTIFY_REPORT_DENIED_MSG = "Your report was rejected. We have reviewed and found no unauthorized content in this Post / Comment";
-	public const string NOTIFY_POST_DELETED = "Your Post / Comment was deleted because we have found unauthorized content in your Post / Comment";
+	public const string NOTIFY_REPORT_ACCEPTED_MSG = "Your report was accepted. We are in the process of deleting the Post / Comment";
+	public const string NOTIFY_REPORT_DENIED_MSG = "Your report was rejected. We have reviewed and found no inappropriately content in the Post / Comment";
+	public const string NOTIFY_POST_DELETED = "One of your Posts / Comments was deleted because we have found inappropriately content in your Post / Comment";
 }

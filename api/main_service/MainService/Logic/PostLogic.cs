@@ -246,33 +246,32 @@ public class PostLogic : IPostLogic
 									& Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 		}
 
-		// Hashtags Filter
-		if (pagination.Filter.Hashtags != null)
+		if (pagination.Filter is not null)
 		{
-			List<string> hashtagsNormal = new List<string>();
-
-			foreach (var hashtag in pagination.Filter.Hashtags!)
+			// Hashtags Filter
+			if (pagination.Filter.Hashtags != null)
 			{
-				hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
+				List<string> hashtagsNormal = new List<string>();
+
+				foreach (var hashtag in pagination.Filter.Hashtags!)
+				{
+					hashtagsNormal.Add(HelperClass.RemoveDiacritics(hashtag).ToUpper());
+				}
+
+				postFilter = postFilter & Builders<Post>.Filter.All(x => x.HashtagsNormalized, hashtagsNormal);
 			}
 
-			postFilter = postFilter & Builders<Post>.Filter.All(x => x.HashtagsNormalized, hashtagsNormal);
-		}
+			// Trending Post Filter
+			if (pagination.Filter.IsTrending)
+			{
+				postFilter = postFilter & Builders<Post>.Filter.Where(x => x.UpvotedBy.Count() >= 1);
+			}
 
-		// Trending Post Filter
-		if (pagination.Filter.IsTrending)
-		{
-			postFilter = postFilter & Builders<Post>.Filter.Where(x => x.UpvotedBy.Count() >= 1);
-		}
-
-		// Pagination formula
-		var skipPage = (pagination.Page - 1) * pagination.Size;
-
-		// Handle full text search if content field is null or empty
-		if (!String.IsNullOrWhiteSpace(pagination.Filter.Content))
-		{
-			// Create full text search filter
-			var searchfilter = new BsonDocument {
+			// Handle full text search if content field is null or empty
+			if (!String.IsNullOrWhiteSpace(pagination.Filter.Content))
+			{
+				// Create full text search filter
+				var searchfilter = new BsonDocument {
 						{ "index", _configuration["DbIndexs:Post"] },
 						{ "text", new BsonDocument {
 							{ "query", pagination.Filter.Content },
@@ -282,22 +281,24 @@ public class PostLogic : IPostLogic
 					}}
 				};
 
-			(var _, var postsFromRepoFTS) = await _postRepo.FindManyAsync(
-				indexFilter: searchfilter,
-				filter: postFilter,
-				lookup: viewPostLookup,
-				project: viewPostProject,
-				sort: viewPostSort,
-				limit: pagination.Size,
-				skip: skipPage);
+				(var _, var postsFromRepoFTS) = await _postRepo.FindManyAsync(
+					indexFilter: searchfilter,
+					filter: postFilter,
+					lookup: viewPostLookup,
+					project: viewPostProject,
+					sort: viewPostSort,
+					limit: pagination.Size,
+					skip: (pagination.Page - 1) * pagination.Size);
 
-			IEnumerable<BsonDocument> stages = new List<BsonDocument>();
+				IEnumerable<BsonDocument> stages = new List<BsonDocument>();
 
-			var totalPostFTS = await _postRepo.CountDocumentAsync(
-				filter: searchfilter,
-				stages: stages);
+				var totalPostFTS = await _postRepo.CountDocumentAsync(
+					filter: postFilter,
+					stages: stages,
+					indexFilter: searchfilter);
 
-			return (totalPostFTS, postsFromRepoFTS);
+				return (totalPostFTS, postsFromRepoFTS);
+			}
 		}
 
 		(var totalPost, var postsFromRepo) = await _postRepo.FindManyAsync(
@@ -319,22 +320,25 @@ public class PostLogic : IPostLogic
 		// Is Deleted Post Filter
 		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 
-		// User Post Filter
-		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.UserId, pagination.Filter.UserId);
+		if (pagination.Filter is not null)
+		{
+			// User Post Filter
+			postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.UserId, pagination.Filter.UserId);
+
+			// Private Post Filter
+			if (userId == pagination.Filter.UserId)
+			{
+				postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE)
+										& Builders<Post>.Filter.Eq(x => x.UserId, userId)
+										& Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
+			}
+		}
 
 		// Public Post Filter
 		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
 
 		// Published At Filter
 		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
-
-		// Private Post Filter
-		if (userId == pagination.Filter.UserId)
-		{
-			postFilter = postFilter | Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PRIVATE)
-									& Builders<Post>.Filter.Eq(x => x.UserId, userId)
-									& Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
-		}
 
 		(var totalPost, var postsFromRepo) = await _postRepo.FindManyAsync(
 			filter: postFilter,

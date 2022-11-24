@@ -72,6 +72,7 @@ const PostCard: React.FC<PostCardProps> = ({
                     isDetailPage ? "" : "cursor-pointer"
                 } ${style}`}
                 onClick={handleViewDetail}
+                data-cy="post-card"
             >
                 <div className="col-span-1">
                     {/* Avatar */}
@@ -85,6 +86,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             style={{
                                 backgroundImage: `url(${post.user.avatar})`,
                             }}
+                            data-cy="avatar-post"
                         />
                     </div>
 
@@ -117,7 +119,10 @@ const PostCard: React.FC<PostCardProps> = ({
 
                     {/* Content */}
                     <div className="pb-8">
-                        <div className="whitespace-pre-wrap mb-4">
+                        <div
+                            className="whitespace-pre-wrap mb-4"
+                            data-cy="post-card-content"
+                        >
                             {post.content
                                 ? HASHTAG_FORMATTER(post.content)
                                 : ""}

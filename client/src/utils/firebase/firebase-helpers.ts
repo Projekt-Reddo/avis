@@ -13,7 +13,7 @@ export const mapAuthCodeToMessage = (authCode: string) => {
             return "Email already in use!";
 
         case "auth/user-not-found":
-            return "Wrong credential!";
+            return "User not found!";
 
         case "auth/wrong-password":
             return "Wrong credential!";

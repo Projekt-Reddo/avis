@@ -62,6 +62,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                                                 ) : (
                                                     <Link
                                                         to={option.to || "#"}
+                                                        data-cy={`${option.lable}`}
                                                         className={`block px-4 py-2 text-sm ${
                                                             active
                                                                 ? "bg-[color:var(--element-bg-color-elevate-1)]"

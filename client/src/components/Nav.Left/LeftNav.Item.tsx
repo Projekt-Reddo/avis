@@ -21,6 +21,7 @@ const LeftNavItem: React.FC<LeftNavItemProps> = ({
                 isActive ? { background: "var(--admin-nav-color-elevate)" } : {}
             }
             to={itemData.path}
+            data-cy={itemData.title}
         >
             <Icon icon={itemData.icon} className="left-nav-item-icon" />
             <div className={`left-nav-item-title ${isShowing ? "show" : ""}`}>

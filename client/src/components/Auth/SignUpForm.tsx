@@ -7,7 +7,6 @@ import yup from "utils/yup-config";
 import Input from "components/shared/Input";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { signupAsync } from "store/slices/authSlice";
-import { hash } from "utils/helpers";
 import Button from "components/Button/Button";
 
 interface SignUpFormProps {}
@@ -31,7 +30,7 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
             signupAsync({
                 name: data.name.replace(/\s+/g, " ").trim(),
                 email: data.email,
-                password: hash(data.password),
+                password: data.password,
             } as UserSignup)
         );
     };
@@ -47,6 +46,7 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                 placeholder="Please enter your name"
                 register={register("name")}
                 error={errors.name}
+                data-cy="name"
             />
             <Input
                 className="py-3 w-full"
@@ -54,6 +54,7 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                 placeholder="Please enter your Email"
                 register={register("email")}
                 error={errors.email}
+                data-cy="email"
             />
             <Input
                 className="py-3 w-full"
@@ -62,10 +63,12 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
                 register={register("password")}
                 type="password"
                 error={errors.password}
+                data-cy="password"
             />
             <Button
                 className="mt-2.5"
                 type="submit"
+                data-cy="submit-btn"
                 disabled={
                     userState.status === "loading" ||
                     userState.status === "init"
@@ -80,7 +83,7 @@ const SignUpForm: React.FunctionComponent<SignUpFormProps> = () => {
 const schema = yup.object().shape({
     name: yup
         .string()
-        .required("Name is equired!")
+        .required("Name is required!")
         .name("Please enter valid name without invalid special characters")
         .min(6, "Name must be minimum of 6 characters"),
     email: yup

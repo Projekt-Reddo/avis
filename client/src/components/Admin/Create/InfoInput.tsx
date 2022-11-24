@@ -59,6 +59,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                             type="text"
                             register={register("title")}
                             error={errors.title}
+                            data-cy="create-song-title"
                         />
                     </div>
 
@@ -71,6 +72,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                             type="text"
                             register={register("alias")}
                             error={errors.alias}
+                            data-cy="create-song-alias"
                         />
                     </div>
 
@@ -83,13 +85,14 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                             rows={7}
                             register={register("description")}
                             error={errors.description}
+                            data-cy="create-song-description"
                         />
                     </div>
 
                     <div className="col-span-1">
                         <label className="font-medium">Genres</label>
                     </div>
-                    <div className="col-span-5">
+                    <div className="col-span-5" id="genres">
                         <SelectAsync
                             className="w-100 lg:w-4/5"
                             isMulti={true}
@@ -107,7 +110,7 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                     <div className="col-span-1">
                         <label className="font-medium">Artists</label>
                     </div>
-                    <div className="col-span-5">
+                    <div className="col-span-5" id="artists">
                         <SelectAsync
                             className="w-100 lg:w-4/5"
                             isMulti={true}
@@ -150,7 +153,12 @@ const InfoInput: FunctionComponent<InfoInputProps> = ({
                         }}
                     >
                         <Icon icon="arrow-right" className="text-white" />
-                        <span className="ml-2 text-white">Next</span>
+                        <span
+                            className="ml-2 text-white"
+                            data-cy="next-step-btn"
+                        >
+                            Next
+                        </span>
                     </Button>
                 </div>
             </div>

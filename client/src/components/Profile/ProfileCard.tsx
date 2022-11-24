@@ -85,7 +85,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
                                 <TextLoading row={3} />
                             ) : (
                                 <>
-                                    <div className="font-bold text-lg py-1">
+                                    <div
+                                        className="font-bold text-lg py-1"
+                                        data-cy="profile-display-name"
+                                    >
                                         {profile.name}
                                     </div>
                                     <div className="py-1 text-gray-500">

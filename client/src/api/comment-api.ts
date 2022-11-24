@@ -28,3 +28,8 @@ export const commentCreateApi = async (comment: CommentCreate) => {
     const res = await axios.post(apiRoute, formData);
     return res.data;
 };
+
+export const deleteComment = async (id: string) => {
+    const res = await axios.delete(`${apiRoute}/${id}`);
+    return res.data;
+};

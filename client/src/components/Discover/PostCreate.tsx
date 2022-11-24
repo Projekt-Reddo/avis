@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
 import { useOutsideClick } from "utils/useOutsideClick";
+import TextareaAutosize from "react-textarea-autosize";
 
 // Components
 import Icon from "components/shared/Icon";
@@ -19,6 +20,8 @@ import { addNewToast } from "components/Toast";
 import "theme/Discover.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { Theme } from "emoji-picker-react";
+import moment from "moment";
+import { DAY_FORMAT } from "utils/constants";
 
 interface PostCreateProps {
     loading: boolean;
@@ -268,6 +271,21 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
         return <></>;
     }
 
+    if (authState && authState.status && authState.status.PostMutedUntil) {
+        return (
+            <div
+                className="flex gap-3 m-4 lg:mx-0 p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800 items-center"
+                role="alert"
+            >
+                <Icon icon="triangle-exclamation" size="lg" />
+                <div>
+                    Your account is muted until{" "}
+                    {moment(authState.status.PostMutedUntil).format(DAY_FORMAT)}
+                </div>
+            </div>
+        );
+    }
+
     const HASHTAG_FORMATTER = (string: string) => {
         return string
             .split(/((?:^|\s)(?:#[a-z\d-] || @[a-z\d-]+))/gi)
@@ -300,7 +318,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
     return (
         <div className="lg:pt-4">
             <form
-                className="card drop-shadow-md grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
+                className="card create-post-shadow grid grid-cols-5 sm:grid-cols-10 gap-4 min-w-[20rem] p-4"
                 onSubmit={handleCreatePost}
             >
                 {/* Avatar */}
@@ -339,22 +357,24 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                             components={{
                                 IndicatorSeparator: () => null,
                             }}
+                            data-cy="create-post-select"
                         />
                     ) : (
                         ""
                     )}
 
                     {/* Content */}
-                    <textarea
-                        className="focus:outline-none bg-[color:var(--post-bg-color)] text-[color:var(--text-primary-color)] text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 pt-2"
+                    <TextareaAutosize
+                        className="focus:outline-none bg-[color:var(--post-bg-color)] text-[color:var(--text-primary-color)] text-xl sm:text-2xl h-12 sm:h-20 w-full border-b-2 mb-4 pt-2 pb-4"
                         placeholder="How do you feel today?"
-                        rows={3}
+                        rows={1}
                         ref={inputRef}
                         onChange={(
                             event: React.ChangeEvent<HTMLTextAreaElement>
                         ) => setContent(event.currentTarget.value)}
                         value={content}
                         onFocus={() => setIsOpenSelect(true)}
+                        data-cy="create-post-input"
                     />
 
                     {/* Might update in the future */}
@@ -468,6 +488,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                 onChange={handleUploadFiles}
                                 multiple
                                 hidden
+                                data-cy="create-post-file-input"
                             />
 
                             {/* Select Icons */}
@@ -483,7 +504,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                 </button>
                                 {showPicker && (
                                     <div className="relative">
-                                        <div className="absolute z-50 mt-4 ml-[-6rem] sm:ml-[-7rem]">
+                                        <div className="absolute z-50 mt-4 ml-[-6rem] sm:ml-[-5rem]">
                                             <EmojiPicker
                                                 onEmojiClick={onEmojiClick}
                                                 skinTonesDisabled
@@ -546,6 +567,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                     uploadedAudio === null &&
                                     uploadedVideo === null)
                             }
+                            data-cy="create-post-submit-btn"
                         >
                             Post
                         </Button>
@@ -560,14 +582,14 @@ const customStyles = {
     option: (provided: any, state: any) => ({
         ...provided,
         color: state.isSelected
-            ? "var(--body-bg-color)"
-            : "var(--teal-general-color)",
+            ? "var(--body-bg-color) !important"
+            : "var(--teal-general-color) !important",
         backgroundColor: state.isSelected ? "var(--teal-general-color)" : "",
     }),
     control: (base: any) => ({
         ...base,
         border: "2px solid var(--teal-general-color)",
-        boxShadow: "none",
+        boxShadow: "4px 4px 8px var(--element-shadow-color)",
         "&:hover": {
             border: "2px solid var(--teal-general-color)",
         },
@@ -584,8 +606,9 @@ const customStyles = {
     menu: (base: any) => ({
         ...base,
         width: 278,
-        color: "var(--text-primary-color)",
+        color: "var(--text-primary-color) !important",
         backgroundColor: "var(--element-bg-color)",
+        boxShadow: "4px 4px 8px var(--element-shadow-color)",
     }),
     valueContainer: (base: any) => ({
         ...base,

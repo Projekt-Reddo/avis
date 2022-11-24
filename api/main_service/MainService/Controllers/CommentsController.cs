@@ -1,6 +1,7 @@
 using AutoMapper;
 using MainService.Data;
 using MainService.Dtos;
+using MainService.Filters;
 using MainService.Logic;
 using MainService.Models;
 using MainService.Utils;
@@ -39,6 +40,29 @@ namespace MainService.Controllers
         public async Task<ActionResult<ResponseDto>> AddComment([FromForm] CommentCreateDto newComment)
         {
             var comment = _mapper.Map<Comment>(newComment);
+
+            var userId = "";
+
+            // Get User Id
+            try
+            {
+                userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+                // To check whether account exist or not.
+                var accountFromRepo = await _accountRepo.FindOneAsync(Builders<Account>.Filter.Eq("Uid", userId));
+
+                // Account not found
+                if (accountFromRepo is null)
+                {
+                    return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+                }
+            }
+            catch (Exception)
+            {
+                return NotFound(new ResponseDto(404, ResponseMessage.ACCOUNT_NOT_FOUND));
+            }
+
+            comment.UserId = userId;
 
             // Add comment into the repo first
             var rs = await _commentRepo.AddOneAsync(comment);
@@ -114,26 +138,59 @@ namespace MainService.Controllers
         [HttpPost("filter")]
         public async Task<ActionResult<PaginationResDto<CommentReadDto>>> GetComments(PaginationReqDto<CommentFilterDto> pagination)
         {
-            // Pagination formula
-            var skipPage = (pagination.Page - 1) * pagination.Size;
+            if (pagination.Filter is null)
+			{
+				return BadRequest(new ResponseDto
+				{
+					Status = 400,
+					Message = $"filter.objectId is required!"
+				});
+			}
 
-            (var total, var comments) = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild, pagination.Size, skipPage);
+			// Pagination formula
+			var skipPage = (pagination.Page - 1) * pagination.Size;
+			var sort = _commentLogic.SortFilter(pagination.Filter.Sort);
 
-            var commentDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
+            try{
+				(var total, var comments) = await _commentLogic.GetComments(pagination.Filter.ObjectId!, pagination.Filter.IsPostChild, sort, pagination.Size, skipPage);
 
-            return Ok(new PaginationResDto<CommentReadDto>((int)total, commentDtos));
-        }
+				var commentDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CommentReadDto>> GetCommentById(string id)
-        {
-            var comment = await _commentLogic.GetCommentById(id);
+				return Ok(new PaginationResDto<CommentReadDto>((int)total, commentDtos));
+			}catch{
+				return BadRequest(new ResponseDto
+				{
+					Status = 400,
+					Message = $"{pagination.Filter.ObjectId} is not exists"
+				});
+			}
+		}
 
-            if (comment is null)
-            {
-                return BadRequest(new ResponseDto(404));
-            }
-            return _mapper.Map<CommentReadDto>(comment);
-        }
-    }
+		[HttpGet("{id}")]
+		public async Task<ActionResult<CommentReadDto>> GetCommentById(string id)
+		{
+			var comment = await _commentLogic.GetCommentById(id);
+
+			if (comment is null)
+			{
+				return BadRequest(new ResponseDto(404));
+			}
+			return _mapper.Map<CommentReadDto>(comment);
+		}
+
+		[Authorize]
+		[HttpDelete("{id}")]
+		[AuthorizeResource(ResourceType = ResourceType.Comment, IdField = "id")]
+		public async Task<ActionResult<ResponseDto>> DeleteComment(string id)
+		{
+			var rs = await _commentLogic.DeleteComment(id);
+
+			if (rs is false)
+			{
+				return BadRequest(new ResponseDto(400));
+			}
+
+			return Ok(new ResponseDto(200));
+		}
+	}
 }

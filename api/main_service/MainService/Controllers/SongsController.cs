@@ -48,13 +48,24 @@ public class SongsController : ControllerBase
 			return BadRequest(new ResponseDto(400, $"Song file: {songCheckMessage}"));
 		}
 
-		(var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(songCreateDto.Thumbnail);
-		if (isImageFile is false)
+		if (songCreateDto.Thumbnail is not null)
 		{
-			return BadRequest(new ResponseDto(400, $"Thumbnail: {imageCheckMessage}"));
+			(var isImageFile, var imageCheckMessage) = FileExtension.CheckImageExtension(songCreateDto.Thumbnail);
+			if (isImageFile is false)
+			{
+				return BadRequest(new ResponseDto(400, $"Thumbnail: {imageCheckMessage}"));
+			}
 		}
 
 		var song = _mapper.Map<Song>(songCreateDto);
+		if (songCreateDto.Thumbnail is null)
+		{
+			song.Thumbnail = DEFAULT_SONG_THUMBNAIL;
+		}
+		if (songCreateDto.Url is null)
+		{
+			song.Url = new Url();
+		}
 		bool songUploadStatus = false;
 
 		using var session = await _songRepo.StartSessionAsync();
@@ -68,11 +79,14 @@ public class SongsController : ControllerBase
 				songCreateDto.File.OpenReadStream(),
 				songCreateDto.File.ContentType,
 				FileExtension.GetFileExtension(songCreateDto.File));
-			await _songLogic.UploadNewThumbnail(
-				song,
-				songCreateDto.Thumbnail.OpenReadStream(),
-				songCreateDto.Thumbnail.ContentType,
-				FileExtension.GetFileExtension(songCreateDto.Thumbnail));
+			if (songCreateDto.Thumbnail is not null)
+			{
+				await _songLogic.UploadNewThumbnail(
+					song,
+					songCreateDto.Thumbnail.OpenReadStream(),
+					songCreateDto.Thumbnail.ContentType,
+					FileExtension.GetFileExtension(songCreateDto.Thumbnail));
+			}
 			await session.CommitTransactionAsync();
 		}
 		catch (Exception e)
@@ -153,6 +167,21 @@ public class SongsController : ControllerBase
 	[HttpDelete]
 	public async Task<ActionResult<ResponseDto>> DeleteSong(SongDeleteDto songDeleteDto)
 	{
+
+		var notFoundSongs = new List<string>();
+		foreach (var songId in songDeleteDto.listId)
+		{
+			var song = await _songLogic.GetSongById(songId);
+			if (song is null)
+			{
+				notFoundSongs.Add(songId);
+			}
+		}
+		if (notFoundSongs.Count > 0)
+		{
+			return BadRequest(new ResponseDto(400, $"Not found songs with ids: {String.Join(", ", notFoundSongs)}"));
+		}
+
 		var songUpdate = Builders<Song>.Update.Set(s => s.IsDeleted, true);
 
 		var rs = await _songRepo.SoftDelete(songDeleteDto.listId, songUpdate);

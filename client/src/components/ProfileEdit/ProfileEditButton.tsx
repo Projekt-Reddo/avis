@@ -24,6 +24,7 @@ const ProfileEditButton: React.FC<ProfileEditButtonProps> = ({ disabled }) => {
                 }}
                 disabled={disabled}
                 onClick={() => setOpen(true)}
+                data-cy="edit-profile-btn"
             >
                 Edit Profile
             </Button>

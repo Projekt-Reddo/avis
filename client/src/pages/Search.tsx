@@ -170,7 +170,10 @@ const Search = () => {
                             </div>
 
                             {postState.data.payload.length === 0 ? (
-                                <div className="flex justify-center items-center font-bold my-4">
+                                <div
+                                    className="flex justify-center items-center font-bold my-4"
+                                    data-cy="discover-error-message"
+                                >
                                     No result
                                 </div>
                             ) : (

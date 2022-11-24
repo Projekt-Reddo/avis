@@ -88,7 +88,17 @@ namespace MainService.Controllers
 			// Pagination formula
 			var skipPage = (pagination.Page - 1) * pagination.Size;
 
-			var sort = _accountLogic.SortFilter(pagination.Filter.Sort);
+			var sort = new BsonDocument();
+
+			if (pagination.Filter == null || pagination.Filter.Sort == null || pagination.Filter.Sort == "")
+			{
+				sort = new BsonDocument
+				{
+					{ "Name", 1 }
+				};
+			} else {
+				sort = _accountLogic.SortFilter(pagination.Filter.Sort);
+			}
 
 			(var totalAccount, var accountsFromRepo) = await _accountRepo.FindManyAsync(filter: accountFilter, sort: sort, limit: pagination.Size, skip: skipPage);
 

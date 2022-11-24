@@ -117,6 +117,7 @@ const Table: React.FC<TableProps> = ({
                                         onChange={handleAllChecked}
                                         checked={isCheckedAll}
                                         value={"random"}
+                                        data-cy="table-select-all-input"
                                     />
                                 </label>
                             </th>
@@ -133,7 +134,7 @@ const Table: React.FC<TableProps> = ({
                         ))}
                     </tr>
                 </thead>
-                <tbody>
+                <tbody data-cy="table-body">
                     {displayData.map((obj, index) => (
                         <tr
                             key={obj.id + index + "tr"}
@@ -141,6 +142,7 @@ const Table: React.FC<TableProps> = ({
                             onClick={() => {
                                 onRowClick(obj);
                             }}
+                            data-cy="table-row"
                         >
                             {hasSelectOption && (
                                 <td className="bg-[color:var(--element-bg-color)] px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -161,6 +163,7 @@ const Table: React.FC<TableProps> = ({
                                                     ? true
                                                     : false
                                             }
+                                            data-cy="table-select-row-input"
                                         />
                                     </label>
                                 </td>

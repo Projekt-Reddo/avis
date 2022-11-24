@@ -23,6 +23,10 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
         // setShowOptions("");
     });
 
+    if (!authState.data) {
+        return <></>;
+    }
+
     return (
         <>
             <div
@@ -32,6 +36,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
                         setShowOptions(post.id);
                     } else setShowOptions("");
                 }}
+                data-cy="post-options"
             >
                 <Icon
                     className="text-2xl cursor-pointer hover:text-[color:var(--teal-general-color)]"
@@ -52,6 +57,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
                             setOpenReport(true);
                         }}
                         className="px-8 py-2 hover:bg-[color:var(--element-bg-color-elevate-1)] flex justify-between items-center"
+                        data-cy="post-report"
                     >
                         <Icon icon="flag" className="mr-4" />
                         Report

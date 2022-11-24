@@ -3,7 +3,7 @@ import "theme/Nav.css";
 import { routesIgnoreNav, THEME } from "utils/constants";
 import Icon from "./Icon";
 import Dropdown from "components/shared/Dropdown";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";
@@ -11,6 +11,12 @@ import { firebaseLogout } from "api/firebase-api";
 
 import WHITE_IMG from "static/white.png";
 import { getTheme, setTheme } from "store/slices/themeSlice";
+import NotificationCard from "components/Notification/NotificationCard";
+import { useOutsideClick } from "utils/useOutsideClick";
+import {
+    setIsReadNotifyAsync,
+    viewNotifyAsync,
+} from "store/slices/notifySlice";
 
 const Nav = () => {
     const location = useLocation();
@@ -19,6 +25,13 @@ const Nav = () => {
     const user = useAppSelector((state) => state.auth.data);
     const authStatus = useAppSelector((state) => state.auth.status);
     const theme = useAppSelector((state) => state.theme);
+    const notifys = useAppSelector((state) => state.notify);
+
+    const [showNotification, setShowNotification] = useState(false);
+    const notificationRef = useRef(null);
+    useOutsideClick(notificationRef, () => {
+        setShowNotification(false);
+    });
 
     function getLinkStyle(path: string) {
         if (path === "/")
@@ -65,7 +78,10 @@ const Nav = () => {
         {
             icon: "bars-progress",
             lable: "Manage",
-            to: "/admin",
+            to:
+                user && user.role === "admin"
+                    ? "/admin/user"
+                    : "/moderator/user",
             isShow:
                 user && (user.role === "admin" || user.role === "moderator"),
         },
@@ -83,6 +99,16 @@ const Nav = () => {
     useEffect(() => {
         dispatch(getTheme());
     }, []);
+
+    useEffect(() => {
+        dispatch(
+            viewNotifyAsync({
+                page: 1,
+                size: 10,
+                filter: {},
+            })
+        );
+    }, [user]);
 
     /**
      * Render
@@ -115,7 +141,11 @@ const Nav = () => {
                 <Link className={getLinkStyle("/")} to="/">
                     Home
                 </Link>
-                <Link className={getLinkStyle("/discover")} to="/discover">
+                <Link
+                    className={getLinkStyle("/discover")}
+                    to="/discover"
+                    data-cy="discover-btn"
+                >
                     Discover
                 </Link>
                 <Link className={getLinkStyle("/feedback")} to="/feedback">
@@ -140,16 +170,55 @@ const Nav = () => {
                         <Link
                             className="hover:text-[color:var(--text-secondary-color)]"
                             to="/signup"
+                            data-cy="register-btn"
                         >
                             Register
                         </Link>
                     </span>
                 ) : (
                     <Fragment>
-                        <Icon className="mr-3" icon="bell" size="xl" />
+                        <div ref={notificationRef}>
+                            <button>
+                                <div className="flex justify-center items-center p-4">
+                                    {notifys?.data?.payload?.filter(
+                                        (item: Notify) => item.isRead === false
+                                    ).length > 0 ? (
+                                        <div className="absolute flex justify-center items-center h-3 w-3 bg-[color:var(--red-darker-color)] font-bold rounded-full text-white text-[10px] ml-4 mb-6">
+                                            {notifys?.data?.payload?.filter(
+                                                (item: Notify) =>
+                                                    item.isRead === false
+                                            ).length > 9
+                                                ? "9+"
+                                                : notifys?.data?.payload?.filter(
+                                                      (item: Notify) =>
+                                                          item.isRead === false
+                                                  ).length}
+                                        </div>
+                                    ) : (
+                                        ""
+                                    )}
+                                    <Icon
+                                        onClick={() => {
+                                            dispatch(setIsReadNotifyAsync());
+                                            setShowNotification(
+                                                !showNotification
+                                            );
+                                        }}
+                                        icon="bell"
+                                        size="xl"
+                                    />
+                                </div>
+                            </button>
+                            {showNotification && (
+                                <div className="absolute w-[20rem] mt-[0.5rem] ml-[-10.4rem]">
+                                    <NotificationCard />
+                                </div>
+                            )}
+                        </div>
+
                         <Dropdown
                             menu={
-                                <Fragment>
+                                <div data-cy="nav-dropdown">
                                     <img
                                         className="inline-block h-9 w-9 rounded-full ring-2 ring-white mr-2"
                                         src={user.avatar || WHITE_IMG}
@@ -159,7 +228,7 @@ const Nav = () => {
                                         }}
                                     />
                                     <Icon icon="angle-down" />
-                                </Fragment>
+                                </div>
                             }
                             options={options}
                         />

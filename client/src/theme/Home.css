@@ -3,6 +3,10 @@
     background-size: cover;
 }
 
+.searching {
+    background-color: rgba(var(--body-bg-color-rgb), 0.85);
+}
+
 .animate {
     animation-duration: 0.5s;
     animation-name: animate-fade;

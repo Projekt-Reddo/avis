@@ -156,22 +156,22 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                 <div
                     className={
                         appear
-                            ? "animate absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
-                            : "animate-d absolute h-[91vh] w-screen bg-white flex justify-center items-center bg-opacity-80 z-10"
+                            ? "searching animate absolute h-[91vh] w-screen flex justify-center items-center bg-opacity-80 z-10"
+                            : "searching animate-d absolute h-[91vh] w-screen flex justify-center items-center bg-opacity-80 z-10"
                     }
                 >
-                    <div className="text-4xl h-56 w-56 mb-20 rounded-full border-2 bg-white flex flex-col justify-center items-center color">
-                        <div className="wave text-4xl h-48 w-48 rounded-full border bg-white flex flex-col justify-center items-center color">
+                    <div className="text-4xl h-56 w-56 mb-10 rounded-full border-2 border-[color:var(--border-color)] bg-[color:var(--element-bg-color)] flex flex-col justify-center items-center color">
+                        <div className="wave text-4xl h-48 w-48 rounded-full border border-[color:var(--border-color)] bg-[color:var(--element-bg-color)] flex flex-col justify-center items-center color">
                             <Icon
                                 icon="microphone"
                                 className="text-[color:var(--teal-general-color)]"
                             ></Icon>
                         </div>
                     </div>
-                    <div className="listen text-xl font-bold absolute">
-                        Try to Hum something in {TIME_TO_HUM} secs
+                    <div className="listen text-xl text-[color:var(--text-primary-color)] font-bold absolute">
+                        Try to hum something in {TIME_TO_HUM} secs
                     </div>
-                    <div className="listen text-3xl font-bold absolute mt-10">
+                    <div className="listen text-3xl text-[color:var(--text-primary-color)] font-bold absolute mt-10">
                         Listening
                     </div>
                 </div>
@@ -188,7 +188,10 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                 }}
             >
                 <div className=" grid justify-items-center">
-                    <div className="text-4xl mb-10 font-bold text-center">
+                    <div
+                        className="text-4xl mb-10 font-bold text-center"
+                        data-cy="text-search-header"
+                    >
                         Discover and search song
                     </div>
                     <div className="relative w-80 md:w-[35rem] flex h-15 bg-[color:var(--element-bg-color)] items-center rounded-xl border-[0.25px] border-[color:var(--border-color)] mb-6 shadow-md">
@@ -225,6 +228,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                                     setShowHistory(true);
                                 }}
                                 ref={inputRef}
+                                data-cy="input-text-search"
                             />
                         </form>
                         <div className="h-full flex items-center justify-center pr-3">

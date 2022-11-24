@@ -97,7 +97,12 @@ const ThumbnailInput: FunctionComponent<ThumbnailInputProps> = ({
                         }}
                     >
                         <Icon icon="arrow-right" className="text-white" />
-                        <span className="ml-2 text-white">Next</span>
+                        <span
+                            className="ml-2 text-white"
+                            data-cy="next-step-btn"
+                        >
+                            Next
+                        </span>
                     </Button>
                 </div>
             </div>

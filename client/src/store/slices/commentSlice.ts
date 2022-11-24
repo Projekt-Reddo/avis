@@ -23,6 +23,10 @@ const commentSlice = createSlice({
             ...state,
             data: action.payload,
         }),
+        deleteComment: (state, action) => ({
+            ...state,
+            data: action.payload,
+        }),
     },
     extraReducers: (builder) => {
         builder
@@ -77,6 +81,7 @@ export const createCommentAsync = createAsyncThunk(
                         ? comment.postId
                         : comment.commentId,
                     isPostChild: comment.postId ? true : false,
+                    sort: "CreateAt Descending",
                 },
             });
         } catch (e: any) {
@@ -90,5 +95,6 @@ export const createCommentAsync = createAsyncThunk(
     }
 );
 
-export const { viewComment, viewMoreComment } = commentSlice.actions;
+export const { viewComment, viewMoreComment, deleteComment } =
+    commentSlice.actions;
 export default commentSlice.reducer;

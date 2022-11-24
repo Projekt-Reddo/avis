@@ -64,6 +64,11 @@ public class PostsController : ControllerBase
 			return BadRequest(new ResponseDto(400, ResponseMessage.POST_EMPTY_CONTENT_MEDIA));
 		}
 
+		if (newPost.PublishedAt < DateTime.Now)
+		{
+			return BadRequest(new ResponseDto(400, ResponseMessage.POST_PAST_PUBLISHED_AT));
+		}
+
 		var userId = "";
 
 		// Get User Id
@@ -194,14 +199,13 @@ public class PostsController : ControllerBase
 	[HttpPost("filter")]
 	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewPost(PaginationReqDto<PostFilterDto> pagination)
 	{
-		var userId = "";
+		string? userId;
 
 		// Get User Id
-		try
+		if (User.FindFirst(JwtTokenPayload.USER_ID) is not null)
 		{
 			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-		}
-		catch (Exception)
+		} else
 		{
 			userId = null;
 		}
@@ -367,7 +371,6 @@ public class PostsController : ControllerBase
 			return Ok(new ResponseDto(200, ResponseMessage.COMMENT_VOTE_SUCCESS));
 		}
 	}
-
 	[HttpPost("save")]
 	public async Task<ActionResult<PaginationResDto<IEnumerable<PostReadDto>>>> ViewSavedPost(PaginationReqDto<PostFilterDto> pagination)
 	{

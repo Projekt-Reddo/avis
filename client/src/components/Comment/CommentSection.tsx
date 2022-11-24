@@ -22,6 +22,7 @@ interface PageFilterCommentProps {
     filter?: {
         objectId: string;
         isPostChild: boolean;
+        sort: string;
     };
 }
 
@@ -44,6 +45,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         filter: {
             objectId: postId,
             isPostChild: isPostChild,
+            sort: "Upvoted Descending",
         },
     });
 

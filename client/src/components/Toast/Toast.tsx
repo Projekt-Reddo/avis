@@ -20,7 +20,7 @@ const Toast: React.FC<ToastProps> = ({ item }) => {
 
     // Auto clear after having mounted 6000 ms
     useEffect(() => {
-        const timer = setTimeout(handleRemoveToast, 7000);
+        const timer = setTimeout(handleRemoveToast, 8888);
 
         // Clean up
         return () => {
@@ -64,6 +64,7 @@ const Toast: React.FC<ToastProps> = ({ item }) => {
                 style={{
                     marginLeft: "5rem",
                 }}
+                data-cy="toast-message"
             >
                 {item.message}
             </div>
