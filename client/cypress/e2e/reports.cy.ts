@@ -51,7 +51,7 @@ describe("reports", () => {
         );
     });
 
-    it.only("report-commend-spam", () => {
+    it("report-commend-spam", () => {
         cy.get('[data-cy="comment-textarea"]').type(
             "This comment is for testing purposes: <the comment report function>"
         );

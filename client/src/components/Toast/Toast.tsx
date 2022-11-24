@@ -20,7 +20,7 @@ const Toast: React.FC<ToastProps> = ({ item }) => {
 
     // Auto clear after having mounted 6000 ms
     useEffect(() => {
-        const timer = setTimeout(handleRemoveToast, 7000);
+        const timer = setTimeout(handleRemoveToast, 8888);
 
         // Clean up
         return () => {
