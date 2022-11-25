@@ -33,7 +33,8 @@ const Edit = () => {
     useEffect(() => {
         if (
             songState.status === "idle" &&
-            songState.data.hasOwnProperty("title")
+            songState.data &&
+            Object.hasOwn(songState.data, "title")
         ) {
             setSongEdit(songState.data);
         }

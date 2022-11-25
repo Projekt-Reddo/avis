@@ -204,7 +204,9 @@ const View = () => {
             />
 
             {/* Data Table */}
-            {songState.status === "loading" || !songState.tableData ? (
+            {songState.status === "loading" ||
+            !songState.tableData ||
+            !songState.data ? (
                 // Loading Components
                 <div className="flex justify-center items-center mt-8">
                     <Loading />

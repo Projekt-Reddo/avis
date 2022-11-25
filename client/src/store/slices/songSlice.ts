@@ -174,7 +174,6 @@ export const editAsync = createAsyncThunk(
                     message: msg,
                 })
             );
-            return msg;
         } catch (e: any) {
             thunkApi.dispatch(
                 addToast({
