@@ -16,7 +16,7 @@ const TabsNav = () => {
     const history = useHistory();
     const dispatch = useAppDispatch();
 
-    const user = useAppSelector((state) => state.user.data);
+    const user = useAppSelector((state) => state.auth.data);
     const notifys = useAppSelector((state) => state.notify);
 
     // For hiding bottom nav bar in desktop view
@@ -45,9 +45,11 @@ const TabsNav = () => {
     return (
         <nav
             className={`${
-                user?.role === "Admin"
+                user?.role === "admin" || user?.role === "moderator"
                     ? "grid grid-cols-5 gap-3"
-                    : "grid grid-cols-4 gap-4"
+                    : user?.role === "user"
+                    ? "grid grid-cols-4 gap-4"
+                    : "grid grid-cols-3 gap-4"
             }  fixed bg-[color:var(--body-bg-color)] bottom-nav-height min-w-full bottom-0 border-t`}
         >
             <Link
@@ -79,43 +81,48 @@ const TabsNav = () => {
                 />
             </Link>
 
-            <div
-                onClick={() => {
-                    dispatch(setIsReadNotifyAsync());
-                    history.push(`/user/notification`);
-                }}
-                className={
-                    location.pathname === "/user/notification"
-                        ? "tab-button-select cursor-pointer"
-                        : "tab-button cursor-pointer"
-                }
-            >
-                <div className="flex justify-center items-center p-4">
-                    {notifys?.data?.payload?.filter(
-                        (item: Notify) => item.isRead === false
-                    ).length > 0 ? (
-                        <div className="absolute flex justify-center items-center h-3 w-3 bg-[color:var(--red-darker-color)] font-bold rounded-full text-white text-[10px] ml-4 mb-6">
-                            {notifys?.data?.payload?.filter(
-                                (item: Notify) => item.isRead === false
-                            ).length > 9
-                                ? "9+"
-                                : notifys?.data?.payload?.filter(
-                                      (item: Notify) => item.isRead === false
-                                  ).length}
-                        </div>
-                    ) : (
-                        ""
-                    )}
-                    <Icon
-                        icon={
-                            location.pathname === "/user/notification"
-                                ? "bell"
-                                : ["far", "bell"]
-                        }
-                        className="text-2xl"
-                    />
+            {!user ? (
+                ""
+            ) : (
+                <div
+                    onClick={() => {
+                        dispatch(setIsReadNotifyAsync());
+                        history.push(`/user/notification`);
+                    }}
+                    className={
+                        location.pathname === "/user/notification"
+                            ? "tab-button-select cursor-pointer"
+                            : "tab-button cursor-pointer"
+                    }
+                >
+                    <div className="flex justify-center items-center p-4">
+                        {notifys?.data?.payload?.filter(
+                            (item: Notify) => item.isRead === false
+                        ).length > 0 ? (
+                            <div className="absolute flex justify-center items-center h-3 w-3 bg-[color:var(--red-darker-color)] font-bold rounded-full text-white text-[10px] ml-4 mb-6">
+                                {notifys?.data?.payload?.filter(
+                                    (item: Notify) => item.isRead === false
+                                ).length > 9
+                                    ? "9+"
+                                    : notifys?.data?.payload?.filter(
+                                          (item: Notify) =>
+                                              item.isRead === false
+                                      ).length}
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                        <Icon
+                            icon={
+                                location.pathname === "/user/notification"
+                                    ? "bell"
+                                    : ["far", "bell"]
+                            }
+                            className="text-2xl"
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
 
             <Link
                 to={!user ? "/login" : "/user/profile"}
@@ -135,9 +142,9 @@ const TabsNav = () => {
                 />
             </Link>
 
-            {user?.role === "Admin" ? (
+            {user?.role === "admin" ? (
                 <Link
-                    to="/admin"
+                    to="/admin/user"
                     className={
                         location.pathname.startsWith("/admin")
                             ? "tab-button-select"

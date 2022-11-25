@@ -562,7 +562,7 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                             type="submit"
                             disabled={
                                 loading ||
-                                (content === "" &&
+                                (content.trim() === "" &&
                                     uploadedImages.length === 0 &&
                                     uploadedAudio === null &&
                                     uploadedVideo === null)
