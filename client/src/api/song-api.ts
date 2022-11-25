@@ -7,7 +7,7 @@ export const createSongApi = async (data: SongCreate) => {
     formData.append("Title", data.title);
     formData.append("Alias", data.alias ?? "");
     formData.append("Thumbnail", data.thumbnailFile!);
-    formData.append("Lyrics", data.lyrics);
+    formData.append("Lyrics", data.lyrics ?? "");
     formData.append("Description", data.description ?? "");
     for (let item of data.genres) {
         formData.append("Genres", item);
@@ -50,7 +50,7 @@ export const editSongApi = async (data: SongCreate) => {
     formData.append("Title", data.title);
     formData.append("Alias", data.alias ?? "");
     formData.append("Thumbnail", data.thumbnailFile!);
-    formData.append("Lyrics", data.lyrics);
+    formData.append("Lyrics", data.lyrics ?? "");
     formData.append("Description", data.description ?? "");
     for (let item of data.genres) {
         formData.append("Genres", item);

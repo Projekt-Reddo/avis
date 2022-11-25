@@ -217,6 +217,7 @@ public class SongLogic : ISongLogic
 			var song = _mapper.Map<Song>(songUpdate);
 
 			// Keep some old critical values
+			song.Id = id;
 			if (song.Url is null)
 			{
 				song.Url = new Url();

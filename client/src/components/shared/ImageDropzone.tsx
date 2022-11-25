@@ -41,7 +41,7 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
     const [preview, setPreview] = useState<string>(defaultPreview);
 
     useEffect(() => {
-        if (savedImage && defaultPreview !== "") {
+        if (savedImage) {
             const objectUrl = URL.createObjectURL(savedImage);
             setPreview(objectUrl);
         }
@@ -57,11 +57,11 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
         }
     }, [acceptedFiles]);
 
-    useEffect(() => {
-        if (!getValues(fieldName)) {
-            setPreview("");
-        }
-    }, [getValues(fieldName)]);
+    // useEffect(() => {
+    //     if (!getValues(fieldName)) {
+    //         setPreview("");
+    //     }
+    // }, [getValues(fieldName)]);
 
     const displayAccept = (item: Accept) => {
         var result: string[] = [];
@@ -84,7 +84,7 @@ const ImageDropzone: FunctionComponent<ImageDropzoneProps> = ({
                 })}
             >
                 <input {...getInputProps()} data-cy="create-song-thumbnail" />
-                {getValues(fieldName) || preview ? (
+                {preview !== "" ? (
                     <div
                         className="w-full h-full"
                         style={{
