@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
-import MicRecorder from "mic-recorder-to-mp3";
 import { textSearchAsync, humToSongAsync } from "store/slices/searchSlice";
 import Icon from "components/shared/Icon";
 import "theme/Home.css";
@@ -10,6 +9,8 @@ import History from "./History";
 import { TIME_TO_HUM } from "utils/constants";
 import LIGHT_BG from "static/Home-bg.webp";
 import DARK_BG from "static/Home-bg-dark.jpg";
+import { VoiceRecorder } from "capacitor-voice-recorder";
+import { base64StringToBlob } from "blob-util";
 
 interface SongSearchProp {
     scrollRef: React.RefObject<HTMLDivElement>;
@@ -20,8 +21,6 @@ interface RecordInfo {
     blobURL: string;
     blob: Blob | null;
 }
-
-const mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
     const dispatch = useAppDispatch();
@@ -35,76 +34,64 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
         blob: null,
     });
 
-    const [hum, setHum] = React.useState(false);
-
     const startRecord = async () => {
-        // Check for mic permission
-        setHum(true);
-        const allowStatus = await navigator.permissions.query({
-            // @ts-ignore
-            name: "microphone",
-        });
-        if (allowStatus.state !== "granted") {
-            try {
-                await navigator.mediaDevices.getUserMedia({
-                    audio: true,
-                });
-            } catch (err: any) {
-                addNewToast({
-                    variant: "danger",
-                    message: "Please enable microphone for recording",
-                });
-                console.log(err);
-                return;
+        VoiceRecorder.requestAudioRecordingPermission().then((status) => {
+            if (Object.hasOwn(status, "voice recording")) {
+                // @ts-ignore
+                if (status["voice recording"] !== "granted") {
+                    addNewToast({
+                        variant: "danger",
+                        message: "Please enable microphone for recording",
+                    });
+                    return;
+                }
+            } else {
+                if (status.value !== true) {
+                    addNewToast({
+                        variant: "danger",
+                        message: "Please enable microphone for recording",
+                    });
+                    return;
+                }
             }
-        }
 
-        mp3Recorder
-            .start()
-            .then(() => {
-                setRecord({ ...record, isRecording: true });
-            })
-            .catch((e: any) => console.log(e));
-        setAppear(true);
+            // Record
+            VoiceRecorder.startRecording()
+                .then(() => {
+                    setRecord((prev) => ({ ...prev, isRecording: true }));
+                })
+                .catch((e) => console.log(e));
+        });
     };
 
     React.useEffect(() => {
-        if (hum) {
-            StopHum();
+        if (record.isRecording) {
+            endRecord();
         }
-    }, [hum]);
-
-    const StopHum = async () => {
-        await delay(12 * 1000); // second to milisecond
-        endRecord();
-        setHum(false);
-    };
+    }, [record]);
 
     const endRecord = async () => {
-        setAppear(false);
-        await delay(750);
-        mp3Recorder
-            .stop()
-            .getMp3()
-            .then((obj: any) => {
-                // obj is [buffer, blob]
-                var blob = obj[1]; // obj[1] get the blob
-                const blobUrl = window.URL.createObjectURL(blob);
-                setRecord({
-                    ...record,
-                    blobURL: blobUrl,
-                    isRecording: false,
-                });
-                dispatch(humToSongAsync(blob)); // fetch api
+        await delay(12.5 * 1000);
+
+        VoiceRecorder.stopRecording()
+            .then((result) => {
+                const blob = base64StringToBlob(
+                    result.value.recordDataBase64,
+                    "audio/mpeg"
+                );
+                dispatch(humToSongAsync(blob));
                 handleScrollToResult();
             })
-            .catch((e: any) => console.log(e));
+            .catch((error) => console.log(error))
+            .finally(() => {
+                setRecord((prev) => ({
+                    ...prev,
+                    isRecording: false,
+                }));
+            });
     };
 
-    //#endregion
-
     // Listening animation
-    const [appear, setAppear] = React.useState(false);
     const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
     const handleScrollToResult = () => {
@@ -113,6 +100,8 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
             block: "start",
         });
     };
+
+    //#endregion
 
     //#region Text search
 
@@ -155,7 +144,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
             {record.isRecording && (
                 <div
                     className={
-                        appear
+                        record.isRecording
                             ? "searching animate absolute h-[91vh] w-screen flex justify-center items-center bg-opacity-80 z-10"
                             : "searching animate-d absolute h-[91vh] w-screen flex justify-center items-center bg-opacity-80 z-10"
                     }
