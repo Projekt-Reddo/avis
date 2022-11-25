@@ -4,14 +4,13 @@ import { useParams } from "react-router-dom";
 import { useAppSelector } from "utils/react-redux-hooks";
 
 // Components
-import PageWrapper from "components/PageWrapper/PageWrapper";
-
 import ProfileCard from "components/Profile/ProfileCard";
 import {
     viewMoreUserPostAsync,
     viewUserPostAsync,
 } from "store/slices/postSlice";
 import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
+import PageWrapperUser from "components/PageWrapper/PageWrapperUser";
 
 const Profile = () => {
     const params: any = useParams();
@@ -32,7 +31,7 @@ const Profile = () => {
     });
 
     return (
-        <PageWrapper>
+        <PageWrapperUser>
             {createPostInfiniteScrollLayout({
                 storeSelector: (state: RootState) => state.post,
                 getInitDataAction: viewUserPostAsync,
@@ -40,7 +39,7 @@ const Profile = () => {
                 LeftComponent: ProfileCard,
                 PageFilter: pageFilter,
             })}
-        </PageWrapper>
+        </PageWrapperUser>
     );
 };
 

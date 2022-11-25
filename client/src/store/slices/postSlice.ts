@@ -96,10 +96,7 @@ const postSlice = createSlice({
             })
             .addCase(viewSavedPostAsync.fulfilled, (state, action) => {
                 state.status = "idle";
-                state.data = {
-                    total: action.payload.total,
-                    payload: [...state.data.payload, ...action.payload.payload],
-                };
+                state.data = action.payload;
             })
             .addCase(viewMoreSavedPostAsync.fulfilled, (state, action) => {
                 state.status = "idle";

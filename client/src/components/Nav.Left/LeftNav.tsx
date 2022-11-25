@@ -1,6 +1,8 @@
 import { useLocation } from "react-router";
 import { toggleLeftNav } from "store/slices/leftNavSlice";
-import { leftNavOptions } from "utils/constants";
+import { setTheme } from "store/slices/themeSlice";
+import { displayThemeIcon, leftNavOptions } from "utils/leftNavData";
+import { handleLogout } from "utils/logout";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 import "./left-nav.styles.css";
@@ -11,12 +13,45 @@ const LeftNav = () => {
     const location = useLocation();
 
     const isShowing = useAppSelector((state) => state.leftNavShowing);
-    const auth = useAppSelector((state) => state.auth);
+    const auth = useAppSelector((state) => state.auth.data);
+    const theme = useAppSelector((state) => state.theme);
 
     const dispatch = useAppDispatch();
     const setIsShowing = () => dispatch(toggleLeftNav());
 
-    let renderOptions = leftNavOptions[auth.data.role];
+    const leftNavUser: LeftNavItemData[] = [
+        {
+            icon: "user-circle",
+            title: "Profile",
+            path: "/user/profile",
+        },
+        {
+            icon: "bars-progress",
+            title: "Manage",
+            path:
+                auth && auth.role === "admin"
+                    ? "/admin/user"
+                    : "/moderator/user",
+            isShown:
+                auth && (auth.role === "admin" || auth.role === "moderator"),
+        },
+        {
+            icon: displayThemeIcon(theme),
+            title: `Display: ${theme.data.display}`,
+            onClick: () => {
+                dispatch(setTheme(theme.data.display));
+            },
+        },
+        {
+            icon: "sign-out-alt",
+            title: "Logout",
+            onClick: handleLogout,
+        },
+    ];
+
+    let renderOptions = location.pathname.startsWith("/user")
+        ? leftNavUser
+        : leftNavOptions[auth.role];
 
     return (
         <nav
@@ -34,7 +69,9 @@ const LeftNav = () => {
                         <LeftNavItem
                             key={item.title}
                             itemData={item}
-                            isActive={location.pathname.startsWith(item.path)}
+                            isActive={location.pathname.startsWith(
+                                item?.path || "never active"
+                            )}
                             isShowing={isShowing}
                         />
                     );
