@@ -2,13 +2,13 @@
 import React from "react";
 
 // Components
-import PageWrapper from "components/PageWrapper/PageWrapper";
 import ProfileCard from "components/Profile/ProfileCard";
 import {
     viewMoreSavedPostAsync,
     viewSavedPostAsync,
 } from "store/slices/postSlice";
 import createPostInfiniteScrollLayout from "components/InfiniteScroll/createPostInfiniteScrollLayout";
+import PageWrapperUser from "components/PageWrapper/PageWrapperUser";
 
 const ProfileSave = () => {
     const [pageFilter, setPageFilter] = React.useState<PageFilterProps>({
@@ -18,7 +18,7 @@ const ProfileSave = () => {
     });
 
     return (
-        <PageWrapper>
+        <PageWrapperUser>
             {createPostInfiniteScrollLayout({
                 storeSelector: (state: RootState) => state.post,
                 getInitDataAction: viewSavedPostAsync,
@@ -26,7 +26,7 @@ const ProfileSave = () => {
                 LeftComponent: ProfileCard,
                 PageFilter: pageFilter,
             })}
-        </PageWrapper>
+        </PageWrapperUser>
     );
 };
 

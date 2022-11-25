@@ -17,6 +17,8 @@ import {
     setIsReadNotifyAsync,
     viewNotifyAsync,
 } from "store/slices/notifySlice";
+import { handleLogout } from "utils/logout";
+import { displayThemeIcon } from "utils/leftNavData";
 
 const Nav = () => {
     const location = useLocation();
@@ -44,23 +46,6 @@ const Nav = () => {
             : "hover:text-[color:var(--text-secondary-color)]";
     }
 
-    const displayThemeIcon = (): string => {
-        if (theme.status === "idle") {
-            switch (theme.data.display) {
-                case THEME.DARK:
-                    return "moon";
-
-                case THEME.SYSTEM:
-                    return "desktop";
-
-                default:
-                    return "sun";
-            }
-        }
-
-        return "sun";
-    };
-
     const options: DropdownOption[] = [
         {
             icon: "user-circle",
@@ -68,7 +53,7 @@ const Nav = () => {
             to: "/user/profile",
         },
         {
-            icon: displayThemeIcon(),
+            icon: displayThemeIcon(theme),
             lable: `Display: ${theme.data.display}`,
             onClick: () => {
                 dispatch(setTheme(theme.data.display));
@@ -91,10 +76,6 @@ const Nav = () => {
             onClick: handleLogout,
         },
     ];
-
-    function handleLogout() {
-        firebaseLogout().then(() => window.location.reload());
-    }
 
     useEffect(() => {
         dispatch(getTheme());

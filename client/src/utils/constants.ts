@@ -19,61 +19,11 @@ export const routes = [
 export const routesIgnoreNav: string[] = ["/login", "/signup", "/verify"];
 export const authRoutes = ["/login", "/signup"];
 
-export const leftNavAdmin: LeftNavItemData[] = [
-    {
-        icon: "user",
-        path: "/admin/user",
-        title: "User",
-    },
-    {
-        icon: "flag",
-        path: "/admin/report",
-        title: "Report",
-    },
-    {
-        icon: "music",
-        path: "/admin/song",
-        title: "Song",
-    },
-    {
-        icon: "microphone",
-        path: "/admin/artist",
-        title: "Artist",
-    },
-    {
-        icon: "guitar",
-        path: "/admin/genre",
-        title: "Genre",
-    },
-];
-
-export const leftNavModerator: LeftNavItemData[] = [
-    {
-        icon: "user",
-        path: "/moderator/user",
-        title: "User",
-    },
-    {
-        icon: "flag",
-        path: "/moderator/report",
-        title: "Report",
-    },
-];
-
 export const USER_ROLE = {
     ADMIN: "admin",
     MODERATOR: "moderator",
     USER: "user",
 };
-
-export const leftNavOptions: {
-    [key: string]: LeftNavItemData[];
-} = {
-    admin: leftNavAdmin,
-    moderator: leftNavModerator,
-};
-
-export const leftNavUser: LeftNavItemData[] = [];
 
 export const MAIN_SERVICE_API =
     import.meta.env.VITE_MAIN_SERVICE_API || "localhost:7000";
