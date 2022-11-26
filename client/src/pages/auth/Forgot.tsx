@@ -96,7 +96,7 @@ const ForgotPassword = () => {
                                     disabled={status === "loading"}
                                     data-cy="submit-btn"
                                 >
-                                    Login
+                                    Get password recovery email
                                 </Button>
                             </form>
                         </div>
