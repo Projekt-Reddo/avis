@@ -39,7 +39,10 @@ const TextArea: React.FC<TextAreaProps> = ({
                 {...props}
             />
             {error?.message && (
-                <span className="text-[color:var(--red-general-color)]">{`${error.message}`}</span>
+                <span
+                    className="text-[color:var(--red-general-color)]"
+                    data-cy="error-message"
+                >{`${error.message}`}</span>
             )}
         </div>
     );

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("view songs", () => {
+describe("view posts", () => {
     beforeEach(() => {
         cy.viewport(1366, 768);
         cy.visit("/discover");

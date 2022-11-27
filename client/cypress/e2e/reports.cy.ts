@@ -70,6 +70,27 @@ describe("reports", () => {
         );
     });
 
+    it("report-commend-other-fail", () => {
+        cy.get('[data-cy="comment-textarea"]').type(
+            "This comment is for testing purposes: <the comment report function>"
+        );
+
+        cy.get('[data-cy="comment-create-button"]').click();
+
+        cy.get('[data-cy="comment-report-icon"]').last().click();
+
+        cy.get('[data-cy="report-types-list"] > :last-child').click();
+
+        cy.get('[data-cy="report-submit-button"]').click();
+
+        cy.get('[data-cy="error-message"]').should(
+            "contain.text",
+            "Problem description is required!"
+        );
+
+        cy.visit("/");
+    });
+
     afterEach(() => {
         cy.get('[data-cy="nav-dropdown"]').click();
         cy.get('[data-cy="Logout"]').click();

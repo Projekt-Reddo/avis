@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("searc-text", () => {
+describe("search-text", () => {
     beforeEach(() => {
         cy.viewport(1366, 768);
         cy.visit("/");
