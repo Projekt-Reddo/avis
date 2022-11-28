@@ -9,12 +9,14 @@ interface ReportConfirmProps {
     isSelected: boolean;
     isAccepted: boolean;
     filter: ReportFilterState;
+    dataCy?: string;
 }
 
 const ReportConfirm: FunctionComponent<ReportConfirmProps> = ({
     isSelected,
     isAccepted,
     filter,
+    dataCy = "default data-cy for report manage button",
 }) => {
     const dispatch = useAppDispatch();
     const reportState = useAppSelector((state) => state.report);
@@ -40,6 +42,7 @@ const ReportConfirm: FunctionComponent<ReportConfirmProps> = ({
                 variant={isAccepted ? "primary" : "danger"}
                 onClick={() => setOpenDelete(true)}
                 disabled={isSelected ? false : true}
+                data-cy={dataCy}
             >
                 {isAccepted ? "Accept" : "Reject"}
             </Button>

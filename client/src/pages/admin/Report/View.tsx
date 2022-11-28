@@ -178,17 +178,22 @@ const ViewReport = () => {
                 filterContent={filterContent}
             />
 
-            <div className="w-full mx-2 flex flex-row gap-2">
+            <div
+                className="w-full mx-2 flex flex-row gap-2"
+                data-cy="report-manage-buttons-group"
+            >
                 <ReportConfirm
                     isSelected={haveAnyItemSelected}
                     isAccepted={true}
                     filter={pageRowFilter}
+                    dataCy="report-accept-btn"
                 />
 
                 <ReportConfirm
                     isSelected={haveAnyItemSelected}
                     isAccepted={false}
                     filter={pageRowFilter}
+                    dataCy="report-reject-btn"
                 />
             </div>
 
