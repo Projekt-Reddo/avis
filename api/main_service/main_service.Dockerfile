@@ -41,4 +41,5 @@ COPY --from=publish /app/publish .
 # ENTRYPOINT ["dotnet", "MainService.dll"]
 
 # Run on Heroku
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet MainService.dll --timezone "SE Asia Standard Time"
+# CMD ASPNETCORE_URLS=http://*:$PORT dotnet MainService.dll --timezone "SE Asia Standard Time"
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet MainService.dll
