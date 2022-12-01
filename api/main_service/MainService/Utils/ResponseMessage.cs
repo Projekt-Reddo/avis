@@ -65,6 +65,7 @@ public static class ResponseMessage
 	// Comment msg
 	public const string COMMENT_CREATE_SUCCESS = "Add new comment successfully";
 	public const string COMMENT_CREATE_FAIL = "Add new comment failed";
+	public const string COMMENT_CREATE_FAIL_NO_IDS = "Add new comment failed: PostId or CommentId must be provided!";
 	public const string COMMENT_CREATE_MEDIA_FAIL = "Media type is not supported";
 	public const string COMMENT_NOT_FOUND = "No comment found";
 	public const string COMMENT_VOTE_SUCCESS = "Comment Vote Successfully";

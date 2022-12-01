@@ -73,6 +73,12 @@ public class CommentLogic : ICommentLogic
 	{
 		var postFilter = Builders<Post>.Filter.Eq(x => x.Id, postId);
 		var postFromRepo = await _postRepo.FindOneAsync(filter: postFilter);
+
+		if (postFromRepo is null)
+		{
+			return false;
+		}
+
 		if (postFromRepo.CommentIds == null)
 		{
 			postFromRepo.CommentIds = new List<ObjectId>();

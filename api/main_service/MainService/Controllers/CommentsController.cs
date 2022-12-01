@@ -39,6 +39,11 @@ namespace MainService.Controllers
 		[HttpPost]
 		public async Task<ActionResult<ResponseDto>> AddComment([FromForm] CommentCreateDto newComment)
 		{
+			if (newComment.PostId is null && newComment.CommentId is null)
+			{
+				return BadRequest(new ResponseDto(400, ResponseMessage.COMMENT_CREATE_FAIL_NO_IDS));
+			}
+
 			if (newComment.Content is null && newComment.Media is null)
 			{
 				return BadRequest(new ResponseDto(400, "Content or Media is required"));
@@ -75,7 +80,12 @@ namespace MainService.Controllers
 			if (newComment.PostId != null)
 			{// if that comment is the 1st level comment
 			 // Update Post comment ids
-				var rss = await _commentLogic.UpdatePostComment(newComment.PostId, rs);
+				var commentLogicRs = await _commentLogic.UpdatePostComment(newComment.PostId, rs);
+
+				if (commentLogicRs == false)
+				{
+					return BadRequest(new ResponseDto(400, ResponseMessage.COMMENT_CREATE_FAIL));
+				}
 			}
 
 			if (newComment.CommentId != null)
@@ -91,7 +101,12 @@ namespace MainService.Controllers
 				commentFromRepo.Comments.Add(new ObjectId(comment.Id));
 				// commentFromRepo.Comments.Add(comment.Id);
 
-				var rss = await _commentLogic.UpdateComment(newComment.CommentId, commentFromRepo);
+				var commentLogicRs = await _commentLogic.UpdateComment(newComment.CommentId, commentFromRepo);
+
+				if (commentLogicRs == false)
+				{
+					return BadRequest(new ResponseDto(400, ResponseMessage.COMMENT_CREATE_FAIL));
+				}
 			}
 
 			var isMediaExist = newComment.Media != null;
