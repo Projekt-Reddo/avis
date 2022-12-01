@@ -4,13 +4,13 @@ namespace MainService.Dtos;
 
 public class CommentCreateDto
 {
-	public string? CommentId { get; set; } = null!;
+	public string? CommentId { get; set; }
 
-	public string? PostId { get; set; } = null!;
+	public string? PostId { get; set; }
 
-	public string? Content { get; set; } = null!;
+	public string? Content { get; set; }
 
-	public IFormFile? Media { get; set; } = null!;
+	public IFormFile? Media { get; set; }
 }
 
 public class CommentReadDto
