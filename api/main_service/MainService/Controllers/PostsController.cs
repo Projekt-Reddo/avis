@@ -230,7 +230,7 @@ public class PostsController : ControllerBase
 		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
 
 		// Published At Filter
-		postFilter = postFilter & Builders<Post>.Filter.Gte(x => x.PublishedAt, DateTime.Now.AddDays(-7));
+		postFilter = postFilter & Builders<Post>.Filter.Gte(x => x.PublishedAt, DateTime.Now.AddDays(-30));
 		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
 
 		// Config to specify needed fields

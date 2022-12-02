@@ -320,6 +320,12 @@ public class PostLogic : IPostLogic
 		// Is Deleted Post Filter
 		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 
+		// Public Post Filter
+		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
+
+		// Published At Filter
+		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
+
 		if (pagination.Filter is not null)
 		{
 			// User Post Filter
@@ -333,12 +339,6 @@ public class PostLogic : IPostLogic
 										& Builders<Post>.Filter.Eq(x => x.IsDeleted, false);
 			}
 		}
-
-		// Public Post Filter
-		postFilter = postFilter & Builders<Post>.Filter.Eq(x => x.DisplayStatus, PostStatus.PUBLIC);
-
-		// Published At Filter
-		postFilter = postFilter & Builders<Post>.Filter.Lte(x => x.PublishedAt, DateTime.Now);
 
 		(var totalPost, var postsFromRepo) = await _postRepo.FindManyAsync(
 			filter: postFilter,
