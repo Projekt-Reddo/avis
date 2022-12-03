@@ -58,3 +58,9 @@ export const THEME = {
     LIGHT: "light",
     SYSTEM: "system",
 };
+
+export const PLATFORM = {
+    WEB: "web",
+    IOS: "ios",
+    ANDROID: "android",
+};

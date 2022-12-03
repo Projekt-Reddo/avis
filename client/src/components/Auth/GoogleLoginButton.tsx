@@ -1,6 +1,10 @@
+import { Capacitor } from "@capacitor/core";
 import Icon from "components/shared/Icon";
 
-import { loginWithGoogleAsync } from "store/slices/authSlice";
+import {
+    loginWithGoogleAltAsync,
+    loginWithGoogleAsync,
+} from "store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 interface GoogleLoginButtonProps {}
@@ -20,7 +24,14 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = () => {
                 opacity: disabled ? "0.5" : "1",
             }}
             onClick={() => {
-                dispatch(loginWithGoogleAsync());
+                if (
+                    !Capacitor.getPlatform() ||
+                    Capacitor.getPlatform() === "web"
+                ) {
+                    dispatch(loginWithGoogleAsync());
+                } else {
+                    dispatch(loginWithGoogleAltAsync());
+                }
             }}
             disabled={disabled}
         >

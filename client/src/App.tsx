@@ -32,6 +32,7 @@ import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { THEME } from "utils/constants";
 import { getTheme } from "store/slices/themeSlice";
 import { useHubConnection } from "utils/use-hub-connection";
+import { Capacitor } from "@capacitor/core";
 
 setupIonicReact({
     swipeBackEnabled: false,
