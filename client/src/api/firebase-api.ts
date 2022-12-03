@@ -6,7 +6,9 @@ import {
     sendEmailVerification,
     signInWithPopup,
     sendPasswordResetEmail,
+    signInWithCredential,
 } from "firebase/auth";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { auth } from "utils/firebase/firebase-config";
 
 export const currentFirebaseUser = () => {
@@ -58,6 +60,19 @@ export const loginWithGoogle = async () => {
 
 export const resetPassword = async (email: string) => {
     const res = await sendPasswordResetEmail(auth, email);
+
+    return res;
+};
+
+export const loginWithGoogleAlt = async () => {
+    // 1. Create credentials on the native layer
+    const result = await FirebaseAuthentication.signInWithGoogle();
+    // 2. Sign in on the web layer using the id token
+    const credential = GoogleAuthProvider.credential(
+        result.credential?.idToken
+    );
+    const auth = getAuth();
+    const res = await signInWithCredential(auth, credential);
 
     return res;
 };

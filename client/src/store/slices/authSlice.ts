@@ -3,6 +3,7 @@ import { createAccountApi, loginWithGoogleApi } from "api/account-api";
 import {
     currentFirebaseUser,
     loginWithGoogle,
+    loginWithGoogleAlt,
     userLoginFirebase,
     userSignupFirebase,
 } from "api/firebase-api";
@@ -39,7 +40,8 @@ const authSlice = createSlice({
                 isAnyOf(
                     signupAsync.pending,
                     loginAsync.pending,
-                    loginWithGoogleAsync.pending
+                    loginWithGoogleAsync.pending,
+                    loginWithGoogleAltAsync.pending
                 ),
                 (state) => {
                     state.status = "loading";
@@ -50,6 +52,7 @@ const authSlice = createSlice({
                     signupAsync.fulfilled,
                     loginAsync.fulfilled,
                     loginWithGoogleAsync.fulfilled,
+                    loginWithGoogleAltAsync.fulfilled,
                     firstCheckin.fulfilled
                 ),
                 (state, action) => {
@@ -130,6 +133,40 @@ export const loginWithGoogleAsync = createAsyncThunk(
                 }
             } else {
                 return await getUserDataState(userFirebaseData.user);
+            }
+        } catch (e: any) {
+            handleError(e, thunkApi);
+        }
+    }
+);
+
+export const loginWithGoogleAltAsync = createAsyncThunk(
+    "auth/login",
+    async (_, thunkApi) => {
+        try {
+            // Login here.
+            const userFirebaseData = await loginWithGoogleAlt();
+
+            const firebaseUser = currentFirebaseUser();
+
+            if (!firebaseUser) return null;
+
+            let tokenResult = await firebaseUser.getIdTokenResult(true);
+
+            // Check if the user account had been added to back-end database or not.
+            if (!tokenResult.claims["initiated"]) {
+                const res = await loginWithGoogleApi({
+                    uid: userFirebaseData.user!.uid,
+                    avatar: userFirebaseData.user!.photoURL,
+                    email: userFirebaseData.user!.email!,
+                    name: userFirebaseData.user!.displayName!,
+                });
+
+                if (res.status === 200) {
+                    return await getUserDataState(firebaseUser);
+                }
+            } else {
+                return await getUserDataState(firebaseUser);
             }
         } catch (e: any) {
             handleError(e, thunkApi);
