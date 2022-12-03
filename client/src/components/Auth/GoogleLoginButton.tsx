@@ -5,6 +5,7 @@ import {
     loginWithGoogleAltAsync,
     loginWithGoogleAsync,
 } from "store/slices/authSlice";
+import { PLATFORM } from "utils/constants";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 
 interface GoogleLoginButtonProps {}
@@ -26,7 +27,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = () => {
             onClick={() => {
                 if (
                     !Capacitor.getPlatform() ||
-                    Capacitor.getPlatform() === "web"
+                    Capacitor.getPlatform() === PLATFORM.WEB
                 ) {
                     dispatch(loginWithGoogleAsync());
                 } else {

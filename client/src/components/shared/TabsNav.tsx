@@ -17,6 +17,7 @@ const TabsNav = () => {
     const dispatch = useAppDispatch();
 
     const user = useAppSelector((state) => state.auth.data);
+    const authStatus = useAppSelector((state) => state.auth.status);
     const notifys = useAppSelector((state) => state.notify);
 
     // For hiding bottom nav bar in desktop view
@@ -124,37 +125,43 @@ const TabsNav = () => {
                 </div>
             )}
 
-            <Link
-                to={!user ? "/login" : "/user/profile"}
-                className={
-                    location.pathname === "/user/profile"
-                        ? "tab-button-select"
-                        : "tab-button"
-                }
-            >
-                <Icon
-                    icon={
-                        location.pathname === "/user/profile"
-                            ? "user-circle"
-                            : ["far", "user-circle"]
-                    }
-                    className="text-2xl p-4"
-                />
-            </Link>
-
-            {user?.role === "admin" ? (
-                <Link
-                    to="/admin/user"
-                    className={
-                        location.pathname.startsWith("/admin")
-                            ? "tab-button-select"
-                            : "tab-button"
-                    }
-                >
-                    <Icon icon="users-gear" className="text-2xl p-4" />
-                </Link>
+            {authStatus === "init" || authStatus === "loading" ? (
+                <></>
             ) : (
-                " "
+                <>
+                    <Link
+                        to={!user ? "/login" : "/user/profile"}
+                        className={
+                            location.pathname === "/user/profile"
+                                ? "tab-button-select"
+                                : "tab-button"
+                        }
+                    >
+                        <Icon
+                            icon={
+                                location.pathname === "/user/profile"
+                                    ? "user-circle"
+                                    : ["far", "user-circle"]
+                            }
+                            className="text-2xl p-4"
+                        />
+                    </Link>
+
+                    {user?.role === "admin" ? (
+                        <Link
+                            to="/admin/user"
+                            className={
+                                location.pathname.startsWith("/admin")
+                                    ? "tab-button-select"
+                                    : "tab-button"
+                            }
+                        >
+                            <Icon icon="users-gear" className="text-2xl p-4" />
+                        </Link>
+                    ) : (
+                        " "
+                    )}
+                </>
             )}
         </nav>
     );
