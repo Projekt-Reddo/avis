@@ -166,7 +166,7 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                 </div>
             )}
             <div
-                className="h-[91vh] flex justify-center items-center"
+                className="h-[94vh] flex justify-center items-center"
                 style={{
                     backgroundImage: `url(${
                         theme.status === "idle" && theme.data.value === "dark"
@@ -174,6 +174,8 @@ const SongSearch: React.FC<SongSearchProp> = ({ scrollRef }) => {
                             : LIGHT_BG
                     })`,
                     backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
                 }}
             >
                 <div className=" grid justify-items-center">
