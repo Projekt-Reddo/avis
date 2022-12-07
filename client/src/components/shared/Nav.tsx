@@ -7,7 +7,6 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
 import { MOBILE_BREAKPOINT } from "utils/constants";
 import { useWindowDimensions } from "utils/useWindowDimensions";
-import { firebaseLogout } from "api/firebase-api";
 
 import WHITE_IMG from "static/white.png";
 import { getTheme, setTheme } from "store/slices/themeSlice";
@@ -107,7 +106,7 @@ const Nav = () => {
 
     return (
         // <nav className="flex flex-row justify-around items-center p-2 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
-        <nav className="grid grid-cols-3 py-2 px-0 lg:px-32 2xl:px-52 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
+        <nav className="grid grid-cols-3 px-0 lg:px-32 2xl:px-52 nav-height drop-shadow-md z-nav bg-[color:var(--nav-bg-color)] border-b-[.5px] border-b-[color:var(--nav-border-color)]">
             <div className="flex items-center">
                 <Link to="/">
                     <img
