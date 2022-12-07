@@ -169,7 +169,8 @@ public class ArtistLogic : IArtistLogic
 
 	public async Task<IEnumerable<Artist>> GetByName(string name)
 	{
-		var filter = Builders<Artist>.Filter.Where(g => g.Name.ToLower().Contains(name.ToLower()));
+		// var filter = Builders<Artist>.Filter.Where(g => g.Name.ToLower().Contains(name.ToLower()));
+		var filter = Builders<Artist>.Filter.Regex("Name", new BsonRegularExpression(name, "i")) | Builders<Artist>.Filter.Regex("Alias", new BsonRegularExpression(name, "i"));
 		(var total, var genres) = await _artistRepo.FindManyAsync(filter: filter);
 		if (total == 0)
 		{

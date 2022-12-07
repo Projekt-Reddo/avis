@@ -101,7 +101,7 @@ const SelectAsync: FunctionComponent<SelectAsyncProps> = ({
                         cacheOptions
                         loadOptions={loadOptions}
                         defaultOptions
-                        onInputChange={handleInputChange}
+                        // onInputChange={handleInputChange}
                         value={options.filter(
                             (c: any) => value && value!.includes(c.value)
                         )}

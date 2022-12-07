@@ -15,54 +15,55 @@ namespace MainService.Controllers;
 [Route("api/[controller]")]
 public class SearchController : ControllerBase
 {
-    private readonly IHumSvcClient _humSvcClient;
-    private readonly ISongRepo _songRepo;
-    private readonly IMapper _mapper;
-    private readonly IConfiguration _configuration;
+	private readonly IHumSvcClient _humSvcClient;
+	private readonly ISongRepo _songRepo;
+	private readonly IMapper _mapper;
+	private readonly IConfiguration _configuration;
 
-    public SearchController(
-        IHumSvcClient humSvcClient,
-        ISongRepo songRepo,
-        IMapper mapper,
-        IConfiguration configuration)
-    {
-        _humSvcClient = humSvcClient;
-        _songRepo = songRepo;
-        _mapper = mapper;
-        _configuration = configuration;
-    }
+	public SearchController(
+		IHumSvcClient humSvcClient,
+		ISongRepo songRepo,
+		IMapper mapper,
+		IConfiguration configuration)
+	{
+		_humSvcClient = humSvcClient;
+		_songRepo = songRepo;
+		_mapper = mapper;
+		_configuration = configuration;
+	}
 
-    [HttpPost("song/hum")]
-    public async Task<ActionResult<ICollection<SongReadDto>>> SearchSongByHum([FromForm] IFormFile inputFile)
-    {
-        var songIds = await _humSvcClient.GetSongIdsByHum(file: inputFile);
+	[HttpPost("song/hum")]
+	public async Task<ActionResult<ICollection<SongReadDto>>> SearchSongByHum([FromForm] IFormFile inputFile)
+	{
+		var songIds = await _humSvcClient.GetSongIdsByHum(file: inputFile);
 
-        if (songIds is null)
-        {
-            return NotFound(new ResponseDto(400, ResponseMessage.SONG_NOT_FOUND));
-        }
-        var filter = Builders<Song>.Filter.In(x => x.Id, songIds);
+		if (songIds is null)
+		{
+			return NotFound(new ResponseDto(400, ResponseMessage.SONG_NOT_FOUND));
+		}
+		var filter = Builders<Song>.Filter.In(x => x.Id, songIds);
 
-        (_, var songs) = await _songRepo.FindManyAsync(filter: filter);
+		(_, var songs) = await _songRepo.FindManyAsync(filter: filter);
 
-        return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
-    }
+		return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
+	}
 
-    [HttpPost("song")]
-    public async Task<ActionResult<ICollection<SongReadDto>>> SearchSongByText([FromQuery] string keyword)
-    {
-        var filter = new BsonDocument {
-            { "index", _configuration["DbIndexs:Song"] },
-            { "text", new BsonDocument {
-                { "query", keyword },
-                { "path", new BsonDocument {
-                    { "wildcard", "*" }
-                }},
-            }}
-        };
+	[HttpPost("song")]
+	public async Task<ActionResult<ICollection<SongReadDto>>> SearchSongByText([FromQuery] string keyword)
+	{
+		var filter = Builders<Song>.Filter.Not(Builders<Song>.Filter.Eq(x => x.IsDeleted, true));
+		var indexFilter = new BsonDocument {
+			{ "index", _configuration["DbIndexs:Song"] },
+			{ "text", new BsonDocument {
+				{ "query", keyword },
+				{ "path", new BsonDocument {
+					{ "wildcard", "*" }
+				}},
+			}}
+		};
 
-        (_, var songs) = await _songRepo.FindManyAsync(indexFilter: filter, limit: 10);
+		(_, var songs) = await _songRepo.FindManyAsync(indexFilter: indexFilter, filter: filter, limit: 10);
 
-        return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
-    }
+		return Ok(_mapper.Map<ICollection<SongReadDto>>(songs));
+	}
 }
