@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using Hangfire;
 using MainService.Data;
@@ -27,6 +28,7 @@ public class PostsController : ControllerBase
 	private readonly ICommentLogic _commentLogic;
 	private readonly IS3Service _s3Service;
 	private readonly IBackgroundJobClient _backgroundJobClient;
+	private readonly ILogger<PostsController> _logger;
 
 	public PostsController(
 		IMapper mapper,
@@ -36,7 +38,8 @@ public class PostsController : ControllerBase
 		IAccountRepo accountRepo,
 		IS3Service s3Service,
 		ICommentLogic commentLogic,
-		IBackgroundJobClient backgroundJobClient
+		IBackgroundJobClient backgroundJobClient,
+		ILogger<PostsController> logger
 	)
 	{
 		_mapper = mapper;
@@ -47,6 +50,7 @@ public class PostsController : ControllerBase
 		_s3Service = s3Service;
 		_commentLogic = commentLogic;
 		_backgroundJobClient = backgroundJobClient;
+		_logger = logger;
 
 	}
 
@@ -183,6 +187,9 @@ public class PostsController : ControllerBase
 
 		if (newPost.PublishedAt is not null)
 		{
+			var published = DateTimeOffset.Parse(newPost.PublishedAt.ToString()!);
+			_logger.LogInformation($"Now: {DateTimeOffset.Now}");
+			_logger.LogInformation($"Enqueued: {published.ToString()}");
 			_backgroundJobClient.Schedule(() =>
 				UpdatePostStatus(rs.Id, new PostStatusUpdateDto(PostStatus.PUBLIC)),
 				DateTimeOffset.Parse(newPost.PublishedAt.ToString()!));
@@ -205,7 +212,8 @@ public class PostsController : ControllerBase
 		if (User.FindFirst(JwtTokenPayload.USER_ID) is not null)
 		{
 			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-		} else
+		}
+		else
 		{
 			userId = null;
 		}
