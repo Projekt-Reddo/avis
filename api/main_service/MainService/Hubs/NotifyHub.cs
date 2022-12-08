@@ -18,7 +18,7 @@ public class NotifyHub : Hub
 		try
 		{
 			var userId = Context.User!.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-			_logger.LogInformation($"Token: {userId}");
+			// _logger.LogInformation($"Token: {userId}");
 
 			await Groups.AddToGroupAsync(Context.ConnectionId, userId);
 		}
@@ -35,7 +35,7 @@ public class NotifyHub : Hub
 		try
 		{
 			var userId = Context.User!.FindFirst(JwtTokenPayload.USER_ID)!.Value;
-			_logger.LogInformation($"Token: {userId}");
+			// _logger.LogInformation($"Token: {userId}");
 
 			await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
 		}
