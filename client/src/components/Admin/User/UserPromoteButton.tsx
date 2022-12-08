@@ -69,8 +69,7 @@ const UserPromoteButton: React.FC<UserManageButtonProps> = ({
                         <span>
                             {selectedRole === USER_ROLE.USER
                                 ? "Promote"
-                                : "Demote"}{" "}
-                            User(s)
+                                : "Demote"}
                         </span>
                     </>
                 ),

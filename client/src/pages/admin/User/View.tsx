@@ -74,9 +74,13 @@ const View = () => {
                 name: data.name,
                 sort: data.sort,
                 joinedStart:
-                    data.joinedStart !== "" ? data.joinedStart : "1000-10-11T10:29:56.693Z",
+                    data.joinedStart !== ""
+                        ? data.joinedStart
+                        : "1000-10-11T10:29:56.693Z",
                 joinedEnd:
-                    data.joinedEnd !== "" ? data.joinedEnd : "3000-10-11T10:29:56.693Z",
+                    data.joinedEnd !== ""
+                        ? data.joinedEnd
+                        : "3000-10-11T10:29:56.693Z",
                 isModerator: data.isModerator,
                 isBanned: data.isBanned,
                 isMuted: data.isMuted,
@@ -163,8 +167,8 @@ const View = () => {
                 ) : (
                     <>
                         {/* Manage Bar */}
-                        <div className="flex justify-between items-center">
-                            <div className="flex flex-row items-center">
+                        <div className="flex justify-between items-center w-full">
+                            <div className="flex flex-row items-center  w-full overflow-y-scroll">
                                 <UserPromoteButton
                                     selectedUser={userState.tableData.filter(
                                         (user: UserDisplay) => user.isSelected
