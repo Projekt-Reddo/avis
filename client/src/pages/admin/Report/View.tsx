@@ -179,7 +179,7 @@ const ViewReport = () => {
             />
 
             <div
-                className="w-full mx-2 flex flex-row gap-2"
+                className="w-full flex flex-row gap-2"
                 data-cy="report-manage-buttons-group"
             >
                 <ReportConfirm

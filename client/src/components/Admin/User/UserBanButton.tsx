@@ -65,7 +65,7 @@ const UserBanButton: React.FC<UserManageButtonProps> = ({
                 title: (
                     <>
                         <Icon icon="user" className="mr-3" />
-                        <span>{isBanned ? "Unban" : "Ban"} User(s)</span>
+                        <span>{isBanned ? "Unban" : "Ban"}</span>
                     </>
                 ),
                 props: {
