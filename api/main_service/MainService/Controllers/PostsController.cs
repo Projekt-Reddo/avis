@@ -1,4 +1,3 @@
-using System;
 using AutoMapper;
 using Hangfire;
 using MainService.Data;
@@ -187,9 +186,6 @@ public class PostsController : ControllerBase
 
 		if (newPost.PublishedAt is not null)
 		{
-			var published = DateTimeOffset.Parse(newPost.PublishedAt.ToString()!);
-			_logger.LogInformation($"Now: {DateTimeOffset.Now}");
-			_logger.LogInformation($"Enqueued: {published.ToString()}");
 			_backgroundJobClient.Schedule(() =>
 				UpdatePostStatus(rs.Id, new PostStatusUpdateDto(PostStatus.PUBLIC)),
 				DateTimeOffset.Parse(newPost.PublishedAt.ToString()!));
