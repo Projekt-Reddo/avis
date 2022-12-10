@@ -95,7 +95,7 @@ const NotificationCard: React.FC<NotificationCardProps> = () => {
                                     {moment().diff(
                                         moment(notify.isReadAt),
                                         "minutes"
-                                    ) < 5 ? (
+                                    ) < 1 ? (
                                         <Icon
                                             icon="circle"
                                             className="text-[color:var(--teal-general-color)] text-xs"
