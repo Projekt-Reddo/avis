@@ -117,7 +117,9 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                     )
                     .filter((word) => word != " "),
                 publishedAt:
-                    publishedAt === null ? "" : publishedAt.toLocaleString(),
+                    publishedAt === null
+                        ? ""
+                        : publishedAt.toLocaleString("en-US"),
                 displayStatus:
                     publishedAt !== null ? "private" : displayStatus.value,
             })
@@ -438,15 +440,26 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                         {typeUpload !== "audio" ? (
                             ""
                         ) : (
-                            <ReactPlayer
-                                url={URL.createObjectURL(uploadedAudio)}
-                                controls={true}
-                                width="100%"
-                                height={50}
-                                style={{
-                                    marginBottom: "1rem",
-                                }}
-                            />
+                            <div className="relative flex justify-end pt-2 sm:pt-4">
+                                <ReactPlayer
+                                    url={URL.createObjectURL(uploadedAudio)}
+                                    controls={true}
+                                    width="100%"
+                                    height={50}
+                                    style={{
+                                        marginBottom: "1rem",
+                                    }}
+                                />
+                                <div
+                                    className="cancel-circle absolute flex justify-center items-center cursor-pointer w-[1rem] h-[1rem] sm:w-[1.5rem] sm:h-[1.5rem] mt-[-0.5rem] mr-[-0.5rem] sm:mt-[-0.75rem] sm:mr-[-0.75rem] text-[0.75rem] sm:text-[1rem]"
+                                    onClick={() => {
+                                        setTypeUpload("");
+                                        setUploadedAudio(null);
+                                    }}
+                                >
+                                    <Icon icon="times" />
+                                </div>
+                            </div>
                         )}
 
                         {/* Video */}
@@ -465,6 +478,19 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                                         left: 0,
                                     }}
                                 />
+                                <div className="flex justify-end">
+                                    <div className="mt-[-56.25%] mr-[0.8rem]">
+                                        <div
+                                            className="cancel-circle absolute flex justify-center items-center cursor-pointer w-[1rem] h-[1rem] sm:w-[1.5rem] sm:h-[1.5rem] mt-[-0.5rem] mr-[-0.5rem] sm:mt-[-0.75rem] sm:mr-[-0.75rem] text-[0.75rem] sm:text-[1rem]"
+                                            onClick={() => {
+                                                setTypeUpload("");
+                                                setUploadedVideo(null);
+                                            }}
+                                        >
+                                            <Icon icon="times" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
