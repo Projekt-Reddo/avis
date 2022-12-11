@@ -64,6 +64,7 @@ const SelectRow: FunctionComponent<SelectRowProps> = ({
                     };
                 });
             }}
+            menuPlacement="top"
         />
     );
 };
