@@ -39,10 +39,9 @@ const SelectRow: FunctionComponent<SelectRowProps> = ({
         }),
         option: (provided: any, state: any) => ({
             ...provided,
-            backgroundColor: "var(--element-bg-color)",
-            "&:hover": {
-                backgroundColor: "var(--element-bg-color-elevate-1)",
-            },
+            backgroundColor: state.isSelected
+                ? "var(--teal-lighter-color)"
+                : "",
         }),
         singleValue: (styles: any) => ({
             ...styles,
