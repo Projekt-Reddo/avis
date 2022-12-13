@@ -80,11 +80,13 @@ const Detail = () => {
                                 post={reportState.data.post}
                                 isDetailPage={true}
                                 style="drop-shadow-none"
+                                hasOptions={false}
                             />
                         ) : (
                             <div className="bg-[color:var(--element-bg-color)] p-4 rounded-lg">
                                 <CommentCard
                                     comment={reportState.data.comment}
+                                    hasOptions={false}
                                 />
                             </div>
                         )}
