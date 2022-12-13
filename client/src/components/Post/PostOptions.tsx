@@ -28,7 +28,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
     }
 
     return (
-        <>
+        <div ref={wrapperRef}>
             <div
                 onClick={(event: React.MouseEvent<HTMLElement>) => {
                     event.stopPropagation();
@@ -44,29 +44,30 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
                 />
             </div>
 
-            {showOptions && showOptions !== "" && authState.status === "idle" && (
-                <div
-                    ref={wrapperRef}
-                    className="search-card flex flex-col py-1 font-bold drop-shadow-md top-8 right-0 absolute z-50 bg-[color:var(--element-bg-color)] border-[0.5px] border-[color:var(--border-color)]"
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                        event.stopPropagation();
-                    }}
-                >
-                    <button
-                        onClick={() => {
-                            setOpenReport(true);
+            {showOptions &&
+                showOptions !== "" &&
+                authState.status === "idle" && (
+                    <div
+                        className="search-card flex flex-col py-1 font-bold drop-shadow-md top-8 right-0 absolute z-50 bg-[color:var(--element-bg-color)] border-[0.5px] border-[color:var(--border-color)]"
+                        onClick={(event: React.MouseEvent<HTMLElement>) => {
+                            event.stopPropagation();
                         }}
-                        className="px-8 py-2 hover:bg-[color:var(--element-bg-color-elevate-1)] flex justify-between items-center"
-                        data-cy="post-report"
                     >
-                        <Icon icon="flag" className="mr-4" />
-                        Report
-                    </button>
-                    {authState.data.uid === post.user.id && (
-                        <PostDeleteButton post={post} />
-                    )}
-                </div>
-            )}
+                        <button
+                            onClick={() => {
+                                setOpenReport(true);
+                            }}
+                            className="px-8 py-2 hover:bg-[color:var(--element-bg-color-elevate-1)] flex justify-between items-center"
+                            data-cy="post-report"
+                        >
+                            <Icon icon="flag" className="mr-4" />
+                            Report
+                        </button>
+                        {authState.data.uid === post.user.id && (
+                            <PostDeleteButton post={post} />
+                        )}
+                    </div>
+                )}
 
             <ModalForm
                 open={openReport}
@@ -81,7 +82,7 @@ const PostOptions: FunctionComponent<PostOptionsProps> = ({ post }) => {
                 }
                 hasFooter={false}
             />
-        </>
+        </div>
     );
 };
 

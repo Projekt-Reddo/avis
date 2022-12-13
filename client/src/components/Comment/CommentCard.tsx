@@ -15,11 +15,13 @@ import CommentVote from "./CommentVote";
 interface CommenteCardProps {
     comment: Comment;
     isDetailPage?: boolean;
+    hasOptions?: boolean;
 }
 
 const CommentCard: React.FC<CommenteCardProps> = ({
     comment,
     isDetailPage = false,
+    hasOptions = true,
 }) => {
     const authState = useAppSelector((state) => state.auth.data);
     const { open: openReport, setOpen: setOpenReport } = useModal();
@@ -107,35 +109,37 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                     </div>
 
                     {/* Other */}
-                    <div
-                        className="flex items-center gap-4"
-                        onClick={(e: any) => {
-                            e.stopPropagation();
-                        }}
-                    >
-                        {/* Vote*/}
-                        <CommentVote comment={comment} />
+                    {hasOptions && (
+                        <div
+                            className="flex items-center gap-4"
+                            onClick={(e: any) => {
+                                e.stopPropagation();
+                            }}
+                        >
+                            {/* Vote*/}
+                            <CommentVote comment={comment} />
 
-                        {/* Reply */}
-                        {/* <Icon
+                            {/* Reply */}
+                            {/* <Icon
                             icon="reply"
                             className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
                         /> */}
 
-                        {/* Report */}
-                        <Icon
-                            icon="flag"
-                            className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
-                            onClick={() => {
-                                if (authState) {
-                                    setOpenReport(true);
-                                }
-                            }}
-                            data-cy="comment-report-icon"
-                        />
+                            {/* Report */}
+                            <Icon
+                                icon="flag"
+                                className="cursor-pointer hover:text-[color:var(--teal-general-color)]"
+                                onClick={() => {
+                                    if (authState) {
+                                        setOpenReport(true);
+                                    }
+                                }}
+                                data-cy="comment-report-icon"
+                            />
 
-                        <CommentDeleteButton comment={comment} />
-                    </div>
+                            <CommentDeleteButton comment={comment} />
+                        </div>
+                    )}
                 </div>
             </div>
 

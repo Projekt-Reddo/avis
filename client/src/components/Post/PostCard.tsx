@@ -20,12 +20,14 @@ interface PostCardProps {
     post: Post;
     isDetailPage?: boolean;
     style?: string;
+    hasOptions?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
     post,
     isDetailPage = false,
     style = "",
+    hasOptions = true,
 }) => {
     const history = useHistory();
 
@@ -114,7 +116,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             </div>
                         </div>
 
-                        <PostOptions post={post} />
+                        {hasOptions && <PostOptions post={post} />}
                     </div>
 
                     {/* Content */}
