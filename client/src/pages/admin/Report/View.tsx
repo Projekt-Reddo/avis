@@ -272,7 +272,11 @@ function getTableDisplayData(data: any) {
         reportee: item.post ? item.post.user.name : item.comment!.user.name,
         type: item.type,
         object: item.post ? "Post" : "Comment",
-        status: item.status ? item.status : "waiting",
+        status: item.status
+            ? item.status === "approve"
+                ? "approved"
+                : "rejected"
+            : "waiting",
         confirmBy: item.confirmedBy ? item.confirmedBy.name : "",
         createdAt: moment(item.createdAt).format(DAY_FORMAT),
         isSelected:
