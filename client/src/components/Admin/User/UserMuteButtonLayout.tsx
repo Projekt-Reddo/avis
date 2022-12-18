@@ -113,7 +113,6 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                                     <div className="flex flex-row items-center justify-center mt-3">
                                         End in{" "}
                                         <input
-                                            type="numer"
                                             value={post}
                                             onChange={handlePostChange}
                                             min={0}
@@ -129,7 +128,6 @@ const UserMuteButtonLayout: React.FC<UserMuteButtonLayoutProps> = ({
                                     <div className="flex flex-row items-center justify-center mt-3">
                                         End in{" "}
                                         <input
-                                            type="numer"
                                             value={comment}
                                             onChange={handleCommentChange}
                                             min={0}
