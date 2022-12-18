@@ -128,6 +128,26 @@ namespace MainService.Controllers
 		[HttpPut("profile/{uid}")]
 		public async Task<ActionResult<AccountProfileReadDto>> UpdateProfile([FromRoute] string uid, [FromForm] AccountProfileUpdateDto accountProfileUpdateDto)
 		{
+			if (uid == null)
+			{
+				return BadRequest(new ResponseDto(400, "Uid is needed!"));
+			}
+
+			// Get User Id
+			try
+			{
+				string userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+
+				if (userId != uid)
+				{
+					return BadRequest(new ResponseDto(403, "You are not allowed to perform this action!"));
+				} 
+			}
+			catch (Exception e)
+			{
+				return BadRequest(new ResponseDto(400, e.Message));
+			}
+
 			(bool _, string message, Account? data) = await _accountLogic.UpdateAccountProfile(uid, accountProfileUpdateDto);
 
 			if (data is null)

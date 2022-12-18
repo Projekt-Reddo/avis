@@ -31,6 +31,10 @@ const commentDetailSlice = createSlice({
             .addCase(commentDetailAsync.fulfilled, (state, action) => {
                 state.status = "idle";
                 state.data = action.payload;
+            })
+            .addCase(commentDetailAsync.rejected, (state) => {
+                state.status = "idle";
+                state.data = null;
             });
     },
 });

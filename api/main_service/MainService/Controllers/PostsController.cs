@@ -276,7 +276,12 @@ public class PostsController : ControllerBase
 		// Get User Id
 		try
 		{
-			userId = User.FindFirst(JwtTokenPayload.USER_ID)!.Value;
+			var token = User.FindFirst(JwtTokenPayload.USER_ID);
+
+			if (token is not null)
+			{
+				userId = User.FindFirst(JwtTokenPayload.USER_ID).Value;
+			}
 		}
 		catch (Exception)
 		{

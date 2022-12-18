@@ -328,7 +328,9 @@ const PostCreate: React.FC<PostCreateProps> = ({ loading }) => {
                     <div
                         className="avatar"
                         style={{
-                            backgroundImage: `url(${authState?.avatar})`,
+                            backgroundImage: `url(${
+                                authState?.avatar
+                            }?${new Date().toISOString()})`,
                         }}
                     />
                     <div />

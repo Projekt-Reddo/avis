@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { editAsync, songDetailAsync } from "store/slices/songSlice";
 import { useAppDispatch, useAppSelector } from "utils/react-redux-hooks";
+import NotFound from "components/shared/NotFound";
 
 interface RouteParams {
     id: string;
@@ -78,6 +79,14 @@ const Edit = () => {
             previousFormStep={previousFormStep}
         />,
     ];
+
+    if (songState.status === "error") {
+        return (
+            <PageWrapperWithLeftNav>
+                <NotFound />
+            </PageWrapperWithLeftNav>
+        );
+    }
 
     return (
         <PageWrapperWithLeftNav className="">

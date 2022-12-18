@@ -203,9 +203,7 @@ const Nav = () => {
                                         className="inline-block h-9 w-9 rounded-full ring-2 ring-white mr-2"
                                         src={
                                             (user.avatar || WHITE_IMG) +
-                                            `?${new Date()
-                                                .toISOString()
-                                                .slice(0, 10)}`
+                                            `?${new Date().toISOString()}`
                                         }
                                         alt="avatar"
                                         style={{

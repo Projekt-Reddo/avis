@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Button from "components/Button/Button";
 import { useModal } from "components/Modal";
 import ProfileEditModal from "components/ProfileEdit/ProfileEdit.Modal";
 import ProfileEdit from "components/ProfileEdit/ProfileEdit";
+import { useAppSelector } from "utils/react-redux-hooks";
 
 interface ProfileEditButtonProps {
     disabled: boolean;
@@ -11,6 +12,14 @@ interface ProfileEditButtonProps {
 
 const ProfileEditButton: React.FC<ProfileEditButtonProps> = ({ disabled }) => {
     const { open, setOpen } = useModal();
+
+    const authData = useAppSelector((state) => state.auth.data);
+
+    useEffect(() => {
+        if (authData.avatar && typeof authData.avatar == "string") {
+            URL.revokeObjectURL(authData.avatar);
+        }
+    }, []);
 
     return (
         <>

@@ -21,6 +21,10 @@ const profileSlice = createSlice({
                 state.status = "idle";
                 state.data = action.payload;
             })
+            .addCase(viewProfileAsync.rejected, (state) => {
+                state.status = "error";
+                state.data = null;
+            })
             .addCase(updateProfileAsync.pending, (state) => {
                 state.status = "loading";
             })
