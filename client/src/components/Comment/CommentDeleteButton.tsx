@@ -39,7 +39,6 @@ const CommentDeleteButton: FunctionComponent<CommentDeleteButtonProps> = ({
                     );
 
                     if (commentDetail.id === comment.id) {
-                        console.log("delte comment detail page");
                         dispatch(deleteCommentDetail(null));
                     }
                 } else {

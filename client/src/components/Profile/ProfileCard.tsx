@@ -60,7 +60,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
                     <div
                         className="profile-avatar absolute rounded-full border-4 border-white profile-bg-img-position"
                         style={{
-                            backgroundImage: `url(${profile.avatar})`,
+                            backgroundImage: `url(${profile.avatar}?${new Date()
+                                .toISOString()
+                                .slice(0, 10)})`,
                             backgroundSize: "cover",
                         }}
                     ></div>

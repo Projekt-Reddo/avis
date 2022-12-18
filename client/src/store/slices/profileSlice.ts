@@ -57,7 +57,10 @@ export const updateProfileAsync = createAsyncThunk(
                 userProfileUpdateDto
             );
 
-            if (data) window.location.reload();
+            if (data) {
+                URL.revokeObjectURL(data.avatar);
+                window.location.reload();
+            }
 
             return data;
         } catch (e: unknown) {
