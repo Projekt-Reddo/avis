@@ -78,7 +78,7 @@ const NotificationCard: React.FC<NotificationCardProps> = () => {
                     }
                     endMessage={
                         <div className="flex justify-center items-center font-bold mt-2">
-                            That all
+                            Nice work, you're all caught up!
                         </div>
                     }
                     className="scrollable-notifi"

@@ -19,6 +19,10 @@ const LeftNav = () => {
     const dispatch = useAppDispatch();
     const setIsShowing = () => dispatch(toggleLeftNav());
 
+    if (location.pathname.startsWith("/profile")) {
+        return <></>;
+    }
+
     const leftNavUser: LeftNavItemData[] = [
         {
             icon: "user-circle",

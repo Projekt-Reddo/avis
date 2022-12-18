@@ -7,6 +7,7 @@ import { songDetailAsync } from "store/slices/songSlice";
 import { relatedSongsAsync } from "store/slices/songRecommendSlice";
 import { useEffect, useRef } from "react";
 import Result from "components/Home/Result";
+import NotFound from "components/shared/NotFound";
 
 interface RouteParams {
     songId: string;
@@ -42,6 +43,14 @@ const Song = () => {
             });
         }
     }, [songState]);
+
+    if (songState.status === "error") {
+        return (
+            <PageWrapper>
+                <NotFound />
+            </PageWrapper>
+        );
+    }
 
     return (
         <PageWrapper

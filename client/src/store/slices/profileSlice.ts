@@ -21,6 +21,10 @@ const profileSlice = createSlice({
                 state.status = "idle";
                 state.data = action.payload;
             })
+            .addCase(viewProfileAsync.rejected, (state) => {
+                state.status = "error";
+                state.data = null;
+            })
             .addCase(updateProfileAsync.pending, (state) => {
                 state.status = "loading";
             })
@@ -57,7 +61,13 @@ export const updateProfileAsync = createAsyncThunk(
                 userProfileUpdateDto
             );
 
-            if (data) window.location.reload();
+            if (data) {
+                if (data.avatar && typeof data.avatar == "string") {
+                    URL.revokeObjectURL(data.avatar);
+                }
+
+                window.location.reload();
+            }
 
             return data;
         } catch (e: unknown) {

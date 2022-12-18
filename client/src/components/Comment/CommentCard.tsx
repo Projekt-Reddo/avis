@@ -35,7 +35,9 @@ const CommentCard: React.FC<CommenteCardProps> = ({
                         to={`/profile/${comment.user.id}`}
                         className="avatar"
                         style={{
-                            backgroundImage: `url(${comment.user.avatar})`,
+                            backgroundImage: `url(${
+                                comment.user.avatar
+                            }?${new Date().toISOString()})`,
                         }}
                     />
                 </div>

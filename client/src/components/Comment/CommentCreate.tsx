@@ -137,7 +137,7 @@ const CommentCreate: FunctionComponent<CommentCreateProps> = ({
                     style={{
                         backgroundImage: `url(${
                             auth.status === "idle" ? auth.data.avatar : ""
-                        })`,
+                        }?${new Date().toISOString()})`,
                     }}
                 />
             </div>

@@ -111,14 +111,12 @@ export default function createPostInfiniteScrollLayout({
                             }
                             endMessage={
                                 <div className="flex justify-center items-center font-bold my-4">
-                                    Post to view more
+                                    Nothing to display!
                                 </div>
                             }
                         >
                             {dataState.data.payload.length === 0 ? (
-                                <div className="flex justify-center items-center font-bold my-4">
-                                    No result
-                                </div>
+                                <div className="flex justify-center items-center font-bold my-4"></div>
                             ) : (
                                 <div
                                     className="lg:pt-4"

@@ -13,6 +13,7 @@ import moment from "moment";
 import ProfileEditButton from "../ProfileEdit/ProfileEditButton";
 import { useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import NotFound from "components/shared/NotFound";
 
 interface ProfileCardProps {
     loading: boolean;
@@ -39,6 +40,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
 
     const profile = profileState.data;
 
+    if (
+        (profileState.status === "idle" || profileState.status === "error") &&
+        !profile
+    ) {
+        return <NotFound />;
+    }
+
     return (
         <div className="lg:pt-4">
             <div className="card drop-shadow-md relative profile-wrapper">
@@ -60,7 +68,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ loading }) => {
                     <div
                         className="profile-avatar absolute rounded-full border-4 border-white profile-bg-img-position"
                         style={{
-                            backgroundImage: `url(${profile.avatar})`,
+                            backgroundImage: `url(${
+                                profile.avatar
+                            }?${new Date().toISOString()})`,
                             backgroundSize: "cover",
                         }}
                     ></div>

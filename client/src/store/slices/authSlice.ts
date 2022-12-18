@@ -182,6 +182,13 @@ export default authSlice.reducer;
 async function getUserDataState(userFirebaseData: User) {
     const tokenResult = await userFirebaseData.getIdTokenResult(true);
 
+    if (
+        tokenResult.claims["avatar"] &&
+        typeof tokenResult.claims["avatar"] == "string"
+    ) {
+        URL.revokeObjectURL(tokenResult.claims["avatar"]);
+    }
+
     return {
         emailVerified: userFirebaseData.emailVerified,
         uid: userFirebaseData.uid,

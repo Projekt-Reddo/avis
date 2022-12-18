@@ -53,7 +53,9 @@ const AvatarDropzone: FunctionComponent<ImageDropzoneProps> = ({
         },
     });
 
-    const [preview, setPreview] = useState<string>(defaultPreview);
+    const [preview, setPreview] = useState<string>(
+        defaultPreview + "?" + new Date().toISOString()
+    );
 
     useEffect(() => {
         if (savedImage && defaultPreview !== "") {
